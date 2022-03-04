@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<set android:ordering="together"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <set android:ordering="sequentially">
+        <objectAnimator android:duration="350" android:valueFrom="M -4974.627 -517 C -4974.627 -517 -145.646 -517 -145.646 -517 C -141.228 -517 -137.646 -513.418 -137.646 -509 C -137.646 -504.582 -141.228 -501 -145.646 -501 C -145.646 -501 -4974.627 -501 -4974.627 -501 C -4979.045 -501 -4982.627 -504.582 -4982.627 -509 C -4982.627 -513.418 -4979.045 -517 -4974.627 -517 Z" android:valueTo="M -4974.627 -517 C -4974.627 -517 -145.646 -517 -145.646 -517 C -141.228 -517 -137.646 -513.418 -137.646 -509 C -137.646 -504.582 -141.228 -501 -145.646 -501 C -145.646 -501 -4974.627 -501 -4974.627 -501 C -4979.045 -501 -4982.627 -504.582 -4982.627 -509 C -4982.627 -513.418 -4979.045 -517 -4974.627 -517 Z" android:valueType="pathType" android:propertyName="pathData" />
+        <objectAnimator android:interpolator="@anim/sesl_easing_sine_in_out_80" android:duration="933" android:valueFrom="M -4974.627 -517 C -4974.627 -517 -145.646 -517 -145.646 -517 C -141.228 -517 -137.646 -513.418 -137.646 -509 C -137.646 -504.582 -141.228 -501 -145.646 -501 C -145.646 -501 -4974.627 -501 -4974.627 -501 C -4979.045 -501 -4982.627 -504.582 -4982.627 -509 C -4982.627 -513.418 -4979.045 -517 -4974.627 -517 Z" android:valueTo="M -132.515 -517 C -132.515 -517 -50.459 -517 -50.459 -517 C -46.041 -517 -42.459 -513.418 -42.459 -509 C -42.459 -504.582 -46.041 -501 -50.459 -501 C -50.459 -501 -132.515 -501 -132.515 -501 C -136.933 -501 -140.515 -504.582 -140.515 -509 C -140.515 -513.418 -136.933 -517 -132.515 -517 Z" android:valueType="pathType" android:propertyName="pathData" />
+        <objectAnimator android:duration="650" android:valueFrom="M -132.515 -517 C -132.515 -517 -50.459 -517 -50.459 -517 C -46.041 -517 -42.459 -513.418 -42.459 -509 C -42.459 -504.582 -46.041 -501 -50.459 -501 C -50.459 -501 -132.515 -501 -132.515 -501 C -136.933 -501 -140.515 -504.582 -140.515 -509 C -140.515 -513.418 -136.933 -517 -132.515 -517 Z" android:valueTo="M -132.515 -517 C -132.515 -517 -50.459 -517 -50.459 -517 C -46.041 -517 -42.459 -513.418 -42.459 -509 C -42.459 -504.582 -46.041 -501 -50.459 -501 C -50.459 -501 -132.515 -501 -132.515 -501 C -136.933 -501 -140.515 -504.582 -140.515 -509 C -140.515 -513.418 -136.933 -517 -132.515 -517 Z" android:valueType="pathType" android:propertyName="pathData" />
+    </set>
+</set>

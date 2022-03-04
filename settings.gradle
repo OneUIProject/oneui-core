@@ -1,1 +1,1 @@
-include ':mylibrary'
+include ':appcompat'

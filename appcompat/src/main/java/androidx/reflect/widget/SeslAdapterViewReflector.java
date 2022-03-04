@@ -1,0 +1,72 @@
+/*
+ * Copyright 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package androidx.reflect.widget;
+
+import android.os.Build;
+import android.widget.AdapterView;
+
+import androidx.annotation.NonNull;
+import androidx.reflect.SeslBaseReflector;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
+/**
+ * Samsung AdapterView utility class.
+ */
+public class SeslAdapterViewReflector {
+    private static final Class<?> mClass = AdapterView.class;
+
+    /**
+     * Set a fill out <var>color</var> for the given {@link AdapterView}.
+     */
+    public static void semSetBottomColor(@NonNull AdapterView adapterView, int color) {
+        String methodName = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            methodName = "hidden_semSetBottomColor";
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            methodName = "semSetBottomColor";
+        }
+
+        Method method = SeslBaseReflector.getDeclaredMethod(mClass, methodName, Integer.TYPE);
+        if (method != null) {
+            SeslBaseReflector.invoke(adapterView, method, color);
+        }
+    }
+
+    /**
+     * Returns the <var>mSelectedPosition</var> field value in the given {@link AdapterView}.
+     */
+    public static int getField_mSelectedPosition(@NonNull AdapterView adapterView) {
+        Field field = SeslBaseReflector.getDeclaredField(mClass, "mSelectedPosition");
+
+        if (field == null) {
+            return -1;
+        }
+
+        Object mSelectedPosition = SeslBaseReflector.get(adapterView, field);
+        if (mSelectedPosition instanceof Integer) {
+            return (Integer) mSelectedPosition;
+        }
+
+        return -1;
+    }
+}

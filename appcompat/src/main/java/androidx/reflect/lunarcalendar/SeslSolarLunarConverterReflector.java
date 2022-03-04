@@ -1,0 +1,146 @@
+/*
+ * Copyright 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package androidx.reflect.lunarcalendar;
+
+import androidx.annotation.NonNull;
+import androidx.reflect.SeslBaseReflector;
+import androidx.reflect.SeslPathClassReflector;
+
+import java.lang.reflect.Method;
+
+import dalvik.system.PathClassLoader;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
+/**
+ * Samsung Calendar SolarLunarConverter utility class.
+ */
+public class SeslSolarLunarConverterReflector {
+    private static final String mClassName = "com.samsung.android.calendar.secfeature.lunarcalendar.SolarLunarConverter";
+
+    /**
+     * Calls <b>SolarLunarConverter.convertLunarToSolar(int, int, int, boolean)</b>.
+     */
+    public static void convertLunarToSolar(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d, boolean isLeapMonth) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "convertLunarToSolar", Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE);
+        if (method != null) {
+            SeslBaseReflector.invoke(solarLunarConverter, method, y, m, d, isLeapMonth);
+        }
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.convertSolarToLunar(int, int, int)</b>.
+     */
+    public static void convertSolarToLunar(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "convertSolarToLunar", Integer.TYPE, Integer.TYPE, Integer.TYPE);
+        if (method != null) {
+            SeslBaseReflector.invoke(solarLunarConverter, method, y, m, d);
+        }
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.getWeekday(int, int, int)</b>.
+     */
+    public static int getWeekday(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, int day) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getWeekday", Integer.TYPE, Integer.TYPE, Integer.TYPE);
+        if (method != null) {
+            Object invoke = SeslBaseReflector.invoke(solarLunarConverter, method, year, month, day);
+            if (invoke instanceof Integer) {
+                return (Integer) invoke;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.getDayLengthOf(int, int, boolean)</b>.
+     */
+    public static int getDayLengthOf(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, boolean isLeapMonth) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getDayLengthOf", Integer.TYPE, Integer.TYPE, Boolean.TYPE);
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(solarLunarConverter, method, year, month, isLeapMonth);
+            if (result instanceof Integer) {
+                return (Integer) result;
+            }
+        }
+
+        return 30;
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.getYear()</b>.
+     */
+    public static int getYear(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getYear");
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
+            if (result instanceof Integer) {
+                return (Integer) result;
+            }
+        }
+
+        return 2019;
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.getMonth()</b>.
+     */
+    public static int getMonth(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getMonth");
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
+            if (result instanceof Integer) {
+                return (Integer) result;
+            }
+        }
+
+        return 10;
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.getDay()</b>.
+     */
+    public static int getDay(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getDay");
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
+            if (result instanceof Integer) {
+                return (Integer) result;
+            }
+        }
+
+        return 19;
+    }
+
+    /**
+     * Calls <b>SolarLunarConverter.isLeapMonth()</b>.
+     */
+    public static boolean isLeapMonth(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "isLeapMonth");
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
+            if (result instanceof Boolean) {
+                return (Boolean) result;
+            }
+        }
+
+        return false;
+    }
+}

@@ -1,0 +1,56 @@
+/*
+ * Copyright 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package androidx.reflect.lunarcalendar;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.reflect.SeslBaseReflector;
+import androidx.reflect.SeslPathClassReflector;
+
+import java.lang.reflect.Method;
+import java.util.Calendar;
+
+import dalvik.system.PathClassLoader;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
+/**
+ * Samsung Calendar LunarDateUtils utility class.
+ */
+public class SeslLunarDateUtilsReflector {
+    private static final String mClassName = "com.android.calendar.event.widget.datetimepicker.LunarDateUtils";
+
+    /**
+     * Calls <b>LunarDateUtils.buildLunarDateString(Calendar, Context)</b>.
+     */
+    @Nullable
+    public static String buildLunarDateString(@NonNull PathClassLoader pathClassLoader, @NonNull Calendar calendar, @NonNull Context context) {
+        Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "buildLunarDateString", Calendar.class, Context.class);
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(null, method, calendar, context);
+            if (result instanceof String) {
+                return (String) result;
+            }
+        }
+
+        return null;
+    }
+}

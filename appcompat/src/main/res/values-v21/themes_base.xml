@@ -27,7 +27,7 @@
     <style name="Platform.AppCompat" parent="Platform.V21.AppCompat" />
     <style name="Platform.AppCompat.Light" parent="Platform.V21.AppCompat.Light" />
 
-    <style name="Platform.V21.AppCompat" parent="android:Theme.Material.NoActionBar">
+    <style name="Platform.V21.AppCompat" parent="android:Theme.DeviceDefault.NoActionBar">
         <!-- Update link colors pre-v23 -->
         <item name="android:textColorLink">?android:attr/colorAccent</item>
         <item name="android:textColorLinkInverse">?android:attr/colorAccent</item>
@@ -40,7 +40,7 @@
         <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="Platform.V21.AppCompat.Light" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Platform.V21.AppCompat.Light" parent="android:Theme.DeviceDefault.Light.NoActionBar">
         <!-- Update link colors pre-v23 -->
         <item name="android:textColorLink">?android:attr/colorAccent</item>
         <item name="android:textColorLinkInverse">?android:attr/colorAccent</item>

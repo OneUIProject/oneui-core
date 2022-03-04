@@ -124,8 +124,8 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
         mPopupStyleRes = popupStyleRes;
 
         final Resources res = context.getResources();
-        mPopupMaxWidth = Math.max(res.getDisplayMetrics().widthPixels / 2,
-                res.getDimensionPixelSize(R.dimen.abc_config_prefDialogWidth));
+        mPopupMaxWidth = res.getDisplayMetrics().widthPixels
+                - mContext.getResources().getDimensionPixelOffset(R.dimen.sesl_menu_popup_offset_horizontal) * 2;
 
         mAnchorView = anchorView;
 

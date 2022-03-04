@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2012, The Android Open Source Project
+** Copyright 2022, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 */
 -->
 
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+
 <!-- These resources are around just to allow their values to be customized
      for different hardware and product builds. -->
 <resources>
     <!-- see comment in values/config.xml -->
-    <dimen name="abc_config_prefDialogWidth">440dp</dimen>
+    <dimen name="sesl_config_prefDialogWidth">440dp</dimen>
 </resources>

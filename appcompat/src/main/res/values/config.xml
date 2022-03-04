@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,25 +14,35 @@
      limitations under the License.
 -->
 
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+
 <!-- These resources are around just to allow their values to be customized
      for different hardware and product builds. -->
 <resources>
     <!-- The maximum width we would prefer dialogs to be.  0 if there is no
     maximum (let them grow as large as the screen).  Actual values are
     specified for -large and -xlarge configurations. -->
-    <dimen name="abc_config_prefDialogWidth">320dp</dimen>
-
-    <!-- Whether action menu items should be displayed in ALLCAPS or not.
-         Defaults to true. If this is not appropriate for specific locales
-         it should be disabled in that locale's resources. -->
-    <bool name="abc_config_actionMenuItemAllCaps">true</bool>
+    <dimen name="sesl_config_prefDialogWidth">320dp</dimen>
 
     <!-- The duration (in milliseconds) of the activity open/close and fragment open/close animations. -->
-    <integer name="abc_config_activityShortDur">150</integer>
-    <integer name="abc_config_activityDefaultDur">220</integer>
+    <integer name="sesl_config_activityShortDur">150</integer>
+    <integer name="sesl_config_activityDefaultDur">220</integer>
 
     <integer name="cancel_button_image_alpha">127</integer>
 
     <!-- The duration (in milliseconds) of the tooltip show/hide animations. -->
-    <integer name="config_tooltipAnimTime">150</integer>
+    <integer name="sesl_config_tooltipAnimTime">150</integer>
+
+    <!-- The duration (in milliseconds) of dialogs show/hide animations. -->
+    <integer name="sesl_dialog_enter_anim_duration">100</integer>
+    <integer name="sesl_dialog_exit_anim_duration">100</integer>
+    <integer name="sesl_dialog_disabled_anim_duration">100</integer>
+
+    <integer name="sesl_loading_progress_anim_duration">750</integer>
+    <integer name="sesl_loading_progress_rot_duration">3000</integer>
+
+    <integer name="sesl_menu_popup_max_item_count">10</integer>
+    <integer name="sesl_menu_popup_max_item_count_mobile_keyboard">7</integer>
+
+    <integer name="status_bar_notification_info_maxnum">999</integer>
 </resources>

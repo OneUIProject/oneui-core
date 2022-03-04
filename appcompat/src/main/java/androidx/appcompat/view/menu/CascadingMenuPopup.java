@@ -231,8 +231,7 @@ final class CascadingMenuPopup extends MenuPopup implements MenuPresenter, OnKey
         mLastPosition = getInitialMenuPosition();
 
         final Resources res = context.getResources();
-        mMenuMaxWidth = Math.max(res.getDisplayMetrics().widthPixels / 2,
-                res.getDimensionPixelSize(R.dimen.abc_config_prefDialogWidth));
+        mMenuMaxWidth = res.getDisplayMetrics().widthPixels;
 
         mSubMenuHoverHandler = new Handler();
     }

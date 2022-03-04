@@ -292,7 +292,7 @@ public class ActivityChooserView extends ViewGroup implements
 
         Resources resources = context.getResources();
         mListPopupMaxWidth = Math.max(resources.getDisplayMetrics().widthPixels / 2,
-                resources.getDimensionPixelSize(R.dimen.abc_config_prefDialogWidth));
+                resources.getDimensionPixelSize(R.dimen.sesl_config_prefDialogWidth));
     }
 
     /**

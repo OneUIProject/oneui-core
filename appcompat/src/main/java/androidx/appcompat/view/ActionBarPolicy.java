@@ -87,7 +87,7 @@ public class ActionBarPolicy {
     }
 
     public boolean hasEmbeddedTabs() {
-        return mContext.getResources().getBoolean(R.bool.abc_action_bar_embed_tabs);
+        return false;
     }
 
     public int getTabContainerHeight() {

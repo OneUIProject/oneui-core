@@ -6,10 +6,10 @@ android {
     compileSdk 32
 
     defaultConfig {
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 1
-        versionName '1.5.0-alpha01'
+        versionName '1.0.38-sesl4'
     }
 
     compileOptions {

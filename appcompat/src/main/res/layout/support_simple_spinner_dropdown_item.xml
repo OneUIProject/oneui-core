@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 **
-** Copyright 2008, The Android Open Source Project
+** Copyright 2022, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License"); 
 ** you may not use this file except in compliance with the License. 
@@ -16,10 +16,13 @@
 ** limitations under the License.
 */
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<androidx.appcompat.widget.SeslDropDownItemTextView xmlns:android="http://schemas.android.com/apk/res/android"
           android:id="@android:id/text1"
           style="?attr/spinnerDropDownItemStyle"
           android:singleLine="true"
           android:layout_width="match_parent"
-          android:layout_height="?attr/dropdownListPreferredItemHeight"
-          android:ellipsize="marquee"/>
+          android:layout_height="wrap_content"
+          android:minHeight="?attr/dropdownListPreferredItemHeight"
+          android:ellipsize="marquee"
+          android:checked="true"/>

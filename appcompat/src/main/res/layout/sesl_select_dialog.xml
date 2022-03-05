@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2015 The Android Open Source Project
+     Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!--
     This layout file is used by the AlertDialog when displaying a list of items.
@@ -22,18 +23,17 @@
 -->
 <view xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/select_dialog_listview"
-      style="@style/Widget.AppCompat.ListView"
+      android:id="@id/select_dialog_listview"
       class="androidx.appcompat.app.AlertController$RecycleListView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_gravity="start"
       android:cacheColorHint="@null"
-      android:clipToPadding="false"
-      android:divider="?attr/listDividerAlertDialog"
-      android:fadingEdge="none"
+      android:divider="?android:attr/listDividerAlertDialog"
       android:overScrollMode="ifContentScrolls"
       android:scrollbars="vertical"
+      android:scrollbarStyle="outsideOverlay"
       android:textAlignment="viewStart"
-      app:paddingBottomNoButtons="@dimen/abc_dialog_list_padding_bottom_no_buttons"
-      app:paddingTopNoTitle="@dimen/abc_dialog_list_padding_top_no_title"/>
+      android:paddingStart="@dimen/sesl_select_dialog_padding_start"
+      android:paddingEnd="@dimen/sesl_select_dialog_padding_end"
+      android:paddingBottom="@dimen/sesl_select_dialog_padding_bottom"
+      app:paddingBottomNoButtons="@dimen/sesl_dialog_list_padding_bottom_no_buttons"/>

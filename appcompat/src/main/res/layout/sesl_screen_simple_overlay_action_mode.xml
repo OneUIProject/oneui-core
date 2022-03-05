@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2014, The Android Open Source Project
+** Copyright 2022, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 This is an optimized layout for a screen, with the minimum set of features
 enabled.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <androidx.appcompat.widget.FitWindowsFrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,12 +28,12 @@ enabled.
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <include layout="@layout/abc_screen_content_include" />
+    <include layout="@layout/sesl_screen_content_include" />
 
     <androidx.appcompat.widget.ViewStubCompat
             android:id="@+id/action_mode_bar_stub"
             android:inflatedId="@+id/action_mode_bar"
-            android:layout="@layout/abc_action_mode_bar"
+            android:layout="@layout/sesl_action_mode_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!--
 This is an optimized layout for a screen, with the minimum set of features
@@ -29,18 +30,17 @@ enabled.
     <TextView
             android:id="@+id/title"
             style="?android:attr/windowTitleStyle"
-            android:singleLine="true"
+            android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
             android:textAlignment="viewStart"
-            android:paddingLeft="?attr/dialogPreferredPadding"
-            android:paddingRight="?attr/dialogPreferredPadding"
-            android:paddingTop="@dimen/abc_dialog_padding_top_material"/>
+            android:paddingStart="@dimen/sesl_dialog_padding"
+            android:paddingTop="@dimen/sesl_dialog_padding"
+            android:paddingEnd="@dimen/sesl_dialog_padding"/>
 
     <include
-            layout="@layout/abc_screen_content_include"
+            layout="@layout/sesl_screen_content_include"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>

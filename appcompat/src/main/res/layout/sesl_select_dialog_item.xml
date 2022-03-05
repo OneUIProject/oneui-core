@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2014 The Android Open Source Project
+     Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!--
     This layout file is used by the AlertDialog when displaying a list of items.
@@ -24,10 +25,12 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/listPreferredItemHeightSmall"
-    android:textAppearance="?attr/textAppearanceListItemSmall"
-    android:textColor="?attr/textColorAlertDialogListItem"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:textAppearance="?attr/textAppearanceListItem"
     android:gravity="center_vertical"
-    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?attr/listPreferredItemPaddingRight"
+    android:paddingStart="@dimen/sesl_select_dialog_item_padding_horizontal"
+    android:paddingTop="@dimen/sesl_select_dialog_item_padding_vertical"
+    android:paddingEnd="@dimen/sesl_select_dialog_item_padding_horizontal"
+    android:paddingBottom="@dimen/sesl_select_dialog_item_padding_vertical"
+    android:textAlignment="viewStart"
     android:ellipsize="marquee" />

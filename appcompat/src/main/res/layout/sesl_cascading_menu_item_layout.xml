@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2022 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+
+<!-- Keep in sync with abc_popup_menu_item_layout.xml (which only differs in the title and shortcut
+    position). -->
+<androidx.appcompat.view.menu.ListMenuItemView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/sesl_popup_menu_item_min_width"
+        android:minHeight="@dimen/sesl_popup_menu_item_min_height"
+        android:paddingStart="@dimen/sesl_popup_menu_item_start_padding"
+        android:paddingTop="@dimen/sesl_popup_menu_item_top_padding"
+        android:paddingEnd="@dimen/sesl_popup_menu_item_end_padding"
+        android:paddingBottom="@dimen/sesl_popup_menu_item_bottom_padding"
+        android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:duplicateParentState="true">
+
+        <ImageView
+            android:id="@+id/group_divider"
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:background="@drawable/sesl_menu_list_divider" />
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:duplicateParentState="true">
+
+            <!-- Icon will be inserted here. -->
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="7.0dip"
+                android:gravity="center_vertical"
+                android:textAppearance="?attr/textAppearanceLargePopupMenu"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:fadingEdge="horizontal"
+                android:textAlignment="viewStart"
+                android:duplicateParentState="true" />
+
+            <TextView
+                android:id="@+id/shortcut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:textAppearance="?attr/textAppearanceSmallPopupMenu"
+                android:singleLine="true"
+                android:duplicateParentState="true"
+                android:textAlignment="viewStart" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/submenuarrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:layout_marginStart="8.0dip"
+        android:layout_marginLeft="8.0dip" />
+
+    <!-- Checkbox, and/or radio button will be inserted here. -->
+
+</androidx.appcompat.view.menu.ListMenuItemView>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2014 The Android Open Source Project
+     Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
                  android:id="@android:id/text1"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
-                 android:minHeight="?attr/listPreferredItemHeightSmall"
-                 android:textAppearance="?android:attr/textAppearanceMedium"
-                 android:textColor="?attr/textColorAlertDialogListItem"
+                 android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                 android:textAppearance="?attr/textAppearanceListItem"
                  android:gravity="center_vertical"
-                 android:paddingLeft="@dimen/abc_select_dialog_padding_start_material"
-                 android:paddingRight="?attr/dialogPreferredPadding"
-                 android:paddingStart="@dimen/abc_select_dialog_padding_start_material"
-                 android:paddingEnd="?attr/dialogPreferredPadding"
-                 android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-                 android:drawableStart="?android:attr/listChoiceIndicatorMultiple"
-                 android:drawablePadding="20dp"
+                 android:paddingTop="@dimen/sesl_select_dialog_item_padding_vertical"
+                 android:paddingBottom="@dimen/sesl_select_dialog_item_padding_vertical"
+                 android:drawableStart="?android:attr/listChoiceIndicatorSingle"
+                 android:drawablePadding="18dp"
                  android:ellipsize="marquee" />

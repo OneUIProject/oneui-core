@@ -22,38 +22,35 @@
         unbundled Action Bar.
     -->
     <eat-comment/>
-    <style name="Platform.AppCompat" parent="android:Theme.Holo">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
+    <style name="Platform.AppCompat" parent="Platform.V21.AppCompat" />
 
-        <item name="android:buttonBarStyle">?attr/buttonBarStyle</item>
-        <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="android:borderlessButtonStyle">?attr/borderlessButtonStyle</item>
+    <style name="Platform.AppCompat.Light" parent="Platform.V21.AppCompat.Light" />
+
+    <style name="Platform.V7.AppCompat" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
+        <item name="windowNoTitle">?android:attr/windowNoTitle</item>
 
         <!-- Window colors -->
+        <item name="android:statusBarColor">@color/sesl_status_bar_color_dark</item>
         <item name="android:colorForeground">@color/foreground_material_dark</item>
         <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
-        <item name="android:colorBackground">@color/background_material_dark</item>
-        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
-        <item name="android:disabledAlpha">@dimen/abc_disabled_alpha_material_dark</item>
+        <item name="android:colorBackground">@color/sesl_background_color_dark</item>
+        <item name="android:colorBackgroundCacheHint">@color/sesl_background_cache_hint_selector</item>
+        <item name="android:disabledAlpha">@dimen/sesl_disabled_color_alpha</item>
+        <item name="android:ambientShadowAlpha">0.1</item>
+        <item name="android:spotShadowAlpha">0.35</item>
         <item name="android:backgroundDimAmount">0.6</item>
-        <item name="android:windowBackground">@color/background_material_dark</item>
 
         <!-- Text colors -->
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
-        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorTertiary">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorHint">@color/abc_hint_foreground_material_dark</item>
-        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_light</item>
-        <item name="android:textColorHighlight">@color/highlighted_text_material_dark</item>
-        <item name="android:textColorHighlightInverse">@color/highlighted_text_material_light</item>
+        <item name="android:textColorPrimary">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_light</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_dark</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_light</item>
+        <item name="android:textColorHighlight">@color/sesl_highlighted_text_color_dark</item>
         <item name="android:textColorLink">?attr/colorAccent</item>
-        <item name="android:textColorLinkInverse">?attr/colorAccent</item>
-        <item name="android:textColorAlertDialogListItem">@color/abc_primary_text_material_dark</item>
 
         <!-- Text styles -->
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
@@ -62,69 +59,43 @@
         <item name="android:textAppearanceLargeInverse">@style/TextAppearance.AppCompat.Large.Inverse</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Medium.Inverse</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
         <item name="android:textAppearanceSmallInverse">@style/TextAppearance.AppCompat.Small.Inverse</item>
 
-        <item name="android:listChoiceIndicatorSingle">@drawable/abc_btn_radio_material</item>
-        <item name="listChoiceIndicatorSingleAnimated">@drawable/abc_btn_radio_material_anim</item>
-        <item name="android:listChoiceIndicatorMultiple">@drawable/abc_btn_check_material</item>
-        <item name="listChoiceIndicatorMultipleAnimated">@drawable/abc_btn_check_material_anim</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/sesl_list_choice_btn_radio</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/sesl_list_choice_btn_check</item>
 
-        <!-- List attributes -->
-        <item name="android:textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.AppCompat.Subhead</item>
-        <!-- textAppearanceListItemSecondary is 21+ only so not safe to apply here-->
-        <item name="android:listPreferredItemHeight">@dimen/abc_list_item_height_material</item>
-        <item name="android:listPreferredItemHeightSmall">@dimen/abc_list_item_height_small_material</item>
-        <item name="android:listPreferredItemHeightLarge">@dimen/abc_list_item_height_large_material</item>
-        <item name="android:listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingStart">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingEnd">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:textSelectHandle">@drawable/sesl_text_select_handle_middle</item>
+        <item name="android:textSelectHandleLeft">@drawable/sesl_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/sesl_text_select_handle_right</item>
 
-        <item name="android:actionModeCutDrawable">?actionModeCutDrawable</item>
-        <item name="android:actionModeCopyDrawable">?actionModeCopyDrawable</item>
-        <item name="android:actionModePasteDrawable">?actionModePasteDrawable</item>
-        <item name="android:actionModeSelectAllDrawable">?actionModeSelectAllDrawable</item>
-
-        <item name="android:textSelectHandle">@drawable/abc_text_select_handle_middle_mtrl</item>
-        <item name="android:textSelectHandleLeft">@drawable/abc_text_select_handle_left_mtrl</item>
-        <item name="android:textSelectHandleRight">@drawable/abc_text_select_handle_right_mtrl</item>
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_dark</item>
     </style>
 
-    <style name="Platform.AppCompat.Light" parent="android:Theme.Holo.Light">
-        <item name="android:windowNoTitle">true</item>
+    <style name="Platform.V7.AppCompat.Light" parent="android:Theme.DeviceDefault.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
-
-        <item name="android:buttonBarStyle">?attr/buttonBarStyle</item>
-        <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="android:borderlessButtonStyle">?attr/borderlessButtonStyle</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
+        <item name="windowNoTitle">?android:attr/windowNoTitle</item>
 
         <!-- Window colors -->
+        <item name="android:statusBarColor">@color/sesl_status_bar_color_light</item>
         <item name="android:colorForeground">@color/foreground_material_light</item>
         <item name="android:colorForegroundInverse">@color/foreground_material_dark</item>
-        <item name="android:colorBackground">@color/background_material_light</item>
-        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_light</item>
-        <item name="android:disabledAlpha">@dimen/abc_disabled_alpha_material_light</item>
+        <item name="android:colorBackground">@color/sesl_background_color_light</item>
+        <item name="android:colorBackgroundCacheHint">@color/sesl_background_cache_hint_selector</item>
+        <item name="android:disabledAlpha">@dimen/sesl_disabled_color_alpha</item>
+        <item name="android:ambientShadowAlpha">0.04</item>
+        <item name="android:spotShadowAlpha">0.15</item>
         <item name="android:backgroundDimAmount">0.6</item>
-        <item name="android:windowBackground">@color/background_material_light</item>
 
         <!-- Text colors -->
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_dark</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorTertiary">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_light</item>
-        <item name="android:textColorPrimaryInverseDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
-        <item name="android:textColorHint">@color/abc_hint_foreground_material_light</item>
-        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_dark</item>
-        <item name="android:textColorHighlight">@color/highlighted_text_material_light</item>
-        <item name="android:textColorHighlightInverse">@color/highlighted_text_material_dark</item>
+        <item name="android:textColorPrimary">@color/sesl_primary_text_light</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_light</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_dark</item>
+        <item name="android:textColorHighlight">@color/sesl_highlighted_text_color_light</item>
         <item name="android:textColorLink">?attr/colorAccent</item>
-        <item name="android:textColorLinkInverse">?attr/colorAccent</item>
-        <item name="android:textColorAlertDialogListItem">@color/abc_primary_text_material_light</item>
 
         <!-- Text styles -->
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
@@ -133,35 +104,21 @@
         <item name="android:textAppearanceLargeInverse">@style/TextAppearance.AppCompat.Large.Inverse</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Medium.Inverse</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
         <item name="android:textAppearanceSmallInverse">@style/TextAppearance.AppCompat.Small.Inverse</item>
 
-        <item name="android:listChoiceIndicatorSingle">@drawable/abc_btn_radio_material</item>
-        <item name="listChoiceIndicatorSingleAnimated">@drawable/abc_btn_radio_material_anim</item>
-        <item name="android:listChoiceIndicatorMultiple">@drawable/abc_btn_check_material</item>
-        <item name="listChoiceIndicatorMultipleAnimated">@drawable/abc_btn_check_material_anim</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/sesl_list_choice_btn_radio</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/sesl_list_choice_btn_check</item>
 
-        <!-- List attributes -->
-        <item name="android:textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.AppCompat.Subhead</item>
-        <!-- textAppearanceListItemSecondary is 21+ only so not safe to apply here-->
-        <item name="android:listPreferredItemHeight">@dimen/abc_list_item_height_material</item>
-        <item name="android:listPreferredItemHeightSmall">@dimen/abc_list_item_height_small_material</item>
-        <item name="android:listPreferredItemHeightLarge">@dimen/abc_list_item_height_large_material</item>
-        <item name="android:listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingStart">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="android:listPreferredItemPaddingEnd">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:textSelectHandle">@drawable/sesl_text_select_handle_middle</item>
+        <item name="android:textSelectHandleLeft">@drawable/sesl_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/sesl_text_select_handle_right</item>
 
-        <item name="android:actionModeCutDrawable">?actionModeCutDrawable</item>
-        <item name="android:actionModeCopyDrawable">?actionModeCopyDrawable</item>
-        <item name="android:actionModePasteDrawable">?actionModePasteDrawable</item>
-        <item name="android:actionModeSelectAllDrawable">?actionModeSelectAllDrawable</item>
-
-        <item name="android:textSelectHandle">@drawable/abc_text_select_handle_middle_mtrl</item>
-        <item name="android:textSelectHandleLeft">@drawable/abc_text_select_handle_left_mtrl</item>
-        <item name="android:textSelectHandleRight">@drawable/abc_text_select_handle_right_mtrl</item>
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_light</item>
     </style>
+
+    <style name="Platform.V21.AppCompat" parent="Platform.V7.AppCompat" />
+
+    <style name="Platform.V21.AppCompat.Light" parent="Platform.V7.AppCompat.Light" />
 
     <!-- Themes in the "Base.Theme" family vary based on the current platform
          version to provide the correct basis on each device. You probably don't
@@ -179,18 +136,33 @@
         <item name="windowActionModeOverlay">false</item>
         <item name="actionBarPopupTheme">@null</item>
 
-        <item name="colorBackgroundFloating">@color/background_floating_material_dark</item>
+        <item name="colorBackgroundFloating">@color/sesl_background_floating_dark</item>
+
+        <item name="android:colorEdgeEffect">@color/sesl_edge_effect_device_default_dark</item>
 
         <!-- Used by MediaRouter -->
         <item name="isLightTheme">false</item>
 
-        <item name="selectableItemBackground">@drawable/abc_item_background_holo_dark</item>
+        <item name="selectableItemBackground">@drawable/sesl_action_bar_item_background</item>
         <item name="selectableItemBackgroundBorderless">?attr/selectableItemBackground</item>
         <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_material</item>
+        <item name="homeAsUpIndicator">@drawable/sesl_ic_ab_back_dark</item>
 
-        <item name="dividerVertical">@drawable/abc_list_divider_mtrl_alpha</item>
-        <item name="dividerHorizontal">@drawable/abc_list_divider_mtrl_alpha</item>
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_light</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_dark</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_light</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
+
+        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
+        <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
+
+        <item name="dividerVertical">?android:attr/dividerVertical</item>
+        <item name="dividerHorizontal">?android:attr/dividerHorizontal</item>
+
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_scrollbar_handle_dark</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_scrollbar_handle_dark</item>
 
         <!-- Action Bar Styles -->
         <item name="actionBarTabStyle">@style/Widget.AppCompat.ActionBar.TabView</item>
@@ -199,52 +171,74 @@
         <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
         <item name="actionOverflowButtonStyle">@style/Widget.AppCompat.ActionButton.Overflow</item>
         <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.PopupMenu.Overflow</item>
-        <item name="actionBarStyle">@style/Widget.AppCompat.ActionBar.Solid</item>
+        <item name="actionOverflowBottomMenuStyle">@style/Widget.AppCompat.BottomPopupMenu.Overflow</item>
+        <item name="actionBarStyle">@style/Widget.AppCompat.ActionBar</item>
         <item name="actionBarSplitStyle">?attr/actionBarStyle</item>
         <item name="actionBarWidgetTheme">@null</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
-        <item name="actionBarSize">@dimen/abc_action_bar_default_height_material</item>
-        <item name="actionBarDivider">?attr/dividerVertical</item>
+        <item name="actionBarTheme">@null</item>
+        <item name="actionBarSize">@dimen/sesl_action_bar_default_height</item>
+        <item name="actionBarDivider">@null</item>
         <item name="actionBarItemBackground">?attr/selectableItemBackgroundBorderless</item>
         <item name="actionMenuTextAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Menu</item>
-        <item name="actionMenuTextColor">?android:attr/textColorPrimaryDisableOnly</item>
+        <item name="actionMenuTextColor">@color/sesl_action_menu_text_dark</item>
+
+        <!-- Action Mode -->
+        <item name="actionModeStyle">@style/Widget.AppCompat.Light.ActionMode</item>
+        <item name="actionModeBackground">@drawable/sesl_action_bar_background_dark</item>
+        <item name="actionModeSplitBackground">?attr/colorPrimaryDark</item>
+        <item name="actionModeCloseContentDescription">@string/abc_action_mode_done</item>
+        <item name="actionModeCloseDrawable">@drawable/sesl_ic_cab_done</item>
+        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.ActionButton.CloseMode</item>
+
+        <item name="actionModeCutDrawable">@drawable/sesl_ic_menu_cut_dark</item>
+        <item name="actionModeCopyDrawable">@drawable/sesl_ic_menu_copy_dark</item>
+        <item name="actionModePasteDrawable">@drawable/sesl_ic_menu_paste_dark</item>
+        <item name="actionModeSelectAllDrawable">@drawable/sesl_ic_menu_selectall_dark</item>
+        <item name="actionModeShareDrawable">@drawable/sesl_ic_menu_share_dark</item>
 
         <!-- Dropdown Spinner Attributes -->
         <item name="actionDropDownStyle">@style/Widget.AppCompat.Spinner.DropDown.ActionBar</item>
 
-        <!-- Action Mode -->
-        <item name="actionModeTheme">?attr/actionBarTheme</item>
-        <item name="actionModeStyle">@style/Widget.AppCompat.ActionMode</item>
-        <item name="actionModeBackground">@drawable/abc_cab_background_top_material</item>
-        <item name="actionModeSplitBackground">?attr/colorPrimaryDark</item>
-        <item name="actionModeCloseContentDescription">@string/abc_action_mode_done</item>
-        <item name="actionModeCloseDrawable">@drawable/abc_ic_ab_back_material</item>
-        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.ActionButton.CloseMode</item>
-
-        <item name="actionModeCutDrawable">@drawable/abc_ic_menu_cut_mtrl_alpha</item>
-        <item name="actionModeCopyDrawable">@drawable/abc_ic_menu_copy_mtrl_am_alpha</item>
-        <item name="actionModePasteDrawable">@drawable/abc_ic_menu_paste_mtrl_am_alpha</item>
-        <item name="actionModeSelectAllDrawable">@drawable/abc_ic_menu_selectall_mtrl_alpha</item>
-        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
-
         <!-- Panel attributes -->
-        <item name="panelMenuListWidth">@dimen/abc_panel_menu_list_width</item>
+        <item name="panelMenuListWidth">@dimen/sesl_panel_menu_list_width</item>
         <item name="panelMenuListTheme">@style/Theme.AppCompat.CompactMenu</item>
-        <item name="panelBackground">@drawable/abc_menu_hardkey_panel_mtrl_mult</item>
-        <item name="android:panelBackground">@android:color/transparent</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
+        <item name="panelBackground">?android:attr/panelBackground</item>
+        <item name="android:panelBackground">?android:attr/colorBackground</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/sesl_list_selector_dark</item>
 
         <!-- List attributes -->
         <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="textAppearanceListItemSmall">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="textAppearanceListItemSecondary">@style/TextAppearance.AppCompat.Body1</item>
-        <item name="listPreferredItemHeight">@dimen/abc_list_item_height_material</item>
-        <item name="listPreferredItemHeightSmall">@dimen/abc_list_item_height_small_material</item>
-        <item name="listPreferredItemHeightLarge">@dimen/abc_list_item_height_large_material</item>
-        <item name="listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingStart">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingEnd">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:listPreferredItemHeight">?attr/listPreferredItemHeight</item>
+        <item name="android:listPreferredItemHeightSmall">?attr/listPreferredItemHeightSmall</item>
+        <item name="android:listPreferredItemHeightLarge">?attr/listPreferredItemHeightLarge</item>
+        <item name="listPreferredItemHeight">@dimen/sesl_list_preferred_item_height</item>
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemHeightLarge">80dp</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="android:listPreferredItemPaddingStart">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="android:listPreferredItemPaddingEnd">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_list_item_padding_horizontal</item>
+
+        <item name="android:absListViewStyle">@android:style/Widget.AbsListView</item>
+
+        <!-- ProgressBar styles -->
+        <item name="android:progressBarStyle">@style/Widget.AppCompat.ProgressBar</item>
+        <item name="android:progressBarStyleInverse">@style/Widget.AppCompat.ProgressBar.Inverse</item>
+        <item name="android:progressBarStyleHorizontal">@style/Widget.AppCompat.ProgressBar.Horizontal</item>
+        <item name="android:progressBarStyleSmall">@style/Widget.AppCompat.ProgressBar.Small</item>
+        <item name="android:progressBarStyleSmallTitle">@style/Widget.AppCompat.ProgressBar.Small.Title</item>
+        <item name="android:progressBarStyleSmallInverse">@style/Widget.AppCompat.ProgressBar.Small.Inverse</item>
+        <item name="android:progressBarStyleLarge">@style/Widget.AppCompat.ProgressBar.Large</item>
+        <item name="android:progressBarStyleLargeInverse">@style/Widget.AppCompat.ProgressBar.Large.Inverse</item>
+
+        <item name="progressNormalColor">@color/sesl_progress_control_color_normal_dark</item>
+        <item name="progressActivatedColor">@color/sesl_progress_control_color_activated_dark</item>
+        <item name="progressCircleDotColor1">@color/sesl_loading_progress_color1</item>
+        <item name="progressCircleDotColor2">@color/sesl_loading_progress_color2</item>
 
         <!-- Spinner styles -->
         <item name="spinnerStyle">@style/Widget.AppCompat.Spinner</item>
@@ -253,10 +247,12 @@
 
         <!-- Required for use of support_simple_spinner_dropdown_item.xml -->
         <item name="spinnerDropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-        <item name="dropdownListPreferredItemHeight">?attr/listPreferredItemHeightSmall</item>
+        <item name="spinnerDropdownTextColor">@color/sesl_spinner_dropdown_text_color_dark</item>
+        <item name="dropdownListPreferredItemHeight">@dimen/sesl_popup_menu_item_min_height</item>
 
         <!-- Popup Menu styles -->
         <item name="popupMenuStyle">@style/Widget.AppCompat.PopupMenu</item>
+        <item name="popupWindowStyle">@style/Widget.AppCompat.PopupWindow</item>
         <item name="textAppearanceLargePopupMenu">@style/TextAppearance.AppCompat.Widget.PopupMenu.Large</item>
         <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.AppCompat.Widget.PopupMenu.Small</item>
         <item name="textAppearancePopupMenuHeader">@style/TextAppearance.AppCompat.Widget.PopupMenu.Header</item>
@@ -266,8 +262,11 @@
 
         <!-- SearchView attributes -->
         <item name="searchViewStyle">@style/Widget.AppCompat.SearchView</item>
-        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-        <item name="textColorSearchUrl">@color/abc_search_url_text</item>
+        <item name="searchViewIconColor">@color/sesl_search_view_icon_color_dark</item>
+        <item name="searchViewTextColor">@color/sesl_search_view_text_color_dark</item>
+        <item name="searchViewHintTextColor">@color/sesl_search_view_hint_text_color_dark</item>
+        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.Light.DropDownItem.Spinner</item>
+        <item name="textColorSearchUrl">@color/sesl_search_url_text</item>
         <item name="textAppearanceSearchResultTitle">@style/TextAppearance.AppCompat.SearchResult.Title</item>
         <item name="textAppearanceSearchResultSubtitle">@style/TextAppearance.AppCompat.SearchResult.Subtitle</item>
 
@@ -279,29 +278,31 @@
         <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
 
         <item name="editTextStyle">@style/Widget.AppCompat.EditText</item>
-        <item name="editTextBackground">@drawable/abc_edit_text_material</item>
+        <item name="editTextBackground">@drawable/sesl_edit_text_background_dark</item>
         <item name="editTextColor">?android:attr/textColorPrimary</item>
         <item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.AutoCompleteTextView</item>
-        <item name="android:textViewStyle">@style/Widget.AppCompat.TextView</item>
 
         <!-- Color palette -->
-        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
-        <item name="colorPrimary">@color/primary_material_dark</item>
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_dark</item>
+        <item name="colorPrimary">@color/sesl_primary_color_dark</item>
         <item name="colorAccent">@color/accent_material_dark</item>
 
-        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivated">?attr/colorAccent</item>
-        <item name="colorControlHighlight">@color/ripple_material_dark</item>
-        <item name="colorButtonNormal">@color/button_material_dark</item>
-        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
+        <item name="colorControlNormal">@color/sesl_control_normal_color_light</item>
+        <item name="colorControlActivated">@color/sesl_primary_dark_color_dark</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_dark</item>
+        <item name="colorButtonNormal">@color/sesl_btn_default_color_dark</item>
+        <item name="colorSwitchThumbNormal">@color/sesl_black</item>
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
 
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
 
-        <item name="checkedTextViewStyle">?android:attr/checkedTextViewStyle</item>
         <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
         <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
         <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="switchDividerColor">@color/sesl_switch_divider_color_dark</item>
+        <item name="switchOffStrokeColor">@color/sesl_switch_thumb_off_stroke_color_dark</item>
+
+        <item name="seslSwitchBarStyle">@style/Widget.AppCompat.SeslSwitchBar</item>
 
         <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
         <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
@@ -311,25 +312,27 @@
         <!-- Button styles -->
         <item name="buttonStyle">@style/Widget.AppCompat.Button</item>
         <item name="buttonStyleSmall">@style/Widget.AppCompat.Button.Small</item>
+        <item name="buttonCornerRadius">@dimen/sesl_button_corner_radius</item>
         <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Widget.Button</item>
 
         <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton</item>
 
         <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar</item>
         <item name="buttonBarButtonStyle">@style/Widget.AppCompat.Button.ButtonBar.AlertDialog</item>
-        <item name="buttonBarPositiveButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="buttonBarNeutralButtonStyle">?attr/buttonBarButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonColor">@color/sesl_dialog_button_red_text_dark</item>
 
         <!-- Dialog attributes -->
         <item name="dialogTheme">@style/ThemeOverlay.AppCompat.Dialog</item>
-        <item name="dialogPreferredPadding">@dimen/abc_dialog_padding_material</item>
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
         <item name="dialogCornerRadius">@dimen/abc_dialog_corner_radius_material</item>
 
         <item name="alertDialogTheme">@style/ThemeOverlay.AppCompat.Dialog.Alert</item>
         <item name="alertDialogStyle">@style/AlertDialog.AppCompat</item>
         <item name="alertDialogCenterButtons">false</item>
-        <item name="textColorAlertDialogListItem">@color/abc_primary_text_material_dark</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_dark</item>
         <item name="listDividerAlertDialog">@null</item>
 
         <!-- Define these here; ContextThemeWrappers around themes that define them should
@@ -340,11 +343,43 @@
         <item name="windowFixedHeightMinor">@null</item>
 
         <!-- Tooltip attributes -->
-        <item name="tooltipFrameBackground">@drawable/tooltip_frame_light</item>
-        <item name="tooltipForegroundColor">@color/foreground_material_light</item>
+        <item name="tooltipFrameBackground">@drawable/sesl_tooltip_background_dark</item>
+        <item name="tooltipForegroundColor">@color/sesl_tooltip_foreground_dark</item>
 
-        <item name="colorError">@color/error_color_material_dark</item>
+        <item name="colorError">@color/sesl_error_color</item>
+
+        <item name="roundedCornerColor">@color/sesl_round_and_bgcolor_dark</item>
+
+        <item name="android:listDivider">@drawable/sesl_list_divider_dark</item>
+        <item name="listDividerColor">@color/sesl_list_divider_color_dark</item>
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.AppCompat.TextView.ListSeparator</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/sesl_list_choice_btn_radio</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/sesl_list_choice_btn_check</item>
+
+        <item name="android:datePickerStyle">@android:style/Widget.Material.DatePicker</item>
+
+        <item name="goToTopStyle">@drawable/sesl_list_go_to_top_dark</item>
+        <item name="dragBlockImage">@drawable/sesl_pen_block_selection</item>
     </style>
+
+    <style name="Base.V21.Theme.AppCompat" parent="Base.V7.Theme.AppCompat">
+        <item name="android:colorPrimary">?attr/colorPrimary</item>
+        <item name="android:colorPrimaryDark">?attr/colorPrimaryDark</item>
+        <item name="android:colorAccent">?attr/colorAccent</item>
+        <item name="android:colorControlNormal">?attr/colorControlNormal</item>
+        <item name="android:colorControlActivated">?attr/colorControlActivated</item>
+        <item name="android:colorControlHighlight">?attr/colorControlHighlight</item>
+        <item name="android:colorButtonNormal">?attr/colorButtonNormal</item>
+        <item name="android:ambientShadowAlpha">@dimen/sesl_ambient_shadow_alpha_dark</item>
+        <item name="android:spotShadowAlpha">@dimen/sesl_spot_shadow_alpha_dark</item>
+    </style>
+
+    <style name="Base.V22.Theme.AppCompat" parent="Base.V21.Theme.AppCompat">
+        <item name="android:actionModeShareDrawable">?attr/actionModeShareDrawable</item>
+    </style>
+
+    <style name="Base.V23.Theme.AppCompat" parent="Base.V22.Theme.AppCompat" />
 
     <!-- Base platform-dependent theme providing an action bar in a light-themed activity. -->
     <style name="Base.V7.Theme.AppCompat.Light" parent="Platform.AppCompat.Light">
@@ -354,18 +389,33 @@
         <item name="windowActionModeOverlay">false</item>
         <item name="actionBarPopupTheme">@null</item>
 
-        <item name="colorBackgroundFloating">@color/background_floating_material_light</item>
+        <item name="colorBackgroundFloating">@color/sesl_background_floating_light</item>
+
+        <item name="android:colorEdgeEffect">@color/sesl_edge_effect_device_default_light</item>
 
         <!-- Used by MediaRouter -->
         <item name="isLightTheme">true</item>
 
-        <item name="selectableItemBackground">@drawable/abc_item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/sesl_action_bar_item_background</item>
         <item name="selectableItemBackgroundBorderless">?attr/selectableItemBackground</item>
-        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_material</item>
+        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Light.Button.Borderless</item>
+        <item name="homeAsUpIndicator">@drawable/sesl_ic_ab_back_light</item>
 
-        <item name="dividerVertical">@drawable/abc_list_divider_mtrl_alpha</item>
-        <item name="dividerHorizontal">@drawable/abc_list_divider_mtrl_alpha</item>
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/sesl_primary_text_light</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_light</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_dark</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
+
+        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
+        <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
+
+        <item name="dividerVertical">?android:attr/dividerVertical</item>
+        <item name="dividerHorizontal">?android:attr/dividerHorizontal</item>
+
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_scrollbar_handle_light</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_scrollbar_handle_light</item>
 
         <!-- Action Bar Styles -->
         <item name="actionBarTabStyle">@style/Widget.AppCompat.Light.ActionBar.TabView</item>
@@ -374,136 +424,168 @@
         <item name="actionButtonStyle">@style/Widget.AppCompat.Light.ActionButton</item>
         <item name="actionOverflowButtonStyle">@style/Widget.AppCompat.Light.ActionButton.Overflow</item>
         <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
-        <item name="actionBarStyle">@style/Widget.AppCompat.Light.ActionBar.Solid</item>
+        <item name="actionOverflowBottomMenuStyle">@style/Widget.AppCompat.Light.BottomPopupMenu.Overflow</item>
+        <item name="actionBarStyle">@style/Widget.AppCompat.Light.ActionBar</item>
         <item name="actionBarSplitStyle">?attr/actionBarStyle</item>
         <item name="actionBarWidgetTheme">@null</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
-        <item name="actionBarSize">@dimen/abc_action_bar_default_height_material</item>
-        <item name="actionBarDivider">?attr/dividerVertical</item>
+        <item name="actionBarTheme">@null</item>
+        <item name="actionBarSize">@dimen/sesl_action_bar_default_height</item>
+        <item name="actionBarDivider">@null</item>
         <item name="actionBarItemBackground">?attr/selectableItemBackgroundBorderless</item>
         <item name="actionMenuTextAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Menu</item>
-        <item name="actionMenuTextColor">?android:attr/textColorPrimaryDisableOnly</item>
+        <item name="actionMenuTextColor">@color/sesl_action_menu_text_light</item>
 
         <!-- Action Mode -->
-        <item name="actionModeTheme">?attr/actionBarTheme</item>
         <item name="actionModeStyle">@style/Widget.AppCompat.ActionMode</item>
-        <item name="actionModeBackground">@drawable/abc_cab_background_top_material</item>
+        <item name="actionModeBackground">@drawable/sesl_action_bar_background_light</item>
         <item name="actionModeSplitBackground">?attr/colorPrimaryDark</item>
         <item name="actionModeCloseContentDescription">@string/abc_action_mode_done</item>
-        <item name="actionModeCloseDrawable">@drawable/abc_ic_ab_back_material</item>
-        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.ActionButton.CloseMode</item>
+        <item name="actionModeCloseDrawable">@drawable/sesl_ic_cab_done</item>
+        <item name="actionModeCloseButtonStyle">@style/Widget.AppCompat.Light.ActionButton.CloseMode</item>
 
-        <item name="actionModeCutDrawable">@drawable/abc_ic_menu_cut_mtrl_alpha</item>
-        <item name="actionModeCopyDrawable">@drawable/abc_ic_menu_copy_mtrl_am_alpha</item>
-        <item name="actionModePasteDrawable">@drawable/abc_ic_menu_paste_mtrl_am_alpha</item>
-        <item name="actionModeSelectAllDrawable">@drawable/abc_ic_menu_selectall_mtrl_alpha</item>
-        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
+        <item name="actionModeCutDrawable">@drawable/sesl_ic_menu_cut_light</item>
+        <item name="actionModeCopyDrawable">@drawable/sesl_ic_menu_copy_light</item>
+        <item name="actionModePasteDrawable">@drawable/sesl_ic_menu_paste_light</item>
+        <item name="actionModeSelectAllDrawable">@drawable/sesl_ic_menu_selectall_light</item>
+        <item name="actionModeShareDrawable">@drawable/sesl_ic_menu_share_light</item>
 
         <!-- Dropdown Spinner Attributes -->
         <item name="actionDropDownStyle">@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar</item>
 
         <!-- Panel attributes -->
-        <item name="panelMenuListWidth">@dimen/abc_panel_menu_list_width</item>
+        <item name="panelMenuListWidth">@dimen/sesl_panel_menu_list_width</item>
         <item name="panelMenuListTheme">@style/Theme.AppCompat.CompactMenu</item>
-        <item name="panelBackground">@drawable/abc_menu_hardkey_panel_mtrl_mult</item>
-        <item name="android:panelBackground">@android:color/transparent</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_light</item>
+        <item name="panelBackground">?android:attr/panelBackground</item>
+        <item name="android:panelBackground">?android:attr/colorBackground</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/sesl_list_selector_light</item>
 
         <!-- List attributes -->
         <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="textAppearanceListItemSmall">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="textAppearanceListItemSecondary">@style/TextAppearance.AppCompat.Body1</item>
-        <item name="listPreferredItemHeight">@dimen/abc_list_item_height_material</item>
-        <item name="listPreferredItemHeightSmall">@dimen/abc_list_item_height_small_material</item>
-        <item name="listPreferredItemHeightLarge">@dimen/abc_list_item_height_large_material</item>
-        <item name="listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingStart">@dimen/abc_list_item_padding_horizontal_material</item>
-        <item name="listPreferredItemPaddingEnd">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:listPreferredItemHeight">?attr/listPreferredItemHeight</item>
+        <item name="android:listPreferredItemHeightSmall">?attr/listPreferredItemHeightSmall</item>
+        <item name="android:listPreferredItemHeightLarge">?attr/listPreferredItemHeightLarge</item>
+        <item name="listPreferredItemHeight">@dimen/sesl_list_preferred_item_height</item>
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemHeightLarge">80dp</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="android:listPreferredItemPaddingStart">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="android:listPreferredItemPaddingEnd">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_list_item_padding_horizontal</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_list_item_padding_horizontal</item>
+
+        <item name="android:absListViewStyle">@android:style/Widget.AbsListView</item>
+
+        <!-- ProgressBar styles -->
+        <item name="android:progressBarStyle">@style/Widget.AppCompat.Light.ProgressBar</item>
+        <item name="android:progressBarStyleInverse">@style/Widget.AppCompat.Light.ProgressBar.Inverse</item>
+        <item name="android:progressBarStyleHorizontal">@style/Widget.AppCompat.Light.ProgressBar.Horizontal</item>
+        <item name="android:progressBarStyleSmall">@style/Widget.AppCompat.Light.ProgressBar.Small</item>
+        <item name="android:progressBarStyleSmallTitle">@style/Widget.AppCompat.Light.ProgressBar.Small.Title</item>
+        <item name="android:progressBarStyleSmallInverse">@style/Widget.AppCompat.Light.ProgressBar.Small.Inverse</item>
+        <item name="android:progressBarStyleLarge">@style/Widget.AppCompat.Light.ProgressBar.Large</item>
+        <item name="android:progressBarStyleLargeInverse">@style/Widget.AppCompat.Light.ProgressBar.Large.Inverse</item>
+
+        <item name="progressNormalColor">@color/sesl_progress_control_color_normal_light</item>
+        <item name="progressActivatedColor">@color/sesl_progress_control_color_activated_light</item>
+        <item name="progressCircleDotColor1">@color/sesl_loading_progress_color1</item>
+        <item name="progressCircleDotColor2">@color/sesl_loading_progress_color2</item>
 
         <!-- Spinner styles -->
-        <item name="spinnerStyle">@style/Widget.AppCompat.Spinner</item>
-        <item name="android:spinnerItemStyle">@style/Widget.AppCompat.TextView.SpinnerItem</item>
-        <item name="android:dropDownListViewStyle">@style/Widget.AppCompat.ListView.DropDown</item>
+        <item name="spinnerStyle">@style/Widget.AppCompat.Light.Spinner</item>
+        <item name="android:spinnerItemStyle">@style/Widget.AppCompat.Light.TextView.SpinnerItem</item>
+        <item name="android:dropDownListViewStyle">@style/Widget.AppCompat.Light.ListView.DropDown</item>
 
         <!-- Required for use of support_simple_spinner_dropdown_item.xml -->
         <item name="spinnerDropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-        <item name="dropdownListPreferredItemHeight">?attr/listPreferredItemHeightSmall</item>
+        <item name="spinnerDropdownTextColor">@color/sesl_spinner_dropdown_text_color_light</item>
+        <item name="dropdownListPreferredItemHeight">@dimen/sesl_popup_menu_item_min_height</item>
 
         <!-- Popup Menu styles -->
         <item name="popupMenuStyle">@style/Widget.AppCompat.Light.PopupMenu</item>
+        <item name="popupWindowStyle">@style/Widget.AppCompat.Light.PopupWindow</item>
         <item name="textAppearanceLargePopupMenu">@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large</item>
         <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small</item>
-        <item name="textAppearancePopupMenuHeader">@style/TextAppearance.AppCompat.Widget.PopupMenu.Header</item>
-        <item name="listPopupWindowStyle">@style/Widget.AppCompat.ListPopupWindow</item>
+        <item name="textAppearancePopupMenuHeader">@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Header</item>
+        <item name="listPopupWindowStyle">@style/Widget.AppCompat.Light.ListPopupWindow</item>
         <item name="dropDownListViewStyle">?android:attr/dropDownListViewStyle</item>
         <item name="listMenuViewStyle">@style/Widget.AppCompat.ListMenuView</item>
 
         <!-- SearchView attributes -->
         <item name="searchViewStyle">@style/Widget.AppCompat.Light.SearchView</item>
-        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-        <item name="textColorSearchUrl">@color/abc_search_url_text</item>
-        <item name="textAppearanceSearchResultTitle">@style/TextAppearance.AppCompat.SearchResult.Title</item>
-        <item name="textAppearanceSearchResultSubtitle">@style/TextAppearance.AppCompat.SearchResult.Subtitle</item>
+        <item name="searchViewIconColor">@color/sesl_search_view_icon_color</item>
+        <item name="searchViewTextColor">@color/sesl_search_view_text_color</item>
+        <item name="searchViewHintTextColor">@color/sesl_search_view_hint_text_color</item>
+        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.Light.DropDownItem.Spinner</item>
+        <item name="textColorSearchUrl">@color/sesl_search_url_text</item>
+        <item name="textAppearanceSearchResultTitle">@style/TextAppearance.AppCompat.Light.SearchResult.Title</item>
+        <item name="textAppearanceSearchResultSubtitle">@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle</item>
 
         <!-- ShareActionProvider attributes -->
         <item name="activityChooserViewStyle">@style/Widget.AppCompat.ActivityChooserView</item>
 
         <!-- Toolbar styles -->
-        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Light.Toolbar</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Light.Toolbar.Button.Navigation</item>
 
-        <item name="editTextStyle">@style/Widget.AppCompat.EditText</item>
-        <item name="editTextBackground">@drawable/abc_edit_text_material</item>
+        <item name="editTextStyle">@style/Widget.AppCompat.Light.EditText</item>
+        <item name="editTextBackground">@drawable/sesl_edit_text_background_light</item>
         <item name="editTextColor">?android:attr/textColorPrimary</item>
-        <item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.AutoCompleteTextView</item>
-        <item name="android:textViewStyle">@style/Widget.AppCompat.TextView</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.Light.AutoCompleteTextView</item>
 
         <!-- Color palette -->
-        <item name="colorPrimaryDark">@color/primary_dark_material_light</item>
-        <item name="colorPrimary">@color/primary_material_light</item>
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_light</item>
+        <item name="colorPrimary">@color/sesl_primary_color_light</item>
         <item name="colorAccent">@color/accent_material_light</item>
 
-        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorControlActivated">?attr/colorAccent</item>
-        <item name="colorControlHighlight">@color/ripple_material_light</item>
-        <item name="colorButtonNormal">@color/button_material_light</item>
-        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_light</item>
+        <item name="colorControlNormal">@color/sesl_control_normal_color_light</item>
+        <item name="colorControlActivated">@color/sesl_primary_dark_color_light</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_light</item>
+        <item name="colorButtonNormal">@color/sesl_btn_default_color_light</item>
+        <item name="colorSwitchThumbNormal">@color/sesl_white</item>
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
 
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
 
-        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
-        <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
-        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="checkboxStyle">@style/Widget.AppCompat.Light.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.AppCompat.Light.CompoundButton.RadioButton</item>
+        <item name="switchStyle">@style/Widget.AppCompat.Light.CompoundButton.Switch</item>
+        <item name="switchDividerColor">@color/sesl_switch_divider_color_light</item>
+        <item name="switchOffStrokeColor">@color/sesl_switch_thumb_off_stroke_color</item>
+
+        <item name="seslSwitchBarStyle">@style/Widget.AppCompat.Light.SeslSwitchBar</item>
 
         <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
         <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
         <item name="ratingBarStyleSmall">@style/Widget.AppCompat.RatingBar.Small</item>
-        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar</item>
+        <item name="seekBarStyle">@style/Widget.AppCompat.Light.SeekBar</item>
 
         <!-- Button styles -->
-        <item name="buttonStyle">@style/Widget.AppCompat.Button</item>
-        <item name="buttonStyleSmall">@style/Widget.AppCompat.Button.Small</item>
-        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Widget.Button</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Light.Button</item>
+        <item name="buttonStyleSmall">@style/Widget.AppCompat.Light.Button.Small</item>
+        <item name="buttonCornerRadius">@dimen/sesl_button_corner_radius</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Widget.Light.Button</item>
 
         <item name="imageButtonStyle">@style/Widget.AppCompat.ImageButton</item>
 
-        <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar</item>
-        <item name="buttonBarButtonStyle">@style/Widget.AppCompat.Button.ButtonBar.AlertDialog</item>
-        <item name="buttonBarPositiveButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">?attr/buttonBarButtonStyle</item>
-        <item name="buttonBarNeutralButtonStyle">?attr/buttonBarButtonStyle</item>
+        <item name="buttonBarStyle">@style/Widget.AppCompat.Light.ButtonBar</item>
+        <item name="buttonBarButtonStyle">@style/Widget.AppCompat.Light.Button.ButtonBar.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonColor">@color/sesl_dialog_button_red_text_light</item>
 
         <!-- Dialog attributes -->
-        <item name="dialogTheme">@style/ThemeOverlay.AppCompat.Dialog</item>
-        <item name="dialogPreferredPadding">@dimen/abc_dialog_padding_material</item>
+        <item name="dialogTheme">@style/ThemeOverlay.AppCompat.Light.Dialog</item>
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
         <item name="dialogCornerRadius">@dimen/abc_dialog_corner_radius_material</item>
 
-        <item name="alertDialogTheme">@style/ThemeOverlay.AppCompat.Dialog.Alert</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.AppCompat.Light.Dialog.Alert</item>
         <item name="alertDialogStyle">@style/AlertDialog.AppCompat.Light</item>
         <item name="alertDialogCenterButtons">false</item>
-        <item name="textColorAlertDialogListItem">@color/abc_primary_text_material_light</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_light</item>
         <item name="listDividerAlertDialog">@null</item>
 
         <!-- Define these here; ContextThemeWrappers around themes that define them should
@@ -514,26 +596,53 @@
         <item name="windowFixedHeightMinor">@null</item>
 
         <!-- Tooltip attributes -->
-        <item name="tooltipFrameBackground">@drawable/tooltip_frame_dark</item>
-        <item name="tooltipForegroundColor">@color/foreground_material_dark</item>
+        <item name="tooltipFrameBackground">@drawable/sesl_tooltip_background_light</item>
+        <item name="tooltipForegroundColor">@color/sesl_tooltip_foreground_light</item>
 
-        <item name="colorError">@color/error_color_material_light</item>
+        <item name="colorError">@color/sesl_error_color</item>
+
+        <item name="roundedCornerColor">@color/sesl_round_and_bgcolor_light</item>
+
+        <item name="android:listDivider">@drawable/sesl_list_divider_light</item>
+        <item name="listDividerColor">@color/sesl_list_divider_color_light</item>
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.AppCompat.Light.TextView.ListSeparator</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/sesl_list_choice_btn_radio</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/sesl_list_choice_btn_check</item>
+
+        <item name="android:datePickerStyle">@android:style/Widget.Material.Light.DatePicker</item>
+
+        <item name="goToTopStyle">@drawable/sesl_list_go_to_top_light</item>
+        <item name="dragBlockImage">@drawable/sesl_pen_block_selection</item>
     </style>
 
-    <style name="Base.Theme.AppCompat" parent="Base.V7.Theme.AppCompat">
+    <style name="Base.V21.Theme.AppCompat.Light" parent="Base.V7.Theme.AppCompat.Light">
+        <item name="android:colorPrimary">?attr/colorPrimary</item>
+        <item name="android:colorPrimaryDark">?attr/colorPrimaryDark</item>
+        <item name="android:colorAccent">?attr/colorAccent</item>
+        <item name="android:colorControlNormal">?attr/colorControlNormal</item>
+        <item name="android:colorControlActivated">?attr/colorControlActivated</item>
+        <item name="android:colorControlHighlight">?attr/colorControlHighlight</item>
+        <item name="android:colorButtonNormal">?attr/colorButtonNormal</item>
+        <item name="android:ambientShadowAlpha">@dimen/sesl_ambient_shadow_alpha_light</item>
+        <item name="android:spotShadowAlpha">@dimen/sesl_spot_shadow_alpha_light</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Light" parent="Base.V7.Theme.AppCompat.Light">
+    <style name="Base.V22.Theme.AppCompat.Light" parent="Base.V21.Theme.AppCompat.Light">
+        <item name="android:actionModeShareDrawable">?attr/actionModeShareDrawable</item>
     </style>
+
+    <style name="Base.V23.Theme.AppCompat.Light" parent="Base.V22.Theme.AppCompat.Light" />
+
+
+    <style name="Base.Theme.AppCompat" parent="Base.V23.Theme.AppCompat" />
+
+    <style name="Base.Theme.AppCompat.Light" parent="Base.V23.Theme.AppCompat.Light" />
 
     <style name="Base.Theme.AppCompat.Light.DarkActionBar" parent="Base.Theme.AppCompat.Light">
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="actionModeTheme">?attr/actionBarTheme</item>
-
-        <!-- Panel attributes -->
-        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
 
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
         <item name="colorPrimary">@color/primary_material_dark</item>
@@ -547,94 +656,154 @@
     </style>
 
     <style name="Base.V7.Theme.AppCompat.Dialog" parent="Base.Theme.AppCompat">
-        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
+        <item name="android:colorBackground">@color/sesl_dialog_window_background_color_material_dark</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:backgroundDimAmount">0.65</item>
+        <item name="android:disabledAlpha">0.4</item>
+
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_dark</item>
+        <item name="colorPrimary">@color/sesl_primary_color_dark</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_dark</item>
+
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Dialog</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="textAppearanceListItem">@style/Base.TextAppearance.AppCompat.Dialog.List</item>
+        <item name="textAppearanceListItemSecondary">@style/Base.TextAppearance.AppCompat.Dialog.List.Secondary</item>
+        <item name="textAppearanceListItemSmall">@style/Base.TextAppearance.AppCompat.Dialog.List</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_dark</item>
 
         <item name="android:windowFrame">@null</item>
         <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat</item>
-        <item name="android:windowTitleBackgroundStyle">@style/Base.DialogWindowTitleBackground.AppCompat</item>
-        <item name="android:windowBackground">@drawable/abc_dialog_material_background</item>
+        <item name="android:windowBackground">@drawable/sesl_dialog_background</item>
+        <item name="android:windowElevation">@dimen/sesl_dialog_window_elevation</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
 
-        <item name="windowActionBar">false</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_dialog_scrollbar_handle_dark</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_dialog_scrollbar_handle_dark</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="listPreferredItemPaddingLeft">24dip</item>
-        <item name="listPreferredItemPaddingRight">24dip</item>
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
 
-        <item name="android:listDivider">@null</item>
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_select_dialog_padding_start</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_select_dialog_padding_end</item>
 
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/sesl_config_closeDialogWhenTouchOutside</item>
+
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_dark</item>
     </style>
+
+    <style name="Base.V21.Theme.AppCompat.Dialog" parent="Base.V7.Theme.AppCompat.Dialog" />
 
     <style name="Base.V7.Theme.AppCompat.Light.Dialog" parent="Base.Theme.AppCompat.Light">
-        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
+        <item name="android:colorBackground">@color/sesl_dialog_window_background_color_material_light</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:backgroundDimAmount">0.18</item>
+        <item name="android:disabledAlpha">0.4</item>
+
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_light</item>
+        <item name="colorPrimary">@color/sesl_primary_color_light</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_light</item>
+
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Light.Dialog</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="textAppearanceListItem">@style/Base.TextAppearance.AppCompat.Light.Dialog.List</item>
+        <item name="textAppearanceListItemSecondary">@style/Base.TextAppearance.AppCompat.Light.Dialog.List.Secondary</item>
+        <item name="textAppearanceListItemSmall">@style/Base.TextAppearance.AppCompat.Light.Dialog.List</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_light</item>
 
         <item name="android:windowFrame">@null</item>
-        <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat</item>
-        <item name="android:windowTitleBackgroundStyle">@style/Base.DialogWindowTitleBackground.AppCompat</item>
-        <item name="android:windowBackground">@drawable/abc_dialog_material_background</item>
+        <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat.Light</item>
+        <item name="android:windowBackground">@drawable/sesl_dialog_background</item>
+        <item name="android:windowElevation">@dimen/sesl_dialog_window_elevation</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
 
-        <item name="windowActionBar">false</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_dialog_scrollbar_handle_light</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_dialog_scrollbar_handle_light</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="listPreferredItemPaddingLeft">24dip</item>
-        <item name="listPreferredItemPaddingRight">24dip</item>
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
 
-        <item name="android:listDivider">@null</item>
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_select_dialog_padding_start</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_select_dialog_padding_end</item>
 
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/sesl_config_closeDialogWhenTouchOutside</item>
+
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_light</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Dialog" parent="Base.V7.Theme.AppCompat.Dialog" />
-    <style name="Base.Theme.AppCompat.Light.Dialog" parent="Base.V7.Theme.AppCompat.Light.Dialog" />
+    <style name="Base.V21.Theme.AppCompat.Light.Dialog" parent="Base.V7.Theme.AppCompat.Light.Dialog" />
 
-    <style name="Base.Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <style name="Base.Theme.AppCompat.Dialog" parent="Base.V21.Theme.AppCompat.Dialog" />
+    <style name="Base.Theme.AppCompat.Light.Dialog" parent="Base.V21.Theme.AppCompat.Light.Dialog" />
+
+    <style name="Base.Theme.AppCompat.Dialog.Alert" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <style name="Base.Theme.AppCompat.Light.Dialog.Alert" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Dialog.MinWidth">
-        <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <style name="Base.Theme.AppCompat.Dialog.MinWidth" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Light.Dialog.MinWidth">
-        <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <style name="Base.Theme.AppCompat.Light.Dialog.MinWidth" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Dialog.FixedSize">
-        <item name="windowFixedWidthMajor">@dimen/abc_dialog_fixed_width_major</item>
-        <item name="windowFixedWidthMinor">@dimen/abc_dialog_fixed_width_minor</item>
-        <item name="windowFixedHeightMajor">@dimen/abc_dialog_fixed_height_major</item>
-        <item name="windowFixedHeightMinor">@dimen/abc_dialog_fixed_height_minor</item>
+    <style name="Base.Theme.AppCompat.Dialog.FixedSize" parent="Base.Theme.AppCompat.Dialog">
+        <item name="windowFixedHeightMajor">@dimen/sesl_dialog_fixed_height_major</item>
+        <item name="windowFixedHeightMinor">@dimen/sesl_dialog_fixed_height_minor</item>
+        <item name="windowFixedWidthMajor">@dimen/sesl_dialog_fixed_width_major</item>
+        <item name="windowFixedWidthMinor">@dimen/sesl_dialog_fixed_width_minor</item>
     </style>
 
-    <style name="Base.Theme.AppCompat.Light.Dialog.FixedSize">
-        <item name="windowFixedWidthMajor">@dimen/abc_dialog_fixed_width_major</item>
-        <item name="windowFixedWidthMinor">@dimen/abc_dialog_fixed_width_minor</item>
-        <item name="windowFixedHeightMajor">@dimen/abc_dialog_fixed_height_major</item>
-        <item name="windowFixedHeightMinor">@dimen/abc_dialog_fixed_height_minor</item>
+    <style name="Base.Theme.AppCompat.Light.Dialog.FixedSize" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="windowFixedHeightMajor">@dimen/sesl_dialog_fixed_height_major</item>
+        <item name="windowFixedHeightMinor">@dimen/sesl_dialog_fixed_height_minor</item>
+        <item name="windowFixedWidthMajor">@dimen/sesl_dialog_fixed_width_major</item>
+        <item name="windowFixedWidthMinor">@dimen/sesl_dialog_fixed_width_minor</item>
     </style>
 
     <!-- We're not large, so redirect to Theme.AppCompat -->
@@ -643,137 +812,187 @@
     <style name="Base.Theme.AppCompat.Light.DialogWhenLarge" parent="Theme.AppCompat.Light" />
 
     <!-- Overlay themes -->
-    <style name="Platform.ThemeOverlay.AppCompat" parent="" />
+    <style name="Platform.ThemeOverlay.AppCompat" parent="">
+        <!-- Copy our color theme attributes to the framework -->
+        <item name="android:colorPrimary">?attr/colorPrimary</item>
+        <item name="android:colorPrimaryDark">?attr/colorPrimaryDark</item>
+        <item name="android:colorAccent">?attr/colorAccent</item>
+        <item name="android:colorControlNormal">?attr/colorControlNormal</item>
+        <item name="android:colorControlActivated">?attr/colorControlActivated</item>
+        <item name="android:colorControlHighlight">?attr/colorControlHighlight</item>
+        <item name="android:colorButtonNormal">?attr/colorButtonNormal</item>
+    </style>
 
     <style name="Base.ThemeOverlay.AppCompat" parent="Platform.ThemeOverlay.AppCompat" />
 
-    <style name="Platform.ThemeOverlay.AppCompat.Dark">
-        <!-- Action Bar styles -->
-        <item name="actionBarItemBackground">@drawable/abc_item_background_holo_dark</item>
-        <item name="actionDropDownStyle">@style/Widget.AppCompat.Spinner.DropDown.ActionBar</item>
-        <item name="selectableItemBackground">@drawable/abc_item_background_holo_dark</item>
+    <style name="Platform.ThemeOverlay.AppCompat.Dark" parent="Platform.ThemeOverlay.AppCompat" />
 
-        <!-- SearchView styles -->
-        <item name="android:autoCompleteTextViewStyle">@style/Widget.AppCompat.AutoCompleteTextView</item>
-        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-    </style>
-
-    <style name="Platform.ThemeOverlay.AppCompat.Light">
-        <item name="actionBarItemBackground">@drawable/abc_item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar</item>
-        <item name="selectableItemBackground">@drawable/abc_item_background_holo_light</item>
-
-        <!-- SearchView attributes -->
-        <item name="android:autoCompleteTextViewStyle">@style/Widget.AppCompat.Light.AutoCompleteTextView</item>
-        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
-    </style>
+    <style name="Platform.ThemeOverlay.AppCompat.Light" parent="Platform.ThemeOverlay.AppCompat" />
 
     <style name="Base.ThemeOverlay.AppCompat.Light" parent="Platform.ThemeOverlay.AppCompat.Light">
-        <item name="android:windowBackground">@color/background_material_light</item>
         <item name="android:colorForeground">@color/foreground_material_light</item>
         <item name="android:colorForegroundInverse">@color/foreground_material_dark</item>
-        <item name="android:colorBackground">@color/background_material_light</item>
-        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_light</item>
-        <item name="colorBackgroundFloating">@color/background_floating_material_light</item>
+        <item name="android:colorBackground">@color/sesl_background_color_light</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
 
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_dark</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorTertiary">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_light</item>
-        <item name="android:textColorPrimaryInverseDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
-        <item name="android:textColorHint">@color/abc_hint_foreground_material_light</item>
-        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_dark</item>
-        <item name="android:textColorHighlight">@color/highlighted_text_material_light</item>
+        <item name="android:textColorPrimary">@color/sesl_primary_text_light</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_light</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_dark</item>
+        <item name="android:textColorHighlight">@color/sesl_highlighted_text_color_light</item>
 
-        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorControlHighlight">@color/ripple_material_light</item>
-        <item name="colorButtonNormal">@color/button_material_light</item>
-        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_light</item>
+        <item name="colorControlNormal">@color/sesl_control_normal_color_light</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_light</item>
 
         <!-- Used by MediaRouter -->
         <item name="isLightTheme">true</item>
     </style>
 
     <style name="Base.ThemeOverlay.AppCompat.Dark" parent="Platform.ThemeOverlay.AppCompat.Dark">
-        <item name="android:windowBackground">@color/background_material_dark</item>
         <item name="android:colorForeground">@color/foreground_material_dark</item>
         <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
-        <item name="android:colorBackground">@color/background_material_dark</item>
-        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
-        <item name="colorBackgroundFloating">@color/background_floating_material_dark</item>
+        <item name="android:colorBackground">@color/sesl_background_color_dark</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
 
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
-        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorTertiary">@color/abc_secondary_text_material_dark</item>
-        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_light</item>
-        <item name="android:textColorHint">@color/abc_hint_foreground_material_dark</item>
-        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_light</item>
-        <item name="android:textColorHighlight">@color/highlighted_text_material_dark</item>
+        <item name="android:textColorPrimary">@color/sesl_primary_text_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/sesl_primary_text_light</item>
+        <item name="android:textColorSecondary">@color/sesl_secondary_text_dark</item>
+        <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_light</item>
+        <item name="android:textColorHighlight">@color/sesl_highlighted_text_color_dark</item>
 
-        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorControlHighlight">@color/ripple_material_dark</item>
-        <item name="colorButtonNormal">@color/button_material_dark</item>
-        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
+        <item name="colorControlNormal">@color/sesl_control_normal_color_light</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_dark</item>
 
         <!-- Used by MediaRouter -->
         <item name="isLightTheme">false</item>
     </style>
 
-    <style name="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">?android:attr/textColorPrimary</item>
-        <item name="searchViewStyle">@style/Widget.AppCompat.SearchView.ActionBar</item>
-    </style>
+    <style name="Base.ThemeOverlay.AppCompat.ActionBar" parent="Base.ThemeOverlay.AppCompat" />
 
-    <style name="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlNormal">?android:attr/textColorPrimary</item>
-        <item name="searchViewStyle">@style/Widget.AppCompat.SearchView.ActionBar</item>
-    </style>
+    <style name="Base.ThemeOverlay.AppCompat.Dark.ActionBar" parent="Base.ThemeOverlay.AppCompat.Dark" />
 
     <!-- Theme overlay that overrides window properties to display as a dialog. -->
-    <style name="Base.ThemeOverlay.AppCompat.Dialog" parent="Base.V7.ThemeOverlay.AppCompat.Dialog" />
+    <style name="Base.ThemeOverlay.AppCompat.Dialog" parent="Base.V21.ThemeOverlay.AppCompat.Dialog" />
 
-    <style name="Base.ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <style name="Base.ThemeOverlay.AppCompat.Dialog.Alert" parent="Base.ThemeOverlay.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+    </style>
+
+    <style name="Base.ThemeOverlay.AppCompat.Light.Dialog" parent="Base.V7.ThemeOverlay.AppCompat.Light.Dialog" />
+
+    <style name="Base.ThemeOverlay.AppCompat.Light.Dialog.Alert" parent="Base.ThemeOverlay.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
     </style>
 
     <!-- Theme overlay that overrides window properties to display as a dialog. -->
     <style name="Base.V7.ThemeOverlay.AppCompat.Dialog" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:colorBackground">@color/sesl_dialog_window_background_color_material_dark</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
+        <item name="android:backgroundDimAmount">0.65</item>
+        <item name="android:disabledAlpha">0.4</item>
+
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_dark</item>
+        <item name="colorPrimary">@color/sesl_primary_color_dark</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_dark</item>
+
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Dialog</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="textAppearanceListItem">@style/Base.TextAppearance.AppCompat.Dialog.List</item>
+        <item name="textAppearanceListItemSecondary">@style/Base.TextAppearance.AppCompat.Dialog.List.Secondary</item>
+        <item name="textAppearanceListItemSmall">@style/Base.TextAppearance.AppCompat.Dialog.List</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_dark</item>
 
         <item name="android:windowFrame">@null</item>
         <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat</item>
-        <item name="android:windowTitleBackgroundStyle">@style/Base.DialogWindowTitleBackground.AppCompat</item>
-        <item name="android:windowBackground">@drawable/abc_dialog_material_background</item>
+        <item name="android:windowBackground">@drawable/sesl_dialog_background</item>
+        <item name="android:windowElevation">@dimen/sesl_dialog_window_elevation</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
 
-        <item name="windowActionBar">false</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_dialog_scrollbar_handle_dark</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_dialog_scrollbar_handle_dark</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="listPreferredItemPaddingLeft">24dip</item>
-        <item name="listPreferredItemPaddingRight">24dip</item>
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
 
-        <item name="android:listDivider">@null</item>
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_select_dialog_padding_start</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_select_dialog_padding_end</item>
 
-        <item name="windowFixedWidthMajor">@null</item>
-        <item name="windowFixedWidthMinor">@null</item>
-        <item name="windowFixedHeightMajor">@null</item>
-        <item name="windowFixedHeightMinor">@null</item>
+        <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Button.Dialog</item>
+        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/sesl_config_closeDialogWhenTouchOutside</item>
 
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_dark</item>
     </style>
+
+    <style name="Base.V7.ThemeOverlay.AppCompat.Light.Dialog" parent="Base.ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/sesl_dialog_window_background_color_material_light</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:backgroundDimAmount">0.18</item>
+        <item name="android:disabledAlpha">0.4</item>
+
+        <item name="colorPrimaryDark">@color/sesl_primary_dark_color_light</item>
+        <item name="colorPrimary">@color/sesl_primary_color_light</item>
+        <item name="colorControlHighlight">@color/sesl_ripple_color_light</item>
+
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Light.Dialog</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="textAppearanceListItem">@style/Base.TextAppearance.AppCompat.Light.Dialog.List</item>
+        <item name="textAppearanceListItemSecondary">@style/Base.TextAppearance.AppCompat.Light.Dialog.List.Secondary</item>
+        <item name="textAppearanceListItemSmall">@style/Base.TextAppearance.AppCompat.Light.Dialog.List</item>
+        <item name="textColorAlertDialogListItem">@color/sesl_select_dialog_list_item_text_light</item>
+
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat.Light</item>
+        <item name="android:windowBackground">@drawable/sesl_dialog_background</item>
+        <item name="android:windowElevation">@dimen/sesl_dialog_window_elevation</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+        <item name="android:windowSoftInputMode">adjustPan</item>
+
+        <item name="android:scrollbarThumbHorizontal">@drawable/sesl_dialog_scrollbar_handle_light</item>
+        <item name="android:scrollbarThumbVertical">@drawable/sesl_dialog_scrollbar_handle_light</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="dialogPreferredPadding">@dimen/sesl_dialog_padding</item>
+
+        <item name="listPreferredItemHeightSmall">@dimen/sesl_list_preferred_item_height_small</item>
+        <item name="listPreferredItemPaddingLeft">?attr/listPreferredItemPaddingStart</item>
+        <item name="listPreferredItemPaddingRight">?attr/listPreferredItemPaddingEnd</item>
+        <item name="listPreferredItemPaddingStart">@dimen/sesl_select_dialog_padding_start</item>
+        <item name="listPreferredItemPaddingEnd">@dimen/sesl_select_dialog_padding_end</item>
+
+        <item name="buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppCompat.Light.Button.Dialog</item>
+        <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/sesl_config_closeDialogWhenTouchOutside</item>
+
+        <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_light</item>
+    </style>
+
+    <style name="Base.V21.ThemeOverlay.AppCompat.Dialog" parent="Base.V7.ThemeOverlay.AppCompat.Dialog" />
 
 </resources>

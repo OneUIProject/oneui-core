@@ -26,7 +26,7 @@
          "Theme.Base" theme. -->
 
     <!-- Empty theme used to create a no-op ContextThemeWrapper. -->
-    <style name="Theme.AppCompat.Empty" parent="" />
+    <style name="Theme.AppCompat.Empty" parent="Theme.AppCompat.DayNight.NoActionBar" />
 
     <!-- Platform-independent theme providing an action bar in a dark-themed activity. -->
     <style name="Theme.AppCompat" parent="Base.Theme.AppCompat" />
@@ -37,23 +37,19 @@
     <!-- Platform-independent theme providing an action bar in a dark-themed activity. -->
     <style name="Theme.AppCompat.Light.DarkActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
 
-    <style name="Theme.AppCompat.NoActionBar">
+    <style name="Theme.AppCompat.NoActionBar" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.AppCompat.Light.NoActionBar" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.AppCompat.DialogWhenLarge"
-           parent="Base.Theme.AppCompat.DialogWhenLarge">
-    </style>
+    <style name="Theme.AppCompat.DialogWhenLarge" parent="Base.Theme.AppCompat.DialogWhenLarge" />
 
-    <style name="Theme.AppCompat.Light.DialogWhenLarge"
-           parent="Base.Theme.AppCompat.Light.DialogWhenLarge">
-    </style>
+    <style name="Theme.AppCompat.Light.DialogWhenLarge" parent="Base.Theme.AppCompat.Light.DialogWhenLarge" />
 
     <style name="Theme.AppCompat.Dialog" parent="Base.Theme.AppCompat.Dialog" />
 
@@ -97,5 +93,7 @@
 
     <style name="ThemeOverlay.AppCompat.Dialog" parent="Base.ThemeOverlay.AppCompat.Dialog" />
     <style name="ThemeOverlay.AppCompat.Dialog.Alert" parent="Base.ThemeOverlay.AppCompat.Dialog.Alert" />
+    <style name="ThemeOverlay.AppCompat.Light.Dialog" parent="Base.ThemeOverlay.AppCompat.Light.Dialog" />
+    <style name="ThemeOverlay.AppCompat.Light.Dialog.Alert" parent="Base.ThemeOverlay.AppCompat.Light.Dialog.Alert" />
 
 </resources>

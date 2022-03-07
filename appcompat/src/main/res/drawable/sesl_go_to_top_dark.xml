@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2022 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24.0dip" android:height="24.0dip"
+    android:viewportWidth="120.0" android:viewportHeight="120.0">
+
+    <path
+        android:fillColor="@color/sesl_list_go_to_top_outer_round_dark"
+        android:pathData="M60,60m-56.1,0a56.1,56.1 0,1 1,112.2 0a56.1,56.1 0,1 1,-112.2 0" />
+
+    <path
+        android:fillColor="@color/sesl_list_go_to_top_inner_round_dark"
+        android:pathData="M60,60m-51,0a51,51 0,1 1,102 0a51,51 0,1 1,-102 0" />
+
+    <path
+        android:fillColor="@color/sesl_list_go_to_top_arrow_bottom_dark"
+        android:pathData="M60,51.462l-21.674,21.675l3.716,3.715l17.958,-17.958l17.958,17.958l3.716,-3.715z" />
+
+    <path
+        android:fillColor="@color/sesl_list_go_to_top_arrow_top_dark"
+        android:pathData="M38.912,45.148h42.176v4.686h-42.176z" />
+
+</vector>

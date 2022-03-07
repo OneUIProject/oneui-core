@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2022 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,19 +15,13 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24.0dip" android:height="24.0dip"
+    android:viewportWidth="72.0" android:viewportHeight="72.0"
+    android:tint="?attr/actionMenuTextColor">
 
-<animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:drawable="@drawable/sesl_btn_check_to_on_000" />
-    <item
-            android:state_enabled="false"
-            android:drawable="@drawable/sesl_btn_check_to_on_001" />
-    <item
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_026" />
-    <item
-            android:state_enabled="false"
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_025" />
-</animated-selector>
+    <path
+        android:fillColor="#ffffffff"
+        android:pathData="M61.125,33.75H38.25V10.875c0,-1.242 -1.008,-2.25 -2.25,-2.25s-2.25,1.008 -2.25,2.25V33.75H10.875c-1.242,0 -2.25,1.008 -2.25,2.25s1.008,2.25 2.25,2.25H33.75v22.875c0,1.242 1.008,2.25 2.25,2.25s2.25,-1.008 2.25,-2.25V38.25h22.875c1.242,0 2.25,-1.008 2.25,-2.25S62.367,33.75 61.125,33.75" />
+
+</vector>

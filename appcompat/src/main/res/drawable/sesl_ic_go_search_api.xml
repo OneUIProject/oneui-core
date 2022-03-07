@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2022 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,19 +15,14 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/sesl_action_button_icon_size" android:height="@dimen/sesl_action_button_icon_size"
+    android:viewportWidth="24.0" android:viewportHeight="24.0"
+    android:tint="?attr/searchViewIconColor">
 
-<animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:drawable="@drawable/sesl_btn_check_to_on_000" />
-    <item
-            android:state_enabled="false"
-            android:drawable="@drawable/sesl_btn_check_to_on_001" />
-    <item
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_026" />
-    <item
-            android:state_enabled="false"
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_025" />
-</animated-selector>
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M10,6l-1.4,1.4 4.599999,4.6 -4.599999,4.6 1.4,1.4 6,-6z" />
+
+</vector>

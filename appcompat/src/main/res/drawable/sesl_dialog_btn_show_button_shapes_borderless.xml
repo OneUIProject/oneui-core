@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2022 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,19 +15,16 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+       android:insetLeft="@dimen/sesl_dialog_button_show_background_inset_horizontal"
+       android:insetTop="@dimen/sesl_dialog_button_show_background_inset_vertical"
+       android:insetRight="@dimen/sesl_dialog_button_show_background_inset_horizontal"
+       android:insetBottom="@dimen/sesl_dialog_button_show_background_inset_vertical">
 
-<animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:drawable="@drawable/sesl_btn_check_to_on_000" />
-    <item
-            android:state_enabled="false"
-            android:drawable="@drawable/sesl_btn_check_to_on_001" />
-    <item
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_026" />
-    <item
-            android:state_enabled="false"
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_025" />
-</animated-selector>
+    <ripple android:color="?attr/colorControlHighlight">
+        <item
+            android:id="@android:id/mask"
+            android:drawable="@drawable/sesl_dialog_btn_show_button_shapes_ripple_shape_mask" />
+    </ripple>
+
+</inset>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2022 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,19 +15,17 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-<animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/sesl_action_bar_background_color_dark" />
+        </shape>
+    </item>
+
     <item
-            android:drawable="@drawable/sesl_btn_check_to_on_000" />
-    <item
-            android:state_enabled="false"
-            android:drawable="@drawable/sesl_btn_check_to_on_001" />
-    <item
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_026" />
-    <item
-            android:state_enabled="false"
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_025" />
-</animated-selector>
+        android:height="@dimen/sesl_action_bar_background_divider_height"
+        android:drawable="@drawable/sesl_action_bar_stacked_divider"
+        android:gravity="bottom" />
+
+</layer-list>

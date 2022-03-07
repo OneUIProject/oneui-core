@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2018 The Android Open Source Project
+  ~ Copyright 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:ignore="NewApi">
+        xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/on"
+            android:drawable="@drawable/sesl_btn_radio_to_on_000" />
+    <item
+            android:state_enabled="false"
+            android:drawable="@drawable/sesl_btn_radio_to_on_001" />
+    <item
             android:state_checked="true"
-            android:drawable="@drawable/btn_radio_on_mtrl" />
+            android:drawable="@drawable/sesl_btn_radio_to_on_026" />
     <item
-            android:id="@+id/off"
-            android:drawable="@drawable/btn_radio_off_mtrl" />
-    <transition
-            android:fromId="@+id/on"
-            android:toId="@+id/off"
-            android:drawable="@drawable/btn_radio_on_to_off_mtrl_animation" />
-    <transition
-            android:fromId="@+id/off"
-            android:toId="@+id/on"
-            android:drawable="@drawable/btn_radio_off_to_on_mtrl_animation" />
+            android:state_enabled="false"
+            android:state_checked="true"
+            android:drawable="@drawable/sesl_btn_radio_to_on_025" />
 </animated-selector>

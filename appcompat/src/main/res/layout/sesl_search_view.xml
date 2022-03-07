@@ -47,8 +47,8 @@
 
     <LinearLayout
         android:id="@+id/search_edit_frame"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         android:layoutDirection="locale">
@@ -71,7 +71,7 @@
             <ImageView
                 android:id="@+id/search_back_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="12dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/sesl_search_icon_background_borderless"

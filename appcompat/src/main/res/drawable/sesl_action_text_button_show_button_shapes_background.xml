@@ -15,19 +15,15 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-<animated-selector
-        xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <ripple
+            android:color="?attr/colorControlHighlight"
+            android:radius="24.0dip" />
+    </item>
+
     <item
-            android:drawable="@drawable/sesl_btn_check_to_on_000" />
-    <item
-            android:state_enabled="false"
-            android:drawable="@drawable/sesl_btn_check_to_on_001" />
-    <item
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_026" />
-    <item
-            android:state_enabled="false"
-            android:state_checked="true"
-            android:drawable="@drawable/sesl_btn_check_to_on_025" />
-</animated-selector>
+        android:drawable="@drawable/sesl_action_text_button_show_button_shapes_shape_mark" />
+
+</layer-list>

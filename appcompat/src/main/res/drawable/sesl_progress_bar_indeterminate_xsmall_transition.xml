@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2022 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<animated-vector android:drawable="@drawable/sesl_progress_bar_indeterminate_xsmall"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <target android:name="c2s4pg1" android:animation="@anim/sesl_xsmall_line1_group5_translatex_4" />
+    <target android:name="c2s4pg1p10" android:animation="@anim/sesl_xsmall_line1_group5_path_6" />
+    <target android:name="c2s3pg1" android:animation="@anim/sesl_xsmall_line2_group5_translatex_8" />
+    <target android:name="c2s3pg1p10" android:animation="@anim/sesl_xsmall_line2_group5_path_10" />
+    <target android:name="c2s2pg1" android:animation="@anim/sesl_xsmall_line3_group5_translatex_12" />
+    <target android:name="c2s2pg1p10" android:animation="@anim/sesl_xsmall_line3_group5_path_14" />
+    <target android:name="c2s1pg1" android:animation="@anim/sesl_xsmall_line4_group5_translatex_16" />
+</animated-vector>

@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <resources>
     <bool name="sesl_action_bar_text_item_mode">false</bool>

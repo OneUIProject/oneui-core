@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2015 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Definitions of styles to be exposed as public -->
 <resources>
@@ -33,6 +34,7 @@
     <public type="style" name="TextAppearance.AppCompat.Light.SearchResult.Title"/>
     <public type="style" name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large"/>
     <public type="style" name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small"/>
+    <public type="style" name="TextAppearance.AppCompat.Light.Widget.TextView.SpinnerItem" />
     <public type="style" name="TextAppearance.AppCompat.Medium"/>
     <public type="style" name="TextAppearance.AppCompat.Medium.Inverse"/>
     <public type="style" name="TextAppearance.AppCompat.Menu"/>
@@ -58,6 +60,7 @@
     <public type="style" name="TextAppearance.AppCompat.Widget.Button.Colored"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.Button.Inverse"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.DropDownItem"/>
+    <public type="style" name="TextAppearance.AppCompat.Widget.Light.Button"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Header"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Large"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Small"/>
@@ -92,6 +95,8 @@
     <public type="style" name="ThemeOverlay.AppCompat.Dialog"/>
     <public type="style" name="ThemeOverlay.AppCompat.Dialog.Alert"/>
     <public type="style" name="ThemeOverlay.AppCompat.Light"/>
+    <public type="style" name="ThemeOverlay.AppCompat.Light.Dialog"/>
+    <public type="style" name="ThemeOverlay.AppCompat.Light.Dialog.Alert"/>
     <public type="style" name="Widget.AppCompat.ActionBar"/>
     <public type="style" name="Widget.AppCompat.ActionBar.Solid"/>
     <public type="style" name="Widget.AppCompat.ActionBar.TabBar"/>
@@ -102,6 +107,7 @@
     <public type="style" name="Widget.AppCompat.ActionButton.Overflow"/>
     <public type="style" name="Widget.AppCompat.ActionMode"/>
     <public type="style" name="Widget.AppCompat.AutoCompleteTextView"/>
+    <public type="style" name="Widget.AppCompat.BottomPopupMenu.Overflow"/>
     <public type="style" name="Widget.AppCompat.Button"/>
     <public type="style" name="Widget.AppCompat.ButtonBar"/>
     <public type="style" name="Widget.AppCompat.ButtonBar.AlertDialog"/>
@@ -109,6 +115,8 @@
     <public type="style" name="Widget.AppCompat.Button.Borderless.Colored"/>
     <public type="style" name="Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
     <public type="style" name="Widget.AppCompat.Button.Colored"/>
+    <public type="style" name="Widget.AppCompat.Button.Custom"/>
+    <public type="style" name="Widget.AppCompat.Button.Dialog"/>
     <public type="style" name="Widget.AppCompat.Button.Small"/>
     <public type="style" name="Widget.AppCompat.CompoundButton.CheckBox"/>
     <public type="style" name="Widget.AppCompat.CompoundButton.RadioButton"/>
@@ -117,6 +125,7 @@
     <public type="style" name="Widget.AppCompat.DropDownItem.Spinner"/>
     <public type="style" name="Widget.AppCompat.EditText"/>
     <public type="style" name="Widget.AppCompat.TextView"/>
+    <public type="style" name="Widget.AppCompat.TextView.ListSeparator"/>
     <public type="style" name="Widget.AppCompat.ImageButton"/>
     <public type="style" name="Widget.AppCompat.Light.ActionBar"/>
     <public type="style" name="Widget.AppCompat.Light.ActionBar.Solid"/>
@@ -130,15 +139,53 @@
     <public type="style" name="Widget.AppCompat.Light.ActionButton"/>
     <public type="style" name="Widget.AppCompat.Light.ActionButton.CloseMode"/>
     <public type="style" name="Widget.AppCompat.Light.ActionButton.Overflow"/>
+    <public type="style" name="Widget.AppCompat.Light.ActionMode"/>
     <public type="style" name="Widget.AppCompat.Light.ActionMode.Inverse"/>
     <public type="style" name="Widget.AppCompat.Light.AutoCompleteTextView"/>
+    <public type="style" name="Widget.AppCompat.Light.BottomPopupMenu.Overflow"/>
+    <public type="style" name="Widget.AppCompat.Light.Button"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.Borderless"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.Borderless.Colored"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.ButtonBar.AlertDialog"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.Colored"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.Dialog"/>
+    <public type="style" name="Widget.AppCompat.Light.Button.Small"/>
+    <public type="style" name="Widget.AppCompat.Light.ButtonBar"/>
+    <public type="style" name="Widget.AppCompat.Light.ButtonBar.AlertDialog"/>
+    <public type="style" name="Widget.AppCompat.Light.CompoundButton.CheckBox"/>
+    <public type="style" name="Widget.AppCompat.Light.CompoundButton.RadioButton"/>
+    <public type="style" name="Widget.AppCompat.Light.CompoundButton.Switch"/>
     <public type="style" name="Widget.AppCompat.Light.DropDownItem.Spinner"/>
+    <public type="style" name="Widget.AppCompat.Light.EditText"/>
+    <public type="style" name="Widget.AppCompat.Light.ImageButton"/>
     <public type="style" name="Widget.AppCompat.Light.ListPopupWindow"/>
+    <public type="style" name="Widget.AppCompat.Light.ListView"/>
     <public type="style" name="Widget.AppCompat.Light.ListView.DropDown"/>
     <public type="style" name="Widget.AppCompat.Light.PopupMenu"/>
     <public type="style" name="Widget.AppCompat.Light.PopupMenu.Overflow"/>
+    <public type="style" name="Widget.AppCompat.Light.PopupWindow"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Circle"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Horizontal"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Inverse"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Large"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Large.Inverse"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Small"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Small.Inverse"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Small.Title"/>
+    <public type="style" name="Widget.AppCompat.Light.ProgressBar.Xlarge"/>
     <public type="style" name="Widget.AppCompat.Light.SearchView"/>
+    <public type="style" name="Widget.AppCompat.Light.SearchView.ActionBar"/>
+    <public type="style" name="Widget.AppCompat.Light.SeekBar"/>
+    <public type="style" name="Widget.AppCompat.Light.SeekBar.Discrete"/>
+    <public type="style" name="Widget.AppCompat.Light.SeslSwitchBar"/>
+    <public type="style" name="Widget.AppCompat.Light.Spinner"/>
+    <public type="style" name="Widget.AppCompat.Light.Spinner.DropDown"/>
     <public type="style" name="Widget.AppCompat.Light.Spinner.DropDown.ActionBar"/>
+    <public type="style" name="Widget.AppCompat.Light.TextView.ListSeparator"/>
+    <public type="style" name="Widget.AppCompat.Light.TextView.SpinnerItem"/>
+    <public type="style" name="Widget.AppCompat.Light.Toolbar"/>
+    <public type="style" name="Widget.AppCompat.Light.Toolbar.Button.Navigation"/>
     <public type="style" name="Widget.AppCompat.ListPopupWindow"/>
     <public type="style" name="Widget.AppCompat.ListView"/>
     <public type="style" name="Widget.AppCompat.ListView.DropDown"/>
@@ -147,7 +194,15 @@
     <public type="style" name="Widget.AppCompat.PopupMenu.Overflow"/>
     <public type="style" name="Widget.AppCompat.PopupWindow"/>
     <public type="style" name="Widget.AppCompat.ProgressBar"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Circle"/>
     <public type="style" name="Widget.AppCompat.ProgressBar.Horizontal"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Inverse"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Large"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Large.Inverse"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Small"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Small.Inverse"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Small.Title"/>
+    <public type="style" name="Widget.AppCompat.ProgressBar.Xlarge"/>
     <public type="style" name="Widget.AppCompat.RatingBar"/>
     <public type="style" name="Widget.AppCompat.RatingBar.Indicator"/>
     <public type="style" name="Widget.AppCompat.RatingBar.Small"/>
@@ -155,6 +210,7 @@
     <public type="style" name="Widget.AppCompat.SearchView.ActionBar"/>
     <public type="style" name="Widget.AppCompat.SeekBar"/>
     <public type="style" name="Widget.AppCompat.SeekBar.Discrete"/>
+    <public type="style" name="Widget.AppCompat.SeslSwitchBar"/>
     <public type="style" name="Widget.AppCompat.Spinner"/>
     <public type="style" name="Widget.AppCompat.Spinner.DropDown"/>
     <public type="style" name="Widget.AppCompat.Spinner.DropDown.ActionBar"/>

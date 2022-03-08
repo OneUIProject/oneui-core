@@ -24,6 +24,8 @@ import android.view.animation.Interpolator;
 
 /**
  * Samsung custom interpolator that simulates an elastic behavior.
+ *
+ * @hide
  */
 class SeslElasticInterpolator implements Interpolator {
     private float mAmplitude;

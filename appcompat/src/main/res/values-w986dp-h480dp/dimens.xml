@@ -16,6 +16,6 @@
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
-    <item type="dimen" name="sesl_dialog_min_width_major">45.000004%</item>
-    <item type="dimen" name="sesl_dialog_min_width_minor">72.0%</item>
+    <item type="dimen" name="sesl_dialog_min_width_major">35.000004%</item>
+    <item type="dimen" name="sesl_dialog_min_width_minor">63.0%</item>
 </resources>

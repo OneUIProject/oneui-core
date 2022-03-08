@@ -404,7 +404,7 @@
         <item name="android:textCursorDrawable">@drawable/sesl_text_cursor</item>
     </style>
 
-    <style name="Base.V7.Widget.AppCompat.Light.AutoCompleteTextView" parent="Widget.AutoCompleteTextView">
+    <style name="Base.V7.Widget.AppCompat.Light.AutoCompleteTextView" parent="android:Widget.AutoCompleteTextView">
         <item name="android:dropDownSelector">?android:attr/listChoiceBackgroundIndicator</item>
         <item name="android:popupBackground">@drawable/sesl_menu_popup_background</item>
         <item name="android:popupElevation">@dimen/sesl_menu_popup_elevation</item>
@@ -578,7 +578,7 @@
         <item name="track">@drawable/sesl_switch_track_selector_dark</item>
         <item name="android:thumb">@drawable/sesl_switch_thumb_selector_dark</item>
         <item name="switchTextAppearance">@style/TextAppearance.AppCompat.Widget.Switch</item>
-        <item name="android:background">?attr/sesl_switch_background</item>
+        <item name="android:background">@drawable/sesl_switch_background</item>
         <item name="showText">false</item>
         <item name="switchPadding">0dp</item>
         <item name="android:textOn">@string/sesl_capital_on</item>

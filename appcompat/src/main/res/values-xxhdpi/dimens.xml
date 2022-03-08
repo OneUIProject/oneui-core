@@ -16,6 +16,9 @@
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
-    <item type="dimen" name="sesl_dialog_min_width_major">45.000004%</item>
-    <item type="dimen" name="sesl_dialog_min_width_minor">72.0%</item>
+    <dimen name="sesl_edit_textfield_cursor_width">5.0px</dimen>
+
+    <dimen name="sesl_list_divider_height">3.0px</dimen>
+
+    <dimen name="sesl_switch_divider_height">2.0px</dimen>
 </resources>

@@ -14,13 +14,18 @@
      limitations under the License.
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
-
 <resources>
-    <item type="dimen" name="abc_dialog_fixed_width_major">60%</item>
-    <item type="dimen" name="abc_dialog_fixed_width_minor">90%</item>
-    <item type="dimen" name="abc_dialog_fixed_height_major">60%</item>
-    <item type="dimen" name="abc_dialog_fixed_height_minor">90%</item>
+    <dimen name="sesl_action_bar_default_height">56.0dip</dimen>
+    <dimen name="sesl_action_bar_height_with_padding">56.0dip</dimen>
+    <dimen name="sesl_action_bar_top_padding">0.0dip</dimen>
 
-    <item type="dimen" name="sesl_dialog_min_width_major">55.000008%</item>
-    <item type="dimen" name="sesl_dialog_min_width_minor">79.99999%</item>
+    <dimen name="sesl_dialog_body_text_padding_bottom">12.0dip</dimen>
+    <dimen name="sesl_dialog_button_bar_padding_bottom">4.0dip</dimen>
+    <dimen name="sesl_dialog_title_padding_bottom">2.0dip</dimen>
+    <dimen name="sesl_dialog_title_padding_top">12.0dip</dimen>
+
+    <dimen name="sesl_select_dialog_padding_bottom">12.0dip</dimen>
+
+    <dimen name="sesl_toolbar_title_text_size">19.0sp</dimen>
+    <dimen name="sesl_toolbar_title_text_size_with_subtitle">19.0sp</dimen>
 </resources>

@@ -156,8 +156,8 @@
         <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_light</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
 
-        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
-        <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
+        <item name="android:textAppearanceListItem">?attr/textAppearanceListItem</item>
+        <item name="android:textAppearanceListItemSmall">?attr/textAppearanceListItemSmall</item>
 
         <item name="dividerVertical">?android:attr/dividerVertical</item>
         <item name="dividerHorizontal">?android:attr/dividerHorizontal</item>
@@ -409,8 +409,8 @@
         <item name="android:textColorSecondaryInverse">@color/sesl_secondary_text_dark</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
 
-        <item name="android:textAppearanceListItem">?textAppearanceListItem</item>
-        <item name="android:textAppearanceListItemSmall">?textAppearanceListItemSmall</item>
+        <item name="android:textAppearanceListItem">?attr/textAppearanceListItem</item>
+        <item name="android:textAppearanceListItemSmall">?attr/textAppearanceListItemSmall</item>
 
         <item name="dividerVertical">?android:attr/dividerVertical</item>
         <item name="dividerHorizontal">?android:attr/dividerHorizontal</item>

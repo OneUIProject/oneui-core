@@ -16,6 +16,10 @@
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
-    <item type="dimen" name="sesl_dialog_min_width_major">45.000004%</item>
-    <item type="dimen" name="sesl_dialog_min_width_minor">72.0%</item>
+    <dimen name="sesl_list_divider_inset">20.0dip</dimen>
+    <dimen name="sesl_list_image_end_padding">20.0dip</dimen>
+    <dimen name="sesl_list_item_padding_horizontal">24.0dip</dimen>
+
+    <dimen name="sesl_switchbar_margin_end">24.0dip</dimen>
+    <dimen name="sesl_switchbar_margin_start">24.0dip</dimen>
 </resources>

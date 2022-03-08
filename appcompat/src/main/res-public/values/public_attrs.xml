@@ -46,6 +46,7 @@
      <public type="attr" name="actionModeStyle"/>
      <public type="attr" name="actionModeTheme"/>
      <public type="attr" name="actionModeWebSearchDrawable"/>
+     <public type="attr" name="actionOverflowBottomMenuStyle"/>
      <public type="attr" name="actionOverflowButtonStyle"/>
      <public type="attr" name="actionOverflowMenuStyle"/>
      <public type="attr" name="actionProviderClass"/>
@@ -68,10 +69,12 @@
      <public type="attr" name="barLength"/>
      <public type="attr" name="borderlessButtonStyle"/>
      <public type="attr" name="buttonBarButtonStyle"/>
+     <public type="attr" name="buttonBarNegativeButtonColor"/>
      <public type="attr" name="buttonBarNegativeButtonStyle"/>
      <public type="attr" name="buttonBarNeutralButtonStyle"/>
      <public type="attr" name="buttonBarPositiveButtonStyle"/>
      <public type="attr" name="buttonBarStyle"/>
+     <public type="attr" name="buttonCornerRadius"/>
      <public type="attr" name="buttonGravity"/>
      <public type="attr" name="buttonStyle"/>
      <public type="attr" name="buttonStyleSmall"/>
@@ -79,6 +82,7 @@
      <public type="attr" name="buttonTintMode"/>
      <public type="attr" name="checkboxStyle"/>
      <public type="attr" name="checkedTextViewStyle"/>
+     <public type="attr" name="checkMarkGravity"/>
      <public type="attr" name="closeIcon"/>
      <public type="attr" name="closeItemLayout"/>
      <public type="attr" name="collapseContentDescription"/>
@@ -109,6 +113,8 @@
      <public type="attr" name="dividerHorizontal"/>
      <public type="attr" name="dividerPadding"/>
      <public type="attr" name="dividerVertical"/>
+     <public type="attr" name="dragBlockImage"/>
+     <public type="attr" name="dragBlockImageBorderless"/>
      <public type="attr" name="drawableSize"/>
      <public type="attr" name="drawerArrowStyle"/>
      <public type="attr" name="dropDownListViewStyle"/>
@@ -121,10 +127,12 @@
      <public type="attr" name="fontVariationSettings"/>
      <public type="attr" name="gapBetweenBars"/>
      <public type="attr" name="goIcon"/>
+     <public type="attr" name="goToTopStyle"/>
      <public type="attr" name="height"/>
      <public type="attr" name="hideOnContentScroll"/>
      <public type="attr" name="homeAsUpIndicator"/>
      <public type="attr" name="homeLayout"/>
+     <public type="attr" name="horizontalProgressLayout"/>
      <public type="attr" name="icon"/>
      <public type="attr" name="iconifiedByDefault"/>
      <public type="attr" name="iconTint"/>
@@ -140,6 +148,8 @@
      <public type="attr" name="listChoiceIndicatorMultipleAnimated"/>
      <public type="attr" name="listChoiceIndicatorSingleAnimated"/>
      <public type="attr" name="listDividerAlertDialog"/>
+     <public type="attr" name="listDividerColor"/>
+     <public type="attr" name="listMultiSelectBackground"/>
      <public type="attr" name="listPopupWindowStyle"/>
      <public type="attr" name="listPreferredItemHeight"/>
      <public type="attr" name="listPreferredItemHeightLarge"/>
@@ -163,25 +173,45 @@
      <public type="attr" name="popupTheme"/>
      <public type="attr" name="popupWindowStyle"/>
      <public type="attr" name="preserveIconSpacing"/>
+     <public type="attr" name="progressActivatedColor"/>
      <public type="attr" name="progressBarPadding"/>
      <public type="attr" name="progressBarStyle"/>
+     <public type="attr" name="progressCircleDotColor1"/>
+     <public type="attr" name="progressCircleDotColor2"/>
+     <public type="attr" name="progressLayout"/>
+     <public type="attr" name="progressNormalColor"/>
      <public type="attr" name="queryBackground"/>
      <public type="attr" name="queryHint"/>
      <public type="attr" name="radioButtonStyle"/>
      <public type="attr" name="ratingBarStyle"/>
      <public type="attr" name="ratingBarStyleIndicator"/>
      <public type="attr" name="ratingBarStyleSmall"/>
+     <public type="attr" name="roundedCornerColor"/>
      <public type="attr" name="searchHintIcon"/>
      <public type="attr" name="searchIcon"/>
+     <public type="attr" name="searchViewHintTextColor"/>
+     <public type="attr" name="searchViewIconColor"/>
      <public type="attr" name="searchViewStyle"/>
+     <public type="attr" name="searchViewTextColor"/>
      <public type="attr" name="seekBarStyle"/>
      <public type="attr" name="selectableItemBackground"/>
      <public type="attr" name="selectableItemBackgroundBorderless"/>
+     <public type="attr" name="seslDialogDivderColor"/>
+     <public type="attr" name="seslSeekBarMode"/>
+     <public type="attr" name="seslSwitchBarBackgroundActivatedColor"/>
+     <public type="attr" name="seslSwitchBarBackgroundColor"/>
+     <public type="attr" name="seslSwitchBarStyle"/>
+     <public type="attr" name="seslSwitchBarTextActivatedColor"/>
+     <public type="attr" name="seslSwitchBarTextColor"/>
+     <public type="attr" name="seslThumbRadius"/>
+     <public type="attr" name="seslTrackMinWidth"/>
+     <public type="attr" name="seslTrackMaxWidth"/>
      <public type="attr" name="showAsAction"/>
      <public type="attr" name="showDividers"/>
      <public type="attr" name="showText"/>
      <public type="attr" name="spinBars"/>
      <public type="attr" name="spinnerDropDownItemStyle"/>
+     <public type="attr" name="spinnerDropdownTextColor"/>
      <public type="attr" name="spinnerStyle"/>
      <public type="attr" name="splitTrack"/>
      <public type="attr" name="srcCompat"/>
@@ -192,7 +222,9 @@
      <public type="attr" name="subtitleTextColor"/>
      <public type="attr" name="subtitleTextStyle"/>
      <public type="attr" name="suggestionRowLayout"/>
+     <public type="attr" name="switchDividerColor"/>
      <public type="attr" name="switchMinWidth"/>
+     <public type="attr" name="switchOffStrokeColor"/>
      <public type="attr" name="switchPadding"/>
      <public type="attr" name="switchStyle"/>
      <public type="attr" name="switchTextAppearance"/>
@@ -232,6 +264,8 @@
      <public type="attr" name="track"/>
      <public type="attr" name="trackTint"/>
      <public type="attr" name="trackTintMode"/>
+     <public type="attr" name="useDisabledAlpha"/>
+     <public type="attr" name="useDisabledAlpha"/>
      <public type="attr" name="voiceIcon"/>
      <public type="attr" name="windowActionBar"/>
      <public type="attr" name="windowActionBarOverlay"/>

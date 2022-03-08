@@ -96,6 +96,7 @@
         <attr name="actionBarTabTextStyle" format="reference" />
         <attr name="actionOverflowButtonStyle" format="reference" />
         <attr name="actionOverflowMenuStyle" format="reference" />
+        <attr name="actionOverflowBottomMenuStyle" format="reference" />
         <!-- Reference to a theme that should be used to inflate popups
              shown by widgets in the action bar. -->
         <attr name="actionBarPopupTheme" format="reference" />
@@ -368,6 +369,7 @@
 
         <!-- Style for the "negative" buttons within button bars -->
         <attr name="buttonBarNegativeButtonStyle" format="reference" />
+        <attr name="buttonBarNegativeButtonColor" format="reference|color" />
 
         <!-- Style for the "neutral" buttons within button bars -->
         <attr name="buttonBarNeutralButtonStyle" format="reference" />
@@ -432,6 +434,25 @@
         <attr name="listChoiceIndicatorSingleAnimated" format="reference" />
         <!-- Animated Drawable to use for multiple choice indicators. -->
         <attr name="listChoiceIndicatorMultipleAnimated" format="reference" />
+
+        <attr name="ignoreRemoveSystemTopInset" format="boolean" />
+
+        <attr name="searchViewIconColor" format="color" />
+        <attr name="searchViewTextColor" format="color" />
+        <attr name="searchViewHintTextColor" format="color" />
+
+        <attr name="roundedCornerColor" format="color" />
+        <attr name="buttonCornerRadius" format="dimension" />
+        <attr name="goToTopStyle" format="reference" />
+        <attr name="seslSwitchBarStyle" format="reference" />
+        <attr name="listDividerColor" format="color" />
+        <attr name="switchDividerColor" format="color" />
+        <attr name="seslDialogDivderColor" format="reference|color" />
+
+        <attr name="progressNormalColor" format="reference|color" />
+        <attr name="progressActivatedColor" format="reference|color" />
+        <attr name="progressCircleDotColor1" format="reference|color" />
+        <attr name="progressCircleDotColor2" format="reference|color" />
 
     </declare-styleable>
 
@@ -803,6 +824,8 @@
         <attr name="android:dropDownWidth" />
         <!-- Reference to an array resource that will populate the Spinner. -->
         <attr name="android:entries" />
+
+        <attr name="spinnerDropdownTextColor" format="reference|color" />
     </declare-styleable>
 
     <declare-styleable name="SearchView">
@@ -930,8 +953,6 @@
                  result to valid color values. Saturate(S + D) -->
             <enum name="add" value="16" />
         </attr>
-        <!-- Display the emoji if emojicompat has this character for emoji not on the system -->
-        <attr name="emojiCompatEnabled" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="LinearLayoutCompat">
@@ -979,6 +1000,7 @@
     </declare-styleable>
 
     <declare-styleable name="Toolbar">
+        <attr name="background" />
         <attr name="titleTextAppearance" format="reference" />
         <attr name="subtitleTextAppearance" format="reference" />
         <attr name="title" />
@@ -1046,6 +1068,8 @@
         <attr name="android:minHeight" />
         <!-- Menu resource to inflate to be shown in the toolbar -->
         <attr name="menu" format="reference" />
+
+        <attr name="tooltipText" />
     </declare-styleable>
 
     <declare-styleable name="PopupWindowBackgroundState">
@@ -1065,6 +1089,8 @@
         <attr name="overlapAnchor" format="boolean" />
         <attr name="android:popupBackground" />
         <attr name="android:popupAnimationStyle"/>
+        <attr name="popupEnterTransition" format="reference" />
+        <attr name="popupExitTransition" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="DrawerArrowToggle">
@@ -1129,30 +1155,14 @@
 
     <declare-styleable name="CheckedTextView">
         <attr name="android:checkMark"/>
-        <!-- Compat attr to load backported drawable types -->
-        <attr name="checkMarkCompat" format="reference"/>
-        <!-- Tint to apply to the check mark drawable. -->
-        <attr name="checkMarkTint" format="color" />
-
-        <!-- Blending mode used to apply the check mark tint. -->
-        <attr name="checkMarkTintMode">
-            <!-- The tint is drawn on top of the drawable.
-                 [Sa + (1 - Sa)*Da, Rc = Sc + (1 - Sa)*Dc] -->
-            <enum name="src_over" value="3" />
-            <!-- The tint is masked by the alpha channel of the drawable. The drawable’s
-                 color channels are thrown out. [Sa * Da, Sc * Da] -->
-            <enum name="src_in" value="5" />
-            <!-- The tint is drawn above the drawable, but with the drawable’s alpha
-                 channel masking the result. [Da, Sc * Da + (1 - Sa) * Dc] -->
-            <enum name="src_atop" value="9" />
-            <!-- Multiplies the color and alpha channels of the drawable with those of
-                 the tint. [Sa * Da, Sc * Dc] -->
-            <enum name="multiply" value="14" />
-            <!-- [Sa + Da - Sa * Da, Sc + Dc - Sc * Dc] -->
-            <enum name="screen" value="15" />
-            <!-- Combines the tint and icon color and alpha channels, clamping the
-                 result to valid color values. Saturate(S + D) -->
-            <enum name="add" value="16" />
+        <attr name="android:checkMarkTint" />
+        <attr name="android:checkMarkTintMode" />
+        <attr name="android:checked" />
+        <attr name="checkMarkGravity">
+            <flag name="left" value="0x00000003" />
+            <flag name="right" value="0x00000005" />
+            <flag name="start" value="0x00800003" />
+            <flag name="end" value="0x00800005" />
         </attr>
     </declare-styleable>
 
@@ -1221,6 +1231,8 @@
         <attr name="splitTrack" format="boolean" />
         <!-- Whether to draw on/off text. -->
         <attr name="showText" format="boolean" />
+
+        <attr name="switchOffStrokeColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="TextAppearance">
@@ -1258,6 +1270,8 @@
         <attr name="listItemLayout" format="reference" />
         <attr name="showTitle" format="boolean" />
         <attr name="buttonIconDimen" format="dimension" />
+        <attr name="progressLayout" format="reference" />
+        <attr name="horizontalProgressLayout" format="reference" />
     </declare-styleable>
 
     <!-- @hide -->
@@ -1300,6 +1314,9 @@
 
     <declare-styleable name="AppCompatSeekBar">
         <attr name="android:thumb" />
+        <attr name="android:thumbOffset" />
+        <attr name="android:thumbTint" />
+        <attr name="android:thumbTintMode" />
         <!-- Drawable displayed at each progress position on a seekbar. -->
         <attr name="tickMark" format="reference" />
         <!-- Tint to apply to the tick mark drawable. -->
@@ -1324,6 +1341,21 @@
                  result to valid color values. Saturate(S + D) -->
             <enum name="add" value="16" />
         </attr>
+
+        <attr name="useDisabledAlpha" format="boolean" />
+
+        <attr name="seslSeekBarMode">
+            <enum name="standard" value="0" />
+            <enum name="warning" value="1" />
+            <enum name="vertical" value="3" />
+            <enum name="split" value="4" />
+            <enum name="expand" value="5" />
+            <enum name="expand_vertical" value="6" />
+        </attr>
+
+        <attr name="seslThumbRadius" format="dimension" />
+        <attr name="seslTrackMinWidth" format="dimension" />
+        <attr name="seslTrackMaxWidth" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="AppCompatTextHelper">
@@ -1345,6 +1377,65 @@
         <attr name="paddingBottomNoButtons" format="dimension" />
         <!-- Top padding to use when no title is present. -->
         <attr name="paddingTopNoTitle" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="AbsListView">
+        <attr name="android:absListViewStyle" />
+        <attr name="android:listViewStyle" />
+        <attr name="android:listSelector" />
+        <attr name="android:drawSelectorOnTop" />
+        <attr name="android:stackFromBottom" />
+        <attr name="android:scrollingCache" />
+        <attr name="android:textFilterEnabled" />
+        <attr name="android:choiceMode" />
+        <attr name="android:transcriptMode" />
+        <attr name="android:cacheColorHint" />
+        <attr name="android:fastScrollEnabled" />
+        <attr name="android:fastScrollStyle" />
+        <attr name="android:fastScrollAlwaysVisible" />
+        <attr name="android:smoothScrollbar" />
+
+        <attr name="listMultiSelectBackground" format="boolean" />
+        <attr name="dragBlockImage" format="reference" />
+        <attr name="dragBlockImageBorderless" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ProgressBar">
+        <attr name="android:animationResolution" />
+        <attr name="android:backgroundTint" />
+        <attr name="android:backgroundTintMode" />
+        <attr name="android:indeterminate" />
+        <attr name="android:indeterminateBehavior" />
+        <attr name="android:indeterminateDrawable" />
+        <attr name="android:indeterminateDuration" />
+        <attr name="android:indeterminateOnly" />
+        <attr name="android:indeterminateTint" />
+        <attr name="android:indeterminateTintMode" />
+        <attr name="android:interpolator" />
+        <attr name="android:max" />
+        <attr name="android:maxHeight" />
+        <attr name="android:maxWidth" />
+        <attr name="android:min" />
+        <attr name="android:minHeight" />
+        <attr name="android:minWidth" />
+        <attr name="android:mirrorForRtl" />
+        <attr name="android:progress" />
+        <attr name="android:progressBackgroundTint" />
+        <attr name="android:progressBackgroundTintMode" />
+        <attr name="android:progressDrawable" />
+        <attr name="android:progressTint" />
+        <attr name="android:progressTintMode" />
+        <attr name="android:secondaryProgress" />
+        <attr name="android:secondaryProgressTint" />
+        <attr name="android:secondaryProgressTintMode" />
+        <attr name="useHorizontalProgress" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SeslSwitchBar">
+        <attr name="seslSwitchBarBackgroundActivatedColor" format="color" />
+        <attr name="seslSwitchBarBackgroundColor" format="color" />
+        <attr name="seslSwitchBarTextActivatedColor" format="color" />
+        <attr name="seslSwitchBarTextColor" format="color" />
     </declare-styleable>
 
 </resources>

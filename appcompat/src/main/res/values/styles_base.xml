@@ -32,7 +32,6 @@
 
         <item name="background">@drawable/sesl_action_bar_background_dark</item>
         <item name="backgroundStacked">@drawable/sesl_action_bar_background_stacked_dark</item>
-        <item name="backgroundSplit">@null</item>
 
         <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
         <item name="actionOverflowButtonStyle">@style/Widget.AppCompat.ActionButton.Overflow</item>
@@ -125,7 +124,7 @@
         <item name="android:ellipsize">marquee</item>
         <item name="android:maxLines">2</item>
         <item name="android:maxWidth">180dp</item>
-        <item name="textAllCaps">true</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="Base.Widget.AppCompat.Light.ActionBar.TabText" parent="Base.Widget.AppCompat.ActionBar.TabText" />
@@ -405,11 +404,11 @@
     <style name="Base.Widget.AppCompat.Light.AutoCompleteTextView" parent="@style/Base.V7.Widget.AppCompat.Light.AutoCompleteTextView" />
 
     <style name="Base.V7.Widget.AppCompat.AutoCompleteTextView" parent="android:Widget.AutoCompleteTextView">
-        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+        <item name="android:dropDownSelector">?android:attr/listChoiceBackgroundIndicator</item>
         <item name="android:popupBackground">@drawable/sesl_menu_popup_background_dark</item>
         <item name="android:popupElevation">@dimen/sesl_menu_popup_elevation</item>
-        <item name="android:background">?attr/editTextBackground</item>
-        <item name="android:textColor">?attr/editTextColor</item>
+        <item name="android:background">?android:attr/editTextBackground</item>
+        <item name="android:textColor">?android:attr/editTextColor</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textCursorDrawable">@drawable/sesl_text_cursor</item>
     </style>
@@ -426,9 +425,9 @@
 
     <style name="Base.Widget.AppCompat.ActivityChooserView" parent="">
         <item name="android:gravity">center</item>
-        <item name="divider">?android:attr/dividerVertical</item>
-        <item name="showDividers">middle</item>
-        <item name="dividerPadding">6dip</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:dividerPadding">6dip</item>
     </style>
 
     <style name="Base.Widget.AppCompat.PopupWindow" parent="android:Widget.Material.PopupWindow" />
@@ -461,7 +460,7 @@
     </style>
 
     <style name="Base.Widget.AppCompat.Toolbar.Button.Navigation" parent="android:Widget.Material.Toolbar.Button.Navigation">
-        <item name="android:background">?attr/controlBackground</item>
+        <item name="android:background">?attr/actionBarItemBackground</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:paddingStart">8.0dip</item>
         <item name="android:scaleType">center</item>

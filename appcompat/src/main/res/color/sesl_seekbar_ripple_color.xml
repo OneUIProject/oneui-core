@@ -17,11 +17,11 @@
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:color="@android:color/transparent" />
-    <item
         android:state_pressed="true"
         android:color="@android:color/transparent" />
     <item
         android:state_focused="true"
         android:color="?attr/colorControlHighlight" />
+    <item
+        android:color="@android:color/transparent" />
 </selector>

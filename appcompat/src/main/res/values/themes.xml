@@ -39,13 +39,17 @@
     <style name="Theme.AppCompat.Light.DarkActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
 
     <style name="Theme.AppCompat.NoActionBar" parent="Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
+        <item name="windowNoTitle">?android:attr/windowNoTitle</item>
     </style>
 
     <style name="Theme.AppCompat.Light.NoActionBar" parent="Theme.AppCompat.Light">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">?android:attr/windowActionBar</item>
+        <item name="windowNoTitle">?android:attr/windowNoTitle</item>
     </style>
 
     <style name="Theme.AppCompat.DialogWhenLarge" parent="Base.Theme.AppCompat.DialogWhenLarge" />

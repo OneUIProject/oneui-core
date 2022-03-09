@@ -17,11 +17,11 @@
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:color="@color/sesl_search_url_text_default" />
-    <item
         android:state_pressed="true"
         android:color="@color/sesl_search_url_text_pressed" />
     <item
         android:state_selected="true"
         android:color="@color/sesl_search_url_text_selected" />
+    <item
+        android:color="@color/sesl_search_url_text_default" />
 </selector>

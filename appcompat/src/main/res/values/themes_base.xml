@@ -184,7 +184,7 @@
         <item name="actionMenuTextColor">@color/sesl_action_menu_text_dark</item>
 
         <!-- Action Mode -->
-        <item name="actionModeStyle">@style/Widget.AppCompat.Light.ActionMode</item>
+        <item name="actionModeStyle">@style/Widget.AppCompat.ActionMode</item>
         <item name="actionModeBackground">@drawable/sesl_action_bar_background_dark</item>
         <item name="actionModeSplitBackground">?attr/colorPrimaryDark</item>
         <item name="actionModeCloseContentDescription">@string/abc_action_mode_done</item>
@@ -266,7 +266,7 @@
         <item name="searchViewIconColor">@color/sesl_search_view_icon_color_dark</item>
         <item name="searchViewTextColor">@color/sesl_search_view_text_color_dark</item>
         <item name="searchViewHintTextColor">@color/sesl_search_view_hint_text_color_dark</item>
-        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.Light.DropDownItem.Spinner</item>
+        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
         <item name="textColorSearchUrl">@color/sesl_search_url_text</item>
         <item name="textAppearanceSearchResultTitle">@style/TextAppearance.AppCompat.SearchResult.Title</item>
         <item name="textAppearanceSearchResultSubtitle">@style/TextAppearance.AppCompat.SearchResult.Subtitle</item>
@@ -437,7 +437,7 @@
         <item name="actionMenuTextColor">@color/sesl_action_menu_text_light</item>
 
         <!-- Action Mode -->
-        <item name="actionModeStyle">@style/Widget.AppCompat.ActionMode</item>
+        <item name="actionModeStyle">@style/Widget.AppCompat.Light.ActionMode</item>
         <item name="actionModeBackground">@drawable/sesl_action_bar_background_light</item>
         <item name="actionModeSplitBackground">?attr/colorPrimaryDark</item>
         <item name="actionModeCloseContentDescription">@string/abc_action_mode_done</item>
@@ -943,7 +943,7 @@
         <item name="seslDialogDivderColor">@color/sesl_dialog_divider_color_material_dark</item>
     </style>
 
-    <style name="Base.V7.ThemeOverlay.AppCompat.Light.Dialog" parent="Base.ThemeOverlay.AppCompat.Light">
+    <style name="Base.V7.ThemeOverlay.AppCompat.Light.Dialog" parent="Base.V7.ThemeOverlay.AppCompat.Dialog">
         <item name="android:colorBackground">@color/sesl_dialog_window_background_color_material_light</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:backgroundDimAmount">0.18</item>

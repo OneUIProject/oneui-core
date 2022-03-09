@@ -59,8 +59,6 @@
     <style name="Base.TextAppearance.AppCompat.Title.Inverse" parent="Base.TextAppearance.AppCompat.Title">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
     <style name="Base.TextAppearance.AppCompat.Subhead" parent="Base.TextAppearance.AppCompat">
@@ -96,8 +94,8 @@
 
     <style name="Base.TextAppearance.AppCompat.Button" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/sesl_button_text_size</item>
-        <item name="android:textAllCaps">false</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="Base.TextAppearance.AppCompat.Widget.Button" parent="TextAppearance.AppCompat.Button">
@@ -204,7 +202,7 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Medium.Inverse" parent="Base.TextAppearance.AppCompat.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Medium.Inverse" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="android:textColor">?android:attr/textColorSecondaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
     </style>

@@ -21,8 +21,8 @@
         android:alpha="@dimen/sesl_disabled_color_alpha"
         android:color="@color/sesl_spinner_item_text_color_normal_light" />
     <item
-        android:color="@color/sesl_spinner_item_text_color_normal_light" />
-    <item
         android:state_checked="true"
         android:color="?attr/colorPrimaryDark" />
+    <item
+        android:color="@color/sesl_spinner_item_text_color_normal_light" />
 </selector>

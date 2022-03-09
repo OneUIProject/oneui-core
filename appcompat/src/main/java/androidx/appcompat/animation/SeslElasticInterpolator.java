@@ -16,7 +16,11 @@
 
 package androidx.appcompat.animation;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
 import android.view.animation.Interpolator;
+
+import androidx.annotation.RestrictTo;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.
@@ -27,6 +31,7 @@ import android.view.animation.Interpolator;
  *
  * @hide
  */
+@RestrictTo(LIBRARY_GROUP)
 class SeslElasticInterpolator implements Interpolator {
     private float mAmplitude;
     private float mPeriod;

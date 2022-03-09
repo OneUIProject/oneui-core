@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package androidx.appcompat.widget;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -27,6 +27,9 @@ import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -43,62 +46,39 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.R;
+import androidx.appcompat.animation.SeslAnimationUtils;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.text.AllCapsTransformationMethod;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.TextViewCompat;
+import androidx.reflect.view.SeslHapticFeedbackConstantsReflector;
+import androidx.reflect.view.SeslViewReflector;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
- * SwitchCompat is a complete backport of the core {@link android.widget.Switch} widget that
- * brings the visuals and the functionality of that widget to older versions of the platform.
- * Unlike other widgets in this package, SwitchCompat is <strong>not</strong> automatically used
- * in layouts that use the <code>&lt;Switch&gt;</code> element. Instead, you need to explicitly
- * use <code>&lt;androidx.appcompat.widget.SwitchCompat&gt;</code> and the matching attributes
- * in your layouts.
- *
- * <p>
- * A Switch is a two-state toggle switch widget that can be used to select one of the two
- * available options. The user may drag the "thumb" back and forth to choose the selected option,
- * or simply tap to toggle as if it were a checkbox. The {@link #setText(CharSequence) text}
- * property controls the text displayed in the label for the switch, whereas the
- * {@link #setTextOff(CharSequence) off} and {@link #setTextOn(CharSequence) on} text
- * controls the text on the thumb. Similarly, the
- * {@link #setTextAppearance(android.content.Context, int) textAppearance} and the related
- * setTypeface() methods control the typeface and style of label text, whereas the
- * {@link #setSwitchTextAppearance(android.content.Context, int) switchTextAppearance} and
- * the related setSwitchTypeface() methods control that of the thumb.
- *
- * <p>
- * The thumb can be tinted with {@link #setThumbTintList(ColorStateList)} and
- * {@link #setThumbTintMode(PorterDuff.Mode)} APIs, as well as with the matching XML attributes.
- * The track can be tinted with {@link #setTrackTintList(ColorStateList)} and
- * {@link #setTrackTintMode(PorterDuff.Mode)} APIs, as well as with the matching XML attributes.
- *
- * <p>See the <a href="{@docRoot}guide/topics/ui/controls/togglebutton.html">Toggle Buttons</a>
- * guide.</p>
- *
- * {@link android.R.attr#textOn}
- * {@link android.R.attr#textOff}
- * {@link androidx.appcompat.R.attr#switchMinWidth}
- * {@link androidx.appcompat.R.attr#switchPadding}
- * {@link androidx.appcompat.R.attr#switchTextAppearance}
- * {@link android.R.attr#thumb}
- * {@link androidx.appcompat.R.attr#thumbTextPadding}
- * {@link androidx.appcompat.R.attr#track}
- * {@link androidx.appcompat.R.attr#thumbTint}
- * {@link androidx.appcompat.R.attr#thumbTintMode}
- * {@link androidx.appcompat.R.attr#trackTint}
- * {@link androidx.appcompat.R.attr#trackTintMode}
+ * Samsung SwitchCompat class.
  */
 public class SwitchCompat extends CompoundButton {
-    private static final int THUMB_ANIMATION_DURATION = 250;
+    private static final boolean SUPPORT_TOUCH_FEEDBACK = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
+
+    private static final int THUMB_ANIMATION_DURATION = 150;
+    private static final int THUMB_ANIMATION_DURATION_ABOVE_M = 500;
+
+    private static final int MIN_FLING_VELOCITY = 500;
+    private static final int CHANGE_FLING_VELOCITY = 2000;
 
     private static final int TOUCH_MODE_IDLE = 0;
     private static final int TOUCH_MODE_DOWN = 1;
@@ -126,6 +106,9 @@ public class SwitchCompat extends CompoundButton {
                 }
             };
 
+    private CharSequence mAccessibilityTextOn;
+    private CharSequence mAccessibilityTextOff;
+
     private Drawable mThumbDrawable;
     private ColorStateList mThumbTintList = null;
     private PorterDuff.Mode mThumbTintMode = null;
@@ -133,6 +116,8 @@ public class SwitchCompat extends CompoundButton {
     private boolean mHasThumbTintMode = false;
 
     private Drawable mTrackDrawable;
+    private Drawable mTrackOnDrawable;
+    private Drawable mTrackOffDrawable;
     private ColorStateList mTrackTintList = null;
     private PorterDuff.Mode mTrackTintMode = null;
     private boolean mHasTrackTint = false;
@@ -190,7 +175,7 @@ public class SwitchCompat extends CompoundButton {
     private Layout mOnLayout;
     private Layout mOffLayout;
     private TransformationMethod mSwitchTransformationMethod;
-    ObjectAnimator mPositionAnimator;
+    ThumbAnimation mPositionAnimator;
     private final AppCompatTextHelper mTextHelper;
 
     @SuppressWarnings("hiding")
@@ -253,6 +238,10 @@ public class SwitchCompat extends CompoundButton {
         mTrackDrawable = a.getDrawable(R.styleable.SwitchCompat_track);
         if (mTrackDrawable != null) {
             mTrackDrawable.setCallback(this);
+            mTrackOnDrawable = mTrackDrawable.getConstantState().newDrawable();
+            mTrackOffDrawable = mTrackDrawable.getConstantState().newDrawable();
+            mTrackOnDrawable.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_checked});
+            mTrackOffDrawable.setState(new int[]{android.R.attr.state_enabled, -android.R.attr.state_checked});
         }
         mTextOn = a.getText(R.styleable.SwitchCompat_android_textOn);
         mTextOff = a.getText(R.styleable.SwitchCompat_android_textOff);
@@ -309,6 +298,10 @@ public class SwitchCompat extends CompoundButton {
         final ViewConfiguration config = ViewConfiguration.get(context);
         mTouchSlop = config.getScaledTouchSlop();
         mMinFlingVelocity = config.getScaledMinimumFlingVelocity();
+
+        mSwitchWidth = getResources().getDimensionPixelSize(R.dimen.sesl_switch_width);
+        mAccessibilityTextOn = getResources().getString(R.string.sesl_switch_on);
+        mAccessibilityTextOff = getResources().getString(R.string.sesl_switch_off);
 
         // Refresh display with current params
         refreshDrawableState();
@@ -507,6 +500,10 @@ public class SwitchCompat extends CompoundButton {
         }
         mTrackDrawable = track;
         if (track != null) {
+            mTrackOnDrawable = track.getConstantState().newDrawable();
+            mTrackOffDrawable = track.getConstantState().newDrawable();
+            mTrackOnDrawable.setState(new int[]{android.R.attr.state_enabled, android.R.attr.state_checked});
+            mTrackOffDrawable.setState(new int[]{android.R.attr.state_enabled, -android.R.attr.state_checked});
             track.setCallback(this);
         }
         requestLayout();
@@ -881,10 +878,7 @@ public class SwitchCompat extends CompoundButton {
             paddingRight = Math.max(paddingRight, inset.right);
         }
 
-        final int switchWidth = Math.max(mSwitchMinWidth,
-                2 * mThumbWidth + paddingLeft + paddingRight);
         final int switchHeight = Math.max(trackHeight, thumbHeight);
-        mSwitchWidth = switchWidth;
         mSwitchHeight = switchHeight;
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -899,7 +893,7 @@ public class SwitchCompat extends CompoundButton {
     public void onPopulateAccessibilityEvent(AccessibilityEvent event) {
         super.onPopulateAccessibilityEvent(event);
 
-        final CharSequence text = isChecked() ? mTextOn : mTextOff;
+        final CharSequence text = isChecked() ? mAccessibilityTextOn : mAccessibilityTextOff;
         if (text != null) {
             event.getText().add(text);
         }
@@ -1034,14 +1028,16 @@ public class SwitchCompat extends CompoundButton {
         // has not been disabled during the drag.
         final boolean commitChange = ev.getAction() == MotionEvent.ACTION_UP && isEnabled();
         final boolean oldState = isChecked();
-        final boolean newState;
+        boolean newState = true;
         if (commitChange) {
             mVelocityTracker.computeCurrentVelocity(1000);
             final float xvel = mVelocityTracker.getXVelocity();
-            if (Math.abs(xvel) > mMinFlingVelocity) {
+            if (Math.abs(xvel) > CHANGE_FLING_VELOCITY || Math.abs(xvel) > MIN_FLING_VELOCITY) {
                 newState = ViewUtils.isLayoutRtl(this) ? (xvel < 0) : (xvel > 0);
             } else {
-                newState = getTargetCheckedState();
+                if (mThumbPosition == 0.0f || mThumbPosition == 1.0f) {
+                    newState = getTargetCheckedState();
+                }
             }
         } else {
             newState = oldState;
@@ -1056,18 +1052,40 @@ public class SwitchCompat extends CompoundButton {
     }
 
     private void animateThumbToCheckedState(final boolean newCheckedState) {
-        final float targetPosition = newCheckedState ? 1 : 0;
-        mPositionAnimator = ObjectAnimator.ofFloat(this, THUMB_POS, targetPosition);
-        mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
-        if (Build.VERSION.SDK_INT >= 18) {
-            mPositionAnimator.setAutoCancel(true);
+        if (mPositionAnimator != null) {
+            cancelPositionAnimator();
         }
-        mPositionAnimator.start();
+        final float targetPosition = newCheckedState ? 1 : 0;
+        mPositionAnimator = new ThumbAnimation(mThumbPosition, targetPosition);
+        mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
+        if (Build.VERSION.SDK_INT >= 23) {
+            mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION_ABOVE_M);
+        }
+        mPositionAnimator.setInterpolator(SeslAnimationUtils.ELASTIC_50);
+        mPositionAnimator.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (mPositionAnimator == animation) {
+                    setThumbPosition(newCheckedState ? 1.0f : 0.0f);
+                    mPositionAnimator = null;
+                }
+            }
+        });
+        startAnimation(mPositionAnimator);
     }
 
     private void cancelPositionAnimator() {
         if (mPositionAnimator != null) {
-            mPositionAnimator.cancel();
+            clearAnimation();
+            mPositionAnimator = null;
         }
     }
 
@@ -1092,6 +1110,13 @@ public class SwitchCompat extends CompoundButton {
 
     @Override
     public void setChecked(boolean checked) {
+        if (SUPPORT_TOUCH_FEEDBACK) {
+            if (checked != isChecked() && hasWindowFocus() &&
+                    SeslViewReflector.isVisibleToUser(this) && !isTemporarilyDetached()) {
+                performHapticFeedback(SeslHapticFeedbackConstantsReflector.semGetVibrationIndex(27));
+            }
+        }
+
         super.setChecked(checked);
 
         // Calling the super method may result in setChecked() getting called
@@ -1264,7 +1289,27 @@ public class SwitchCompat extends CompoundButton {
                 trackDrawable.draw(canvas);
                 canvas.restoreToCount(saveCount);
             } else {
+                Drawable trackBgDrawable = isChecked() ? mTrackOffDrawable : mTrackOnDrawable;
+                trackBgDrawable.setBounds(trackDrawable.getBounds());
+
+                int alpha = (int) (mThumbPosition * 255.0f);
+                if (alpha > 255) {
+                    alpha = 255;
+                } else if (alpha < 0) {
+                    alpha = 0;
+                }
+                int bgAlpha = 255 - alpha;
+
+                if (isChecked()) {
+                    trackDrawable.setAlpha(alpha);
+                    trackBgDrawable.setAlpha(bgAlpha);
+                } else {
+                    trackDrawable.setAlpha(bgAlpha);
+                    trackBgDrawable.setAlpha(alpha);
+                }
+
                 trackDrawable.draw(canvas);
+                trackBgDrawable.draw(canvas);
             }
         }
 
@@ -1421,10 +1466,8 @@ public class SwitchCompat extends CompoundButton {
             mTrackDrawable.jumpToCurrentState();
         }
 
-        if (mPositionAnimator != null && mPositionAnimator.isStarted()) {
-            mPositionAnimator.end();
-            mPositionAnimator = null;
-        }
+        cancelPositionAnimator();
+        setThumbPosition(isChecked() ? 1.0f : 0.0f);
     }
 
     @Override
@@ -1473,7 +1516,7 @@ public class SwitchCompat extends CompoundButton {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             ViewCompat.setStateDescription(
                     this,
-                    mTextOn == null ? getResources().getString(R.string.abc_capital_on) : mTextOn
+                    mAccessibilityTextOn == null ? getResources().getString(R.string.abc_capital_on) : mAccessibilityTextOn
             );
         }
     }
@@ -1482,8 +1525,47 @@ public class SwitchCompat extends CompoundButton {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             ViewCompat.setStateDescription(
                     this,
-                    mTextOff == null ? getResources().getString(R.string.abc_capital_off) : mTextOff
+                    mAccessibilityTextOff == null ? getResources().getString(R.string.abc_capital_off) : mAccessibilityTextOff
             );
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mSwitchWidth = getResources().getDimensionPixelSize(R.dimen.sesl_switch_width);
+        mAccessibilityTextOn = getResources().getString(R.string.sesl_switch_on);
+        mAccessibilityTextOff = getResources().getString(R.string.sesl_switch_off);
+    }
+
+    public void seslSetTrackStrokeColor(@ColorInt int color) {
+        DrawableContainer.DrawableContainerState containerState = (DrawableContainer.DrawableContainerState) mTrackDrawable.getConstantState();
+        LayerDrawable switchDrawable = (LayerDrawable) containerState.getChildren()[2];
+        GradientDrawable trackDrawable = (GradientDrawable) switchDrawable.findDrawableByLayerId(R.id.sesl_switch_track_on);
+        trackDrawable.setStroke(4, color);
+    }
+
+    public void seslSetThumbStrokeColor(@ColorInt int color) {
+        DrawableContainer.DrawableContainerState containerState = (DrawableContainer.DrawableContainerState) mTrackDrawable.getConstantState();
+        LayerDrawable switchDrawable = (LayerDrawable) containerState.getChildren()[2];
+        GradientDrawable thumbDrawable = (GradientDrawable) switchDrawable.findDrawableByLayerId(R.id.sesl_switch_thumb_on);
+        thumbDrawable.setStroke(4, color);
+    }
+
+    private class ThumbAnimation extends Animation {
+        final float mStartPosition;
+        final float mEndPosition;
+        final float mDiff;
+
+        ThumbAnimation(float startPos, float endPos) {
+            mStartPosition = startPos;
+            mEndPosition = endPos;
+            mDiff = endPos - startPos;
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            setThumbPosition(mStartPosition + (mDiff * interpolatedTime));
         }
     }
 }

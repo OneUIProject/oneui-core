@@ -68,6 +68,8 @@
     <item type="dimen" name="sesl_ambient_shadow_alpha_dark">0.1</item>
     <item type="dimen" name="sesl_ambient_shadow_alpha_light">0.04</item>
 
+    <dimen name="sesl_appbar_bottom_padding">0.0dip</dimen>
+
     <item type="dimen" name="sesl_background_dim">0.6</item>
 
     <dimen name="sesl_badge_additional_width">4.0dip</dimen>

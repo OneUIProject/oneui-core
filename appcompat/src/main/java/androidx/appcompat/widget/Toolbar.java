@@ -17,6 +17,7 @@
 package androidx.appcompat.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 import static androidx.annotation.RestrictTo.Scope.TESTS;
 
@@ -2390,6 +2391,7 @@ public class Toolbar extends ViewGroup {
         }
     }
 
+    @RestrictTo(LIBRARY_GROUP)
     public void setTitleAccessibilityEnabled(boolean enabled) {
         if (enabled) {
             if (mTitleTextView != null) {

@@ -20,7 +20,6 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 import static androidx.annotation.RestrictTo.Scope.TESTS;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -45,7 +44,6 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.MainThread;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,14 +62,8 @@ import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.SubMenuBuilder;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
-import androidx.core.view.MenuHost;
-import androidx.core.view.MenuHostHelper;
-import androidx.core.view.MenuProvider;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.resourceinspection.annotation.Attribute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +143,7 @@ import java.util.List;
  * {@link androidx.appcompat.R.attr#titleTextColor}
  * {@link androidx.appcompat.R.attr#menu}
  */
-public class Toolbar extends ViewGroup implements MenuHost {
+public class Toolbar extends ViewGroup {
     private static final String TAG = "Toolbar";
 
     private ActionMenuView mMenuView;
@@ -206,18 +198,13 @@ public class Toolbar extends ViewGroup implements MenuHost {
 
     private final int[] mTempMargins = new int[2];
 
-    final MenuHostHelper mMenuHostHelper = new MenuHostHelper(this::invalidateMenu);
-    private ArrayList<MenuItem> mProvidedMenuItems = new ArrayList<>();
     OnMenuItemClickListener mOnMenuItemClickListener;
 
     private final ActionMenuView.OnMenuItemClickListener mMenuViewItemClickListener =
             new ActionMenuView.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    boolean consumed = mMenuHostHelper.onMenuItemSelected(item);
-                    if (consumed) {
-                        return true;
-                    } else if (mOnMenuItemClickListener != null) {
+                    if (mOnMenuItemClickListener != null) {
                         return mOnMenuItemClickListener.onMenuItemClick(item);
                     }
                     return false;
@@ -389,8 +376,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *         0 if menus are inflated against the toolbar theme
      * @see #setPopupTheme(int)
      */
-    @Attribute("androidx.appcompat:popupTheme")
-    @StyleRes
     public int getPopupTheme() {
         return mPopupTheme;
     }
@@ -422,7 +407,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setTitleMarginStart(int)
      * {@link androidx.appcompat.R.attr#titleMarginStart}
      */
-    @Attribute("androidx.appcompat:titleMarginStart")
     public int getTitleMarginStart() {
         return mTitleMarginStart;
     }
@@ -445,7 +429,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setTitleMarginTop(int)
      * {@link androidx.appcompat.R.attr#titleMarginTop}
      */
-    @Attribute("androidx.appcompat:titleMarginTop")
     public int getTitleMarginTop() {
         return mTitleMarginTop;
     }
@@ -468,7 +451,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setTitleMarginEnd(int)
      * {@link androidx.appcompat.R.attr#titleMarginEnd}
      */
-    @Attribute("androidx.appcompat:titleMarginEnd")
     public int getTitleMarginEnd() {
         return mTitleMarginEnd;
     }
@@ -491,7 +473,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setTitleMarginBottom(int)
      * {@link androidx.appcompat.R.attr#titleMarginBottom}
      */
-    @Attribute("androidx.appcompat:titleMarginBottom")
     public int getTitleMarginBottom() {
         return mTitleMarginBottom;
     }
@@ -669,7 +650,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setLogo(int)
      * @see #setLogo(android.graphics.drawable.Drawable)
      */
-    @Attribute("androidx.appcompat:logo")
     public Drawable getLogo() {
         return mLogoView != null ? mLogoView.getDrawable() : null;
     }
@@ -708,7 +688,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * @return A description of the logo
      */
-    @Attribute("androidx.appcompat:logoDescription")
     public CharSequence getLogoDescription() {
         return mLogoView != null ? mLogoView.getContentDescription() : null;
     }
@@ -756,7 +735,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * @return The current title.
      */
-    @Attribute("androidx.appcompat:title")
     public CharSequence getTitle() {
         return mTitleText;
     }
@@ -813,7 +791,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * @return The current subtitle
      */
-    @Attribute("androidx.appcompat:subtitle")
     public CharSequence getSubtitle() {
         return mSubtitleText;
     }
@@ -936,7 +913,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * {@link androidx.appcompat.R.attr#navigationContentDescription}
      */
-    @Attribute("androidx.appcompat:navigationContentDescription")
     @Nullable
     public CharSequence getNavigationContentDescription() {
         return mNavButtonView != null ? mNavButtonView.getContentDescription() : null;
@@ -1030,7 +1006,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * {@link androidx.appcompat.R.attr#navigationIcon}
      */
-    @Attribute("androidx.appcompat:navigationIcon")
     @Nullable
     public Drawable getNavigationIcon() {
         return mNavButtonView != null ? mNavButtonView.getDrawable() : null;
@@ -1059,7 +1034,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * {@link androidx.appcompat.R.attr#collapseContentDescription}
      */
-    @Attribute("androidx.appcompat:collapseContentDescription")
     @Nullable
     public CharSequence getCollapseContentDescription() {
         return mCollapseButtonView != null ? mCollapseButtonView.getContentDescription() : null;
@@ -1105,7 +1079,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      *
      * {@link androidx.appcompat.R.attr#collapseIcon}
      */
-    @Attribute("androidx.appcompat:collapseIcon")
     @Nullable
     public Drawable getCollapseIcon() {
         return mCollapseButtonView != null ? mCollapseButtonView.getDrawable() : null;
@@ -1153,7 +1126,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @return The toolbar's Menu
      * {@link androidx.appcompat.R.attr#menu}
      */
-    @Attribute("androidx.appcompat:menu")
     public Menu getMenu() {
         ensureMenu();
         return mMenuView.getMenu();
@@ -1274,7 +1246,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #getContentInsetRight()
      * {@link androidx.appcompat.R.attr#contentInsetStart}
      */
-    @Attribute("androidx.appcompat:contentInsetStart")
     public int getContentInsetStart() {
         return mContentInsets != null ? mContentInsets.getStart() : 0;
     }
@@ -1295,7 +1266,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #getContentInsetRight()
      * {@link androidx.appcompat.R.attr#contentInsetEnd}
      */
-    @Attribute("androidx.appcompat:contentInsetEnd")
     public int getContentInsetEnd() {
         return mContentInsets != null ? mContentInsets.getEnd() : 0;
     }
@@ -1339,7 +1309,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #getContentInsetRight()
      * {@link androidx.appcompat.R.attr#contentInsetLeft}
      */
-    @Attribute("androidx.appcompat:contentInsetLeft")
     public int getContentInsetLeft() {
         return mContentInsets != null ? mContentInsets.getLeft() : 0;
     }
@@ -1360,7 +1329,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #getContentInsetLeft()
      * {@link androidx.appcompat.R.attr#contentInsetRight}
      */
-    @Attribute("androidx.appcompat:contentInsetRight")
     public int getContentInsetRight() {
         return mContentInsets != null ? mContentInsets.getRight() : 0;
     }
@@ -1377,7 +1345,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setContentInsetStartWithNavigation(int)
      * {@link androidx.appcompat.R.attr#contentInsetStartWithNavigation}
      */
-    @Attribute("androidx.appcompat:contentInsetStartWithNavigation")
     public int getContentInsetStartWithNavigation() {
         return mContentInsetStartWithNavigation != RtlSpacingHelper.UNDEFINED
                 ? mContentInsetStartWithNavigation
@@ -1421,7 +1388,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
      * @see #setContentInsetEndWithActions(int)
      * {@link androidx.appcompat.R.attr#contentInsetEndWithActions}
      */
-    @Attribute("androidx.appcompat:contentInsetEndWithActions")
     public int getContentInsetEndWithActions() {
         return mContentInsetEndWithActions != RtlSpacingHelper.UNDEFINED
                 ? mContentInsetEndWithActions
@@ -1523,17 +1489,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
             lp.gravity = GravityCompat.START | (mButtonGravity & Gravity.VERTICAL_GRAVITY_MASK);
             mNavButtonView.setLayoutParams(lp);
         }
-    }
-
-    /**
-     * Returns the navigation button view.
-     *
-     * @hide Only for use in tests.
-     */
-    @RestrictTo(RestrictTo.Scope.TESTS)
-    @Nullable
-    View getNavButtonView() {
-        return mNavButtonView;
     }
 
     void ensureCollapseButtonView() {
@@ -2362,68 +2317,6 @@ public class Toolbar extends ViewGroup implements MenuHost {
 
     Context getPopupContext() {
         return mPopupContext;
-    }
-
-    private ArrayList<MenuItem> getCurrentMenuItems() {
-        ArrayList<MenuItem> menuItems = new ArrayList<>();
-
-        Menu menu = getMenu();
-        for (int i = 0; i < menu.size(); i++) {
-            menuItems.add(menu.getItem(i));
-        }
-
-        return menuItems;
-    }
-
-    private void onCreateMenu() {
-        ArrayList<MenuItem> oldMenuItemList = getCurrentMenuItems();
-        mMenuHostHelper.onCreateMenu(getMenu(), getMenuInflater());
-
-        ArrayList<MenuItem> newMenuItemList = getCurrentMenuItems();
-        newMenuItemList.removeAll(oldMenuItemList);
-        mProvidedMenuItems = newMenuItemList;
-    }
-
-    @Override
-    @MainThread
-    public void addMenuProvider(@NonNull MenuProvider provider) {
-        mMenuHostHelper.addMenuProvider(provider);
-    }
-
-    @Override
-    @MainThread
-    public void addMenuProvider(@NonNull MenuProvider provider, @NonNull LifecycleOwner owner) {
-        mMenuHostHelper.addMenuProvider(provider, owner);
-    }
-
-    @Override
-    @MainThread
-    @SuppressLint("LambdaLast")
-    public void addMenuProvider(@NonNull MenuProvider provider, @NonNull LifecycleOwner owner,
-            @NonNull Lifecycle.State state) {
-        mMenuHostHelper.addMenuProvider(provider, owner, state);
-    }
-
-    @Override
-    @MainThread
-    public void removeMenuProvider(@NonNull MenuProvider provider) {
-        mMenuHostHelper.removeMenuProvider(provider);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Only the {@link MenuItem items} in the {@link Menu} that were provided by
-     * {@link MenuProvider}s should be removed and repopulated, leaving all manually
-     * inflated menu items untouched, as they should continue to be managed manually.
-     */
-    @Override
-    @MainThread
-    public void invalidateMenu() {
-        for (MenuItem menuItem : mProvidedMenuItems) {
-            getMenu().removeItem(menuItem.getItemId());
-        }
-        onCreateMenu();
     }
 
     /**

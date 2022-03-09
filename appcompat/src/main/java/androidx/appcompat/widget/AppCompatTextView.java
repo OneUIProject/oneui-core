@@ -26,7 +26,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
-import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.inputmethod.EditorInfo;
@@ -48,7 +47,6 @@ import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
 import androidx.core.widget.TintableCompoundDrawablesView;
-import androidx.resourceinspection.annotation.AppCompatShadowedAttributes;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -79,16 +77,12 @@ import java.util.concurrent.Future;
  * <a href="{@docRoot}topic/libraries/support-library/packages.html#v7-appcompat">appcompat</a>.
  * You should only need to manually use this class when writing custom views.</p>
  */
-@AppCompatShadowedAttributes
 public class AppCompatTextView extends TextView implements TintableBackgroundView,
-        TintableCompoundDrawablesView, AutoSizeableTextView, EmojiCompatConfigurationView {
+        TintableCompoundDrawablesView, AutoSizeableTextView {
 
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
     private final AppCompatTextHelper mTextHelper;
     private final AppCompatTextClassifierHelper mTextClassifierHelper;
-    @SuppressWarnings("NotNullFieldNotInitialized") // initialized in getter
-    @NonNull
-    private AppCompatEmojiTextHelper mEmojiTextViewHelper;
 
     private boolean mIsSetTypefaceProcessing = false;
 
@@ -117,21 +111,6 @@ public class AppCompatTextView extends TextView implements TintableBackgroundVie
         mTextHelper.applyCompoundDrawablesTints();
 
         mTextClassifierHelper = new AppCompatTextClassifierHelper(this);
-
-        AppCompatEmojiTextHelper emojiTextViewHelper = getEmojiTextViewHelper();
-        emojiTextViewHelper.loadFromAttributes(attrs, defStyleAttr);
-    }
-
-    /**
-     * This may be called from super constructors.
-     */
-    @NonNull
-    private AppCompatEmojiTextHelper getEmojiTextViewHelper() {
-        //noinspection ConstantConditions
-        if (mEmojiTextViewHelper == null) {
-            mEmojiTextViewHelper = new AppCompatEmojiTextHelper(this);
-        }
-        return mEmojiTextViewHelper;
     }
 
     @Override
@@ -212,27 +191,6 @@ public class AppCompatTextView extends TextView implements TintableBackgroundVie
         if (mTextHelper != null) {
             mTextHelper.onSetTextAppearance(context, resId);
         }
-    }
-
-    @Override
-    public void setFilters(@SuppressWarnings("ArrayReturn") @NonNull InputFilter[] filters) {
-        super.setFilters(getEmojiTextViewHelper().getFilters(filters));
-    }
-
-    @Override
-    public void setAllCaps(boolean allCaps) {
-        super.setAllCaps(allCaps);
-        getEmojiTextViewHelper().setAllCaps(allCaps);
-    }
-
-    @Override
-    public void setEmojiCompatEnabled(boolean enabled) {
-        getEmojiTextViewHelper().setEnabled(enabled);
-    }
-
-    @Override
-    public boolean isEmojiCompatEnabled() {
-        return getEmojiTextViewHelper().isEnabled();
     }
 
     @Override
@@ -485,17 +443,9 @@ public class AppCompatTextView extends TextView implements TintableBackgroundVie
      * {@link TextViewCompat#setCustomSelectionActionModeCallback(TextView, ActionMode.Callback)}
      */
     @Override
-    public void setCustomSelectionActionModeCallback(
-            @Nullable ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(
-                TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
-    }
-
-    @Override
-    @Nullable
-    public ActionMode.Callback getCustomSelectionActionModeCallback() {
-        return TextViewCompat.unwrapCustomSelectionActionModeCallback(
-                super.getCustomSelectionActionModeCallback());
+    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
+        super.setCustomSelectionActionModeCallback(TextViewCompat
+                .wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 
     /**

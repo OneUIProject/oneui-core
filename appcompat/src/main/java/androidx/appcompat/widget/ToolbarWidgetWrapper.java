@@ -260,9 +260,6 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
         mTitle = title;
         if ((mDisplayOpts & ActionBar.DISPLAY_SHOW_TITLE) != 0) {
             mToolbar.setTitle(title);
-            if (mTitleSet) {
-                ViewCompat.setAccessibilityPaneTitle(mToolbar.getRootView(), title);
-            }
         }
     }
 

@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
@@ -37,16 +36,6 @@ import androidx.fragment.app.DialogFragment;
  * @see DialogFragment
  */
 public class AppCompatDialogFragment extends DialogFragment {
-
-    /** {@inheritDoc} **/
-    public AppCompatDialogFragment() {
-        super();
-    }
-
-    /** {@inheritDoc} **/
-    public AppCompatDialogFragment(@LayoutRes int contentLayoutId) {
-        super(contentLayoutId);
-    }
 
     @NonNull
     @Override

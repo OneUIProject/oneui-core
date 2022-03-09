@@ -47,7 +47,6 @@ import androidx.appcompat.view.menu.MenuView;
  * items in an overflow menu. This allows applications to present packs of actions inline with
  * specific or repeating content.
  */
-@SuppressWarnings("HiddenSuperclass")
 public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.ItemInvoker,
         MenuView {
 

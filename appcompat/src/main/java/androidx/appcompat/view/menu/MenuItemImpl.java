@@ -37,7 +37,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewDebug;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
@@ -257,7 +256,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public MenuItem setAlphabeticShortcut(char alphaChar, int alphaModifiers) {
         if (mShortcutAlphabeticChar == alphaChar
@@ -300,7 +298,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public MenuItem setNumericShortcut(char numericChar, int numericModifiers) {
         if (mShortcutNumericChar == numericChar && mShortcutNumericModifiers == numericModifiers) {
@@ -325,7 +322,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public MenuItem setShortcut(char numericChar, char alphaChar, int numericModifiers,
             int alphaModifiers) {
@@ -538,7 +534,6 @@ public final class MenuItemImpl implements SupportMenuItem {
     }
 
 
-    @NonNull
     @Override
     public MenuItem setIconTintList(@Nullable ColorStateList iconTintList) {
         mIconTintList = iconTintList;
@@ -555,7 +550,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return mIconTintList;
     }
 
-    @NonNull
     @Override
     public MenuItem setIconTintMode(PorterDuff.Mode iconTintMode) {
         mIconTintMode = iconTintMode;
@@ -752,7 +746,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         mMenu.onItemActionRequestChanged(this);
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setActionView(View view) {
         mActionView = view;
@@ -764,7 +757,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setActionView(int resId) {
         final Context context = mMenu.getContext();
@@ -802,7 +794,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return mActionProvider;
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setSupportActionProvider(ActionProvider actionProvider) {
         if (mActionProvider != null) {
@@ -822,7 +813,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setShowAsActionFlags(int actionEnum) {
         setShowAsAction(actionEnum);
@@ -887,7 +877,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return this;
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setContentDescription(CharSequence contentDescription) {
         mContentDescription = contentDescription;
@@ -902,7 +891,6 @@ public final class MenuItemImpl implements SupportMenuItem {
         return mContentDescription;
     }
 
-    @NonNull
     @Override
     public SupportMenuItem setTooltipText(CharSequence tooltipText) {
         mTooltipText = tooltipText;

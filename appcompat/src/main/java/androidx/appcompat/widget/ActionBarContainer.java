@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
 import androidx.core.view.ViewCompat;
@@ -104,7 +103,7 @@ public class ActionBarContainer extends FrameLayout {
                 mBackground == null && mStackedBackground == null);
         invalidate();
         if (Build.VERSION.SDK_INT >= 21) {
-            Api21Impl.invalidateOutline(this);
+            invalidateOutline();
         }
     }
 
@@ -125,7 +124,7 @@ public class ActionBarContainer extends FrameLayout {
                 mBackground == null && mStackedBackground == null);
         invalidate();
         if (Build.VERSION.SDK_INT >= 21) {
-            Api21Impl.invalidateOutline(this);
+            invalidateOutline();
         }
     }
 
@@ -145,7 +144,7 @@ public class ActionBarContainer extends FrameLayout {
                 mBackground == null && mStackedBackground == null);
         invalidate();
         if (Build.VERSION.SDK_INT >= 21) {
-            Api21Impl.invalidateOutline(this);
+            invalidateOutline();
         }
     }
 
@@ -344,17 +343,6 @@ public class ActionBarContainer extends FrameLayout {
 
         if (needsInvalidate) {
             invalidate();
-        }
-    }
-
-    @RequiresApi(21)
-    private static class Api21Impl {
-        private Api21Impl() {
-            // Non-instantiable.
-        }
-
-        public static void invalidateOutline(ActionBarContainer drawable) {
-            drawable.invalidateOutline();
         }
     }
 }

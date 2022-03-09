@@ -591,17 +591,16 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         if (ab != null) {
             ab.onDestroy();
         }
-        mActionBar = null;
 
         if (toolbar != null) {
             final ToolbarActionBar tbab = new ToolbarActionBar(toolbar, getTitle(),
                     mAppCompatWindowCallback);
             mActionBar = tbab;
-            // Set the nested action bar window callback so that it receive menu events
-            mAppCompatWindowCallback.setActionBarCallback(tbab.mMenuCallback);
+            mWindow.setCallback(tbab.getWrappedWindowCallback());
         } else {
-            // Clear the nested action bar window callback
-            mAppCompatWindowCallback.setActionBarCallback(null);
+            mActionBar = null;
+            // Re-set the original window callback since we may have already set a Toolbar wrapper
+            mWindow.setCallback(mAppCompatWindowCallback);
         }
 
         invalidateOptionsMenu();
@@ -695,7 +694,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         ViewGroup contentParent = mSubDecor.findViewById(android.R.id.content);
         contentParent.removeAllViews();
         contentParent.addView(v);
-        mAppCompatWindowCallback.bypassOnContentChanged(mWindow.getCallback());
+        mAppCompatWindowCallback.getWrapped().onContentChanged();
     }
 
     @Override
@@ -704,7 +703,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         ViewGroup contentParent = mSubDecor.findViewById(android.R.id.content);
         contentParent.removeAllViews();
         LayoutInflater.from(mContext).inflate(resId, contentParent);
-        mAppCompatWindowCallback.bypassOnContentChanged(mWindow.getCallback());
+        mAppCompatWindowCallback.getWrapped().onContentChanged();
     }
 
     @Override
@@ -713,7 +712,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         ViewGroup contentParent = mSubDecor.findViewById(android.R.id.content);
         contentParent.removeAllViews();
         contentParent.addView(v, lp);
-        mAppCompatWindowCallback.bypassOnContentChanged(mWindow.getCallback());
+        mAppCompatWindowCallback.getWrapped().onContentChanged();
     }
 
     @Override
@@ -721,7 +720,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         ensureSubDecor();
         ViewGroup contentParent = mSubDecor.findViewById(android.R.id.content);
         contentParent.addView(v, lp);
-        mAppCompatWindowCallback.bypassOnContentChanged(mWindow.getCallback());
+        mAppCompatWindowCallback.getWrapped().onContentChanged();
     }
 
     @Override
@@ -1463,7 +1462,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
 
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
             // If this is a MENU event, let the Activity have a go.
-            if (mAppCompatWindowCallback.bypassDispatchKeyEvent(mWindow.getCallback(), event)) {
+            if (mAppCompatWindowCallback.getWrapped().dispatchKeyEvent(event)) {
                 return true;
             }
         }
@@ -1532,8 +1531,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
                 mAppCompatViewInflater = new AppCompatViewInflater();
             } else {
                 try {
-                    Class<?> viewInflaterClass =
-                            mContext.getClassLoader().loadClass(viewInflaterClassName);
+                    Class<?> viewInflaterClass = Class.forName(viewInflaterClassName);
                     mAppCompatViewInflater =
                             (AppCompatViewInflater) viewInflaterClass.getDeclaredConstructor()
                                     .newInstance();
@@ -2099,7 +2097,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
             // We need to be careful which callback we dispatch the call to. We can not dispatch
             // this to the Window's callback since that will call back into this method and cause a
             // crash. Instead we need to dispatch down to the original Activity/Dialog/etc.
-            mAppCompatWindowCallback.bypassOnPanelClosed(mWindow.getCallback(), featureId, menu);
+            mAppCompatWindowCallback.getWrapped().onPanelClosed(featureId, menu);
         }
     }
 
@@ -3062,37 +3060,14 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         }
     }
 
-    /**
-     * Interface which allows ToolbarActionBar to receive menu events without
-     * needing to wrap the Window.Callback
-     */
-    interface ActionBarMenuCallback {
-        boolean onPreparePanel(int featureId);
-
-        @Nullable
-        View onCreatePanelView(int featureId);
-    }
 
     class AppCompatWindowCallback extends WindowCallbackWrapper {
-        private ActionBarMenuCallback mActionBarCallback;
-        private boolean mOnContentChangedBypassEnabled;
-        private boolean mDispatchKeyEventBypassEnabled;
-        private boolean mOnPanelClosedBypassEnabled;
-
         AppCompatWindowCallback(Window.Callback callback) {
             super(callback);
         }
 
-        void setActionBarCallback(@Nullable ActionBarMenuCallback callback) {
-            mActionBarCallback = callback;
-        }
-
         @Override
         public boolean dispatchKeyEvent(KeyEvent event) {
-            if (mDispatchKeyEventBypassEnabled) {
-                return getWrapped().dispatchKeyEvent(event);
-            }
-
             return AppCompatDelegateImpl.this.dispatchKeyEvent(event)
                     || super.dispatchKeyEvent(event);
         }
@@ -3114,23 +3089,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
         }
 
         @Override
-        public View onCreatePanelView(int featureId) {
-            if (mActionBarCallback != null) {
-                View created = mActionBarCallback.onCreatePanelView(featureId);
-                if (created != null) {
-                    return created;
-                }
-            }
-            return super.onCreatePanelView(featureId);
-        }
-
-        @Override
         public void onContentChanged() {
-            if (mOnContentChangedBypassEnabled) {
-                getWrapped().onContentChanged();
-                return;
-            }
-
             // We purposely do not propagate this call as this is called when we install
             // our sub-decor rather than the user's content
         }
@@ -3153,13 +3112,7 @@ class AppCompatDelegateImpl extends AppCompatDelegate
                 mb.setOverrideVisibleItems(true);
             }
 
-            boolean handled = false;
-            if (mActionBarCallback != null && mActionBarCallback.onPreparePanel(featureId)) {
-                handled = true;
-            }
-            if (!handled) {
-                handled = super.onPreparePanel(featureId, view, menu);
-            }
+            final boolean handled = super.onPreparePanel(featureId, view, menu);
 
             if (mb != null) {
                 mb.setOverrideVisibleItems(false);
@@ -3177,11 +3130,6 @@ class AppCompatDelegateImpl extends AppCompatDelegate
 
         @Override
         public void onPanelClosed(int featureId, Menu menu) {
-            if (mOnPanelClosedBypassEnabled) {
-                getWrapped().onPanelClosed(featureId, menu);
-                return;
-            }
-
             super.onPanelClosed(featureId, menu);
             AppCompatDelegateImpl.this.onPanelClosed(featureId);
         }
@@ -3249,58 +3197,6 @@ class AppCompatDelegateImpl extends AppCompatDelegate
             } else {
                 // If we don't have a menu, jump pass through the original instead
                 super.onProvideKeyboardShortcuts(data, menu, deviceId);
-            }
-        }
-
-        /**
-         * Performs a call to {@link Window.Callback#onContentChanged()}, ensuring that if the
-         * delegate's own {@link #onContentChanged()} is called then it delegates directly to the
-         * wrapped callback.
-         *
-         * @param c the callback
-         */
-        public void bypassOnContentChanged(Window.Callback c) {
-            try {
-                mOnContentChangedBypassEnabled = true;
-                c.onContentChanged();
-            } finally {
-                mOnContentChangedBypassEnabled = false;
-            }
-        }
-
-        /**
-         * Performs a call to {@link Window.Callback#dispatchKeyEvent(KeyEvent)}, ensuring that if
-         * the delegate's own {@link #dispatchKeyEvent(KeyEvent)} is called then it delegates
-         * directly to the wrapped callback.
-         *
-         * @param c the callback
-         * @param e the key event to dispatch
-         * @return whether the key event was handled
-         */
-        public boolean bypassDispatchKeyEvent(Window.Callback c, KeyEvent e) {
-            try {
-                mDispatchKeyEventBypassEnabled = true;
-                return c.dispatchKeyEvent(e);
-            } finally {
-                mDispatchKeyEventBypassEnabled = false;
-            }
-        }
-
-        /**
-         * Performs a call to {@link Window.Callback#onPanelClosed(int, Menu)}, ensuring that if the
-         * delegate's own {@link #onPanelClosed(int, Menu)} is called then it delegates directly to
-         * the wrapped callback.
-         *
-         * @param c the callback
-         * @param featureId the feature ID for the panel
-         * @param menu the menu represented by the panel
-         */
-        public void bypassOnPanelClosed(Window.Callback c, int featureId, Menu menu) {
-            try {
-                mOnPanelClosedBypassEnabled = true;
-                c.onPanelClosed(featureId, menu);
-            } finally {
-                mOnPanelClosedBypassEnabled = false;
             }
         }
     }

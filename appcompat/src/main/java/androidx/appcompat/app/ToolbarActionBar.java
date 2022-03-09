@@ -32,21 +32,20 @@ import android.widget.SpinnerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.WindowCallbackWrapper;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.widget.DecorToolbar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
-import androidx.core.util.Preconditions;
 import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
 class ToolbarActionBar extends ActionBar {
-    final DecorToolbar mDecorToolbar;
-    final Window.Callback mWindowCallback;
-    final AppCompatDelegateImpl.ActionBarMenuCallback mMenuCallback;
+    DecorToolbar mDecorToolbar;
     boolean mToolbarMenuPrepared;
+    Window.Callback mWindowCallback;
     private boolean mMenuCallbackSet;
 
     private boolean mLastMenuVisibility;
@@ -67,17 +66,16 @@ class ToolbarActionBar extends ActionBar {
                 }
             };
 
-    ToolbarActionBar(@NonNull Toolbar toolbar, @Nullable CharSequence title,
-            @NonNull Window.Callback windowCallback) {
-        Preconditions.checkNotNull(toolbar);
+    ToolbarActionBar(Toolbar toolbar, CharSequence title, Window.Callback windowCallback) {
         mDecorToolbar = new ToolbarWidgetWrapper(toolbar, false);
-
-        mWindowCallback = Preconditions.checkNotNull(windowCallback);
-        mDecorToolbar.setWindowCallback(windowCallback);
+        mWindowCallback = new ToolbarCallbackWrapper(windowCallback);
+        mDecorToolbar.setWindowCallback(mWindowCallback);
         toolbar.setOnMenuItemClickListener(mMenuClicker);
         mDecorToolbar.setWindowTitle(title);
+    }
 
-        mMenuCallback = new ToolbarMenuCallback();
+    public Window.Callback getWrappedWindowCallback() {
+        return mWindowCallback;
     }
 
     @Override
@@ -515,18 +513,19 @@ class ToolbarActionBar extends ActionBar {
         }
     }
 
-    private class ToolbarMenuCallback implements AppCompatDelegateImpl.ActionBarMenuCallback {
-        ToolbarMenuCallback() {}
+    private class ToolbarCallbackWrapper extends WindowCallbackWrapper {
+        public ToolbarCallbackWrapper(Window.Callback wrapped) {
+            super(wrapped);
+        }
 
         @Override
-        public boolean onPreparePanel(int featureId) {
-            if (featureId == Window.FEATURE_OPTIONS_PANEL && !mToolbarMenuPrepared) {
+        public boolean onPreparePanel(int featureId, View view, Menu menu) {
+            final boolean result = super.onPreparePanel(featureId, view, menu);
+            if (result && !mToolbarMenuPrepared) {
                 mDecorToolbar.setMenuPrepared();
                 mToolbarMenuPrepared = true;
-                // We don't want the stop the AppCompat/Window receiving the event, so don't
-                // return true
             }
-            return false;
+            return result;
         }
 
         @Override
@@ -537,7 +536,7 @@ class ToolbarActionBar extends ActionBar {
                 // preparing a default one.
                 return new View(mDecorToolbar.getContext());
             }
-            return null;
+            return super.onCreatePanelView(featureId);
         }
     }
 
@@ -558,8 +557,11 @@ class ToolbarActionBar extends ActionBar {
 
         @Override
         public boolean onOpenSubMenu(@NonNull MenuBuilder subMenu) {
-            mWindowCallback.onMenuOpened(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, subMenu);
-            return true;
+            if (mWindowCallback != null) {
+                mWindowCallback.onMenuOpened(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, subMenu);
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -570,7 +572,9 @@ class ToolbarActionBar extends ActionBar {
 
             mClosingActionMenu = true;
             mDecorToolbar.dismissPopupMenus();
-            mWindowCallback.onPanelClosed(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
+            if (mWindowCallback != null) {
+                mWindowCallback.onPanelClosed(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
+            }
             mClosingActionMenu = false;
         }
     }
@@ -587,10 +591,13 @@ class ToolbarActionBar extends ActionBar {
 
         @Override
         public void onMenuModeChange(@NonNull MenuBuilder menu) {
-            if (mDecorToolbar.isOverflowMenuShowing()) {
-                mWindowCallback.onPanelClosed(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
-            } else if (mWindowCallback.onPreparePanel(Window.FEATURE_OPTIONS_PANEL, null, menu)) {
-                mWindowCallback.onMenuOpened(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
+            if (mWindowCallback != null) {
+                if (mDecorToolbar.isOverflowMenuShowing()) {
+                    mWindowCallback.onPanelClosed(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
+                } else if (mWindowCallback.onPreparePanel(Window.FEATURE_OPTIONS_PANEL,
+                        null, menu)) {
+                    mWindowCallback.onMenuOpened(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR, menu);
+                }
             }
         }
     }

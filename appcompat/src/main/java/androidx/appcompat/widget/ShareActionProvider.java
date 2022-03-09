@@ -40,7 +40,7 @@ import androidx.core.view.ActionProvider;
  * overflow menu, it creates a submenu with the appropriate sharing
  * actions.
  *
- * ### Adding a share action
+ * <h3 id="add-share-action">Adding a share action</h3>
  *
  * <p>To add a "share" action to your activity, put a
  * <code>ShareActionProvider</code> in the app bar's menu resource. For
@@ -101,7 +101,7 @@ import androidx.core.view.ActionProvider;
  * myShareActionProvider.setShareIntent(myShareIntent);</pre></li>
  * </ol>
  *
- * ### Share target rankings
+ * <h3 id="rankings">Share target rankings</h3>
  *
  * <p>The share action provider retains a ranking for each share target,
  * based on how often the user chooses each one. The more often a user

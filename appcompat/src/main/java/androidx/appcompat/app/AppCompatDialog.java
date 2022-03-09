@@ -18,6 +18,7 @@ package androidx.appcompat.app;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -25,10 +26,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.ComponentDialog;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
@@ -38,20 +37,23 @@ import androidx.core.view.KeyEventDispatcher;
 /**
  * Base class for AppCompat themed {@link android.app.Dialog}s.
  */
-@SuppressWarnings("unused")
-public class AppCompatDialog extends ComponentDialog implements AppCompatCallback {
+public class AppCompatDialog extends Dialog implements AppCompatCallback {
 
     private AppCompatDelegate mDelegate;
 
     // Until KeyEventDispatcher is un-hidden, it can't be implemented directly,
-    private final KeyEventDispatcher.Component mKeyDispatcher =
-            AppCompatDialog.this::superDispatchKeyEvent;
+    private final KeyEventDispatcher.Component mKeyDispatcher = new KeyEventDispatcher.Component() {
+        @Override
+        public boolean superDispatchKeyEvent(KeyEvent event) {
+            return AppCompatDialog.this.superDispatchKeyEvent(event);
+        }
+    };
 
-    public AppCompatDialog(@NonNull Context context) {
+    public AppCompatDialog(Context context) {
         this(context, 0);
     }
 
-    public AppCompatDialog(@NonNull Context context, int theme) {
+    public AppCompatDialog(Context context, int theme) {
         super(context, getThemeResId(context, theme));
 
         final AppCompatDelegate delegate = getDelegate();
@@ -65,11 +67,9 @@ public class AppCompatDialog extends ComponentDialog implements AppCompatCallbac
         delegate.onCreate(null);
     }
 
-    protected AppCompatDialog(@NonNull Context context, boolean cancelable,
-            @Nullable OnCancelListener cancelListener) {
-        super(context);
-        setCancelable(cancelable);
-        setOnCancelListener(cancelListener);
+    protected AppCompatDialog(Context context, boolean cancelable,
+            OnCancelListener cancelListener) {
+        super(context, cancelable, cancelListener);
     }
 
     @Override
@@ -96,12 +96,12 @@ public class AppCompatDialog extends ComponentDialog implements AppCompatCallbac
     }
 
     @Override
-    public void setContentView(@NonNull View view) {
+    public void setContentView(View view) {
         getDelegate().setContentView(view);
     }
 
     @Override
-    public void setContentView(@NonNull View view, ViewGroup.LayoutParams params) {
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
         getDelegate().setContentView(view, params);
     }
 
@@ -125,7 +125,7 @@ public class AppCompatDialog extends ComponentDialog implements AppCompatCallbac
     }
 
     @Override
-    public void addContentView(@NonNull View view, ViewGroup.LayoutParams params) {
+    public void addContentView(View view, ViewGroup.LayoutParams params) {
         getDelegate().addContentView(view, params);
     }
 
@@ -172,7 +172,6 @@ public class AppCompatDialog extends ComponentDialog implements AppCompatCallbac
     /**
      * @return The {@link AppCompatDelegate} being used by this Dialog.
      */
-    @NonNull
     public AppCompatDelegate getDelegate() {
         if (mDelegate == null) {
             mDelegate = AppCompatDelegate.create(this, this);

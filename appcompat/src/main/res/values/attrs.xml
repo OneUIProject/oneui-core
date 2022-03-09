@@ -593,6 +593,11 @@
              view will be inflated using a {@link android.content.Context} themed with
              the specified resource. -->
         <attr name="android:theme" />
+
+        <attr name="android:background" />
+        <attr name="android:contentDescription" />
+        <attr name="android:minWidth" />
+        <attr name="android:minHeight" />
     </declare-styleable>
 
     <declare-styleable name="ViewBackgroundHelper">

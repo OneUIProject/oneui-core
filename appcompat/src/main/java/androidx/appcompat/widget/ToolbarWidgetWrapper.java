@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,8 +93,8 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
     private Drawable mDefaultNavigationIcon;
 
     public ToolbarWidgetWrapper(Toolbar toolbar, boolean style) {
-        this(toolbar, style, R.string.abc_action_bar_up_description,
-                R.drawable.abc_ic_ab_back_material);
+        this(toolbar, style, R.string.sesl_action_bar_up_description,
+                R.drawable.sesl_ic_ab_back_light);
     }
 
     public ToolbarWidgetWrapper(Toolbar toolbar, boolean style,

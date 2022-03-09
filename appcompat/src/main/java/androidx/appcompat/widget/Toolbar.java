@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import static androidx.annotation.RestrictTo.Scope.TESTS;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
@@ -29,6 +32,7 @@ import android.os.Parcelable;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
@@ -60,96 +64,36 @@ import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.SubMenuBuilder;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
+import androidx.reflect.view.SeslViewReflector;
+import androidx.reflect.widget.SeslHoverPopupWindowReflector;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * A standard toolbar for use within application content.
- *
- * <p>A Toolbar is a generalization of {@link ActionBar action bars} for use
- * within application layouts. While an action bar is traditionally part of an
- * {@link android.app.Activity Activity's} opaque window decor controlled by the framework,
- * a Toolbar may be placed at any arbitrary level of nesting within a view hierarchy.
- * An application may choose to designate a Toolbar as the action bar for an Activity
- * using the {@link androidx.appcompat.app.AppCompatActivity#setSupportActionBar(Toolbar)
- * setSupportActionBar()} method.</p>
- *
- * <p>Toolbar supports a more focused feature set than ActionBar. From start to end, a toolbar
- * may contain a combination of the following optional elements:
- *
- * <ul>
- *     <li><em>A navigation button.</em> This may be an Up arrow, navigation menu toggle, close,
- *     collapse, done or another glyph of the app's choosing. This button should always be used
- *     to access other navigational destinations within the container of the Toolbar and
- *     its signified content or otherwise leave the current context signified by the Toolbar.
- *     The navigation button is vertically aligned within the Toolbar's minimum height,
- *     if set.</li>
- *     <li><em>A branded logo image.</em> This may extend to the height of the bar and can be
- *     arbitrarily wide.</li>
- *     <li><em>A title and subtitle.</em> The title should be a signpost for the Toolbar's current
- *     position in the navigation hierarchy and the content contained there. The subtitle,
- *     if present should indicate any extended information about the current content.
- *     If an app uses a logo image it should strongly consider omitting a title and subtitle.</li>
- *     <li><em>One or more custom views.</em> The application may add arbitrary child views
- *     to the Toolbar. They will appear at this position within the layout. If a child view's
- *     {@link LayoutParams} indicates a {@link Gravity} value of
- *     {@link Gravity#CENTER_HORIZONTAL CENTER_HORIZONTAL} the view will attempt to center
- *     within the available space remaining in the Toolbar after all other elements have been
- *     measured.</li>
- *     <li><em>An {@link ActionMenuView action menu}.</em> The menu of actions will pin to the
- *     end of the Toolbar offering a few
- *     <a href="http://developer.android.com/design/patterns/actionbar.html#ActionButtons">
- *     frequent, important or typical</a> actions along with an optional overflow menu for
- *     additional actions. Action buttons are vertically aligned within the Toolbar's
- *     minimum height, if set.</li>
- * </ul>
- * </p>
- *
- * <p>In modern Android UIs developers should lean more on a visually distinct color scheme for
- * toolbars than on their application icon. The use of application icon plus title as a standard
- * layout is discouraged on API 21 devices and newer.</p>
- *
- * {@link androidx.appcompat.R.attr#buttonGravity}
- * {@link androidx.appcompat.R.attr#collapseContentDescription}
- * {@link androidx.appcompat.R.attr#collapseIcon}
- * {@link androidx.appcompat.R.attr#contentInsetEnd}
- * {@link androidx.appcompat.R.attr#contentInsetLeft}
- * {@link androidx.appcompat.R.attr#contentInsetRight}
- * {@link androidx.appcompat.R.attr#contentInsetStart}
- * {@link androidx.appcompat.R.attr#contentInsetStartWithNavigation}
- * {@link androidx.appcompat.R.attr#contentInsetEndWithActions}
- * {@link android.R.attr#gravity}
- * {@link androidx.appcompat.R.attr#logo}
- * {@link androidx.appcompat.R.attr#logoDescription}
- * {@link androidx.appcompat.R.attr#maxButtonHeight}
- * {@link androidx.appcompat.R.attr#navigationContentDescription}
- * {@link androidx.appcompat.R.attr#navigationIcon}
- * {@link androidx.appcompat.R.attr#popupTheme}
- * {@link androidx.appcompat.R.attr#subtitle}
- * {@link androidx.appcompat.R.attr#subtitleTextAppearance}
- * {@link androidx.appcompat.R.attr#subtitleTextColor}
- * {@link androidx.appcompat.R.attr#title}
- * {@link androidx.appcompat.R.attr#titleMargin}
- * {@link androidx.appcompat.R.attr#titleMarginBottom}
- * {@link androidx.appcompat.R.attr#titleMarginEnd}
- * {@link androidx.appcompat.R.attr#titleMarginStart}
- * {@link androidx.appcompat.R.attr#titleMarginTop}
- * {@link androidx.appcompat.R.attr#titleTextAppearance}
- * {@link androidx.appcompat.R.attr#titleTextColor}
- * {@link androidx.appcompat.R.attr#menu}
+ * Samsung Toolbar class.
  */
 public class Toolbar extends ViewGroup {
+    private static final float MAX_FONT_SCALE = 1.2f;
+
     private static final String TAG = "Toolbar";
 
+    private Drawable mBackground;
     private ActionMenuView mMenuView;
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
     private ImageButton mNavButtonView;
+    private Drawable mNavButtonIconDrawable;
+    private CharSequence mNavTooltipText;
     private ImageView mLogoView;
 
     private Drawable mCollapseIcon;
@@ -247,12 +191,11 @@ public class Toolbar extends ViewGroup {
         mGravity = a.getInteger(R.styleable.Toolbar_android_gravity, mGravity);
         mButtonGravity = a.getInteger(R.styleable.Toolbar_buttonGravity, Gravity.TOP);
 
-        // First read the correct attribute
+        mBackground = a.getDrawable(R.styleable.Toolbar_background);
+        mNavTooltipText = a.getText(R.styleable.Toolbar_tooltipText);
+        setBackground(mBackground);
+
         int titleMargin = a.getDimensionPixelOffset(R.styleable.Toolbar_titleMargin, 0);
-        if (a.hasValue(R.styleable.Toolbar_titleMargins)) {
-            // Now read the deprecated attribute, if it has a value
-            titleMargin = a.getDimensionPixelOffset(R.styleable.Toolbar_titleMargins, titleMargin);
-        }
         mTitleMarginStart = mTitleMarginEnd = mTitleMarginTop = mTitleMarginBottom = titleMargin;
 
         final int marginStart = a.getDimensionPixelOffset(R.styleable.Toolbar_titleMarginStart, -1);
@@ -351,6 +294,22 @@ public class Toolbar extends ViewGroup {
         }
 
         a.recycle();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        final int topPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_top_padding);
+        setPadding(0, topPadding, 0, 0);
+
+        TypedArray a = getContext().obtainStyledAttributes(R.styleable.AppCompatTheme);
+        final int actionBarSize = a.getDimensionPixelSize(R.styleable.AppCompatTheme_actionBarSize, 0);
+        a.recycle();
+
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        lp.height = actionBarSize + topPadding;
+        setLayoutParams(lp);
     }
 
     /**
@@ -884,6 +843,16 @@ public class Toolbar extends ViewGroup {
     }
 
     /**
+     * Return the color of the title view.
+     */
+    public int seslGetTitleTextColor() {
+        if (mTitleTextView != null) {
+            return mTitleTextView.getCurrentTextColor();
+        }
+        return Color.TRANSPARENT;
+    }
+
+    /**
      * Sets the text color of the subtitle, if present.
      *
      * @param color The new text color in 0xAARRGGBB format
@@ -902,6 +871,16 @@ public class Toolbar extends ViewGroup {
         if (mSubtitleTextView != null) {
             mSubtitleTextView.setTextColor(color);
         }
+    }
+
+    /**
+     * Return the color of the subtitle view.
+     */
+    public int seslGetSubtitleTextColor() {
+        if (mSubtitleTextView != null) {
+            return mSubtitleTextView.getCurrentTextColor();
+        }
+        return Color.TRANSPARENT;
     }
 
     /**
@@ -996,6 +975,7 @@ public class Toolbar extends ViewGroup {
         }
         if (mNavButtonView != null) {
             mNavButtonView.setImageDrawable(icon);
+            mNavButtonIconDrawable = icon;
         }
     }
 
@@ -1069,6 +1049,8 @@ public class Toolbar extends ViewGroup {
         }
         if (mCollapseButtonView != null) {
             mCollapseButtonView.setContentDescription(description);
+            TooltipCompat.setTooltipText(mCollapseButtonView, description);
+            mCollapseDescription = description;
         }
     }
 
@@ -1488,6 +1470,10 @@ public class Toolbar extends ViewGroup {
             final LayoutParams lp = generateDefaultLayoutParams();
             lp.gravity = GravityCompat.START | (mButtonGravity & Gravity.VERTICAL_GRAVITY_MASK);
             mNavButtonView.setLayoutParams(lp);
+            SeslViewReflector.semSetHoverPopupType(mNavButtonView, SeslHoverPopupWindowReflector.getField_TYPE_NONE());
+            if (!TextUtils.isEmpty(mNavTooltipText)) {
+                TooltipCompat.setTooltipText(mNavButtonView, mNavTooltipText);
+            }
         }
     }
 
@@ -1507,6 +1493,10 @@ public class Toolbar extends ViewGroup {
                     collapseActionView();
                 }
             });
+            SeslViewReflector.semSetHoverPopupType(mCollapseButtonView, SeslHoverPopupWindowReflector.getField_TYPE_NONE());
+            if (!TextUtils.isEmpty(mCollapseDescription)) {
+                TooltipCompat.setTooltipText(mCollapseButtonView, mCollapseDescription);
+            }
         }
     }
 
@@ -1718,6 +1708,14 @@ public class Toolbar extends ViewGroup {
                     getVerticalMargins(mNavButtonView));
             childState = View.combineMeasuredStates(childState,
                     mNavButtonView.getMeasuredState());
+
+            Drawable navButtonDrawable = mNavButtonView.getDrawable();
+            Drawable navButtonBackground = mNavButtonView.getBackground();
+            if (navButtonDrawable != null && navButtonBackground != null) {
+                final int left = (mNavButtonView.getPaddingLeft() - mNavButtonView.getPaddingRight()) / 2;
+                final int right = left + navWidth;
+                DrawableCompat.setHotspotBounds(navButtonBackground, left, 0, right, height);
+            }
         }
 
         if (shouldLayout(mCollapseButtonView)) {
@@ -1788,6 +1786,36 @@ public class Toolbar extends ViewGroup {
         final int titleVertMargins = mTitleMarginTop + mTitleMarginBottom;
         final int titleHorizMargins = mTitleMarginStart + mTitleMarginEnd;
         if (shouldLayout(mTitleTextView)) {
+            TypedArray a = getContext().obtainStyledAttributes(mTitleTextAppearance, R.styleable.TextAppearance);
+            TypedValue currentTitleTextSize = a.peekValue(R.styleable.TextAppearance_android_textSize);
+            float titleTextSize = getResources().getDimensionPixelSize(R.dimen.sesl_toolbar_title_text_size);
+            if (!TextUtils.isEmpty(mSubtitleText)) {
+                titleTextSize = getResources().getDimensionPixelSize(R.dimen.sesl_toolbar_title_text_size_with_subtitle);
+            }
+            if (currentTitleTextSize != null) {
+                titleTextSize = TypedValue.complexToFloat(currentTitleTextSize.data);
+            }
+            a.recycle();
+
+            TypedArray a2 = getContext().obtainStyledAttributes(mSubtitleTextAppearance, R.styleable.TextAppearance);
+            TypedValue currentSubtitleTextSize = a2.peekValue(R.styleable.TextAppearance_android_textSize);
+            float subtitleTextSize = getResources().getDimensionPixelSize(R.dimen.sesl_toolbar_subtitle_text_size);
+            if (currentSubtitleTextSize != null) {
+                subtitleTextSize = TypedValue.complexToFloat(currentSubtitleTextSize.data);
+            }
+            a2.recycle();
+
+            if (titleTextSize == -1.0f || !TextUtils.isEmpty(mSubtitleText)) {
+                mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, titleTextSize);
+                mSubtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, subtitleTextSize);
+            } else {
+                float fontScale = getContext().getResources().getConfiguration().fontScale;
+                if (fontScale > MAX_FONT_SCALE) {
+                    fontScale = 1.2f;
+                }
+                mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, titleTextSize * fontScale);
+            }
+
             titleWidth = measureChildCollapseMargins(mTitleTextView, widthMeasureSpec,
                     width + titleHorizMargins, heightMeasureSpec, titleVertMargins,
                     collapsingMargins);
@@ -1844,6 +1872,9 @@ public class Toolbar extends ViewGroup {
         final int alignmentHeight = minHeight >= 0 ? Math.min(minHeight, b - t) : 0;
 
         if (shouldLayout(mNavButtonView)) {
+            if (mNavButtonView.getLayoutDirection() != mNavButtonIconDrawable.getLayoutDirection()) {
+                mNavButtonIconDrawable.setLayoutDirection(mNavButtonView.getLayoutDirection());
+            }
             if (isRtl) {
                 right = layoutChildRight(mNavButtonView, right, collapsingMargins,
                         alignmentHeight);
@@ -2225,6 +2256,11 @@ public class Toolbar extends ViewGroup {
         return super.checkLayoutParams(p) && p instanceof LayoutParams;
     }
 
+    private static boolean isCustomView(View view) {
+        LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        return lp.mViewType == LayoutParams.CUSTOM;
+    }
+
     /** @hide */
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     public DecorToolbar getWrapper() {
@@ -2317,6 +2353,76 @@ public class Toolbar extends ViewGroup {
 
     Context getPopupContext() {
         return mPopupContext;
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        TypedArray a = getContext().obtainStyledAttributes(R.styleable.AppCompatTheme);
+        final int actionBarSize = a.getDimensionPixelSize(R.styleable.AppCompatTheme_actionBarSize, 0);
+        if (mNavButtonView != null) {
+            a = getContext().obtainStyledAttributes(null, R.styleable.View, R.attr.actionOverflowButtonStyle, 0);
+            mNavButtonView.setMinimumHeight(a.getDimensionPixelSize(R.styleable.View_android_minHeight, 0));
+        }
+        a.recycle();
+
+        final int topPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_top_padding);
+        setPadding(0, topPadding, 0, 0);
+
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        lp.height = actionBarSize + topPadding;
+        setLayoutParams(lp);
+
+        TypedArray a2 = getContext().obtainStyledAttributes(null, R.styleable.Toolbar, android.R.attr.toolbarStyle, 0);
+        int maxButtonHeight = a2.getDimensionPixelSize(R.styleable.Toolbar_maxButtonHeight, -1);
+        if (maxButtonHeight >= -1) {
+            mMaxButtonHeight = maxButtonHeight;
+        }
+        int minHeight = a2.getDimensionPixelSize(R.styleable.Toolbar_android_minHeight, -1);
+        if (minHeight >= -1) {
+            setMinimumHeight(minHeight);
+        }
+        a2.recycle();
+
+        if (mMenuView != null && mMenuView.isOverflowMenuShowing()) {
+            mMenuView.hideOverflowMenu();
+        }
+    }
+
+    public void setTitleAccessibilityEnabled(boolean enabled) {
+        if (enabled) {
+            if (mTitleTextView != null) {
+                mTitleTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+            if (mSubtitleTextView != null) {
+                mSubtitleTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
+        } else {
+            if (mTitleTextView != null) {
+                mTitleTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            };
+            if (mSubtitleTextView != null) {
+                mSubtitleTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_HOVER_MOVE:
+            case MotionEvent.ACTION_HOVER_ENTER:
+                TooltipCompat.seslSetNextTooltipForceBelow(true);
+                TooltipCompat.seslSetNextTooltipForceActionBarPosX(true);
+                break;
+            case MotionEvent.ACTION_HOVER_EXIT:
+                TooltipCompat.seslSetNextTooltipForceBelow(false);
+                TooltipCompat.seslSetNextTooltipForceActionBarPosX(false);
+                break;
+        }
+
+        return super.dispatchGenericMotionEvent(event);
     }
 
     /**

@@ -22,6 +22,10 @@
     <public type="style" name="TextAppearance.AppCompat.Body2"/>
     <public type="style" name="TextAppearance.AppCompat.Button"/>
     <public type="style" name="TextAppearance.AppCompat.Caption"/>
+    <public type="style" name="TextAppearance.AppCompat.Description"/>
+    <public type="style" name="TextAppearance.AppCompat.Dialog"/>
+    <public type="style" name="TextAppearance.AppCompat.Dialog.List"/>
+    <public type="style" name="TextAppearance.AppCompat.Dialog.List.Secondary"/>
     <public type="style" name="TextAppearance.AppCompat.Display1"/>
     <public type="style" name="TextAppearance.AppCompat.Display2"/>
     <public type="style" name="TextAppearance.AppCompat.Display3"/>
@@ -30,6 +34,7 @@
     <public type="style" name="TextAppearance.AppCompat.Inverse"/>
     <public type="style" name="TextAppearance.AppCompat.Large"/>
     <public type="style" name="TextAppearance.AppCompat.Large.Inverse"/>
+    <public type="style" name="TextAppearance.AppCompat.Light.Description"/>
     <public type="style" name="TextAppearance.AppCompat.Light.SearchResult.Subtitle"/>
     <public type="style" name="TextAppearance.AppCompat.Light.SearchResult.Title"/>
     <public type="style" name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large"/>
@@ -64,6 +69,7 @@
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Header"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Large"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.PopupMenu.Small"/>
+    <public type="style" name="TextAppearance.AppCompat.Widget.SeslSwitchBar"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.Switch"/>
     <public type="style" name="TextAppearance.AppCompat.Widget.TextView.SpinnerItem"/>
     <public type="style" name="Theme.AppCompat"/>

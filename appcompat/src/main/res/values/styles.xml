@@ -267,6 +267,8 @@
 
     <style name="Widget.AppCompat.Light.SeslSwitchBar" parent="Base.Widget.AppCompat.Light.SeslSwitchBar" />
 
+    <style name="TextAppearance.AppCompat.Widget.SeslSwitchBar" parent="Base.TextAppearance.AppCompat.Widget.SeslSwitchBar" />
+
     <!-- Toolbar -->
 
     <style name="Widget.AppCompat.Toolbar" parent="Base.Widget.AppCompat.Toolbar" />
@@ -358,6 +360,16 @@
 
     <style name="TextAppearance.AppCompat.Tooltip" parent="Base.TextAppearance.AppCompat.Tooltip"/>
 
+    <style name="TextAppearance.AppCompat.Description" parent="Base.TextAppearance.AppCompat.Description" />
+
+    <style name="TextAppearance.AppCompat.Light.Description" parent="Base.TextAppearance.AppCompat.Light.Description" />
+
+    <style name="TextAppearance.AppCompat.Dialog" parent="@style/Base.TextAppearance.AppCompat.Dialog" />
+
+    <style name="TextAppearance.AppCompat.Dialog.List" parent="Base.TextAppearance.AppCompat.Dialog.List" />
+
+    <style name="TextAppearance.AppCompat.Dialog.List.Secondary" parent="Base.TextAppearance.AppCompat.Dialog.List.Secondary" />
+
     <!--
          The following themes are deprecated.
     -->
@@ -382,5 +394,6 @@
     <style name="Widget.AppCompat.Light.ActivityChooserView" parent="Widget.AppCompat.ActivityChooserView" />
     <style name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large" parent="TextAppearance.AppCompat.Widget.PopupMenu.Large" />
     <style name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small" parent="TextAppearance.AppCompat.Widget.PopupMenu.Small" />
+    <style name="TextAppearance.AppCompat.Light.Widget.PopupMenu.Header" parent="Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Header" />
 
 </resources>

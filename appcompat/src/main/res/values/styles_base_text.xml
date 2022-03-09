@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2014 The Android Open Source Project
+     Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,93 +14,99 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <resources>
 
     <style name="Base.TextAppearance.AppCompat" parent="android:TextAppearance">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textColorHint">?android:textColorHint</item>
-        <item name="android:textColorHighlight">?android:textColorHighlight</item>
-        <item name="android:textColorLink">?android:textColorLink</item>
-        <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textColorHint">?android:attr/textColorHint</item>
+        <item name="android:textColorHighlight">?android:attr/textColorHighlight</item>
+        <item name="android:textColorLink">?android:attr/textColorLink</item>
+        <item name="android:textSize">@dimen/sesl_text_size_body_1</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Display4">
-        <item name="android:textSize">@dimen/abc_text_size_display_4_material</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+    <style name="Base.TextAppearance.AppCompat.Display4" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_display_4</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Display3">
-        <item name="android:textSize">@dimen/abc_text_size_display_3_material</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+    <style name="Base.TextAppearance.AppCompat.Display3" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_display_3</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Display2">
-        <item name="android:textSize">@dimen/abc_text_size_display_2_material</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+    <style name="Base.TextAppearance.AppCompat.Display2" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_display_2</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Display1">
-        <item name="android:textSize">@dimen/abc_text_size_display_1_material</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+    <style name="Base.TextAppearance.AppCompat.Display1" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_display_1</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Headline">
-        <item name="android:textSize">@dimen/abc_text_size_headline_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+    <style name="Base.TextAppearance.AppCompat.Headline" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_headline</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Title">
-        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+    <style name="Base.TextAppearance.AppCompat.Title" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_title</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Title.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Title.Inverse" parent="Base.TextAppearance.AppCompat.Title">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
         <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
         <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Subhead">
-        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+    <style name="Base.TextAppearance.AppCompat.Subhead" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_subhead</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:fontFamily">@string/sesl_font_family_regular</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Subhead.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Subhead.Inverse" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Body2">
+    <style name="Base.TextAppearance.AppCompat.Body2" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/abc_text_size_body_2_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Body1">
+    <style name="Base.TextAppearance.AppCompat.Body1" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Caption">
+    <style name="Base.TextAppearance.AppCompat.Caption" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/abc_text_size_caption_material</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Menu">
-        <item name="android:textSize">@dimen/abc_text_size_menu_material</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+    <style name="Base.TextAppearance.AppCompat.Menu" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_menu</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Button">
-        <item name="android:textSize">@dimen/abc_text_size_button_material</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+    <style name="Base.TextAppearance.AppCompat.Button" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_button_text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Widget.Button" parent="TextAppearance.AppCompat.Button" />
+    <style name="Base.TextAppearance.AppCompat.Widget.Button" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">@dimen/sesl_button_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/sesl_btn_text_color_dark</item>
+        <item name="fontFamily">@string/sesl_font_family_regular</item>
+        <item name="textAllCaps">false</item>
+    </style>
 
     <style name="Base.TextAppearance.AppCompat.Widget.Light.Button" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">@dimen/sesl_button_text_size</item>
@@ -111,64 +117,111 @@
     </style>
 
     <style name="Base.TextAppearance.AppCompat.Widget.Button.Inverse" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Tooltip">
+    <style name="Base.TextAppearance.AppCompat.Tooltip" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!-- Deprecated text styles -->
-
-    <style name="Base.TextAppearance.AppCompat.Inverse">
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
+    <!-- SESL -->
+    <style name="Base.TextAppearance.AppCompat.Dialog" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_dialog_body_text_size</item>
+        <item name="android:textColor">@color/sesl_dialog_body_text_color_dark</item>
+        <item name="fontFamily">@string/sesl_font_family_regular</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Large">
-        <item name="android:textSize">@dimen/abc_text_size_large_material</item>
+    <style name="Base.TextAppearance.AppCompat.Light.Dialog" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_dialog_body_text_size</item>
+        <item name="android:textColor">@color/sesl_dialog_body_text_color_light</item>
+        <item name="fontFamily">@string/sesl_font_family_regular</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.DialogWindowTitle" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_dialog_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/sesl_dialog_title_text_color_dark</item>
+        <item name="android:fontFamily">sec-roboto-light</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Light.DialogWindowTitle" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_dialog_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/sesl_dialog_title_text_color_light</item>
+        <item name="android:fontFamily">sec-roboto-light</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Dialog.List" parent="Base.TextAppearance.AppCompat.Dialog">
+        <item name="android:textSize">@dimen/sesl_select_dialog_list_item_text_size</item>
+        <item name="android:textColor">@color/sesl_select_dialog_list_item_text_dark</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Light.Dialog.List" parent="Base.TextAppearance.AppCompat.Light.Dialog">
+        <item name="android:textSize">@dimen/sesl_select_dialog_list_item_text_size</item>
+        <item name="android:textColor">@color/sesl_select_dialog_list_item_text_light</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Dialog.List.Secondary" parent="Base.TextAppearance.AppCompat.Dialog.List">
+        <item name="android:textSize">@dimen/sesl_select_dialog_list_item_text_size_secondary</item>
+        <item name="android:textColor">@color/sesl_dialog_sub_text_color_material_dark</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Light.Dialog.List.Secondary" parent="Base.TextAppearance.AppCompat.Light.Dialog.List">
+        <item name="android:textSize">@dimen/sesl_select_dialog_list_item_text_size_secondary</item>
+        <item name="android:textColor">@color/sesl_dialog_sub_text_color_material_light</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Description" parent="@style/Base.TextAppearance.AppCompat.Dialog">
+        <item name="android:textSize">@dimen/sesl_description_text_size</item>
+        <item name="android:textColor">@color/sesl_description_text_color_dark</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Light.Description" parent="Base.TextAppearance.AppCompat.Light.Dialog">
+        <item name="android:textSize">@dimen/sesl_description_text_size</item>
+        <item name="android:textColor">@color/sesl_description_text_color_light</item>
+    </style>
+
+
+    <!-- Deprecated text styles -->
+
+    <style name="Base.TextAppearance.AppCompat.Inverse" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Large" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_large</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Large.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Large.Inverse" parent="Base.TextAppearance.AppCompat.Large">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">@dimen/abc_text_size_medium_material</item>
+    <style name="Base.TextAppearance.AppCompat.Medium" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_medium</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Medium.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Medium.Inverse" parent="Base.TextAppearance.AppCompat.Inverse">
         <item name="android:textColor">?android:attr/textColorSecondaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/abc_text_size_small_material</item>
-        <item name="android:textColor">?android:attr/textColorTertiary</item>
+    <style name="Base.TextAppearance.AppCompat.Small" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sesl_text_size_small</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:fontFamily">@string/sesl_font_family_regular</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Small.Inverse">
+    <style name="Base.TextAppearance.AppCompat.Small.Inverse" parent="Base.TextAppearance.AppCompat.Small">
         <item name="android:textColor">?android:attr/textColorTertiaryInverse</item>
         <item name="android:textColorHint">?android:attr/textColorHintInverse</item>
-        <item name="android:textColorHighlight">?android:attr/textColorHighlightInverse</item>
-        <item name="android:textColorLink">?android:attr/textColorLinkInverse</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Widget.Button.Colored">
-        <item name="android:textColor">@color/abc_btn_colored_text_material</item>
-    </style>
+    <style name="Base.TextAppearance.AppCompat.Widget.Button.Colored" parent="Base.TextAppearance.AppCompat.Widget.Button"/>
 
-    <style name="Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored" parent="Base.TextAppearance.AppCompat.Widget.Button">
-        <item name="android:textColor">@color/abc_btn_colored_borderless_text_material</item>
-    </style>
+    <style name="Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored" parent="Base.TextAppearance.AppCompat.Widget.Button"/>
 
 </resources>

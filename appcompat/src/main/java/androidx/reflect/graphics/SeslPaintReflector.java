@@ -16,9 +16,12 @@
 
 package androidx.reflect.graphics;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -30,6 +33,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung Paint utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslPaintReflector {
     private static final Class<?> mClass = Paint.class;
 

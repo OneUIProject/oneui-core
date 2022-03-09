@@ -16,10 +16,11 @@
 
 package androidx.reflect.feature;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,6 +32,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung FloatingFeature utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslFloatingFeatureReflector {
     private static final String mClassName;
 
@@ -47,7 +49,6 @@ public class SeslFloatingFeatureReflector {
     /**
      * Returns instance of <b>SemFloatingFeature</b>.
      */
-    @Nullable
     private static Object getInstance() {
         Method method = SeslBaseReflector.getMethod(mClassName, "getInstance");
         if (method != null) {
@@ -63,8 +64,7 @@ public class SeslFloatingFeatureReflector {
     /**
      * Gets the value of the given Floating Feature <arg>tag</arg>.
      */
-    @NonNull
-    public static String getString(@NonNull String tag, @NonNull String defaultValue) {
+    public static String getString(String tag, String defaultValue) {
         Object result = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -16,6 +16,8 @@
 
 package androidx.reflect.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
@@ -24,6 +26,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -36,9 +39,30 @@ import java.lang.reflect.Method;
 /**
  * Samsung View utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslViewReflector {
     private static final String TAG = "SeslViewReflector";
     private static final Class<?> mClass = View.class;
+
+    /**
+     * Set left padding in the given {@link View}.
+     */
+    public static void setField_mPaddingLeft(@NonNull View view, int value) {
+        Field field = SeslBaseReflector.getDeclaredField(mClass, "mPaddingLeft");
+        if (field != null) {
+            SeslBaseReflector.set(view, field, value);
+        }
+    }
+
+    /**
+     * Set right padding in the given {@link View}.
+     */
+    public static void setField_mPaddingRight(@NonNull View view, int value) {
+        Field field = SeslBaseReflector.getDeclaredField(mClass, "mPaddingRight");
+        if (field != null) {
+            SeslBaseReflector.set(view, field, value);
+        }
+    }
 
     /**
      * Returns the <var>mPaddingLeft</var> field value in the given {@link View}.
@@ -58,16 +82,6 @@ public class SeslViewReflector {
     }
 
     /**
-     * Set left padding in the given {@link View}.
-     */
-    public static void setField_mPaddingLeft(@NonNull View view, int value) {
-        Field field = SeslBaseReflector.getDeclaredField(mClass, "mPaddingLeft");
-        if (field != null) {
-            SeslBaseReflector.set(view, field, value);
-        }
-    }
-
-    /**
      * Returns the <var>mPaddingRight</var> field value in the given {@link View}.
      */
     public static int getField_mPaddingRight(@NonNull View view) {
@@ -81,16 +95,6 @@ public class SeslViewReflector {
             return (Integer) paddingLeft;
         } else {
             return 0;
-        }
-    }
-
-    /**
-     * Set right padding in the given {@link View}.
-     */
-    public static void setField_mPaddingRight(@NonNull View view, int value) {
-        Field field = SeslBaseReflector.getDeclaredField(mClass, "mPaddingRight");
-        if (field != null) {
-            SeslBaseReflector.set(view, field, value);
         }
     }
 
@@ -168,7 +172,7 @@ public class SeslViewReflector {
     /**
      * Calls <b>View.isVisibleToUser(Rect)</b>.
      */
-    public static boolean isVisibleToUser(@NonNull View view, @Nullable Rect boundInView) {
+    public static boolean isVisibleToUser(@NonNull View view, Rect boundInView) {
         Method method = SeslBaseReflector.getDeclaredMethod(mClass, "isVisibleToUser", Rect.class);
         if (method != null) {
             Object result = SeslBaseReflector.invoke(view, method, boundInView);
@@ -276,7 +280,7 @@ public class SeslViewReflector {
     /**
      * Set a custom pointer icon for the specified <arg>toolType</arg> in the given {@link View}.
      */
-    public static void semSetPointerIcon(@NonNull View view, int toolType, @Nullable PointerIcon pointerIcon) {
+    public static void semSetPointerIcon(@NonNull View view, int toolType, PointerIcon pointerIcon) {
         Method method = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_semSetPointerIcon", Integer.TYPE, PointerIcon.class);

@@ -16,10 +16,13 @@
 
 package androidx.reflect.hardware.input;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.hardware.input.InputManager;
 import android.os.Build;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,13 +34,15 @@ import java.lang.reflect.Method;
 /**
  * Samsung InputManager utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslInputManagerReflector {
+    @RequiresApi(21)
     private static final Class<?> mClass = InputManager.class;
 
     /**
      * Returns instance of {@link InputManager}.
      */
-    @Nullable
+    @RequiresApi(21)
     private static Object getInstance() {
         Method method = SeslBaseReflector.getMethod(mClass, "getInstance");
         if (method != null) {

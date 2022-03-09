@@ -16,12 +16,14 @@
 
 package androidx.reflect.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.widget.AbsListView;
 import android.widget.EdgeEffect;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -34,13 +36,13 @@ import java.lang.reflect.Method;
 /**
  * Samsung ListView utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslAbsListViewReflector {
     private static final Class<?> mClass = AbsListView.class;
 
     /**
      * Returns the <var>mEdgeGlowTop</var> field used in the given {@link AbsListView}.
      */
-    @Nullable
     public static EdgeEffect getField_mEdgeGlowTop(@NonNull AbsListView listView) {
         Object edgeGlowTop = null;
 
@@ -66,7 +68,7 @@ public class SeslAbsListViewReflector {
     /**
      * Replaces the <var>mEdgeGlowTop</var> field used in the given {@link AbsListView}.
      */
-    public static void setField_mEdgeGlowTop(@NonNull AbsListView listView, @NonNull EdgeEffect edgeEffect) {
+    public static void setField_mEdgeGlowTop(@NonNull AbsListView listView, EdgeEffect edgeEffect) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_mEdgeGlowTop", EdgeEffect.class);
             if (method != null) {
@@ -81,35 +83,9 @@ public class SeslAbsListViewReflector {
     }
 
     /**
-     * Returns the <var>mEdgeGlowBottom</var> field used in the given {@link AbsListView}.
-     */
-    @Nullable
-    public static EdgeEffect getField_mEdgeGlowBottom(@NonNull AbsListView listView) {
-        Object edgeGlowTop = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_mEdgeGlowBottom");
-            if (method != null) {
-                edgeGlowTop = SeslBaseReflector.invoke(listView, method);
-            }
-        } else {
-            Field field = SeslBaseReflector.getDeclaredField(mClass, "mEdgeGlowBottom");
-            if (field != null) {
-                edgeGlowTop = SeslBaseReflector.get(listView, field);
-            }
-        }
-
-        if (edgeGlowTop instanceof EdgeEffect) {
-            return (EdgeEffect) edgeGlowTop;
-        }
-
-        return null;
-    }
-
-    /**
      * Replaces the <var>mEdgeGlowBottom</var> field used in the given {@link AbsListView}.
      */
-    public static void setField_mEdgeGlowBottom(@NonNull AbsListView listView, @NonNull EdgeEffect edgeEffect) {
+    public static void setField_mEdgeGlowBottom(@NonNull AbsListView listView, EdgeEffect edgeEffect) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_mEdgeGlowBottom", EdgeEffect.class);
             if (method != null) {

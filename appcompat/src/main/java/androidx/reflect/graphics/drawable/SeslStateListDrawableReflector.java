@@ -16,12 +16,14 @@
 
 package androidx.reflect.graphics.drawable;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -33,6 +35,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung StateListDrawable utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslStateListDrawableReflector {
     private static final Class<?> mClass = StateListDrawable.class;
 
@@ -60,7 +63,6 @@ public class SeslStateListDrawableReflector {
     /**
      * Gets the drawable at an index in the given {@link StateListDrawable}.
      */
-    @Nullable
     public static Drawable getStateDrawable(@NonNull StateListDrawable drawable, int index) {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -16,10 +16,12 @@
 
 package androidx.reflect.content.res;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,13 +33,13 @@ import java.lang.reflect.Method;
 /**
  * Samsung Resources utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslResourcesReflector {
     private static final Class<?> mClass = Resources.class;
 
     /**
      * Return the compatibility mode info for the given {@link Resources}.
      */
-    @Nullable
     static Object getCompatibilityInfo(@NonNull Resources resources) {
         Method method = SeslBaseReflector.getMethod(mClass, "getCompatibilityInfo");
         if (method != null) {

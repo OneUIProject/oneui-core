@@ -16,10 +16,12 @@
 
 package androidx.reflect.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.res.Resources;
 import android.view.ViewDebug;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,6 +33,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung ViewDebug utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslViewDebugReflector {
     private static final Class<?> mClass = ViewDebug.class;
 
@@ -42,8 +45,7 @@ public class SeslViewDebugReflector {
      * @return a String array containing pairs of adjacent Theme attribute data: name followed by
      * its value.
      */
-    @NonNull
-    public static String[] getStyleAttributesDump(@NonNull Resources resources, @NonNull Resources.Theme theme) {
+    public static String[] getStyleAttributesDump(Resources resources, Resources.Theme theme) {
         Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_getStyleAttributesDump", Resources.class, Resources.Theme.class);
         if (method != null) {
             method.setAccessible(true);

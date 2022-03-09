@@ -16,9 +16,11 @@
 
 package androidx.reflect.view.inputmethod;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -30,13 +32,14 @@ import java.lang.reflect.Method;
 /**
  * Samsung InputMethodManager utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslInputMethodManagerReflector {
     private static final Class<?> mClass = InputMethodManager.class;
 
     /**
      * Returns current accessory keyboard state in the given {@link InputMethodManager}.
      */
-    public static int isAccessoryKeyboardState(@NonNull InputMethodManager imm) {
+    public static int isAccessoryKeyboardState(InputMethodManager imm) {
         Method method = SeslBaseReflector.getMethod(mClass, "isAccessoryKeyboardState");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(imm, method);
@@ -51,7 +54,7 @@ public class SeslInputMethodManagerReflector {
     /**
      * Get whether the soft keyboard is shown in the given {@link InputMethodManager}.
      */
-    public static boolean isInputMethodShown(@NonNull InputMethodManager imm) {
+    public static boolean isInputMethodShown(InputMethodManager imm) {
         Method method = SeslBaseReflector.getMethod(mClass, "semIsInputMethodShown");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(imm, method);

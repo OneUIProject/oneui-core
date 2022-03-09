@@ -16,7 +16,10 @@
 
 package androidx.reflect.lunarcalendar;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 import androidx.reflect.SeslPathClassReflector;
 
@@ -32,6 +35,7 @@ import dalvik.system.PathClassLoader;
 /**
  * Samsung Calendar SolarLunarTables utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSolarLunarTablesReflector {
     private static final String mClassName = "com.samsung.android.calendar.secfeature.lunarcalendar.SolarLunarTables";
 

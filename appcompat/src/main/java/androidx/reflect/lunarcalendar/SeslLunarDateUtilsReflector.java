@@ -16,10 +16,11 @@
 
 package androidx.reflect.lunarcalendar;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 import androidx.reflect.SeslPathClassReflector;
 
@@ -35,14 +36,14 @@ import dalvik.system.PathClassLoader;
 /**
  * Samsung Calendar LunarDateUtils utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslLunarDateUtilsReflector {
     private static final String mClassName = "com.android.calendar.event.widget.datetimepicker.LunarDateUtils";
 
     /**
      * Calls <b>LunarDateUtils.buildLunarDateString(Calendar, Context)</b>.
      */
-    @Nullable
-    public static String buildLunarDateString(@NonNull PathClassLoader pathClassLoader, @NonNull Calendar calendar, @NonNull Context context) {
+    public static String buildLunarDateString(PathClassLoader pathClassLoader, Calendar calendar, Context context) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "buildLunarDateString", Calendar.class, Context.class);
         if (method != null) {
             Object result = SeslBaseReflector.invoke(null, method, calendar, context);

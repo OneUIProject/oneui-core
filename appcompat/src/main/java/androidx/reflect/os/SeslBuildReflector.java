@@ -16,8 +16,11 @@
 
 package androidx.reflect.os;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -29,6 +32,7 @@ import java.lang.reflect.Field;
 /**
  * Samsung Build utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslBuildReflector {
     /**
      * Samsung Build.VERSION utility class.

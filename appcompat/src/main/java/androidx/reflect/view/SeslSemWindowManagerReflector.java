@@ -19,7 +19,6 @@ package androidx.reflect.view;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -38,7 +37,6 @@ public class SeslSemWindowManagerReflector {
     /**
      * Returns instance of <b>SemWindowManager</b>.
      */
-    @Nullable
     private static Object getInstance() {
         Method method = SeslBaseReflector.getMethod(mClassName, "getInstance");
         if (method != null) {
@@ -54,7 +52,7 @@ public class SeslSemWindowManagerReflector {
     /**
      * Adds a listener which will receive fold state events.
      */
-    public static void registerFoldStateListener(@NonNull Object listener, @NonNull Object handler) {
+    public static void registerFoldStateListener(@NonNull Object listener, Object handler) {
         Method method = SeslBaseReflector.getMethod(mClassName, "registerFoldStateListener", SeslBaseReflector.getClass(mListenerName), Handler.class);
         if (method != null) {
             SeslBaseReflector.invoke(getInstance(), method, listener, handler);

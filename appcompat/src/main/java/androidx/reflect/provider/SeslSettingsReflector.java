@@ -16,10 +16,12 @@
 
 package androidx.reflect.provider;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.provider.Settings;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -32,6 +34,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung Settings utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSettingsReflector {
     /**
      * Samsung Settings.System utility class.
@@ -42,7 +45,6 @@ public class SeslSettingsReflector {
         /**
          * Returns <b>Settings.System.SEM_PEN_HOVERING</b>.
          */
-        @NonNull
         public static String getField_SEM_PEN_HOVERING() {
             Object PEN_HOVERING = null;
 
@@ -75,7 +77,6 @@ public class SeslSettingsReflector {
         /**
          * Returns <b>Settings.System.SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY</b>.
          */
-        @NonNull
         public static String getField_SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY");

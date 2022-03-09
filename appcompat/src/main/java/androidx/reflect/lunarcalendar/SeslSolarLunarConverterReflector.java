@@ -16,7 +16,10 @@
 
 package androidx.reflect.lunarcalendar;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 import androidx.reflect.SeslPathClassReflector;
 
@@ -31,13 +34,14 @@ import dalvik.system.PathClassLoader;
 /**
  * Samsung Calendar SolarLunarConverter utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSolarLunarConverterReflector {
     private static final String mClassName = "com.samsung.android.calendar.secfeature.lunarcalendar.SolarLunarConverter";
 
     /**
      * Calls <b>SolarLunarConverter.convertLunarToSolar(int, int, int, boolean)</b>.
      */
-    public static void convertLunarToSolar(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d, boolean isLeapMonth) {
+    public static void convertLunarToSolar(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d, boolean isLeapMonth) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "convertLunarToSolar", Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE);
         if (method != null) {
             SeslBaseReflector.invoke(solarLunarConverter, method, y, m, d, isLeapMonth);
@@ -47,7 +51,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.convertSolarToLunar(int, int, int)</b>.
      */
-    public static void convertSolarToLunar(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d) {
+    public static void convertSolarToLunar(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int y, int m, int d) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "convertSolarToLunar", Integer.TYPE, Integer.TYPE, Integer.TYPE);
         if (method != null) {
             SeslBaseReflector.invoke(solarLunarConverter, method, y, m, d);
@@ -57,7 +61,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.getWeekday(int, int, int)</b>.
      */
-    public static int getWeekday(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, int day) {
+    public static int getWeekday(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, int day) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getWeekday", Integer.TYPE, Integer.TYPE, Integer.TYPE);
         if (method != null) {
             Object invoke = SeslBaseReflector.invoke(solarLunarConverter, method, year, month, day);
@@ -72,7 +76,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.getDayLengthOf(int, int, boolean)</b>.
      */
-    public static int getDayLengthOf(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, boolean isLeapMonth) {
+    public static int getDayLengthOf(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter, int year, int month, boolean isLeapMonth) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getDayLengthOf", Integer.TYPE, Integer.TYPE, Boolean.TYPE);
         if (method != null) {
             Object result = SeslBaseReflector.invoke(solarLunarConverter, method, year, month, isLeapMonth);
@@ -87,7 +91,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.getYear()</b>.
      */
-    public static int getYear(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+    public static int getYear(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getYear");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
@@ -102,7 +106,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.getMonth()</b>.
      */
-    public static int getMonth(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+    public static int getMonth(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getMonth");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
@@ -117,7 +121,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.getDay()</b>.
      */
-    public static int getDay(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+    public static int getDay(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getDay");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(solarLunarConverter, method);
@@ -132,7 +136,7 @@ public class SeslSolarLunarConverterReflector {
     /**
      * Calls <b>SolarLunarConverter.isLeapMonth()</b>.
      */
-    public static boolean isLeapMonth(@NonNull PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
+    public static boolean isLeapMonth(PathClassLoader pathClassLoader, @NonNull Object solarLunarConverter) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "isLeapMonth");
         if (method != null) {
             Object result = SeslBaseReflector.invoke(solarLunarConverter, method);

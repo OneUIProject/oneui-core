@@ -16,8 +16,9 @@
 
 package androidx.reflect.lunarcalendar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 import androidx.reflect.SeslPathClassReflector;
 
@@ -32,14 +33,14 @@ import dalvik.system.PathClassLoader;
 /**
  * Samsung Calendar Feature utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslFeatureReflector {
     private static final String mClassName = "com.android.calendar.Feature";
 
     /**
      * Returns an instance of <b>SolarLunarConverter</b> in the given {@link PathClassLoader}.
      */
-    @Nullable
-    public static Object getSolarLunarConverter(@NonNull PathClassLoader pathClassLoader) {
+    public static Object getSolarLunarConverter(PathClassLoader pathClassLoader) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getSolarLunarConverter");
         if (method != null) {
             return SeslBaseReflector.invoke(null, method);
@@ -51,8 +52,7 @@ public class SeslFeatureReflector {
     /**
      * Returns an instance of <b>SolarLunarTables</b> in the given {@link PathClassLoader}.
      */
-    @Nullable
-    public static Object getSolarLunarTables(@NonNull PathClassLoader pathClassLoader) {
+    public static Object getSolarLunarTables(PathClassLoader pathClassLoader) {
         Method method = SeslPathClassReflector.getMethod(pathClassLoader, mClassName, "getSolarLunarTables");
         if (method != null) {
             return SeslBaseReflector.invoke(null, method);

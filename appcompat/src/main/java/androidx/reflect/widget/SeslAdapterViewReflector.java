@@ -16,10 +16,14 @@
 
 package androidx.reflect.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.widget.AdapterView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -32,13 +36,14 @@ import java.lang.reflect.Method;
 /**
  * Samsung AdapterView utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslAdapterViewReflector {
     private static final Class<?> mClass = AdapterView.class;
 
     /**
      * Set a fill out <var>color</var> for the given {@link AdapterView}.
      */
-    public static void semSetBottomColor(@NonNull AdapterView adapterView, int color) {
+    public static void semSetBottomColor(@NonNull AdapterView adapterView, @ColorInt int color) {
         String methodName = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             methodName = "hidden_semSetBottomColor";

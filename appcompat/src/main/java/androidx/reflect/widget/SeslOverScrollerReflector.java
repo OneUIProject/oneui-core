@@ -16,10 +16,13 @@
 
 package androidx.reflect.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.widget.OverScroller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,6 +34,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung OverScroller utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslOverScrollerReflector {
     private static final Class<?> mClass = OverScroller.class;
 

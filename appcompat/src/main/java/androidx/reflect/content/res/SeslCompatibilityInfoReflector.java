@@ -16,9 +16,12 @@
 
 package androidx.reflect.content.res;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -30,6 +33,7 @@ import java.lang.reflect.Field;
 /**
  * Samsung CompatibilityInfo utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslCompatibilityInfoReflector {
     private static final String mClassName = "android.content.res.CompatibilityInfo";
 

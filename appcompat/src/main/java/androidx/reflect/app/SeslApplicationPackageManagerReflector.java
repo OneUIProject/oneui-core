@@ -16,12 +16,14 @@
 
 package androidx.reflect.app;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.ComponentName;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -33,14 +35,14 @@ import java.lang.reflect.Method;
 /**
  * Samsung ApplicationPackageManager utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslApplicationPackageManagerReflector {
     private static final String mClassName = "android.app.ApplicationPackageManager";
 
     /**
      * Retrieve the icon associated with the given <arg>packageName</arg>.
      */
-    @Nullable
-    public static Drawable semGetApplicationIconForIconTray(@NonNull Object instance, @NonNull String packageName, int mode) {
+    public static Drawable semGetApplicationIconForIconTray(@NonNull Object instance, String packageName, int mode) {
         Method method = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -62,8 +64,7 @@ public class SeslApplicationPackageManagerReflector {
     /**
      * Retrieve the icon associated with the given {@link ComponentName}.
      */
-    @Nullable
-    public static Drawable semGetActivityIconForIconTray(@NonNull Object instance, @NonNull ComponentName activityName, int mode) {
+    public static Drawable semGetActivityIconForIconTray(@NonNull Object instance, ComponentName activityName, int mode) {
         Method method = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

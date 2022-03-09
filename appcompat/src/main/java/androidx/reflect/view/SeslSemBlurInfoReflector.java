@@ -16,13 +16,14 @@
 
 package androidx.reflect.view;
 
-import android.annotation.SuppressLint;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Constructor;
@@ -36,6 +37,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung SemBlurInfo utility class, to be used only for devices with OneUI 4 onwards.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSemBlurInfoReflector {
     private static final String TAG = "SeslSemBlurInfoReflector";
     private static final String mBuilderClass = "android.view.SemBlurInfo$Builder";
@@ -43,8 +45,6 @@ public class SeslSemBlurInfoReflector {
     /**
      * Creates a <b>SemBlurInfo.Builder</b> instance with the given <arg>blurMode</arg>.
      */
-    @SuppressLint("LongLogTag")
-    @Nullable
     public static Object semCreateBlurBuilder(int blurMode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Constructor<?> constructor = SeslBaseReflector.getConstructor(mBuilderClass, Integer.TYPE);
@@ -68,7 +68,7 @@ public class SeslSemBlurInfoReflector {
      * Sets background blur <arg>radius</arg> in the given <arg>builder</arg>.
      */
     @NonNull
-    public static Object semSetBuilderBlurRadius(@NonNull Object builder, int radius) {
+    public static Object semSetBuilderBlurRadius(Object builder, int radius) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setRadius", Integer.TYPE);
             if (method != null) {
@@ -84,7 +84,7 @@ public class SeslSemBlurInfoReflector {
      * Sets background blur <arg>color</arg> in the given <arg>builder</arg>.
      */
     @NonNull
-    public static Object semSetBuilderBlurBackgroundColor(@NonNull Object builder, int color) {
+    public static Object semSetBuilderBlurBackgroundColor(Object builder, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundColor", Integer.TYPE);
             if (method != null) {
@@ -100,7 +100,7 @@ public class SeslSemBlurInfoReflector {
      * Sets background blur <arg>cornerRadius</arg> in the given <arg>builder</arg>.
      */
     @NonNull
-    public static Object semSetBuilderBlurBackgroundCornerRadius(@NonNull Object builder, float cornerRadius) {
+    public static Object semSetBuilderBlurBackgroundCornerRadius(Object builder, float cornerRadius) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundCornerRadius", Float.TYPE);
             if (method != null) {
@@ -115,7 +115,7 @@ public class SeslSemBlurInfoReflector {
     /**
      * Sets a <b>SemBlurInfo.Builder</b> instance in the given <arg>view</arg>.
      */
-    public static void semBuildSetBlurInfo(@NonNull Object builder, @NonNull View view) {
+    public static void semBuildSetBlurInfo(Object builder, @NonNull View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_build");
             if (method != null) {

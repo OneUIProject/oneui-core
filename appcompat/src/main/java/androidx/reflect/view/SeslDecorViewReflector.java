@@ -16,10 +16,13 @@
 
 package androidx.reflect.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,6 +34,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung DecorView utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslDecorViewReflector {
     /**
      * Set whether to hide rounded corners in the given <b>DecorView</b>.

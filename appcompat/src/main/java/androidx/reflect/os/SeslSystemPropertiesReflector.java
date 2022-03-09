@@ -19,7 +19,6 @@ package androidx.reflect.os;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.os.Build;
-import android.os.UserHandle;
 
 import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
@@ -31,30 +30,45 @@ import java.lang.reflect.Method;
  */
 
 /**
- * Samsung UserHandle utility class.
+ * Samsung SystemProperties utility class.
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
-public class SeslUserHandleReflector {
-    private static final Class<?> mClass = UserHandle.class;
+public class SeslSystemPropertiesReflector {
+    private static final String mClassName = "android.os.SemSystemProperties";
 
-    /**
-     * Returns the user id of the current process.
-     */
-    public static int myUserId() {
+    public static String getSalesCode() {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_myUserId");
+            method = SeslBaseReflector.getDeclaredMethod(mClassName, "getSalesCode");
         } else {
-            method = SeslBaseReflector.getMethod(mClass, "myUserId");
+            method = SeslBaseReflector.getMethod(mClassName, "getSalesCode");
         }
 
         if (method != null) {
             Object result = SeslBaseReflector.invoke(null, method);
-            if (result instanceof Integer) {
-                return (Integer) result;
+            if (result instanceof String) {
+                return (String) result;
             }
         }
 
-        return 0;
+        return null;
+    }
+
+    public static String getStringProperties(String key) {
+        Method method;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            method = SeslBaseReflector.getDeclaredMethod(mClassName, "get", String.class);
+        } else {
+            method = SeslBaseReflector.getMethod(mClassName, "get", String.class);
+        }
+
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(null, method, key);
+            if (result instanceof String) {
+                return (String) result;
+            }
+        }
+
+        return null;
     }
 }

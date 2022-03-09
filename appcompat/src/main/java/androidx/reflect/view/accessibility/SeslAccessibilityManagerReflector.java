@@ -18,7 +18,6 @@ package androidx.reflect.view.accessibility;
 
 import android.view.accessibility.AccessibilityManager;
 
-import androidx.annotation.Nullable;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -36,7 +35,7 @@ public class SeslAccessibilityManagerReflector {
     /**
      * Returns semScreenReader status in the given <arg>accessibilityManager</arg>.
      */
-    public static boolean isScreenReaderEnabled(@Nullable AccessibilityManager accessibilityManager, boolean defaultValue) {
+    public static boolean isScreenReaderEnabled(AccessibilityManager accessibilityManager, boolean defaultValue) {
         Method method = SeslBaseReflector.getDeclaredMethod(mClassName, "semIsScreenReaderEnabled");
         if (accessibilityManager != null && method != null) {
             return (Boolean) SeslBaseReflector.invoke(accessibilityManager, method);

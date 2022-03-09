@@ -16,9 +16,12 @@
 
 package androidx.reflect.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.view.HapticFeedbackConstants;
 
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -30,6 +33,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung HapticFeedbackConstants utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslHapticFeedbackConstantsReflector {
     private static final Class<?> mClass = HapticFeedbackConstants.class;
 

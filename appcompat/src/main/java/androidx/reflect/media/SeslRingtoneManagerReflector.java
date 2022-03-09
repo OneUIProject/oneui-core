@@ -16,10 +16,12 @@
 
 package androidx.reflect.media;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.media.RingtoneManager;
 import android.os.Build;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -32,13 +34,13 @@ import java.lang.reflect.Method;
 /**
  * Samsung RingtoneManager utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslRingtoneManagerReflector {
     private static final Class<?> mClass = RingtoneManager.class;
 
     /**
      * Returns <b>RingtoneManager.EXTRA_RINGTONE_AUDIO_ATTRIBUTES_FLAGS</b>.
      */
-    @NonNull
     public static String getField_EXTRA_RINGTONE_AUDIO_ATTRIBUTES_FLAGS() {
         Object EXTRA_RINGTONE_AUDIO_ATTRIBUTES_FLAGS = null;
 

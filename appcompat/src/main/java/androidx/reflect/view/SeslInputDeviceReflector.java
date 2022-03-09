@@ -16,10 +16,12 @@
 
 package androidx.reflect.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.view.InputDevice;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -31,13 +33,14 @@ import java.lang.reflect.Method;
 /**
  * Samsung InputDevice utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslInputDeviceReflector {
     private static final Class<?> mClass = InputDevice.class;
 
     /**
      * Sets the current pointer type in the given {@link InputDevice}.
      */
-    public static void semSetPointerType(@Nullable InputDevice inputDevice, int pointerType) {
+    public static void semSetPointerType(InputDevice inputDevice, int pointerType) {
         if (inputDevice != null) {
             Method method = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

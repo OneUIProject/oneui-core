@@ -20,8 +20,6 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 
 import dalvik.system.PathClassLoader;
@@ -35,8 +33,6 @@ import java.lang.reflect.Method;
 
 /**
  * Samsung Java Reflection utility class.
- *
- * @hide
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslPathClassReflector {
@@ -46,8 +42,7 @@ public class SeslPathClassReflector {
      * Returns the {@link Class} object associated with the class or interface with the given
      * string name, using the given class loader.
      */
-    @Nullable
-    public static Class<?> getClass(@NonNull PathClassLoader pathClassLoader, @NonNull String className) {
+    public static Class<?> getClass(PathClassLoader pathClassLoader, String className) {
         try {
             return Class.forName(className, true, pathClassLoader);
         } catch (ClassNotFoundException e) {
@@ -60,8 +55,7 @@ public class SeslPathClassReflector {
      * Returns a {@link Method} object that reflects the specified public member method of the
      * class or interface represented by the given string name, using the given class loader.
      */
-    @Nullable
-    public static Method getMethod(@NonNull PathClassLoader pathClassLoader, @NonNull String className, @NonNull String methodName, @NonNull Class<?>... parameterTypes) {
+    public static Method getMethod(PathClassLoader pathClassLoader, String className, String methodName, Class<?>... parameterTypes) {
         Class<?> cls = getClass(pathClassLoader, className);
         if (cls == null) {
             return null;
@@ -78,8 +72,7 @@ public class SeslPathClassReflector {
      * Returns a {@link Field} object that reflects the specified public member field of the class or
      * interface represented by the given string name, using the given class loader.
      */
-    @Nullable
-    public static Field getField(@NonNull PathClassLoader pathClassLoader, @NonNull String className, @NonNull String fieldName) {
+    public static Field getField(PathClassLoader pathClassLoader, String className, String fieldName) {
         Class<?> cls = getClass(pathClassLoader, className);
         if (cls == null) {
             return null;

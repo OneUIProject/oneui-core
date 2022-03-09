@@ -16,11 +16,13 @@
 
 package androidx.reflect.icu;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -35,6 +37,7 @@ import java.util.Locale;
 /**
  * Samsung ICU utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslLocaleDataReflector {
     private static final String mClassName = "libcore.icu.LocaleData";
     private static final String mDateFormatSymbolsClass = "android.icu.text.DateFormatSymbols";
@@ -44,7 +47,6 @@ public class SeslLocaleDataReflector {
     /**
      * Returns a shared LocaleData for the given locale.
      */
-    @Nullable
     public static Object get(@NonNull Locale locale) {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -91,7 +93,6 @@ public class SeslLocaleDataReflector {
     /**
      * Returns <b>LocaleData.amPm</b>.
      */
-    @NonNull
     public static String[] getField_amPm(@NonNull Object localeData) {
         Object amPm = null;
 
@@ -118,7 +119,6 @@ public class SeslLocaleDataReflector {
     /**
      * Returns <b>LocaleData.narrowAm</b>.
      */
-    @NonNull
     public static String getField_narrowAm(@NonNull Object localeData) {
         Object narrowAm = null;
 
@@ -144,7 +144,6 @@ public class SeslLocaleDataReflector {
     /**
      * Returns <b>LocaleData.narrowPm</b>.
      */
-    @NonNull
     public static String getField_narrowPm(@NonNull Object localeData) {
         Object narrowPm = null;
 
@@ -170,7 +169,6 @@ public class SeslLocaleDataReflector {
     /**
      * Calls <b>SemDateFormatSymbols.getAmpmNarrowStrings(DateFormatSymbols)</b>.
      */
-    @NonNull
     public static String[] getAmpmNarrowStrings(@NonNull Object dateFormatSymbols) {
         Method method = SeslBaseReflector.getDeclaredMethod(mSemDateFormatSymbolsClass, "getAmpmNarrowStrings", SeslBaseReflector.getClass(mDateFormatSymbolsClass));
 

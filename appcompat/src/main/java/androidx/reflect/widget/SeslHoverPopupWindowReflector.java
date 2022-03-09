@@ -16,9 +16,12 @@
 
 package androidx.reflect.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Field;
@@ -31,6 +34,7 @@ import java.lang.reflect.Method;
 /**
  * Samsung HoverPopupWindow utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslHoverPopupWindowReflector {
     private static final String mClassName = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
             "com.samsung.android.widget.SemHoverPopupWindow" :

@@ -16,12 +16,13 @@
 
 package androidx.reflect.text;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -33,14 +34,14 @@ import java.lang.reflect.Method;
 /**
  * Samsung TextUtils utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslTextUtilsReflector {
     private static final Class<?> mClass = TextUtils.class;
 
     /**
      * Calls <b>TextUtils.semGetPrefixCharForSpan(TextPaint, CharSequence, char[])</b>.
      */
-    @Nullable
-    public static char[] semGetPrefixCharForSpan(@NonNull TextPaint paint, @NonNull CharSequence text, @NonNull char[] prefix) {
+    public static char[] semGetPrefixCharForSpan(TextPaint paint, CharSequence text, char[] prefix) {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_semGetPrefixCharForSpan", TextPaint.class, CharSequence.class, char[].class);

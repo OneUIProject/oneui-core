@@ -16,12 +16,15 @@
 
 package androidx.reflect.content;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.UserHandle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.RestrictTo;
 import androidx.reflect.SeslBaseReflector;
 
 import java.lang.reflect.Method;
@@ -33,14 +36,15 @@ import java.lang.reflect.Method;
 /**
  * Samsung Context utility class.
  */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslContextReflector {
     private static final Class<?> mClass = Context.class;
 
     /**
      * Return a new {@link Context} object for the given <arg>packageName</arg> and {@link UserHandle}.
      */
-    @Nullable
-    public static Context createPackageContextAsUser(@NonNull Context context, @NonNull String packageName, int flags, @NonNull UserHandle user) {
+    @RequiresApi(21)
+    public static Context createPackageContextAsUser(@NonNull Context context, String packageName, int flags, UserHandle user) {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_createPackageContextAsUser", String.class, Integer.TYPE, UserHandle.class);
@@ -61,7 +65,6 @@ public class SeslContextReflector {
     /**
      * Return the Theme object associated with the given {@link Context}.
      */
-    @Nullable
     public static String[] getTheme(@NonNull Context context) {
         Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_getTheme");
         if (method != null) {

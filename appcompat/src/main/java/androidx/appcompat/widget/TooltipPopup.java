@@ -135,6 +135,7 @@ class TooltipPopup {
         wm.addView(mContentView, mLayoutParams);
     }
 
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
     public void showActionItemTooltip(int x, int y, int layoutDirection, CharSequence tooltipText) {
         if (isShowing()) {
             hide();

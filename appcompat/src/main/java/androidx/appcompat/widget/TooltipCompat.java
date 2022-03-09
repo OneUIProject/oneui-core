@@ -16,10 +16,13 @@
 
 package androidx.appcompat.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.
@@ -56,6 +59,7 @@ public class TooltipCompat  {
     /**
      * Set a custom position where to show the next Tooltip.
      */
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
     static void setTooltipPosition(int x, int y, int layoutDirection) {
         TooltipCompatHandler.seslSetTooltipPosition(x, y, layoutDirection);
     }
@@ -63,6 +67,7 @@ public class TooltipCompat  {
     /**
      * Set whether to show the next Tooltip.
      */
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
     public static void setTooltipNull(boolean tooltipNull) {
         TooltipCompatHandler.seslSetTooltipNull(tooltipNull);
     }

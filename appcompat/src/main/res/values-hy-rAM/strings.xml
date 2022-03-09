@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Ավելին</string>
+    <string name="sesl_searchview_description_query">Որոնման հարցում</string>
+    <string name="sesl_searchview_description_submit">Ներկայացնել հարցում</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">Ն</string>
+    <string name="sesl_action_menu_overflow_badge_description">Նոր բովանդակություն կա</string>
+    <string name="sesl_search_hint">Որոնել</string>
+    <string name="sesl_action_menu_overflow_description">Այլ ընտրանքներ</string>
+    <string name="sesl_switchbar_off_text">Անջտված է</string>
+    <string name="sesl_switchbar_on_text">Միացած</string>
+    <string name="sesl_searchview_description_clear">Մաքրել որոնման դաշտը</string>
+    <string name="sesl_searchview_description_search">Որոնել</string>
+    <string name="sesl_toolbar_collapse_description">Կոծկել</string>
+    <string name="sesl_action_bar_up_description">Նավարկել վեր</string>
+    <string name="sesl_switch_off">Անջատված</string>
+    <string name="sesl_searchview_description_voice">Ձայնով որոնում</string>
+    <string name="sesl_switch_on">Միացված</string>
+</resources>

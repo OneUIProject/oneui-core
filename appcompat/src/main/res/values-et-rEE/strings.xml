@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Veel</string>
+    <string name="sesl_searchview_description_query">Otsingupäring</string>
+    <string name="sesl_searchview_description_submit">Edasta päring</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">U</string>
+    <string name="sesl_action_menu_overflow_badge_description">Uus sisu on saadaval</string>
+    <string name="sesl_search_hint">Otsi</string>
+    <string name="sesl_action_menu_overflow_description">Veel valikuid</string>
+    <string name="sesl_switchbar_off_text">Väljas</string>
+    <string name="sesl_switchbar_on_text">Sees</string>
+    <string name="sesl_searchview_description_clear">Tühjenda otsinguväli</string>
+    <string name="sesl_searchview_description_search">Otsi</string>
+    <string name="sesl_toolbar_collapse_description">Ahenda</string>
+    <string name="sesl_action_bar_up_description">Sirvimisklahv üles</string>
+    <string name="sesl_switch_off">Väljas</string>
+    <string name="sesl_searchview_description_voice">Häälotsing</string>
+    <string name="sesl_switch_on">Sees</string>
+</resources>

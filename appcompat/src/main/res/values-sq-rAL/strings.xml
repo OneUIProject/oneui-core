@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Më tej</string>
+    <string name="sesl_searchview_description_query">Pyetje për kërkim</string>
+    <string name="sesl_searchview_description_submit">Dërgo kërkesë</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">+</string>
+    <string name="sesl_action_menu_overflow_badge_description">Ka materiale të reja në dispozicion</string>
+    <string name="sesl_search_hint">Kërko</string>
+    <string name="sesl_action_menu_overflow_description">Opsione të tjera</string>
+    <string name="sesl_switchbar_off_text">Fikur</string>
+    <string name="sesl_switchbar_on_text">Aktiv</string>
+    <string name="sesl_searchview_description_clear">Pastro fushën e kërkimit</string>
+    <string name="sesl_searchview_description_search">Kërko</string>
+    <string name="sesl_toolbar_collapse_description">Palos</string>
+    <string name="sesl_action_bar_up_description">Drejtohu lart</string>
+    <string name="sesl_switch_off">Fikur</string>
+    <string name="sesl_searchview_description_voice">Kërkimi me zë</string>
+    <string name="sesl_switch_on">Ndezur</string>
+</resources>

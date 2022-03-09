@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">আরও</string>
+    <string name="sesl_searchview_description_query">কোয়্যারি সন্ধান</string>
+    <string name="sesl_searchview_description_submit">প্রশ্ন দাখিল</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">ন</string>
+    <string name="sesl_action_menu_overflow_badge_description">নতুন সামগ্রী সুলভ</string>
+    <string name="sesl_search_hint">অনুসন্ধান করুন</string>
+    <string name="sesl_action_menu_overflow_description">আরও বিকল্প</string>
+    <string name="sesl_switchbar_off_text">বন্ধ</string>
+    <string name="sesl_switchbar_on_text">চালু</string>
+    <string name="sesl_searchview_description_clear">অনুসন্ধান ক্ষেত্র পরিষ্কার করুন</string>
+    <string name="sesl_searchview_description_search">অনুসন্ধান করুন</string>
+    <string name="sesl_toolbar_collapse_description">সঙ্কোচন করুন</string>
+    <string name="sesl_action_bar_up_description">উপরে নেভিগেট করুন</string>
+    <string name="sesl_switch_off">বন্ধ</string>
+    <string name="sesl_searchview_description_voice">ভয়েস অনুসন্ধান</string>
+    <string name="sesl_switch_on">চালু</string>
+</resources>

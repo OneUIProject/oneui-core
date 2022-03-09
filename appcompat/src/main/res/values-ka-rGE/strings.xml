@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">სხვა</string>
+    <string name="sesl_searchview_description_query">საძიებო ფრაზა</string>
+    <string name="sesl_searchview_description_submit">მოთხოვნის გაგზავნა</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">ა</string>
+    <string name="sesl_action_menu_overflow_badge_description">გამოვიდა ახალი მასალა</string>
+    <string name="sesl_search_hint">ძებნა</string>
+    <string name="sesl_action_menu_overflow_description">სხვა ოფციები</string>
+    <string name="sesl_switchbar_off_text">გამორთ.</string>
+    <string name="sesl_switchbar_on_text">ჩართ.</string>
+    <string name="sesl_searchview_description_clear">საძიებო ველის გასუფთავება</string>
+    <string name="sesl_searchview_description_search">ძებნა</string>
+    <string name="sesl_toolbar_collapse_description">აკეცვა</string>
+    <string name="sesl_action_bar_up_description">ნავიგაცია ზემოთ</string>
+    <string name="sesl_switch_off">გამორთული</string>
+    <string name="sesl_searchview_description_voice">ძებნა ხმით</string>
+    <string name="sesl_switch_on">ჩართული</string>
+</resources>

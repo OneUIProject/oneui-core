@@ -77,4 +77,48 @@
     <!-- Displayed in place of the regular shortcut letter when a menu item has Menu+delete for the shortcut. -->
     <string name="abc_menu_delete_shortcut_label">delete</string>
 
+    <string name="sesl_action_bar_home_description">Navigate home</string>
+    <string name="sesl_action_bar_home_description_format">%1$s, %2$s</string>
+    <string name="sesl_action_bar_home_subtitle_description_format">%1$s, %2$s, %3$s</string>
+    <string name="sesl_action_bar_up_description">Navigate up</string>
+
+    <string name="sesl_action_menu_overflow_badge_description">New content available</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_description">More options</string>
+
+    <string name="sesl_action_mode_done">Done</string>
+
+    <string name="sesl_activity_chooser_view_see_all">See all</string>
+    <string name="sesl_activitychooserview_choose_application">Choose an app</string>
+
+    <string name="sesl_capital_off">OFF</string>
+    <string name="sesl_capital_on">ON</string>
+
+    <string name="sesl_font_family_bold" translatable="false">sans-serif</string>
+    <string name="sesl_font_family_light" translatable="false">sans-serif-light</string>
+    <string name="sesl_font_family_medium" translatable="false">sec-roboto-light</string>
+    <string name="sesl_font_family_regular" translatable="false">sec-roboto-light</string>
+
+    <string name="sesl_more_item_label">More</string>
+
+    <string name="sesl_search_hint">Search…</string>
+    <string name="sesl_search_menu_title">Search</string>
+    <string name="sesl_searchview_description_clear">Clear search field</string>
+    <string name="sesl_searchview_description_query">Search query</string>
+    <string name="sesl_searchview_description_search">Search</string>
+    <string name="sesl_searchview_description_submit">Submit query</string>
+    <string name="sesl_searchview_description_voice">Voice search</string>
+
+    <string name="sesl_shareactionprovider_share_with">Share with</string>
+    <string name="sesl_shareactionprovider_share_with_application">Share with %s</string>
+
+    <string name="sesl_switch_off">Off</string>
+    <string name="sesl_switch_on">On</string>
+
+    <string name="sesl_switchbar_off_text">Off</string>
+    <string name="sesl_switchbar_on_text">On</string>
+
+    <string name="sesl_text_style_medium">1</string>
+    <string name="sesl_toolbar_collapse_description">Collapse</string>
+
 </resources>

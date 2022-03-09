@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">དེ་ལས་མང་བ།</string>
+    <string name="sesl_searchview_description_query">བཤེར་འཚོལ་འདྲི་རྩད།</string>
+    <string name="sesl_searchview_description_submit">འདྲི་རྩད་འབུལ།</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_badge_description">ནང་དོན་གསར་པ་སྤྱོད་ཆོག་པ།</string>
+    <string name="sesl_search_hint">འཚོལ་བཤེར།</string>
+    <string name="sesl_action_menu_overflow_description">དེ་བས་མང་བའི་འདེམས་ག།</string>
+    <string name="sesl_switchbar_off_text">ཁ་རྒྱག</string>
+    <string name="sesl_switchbar_on_text">ཁ་ཕྱེ།</string>
+    <string name="sesl_searchview_description_clear">འཚོལ་བཤེར་སྡེ་གཙང་སེལ་བྱེད།</string>
+    <string name="sesl_searchview_description_search">འཚོལ་བཤེར།</string>
+    <string name="sesl_toolbar_collapse_description">སྐུམ།</string>
+    <string name="sesl_action_bar_up_description">གོང་ལ་ཕྱོགས་སྟོན།</string>
+    <string name="sesl_switch_off">སྒོ་སྟེམ།</string>
+    <string name="sesl_searchview_description_voice">སྐད་སྒྲ་འཚོལ་བསྡུ།</string>
+    <string name="sesl_switch_on">བེད་སྤྱོད་བྱེད་བཞིན་པ་</string>
+</resources>

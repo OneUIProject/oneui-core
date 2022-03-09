@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">കൂടുതല്‍</string>
+    <string name="sesl_searchview_description_query">തിരച്ചില്‍ സംശയം</string>
+    <string name="sesl_searchview_description_submit">ക്വറി സമര്‍പ്പിക്കുക</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_badge_description">പുതിയ ഉള്ളടക്കം ലഭ്യം</string>
+    <string name="sesl_search_hint">തിരയുക</string>
+    <string name="sesl_action_menu_overflow_description">കൂടുതൽ ഐച്ഛികങ്ങൾ</string>
+    <string name="sesl_switchbar_off_text">ഓഫ്</string>
+    <string name="sesl_switchbar_on_text">ഓണ്‍</string>
+    <string name="sesl_searchview_description_clear">തിരയൽ ഫീൽഡ് മായ്ക്കുക</string>
+    <string name="sesl_searchview_description_search">തിരയുക</string>
+    <string name="sesl_toolbar_collapse_description">ചുരുക്കുക</string>
+    <string name="sesl_action_bar_up_description">മുകളിലേക്ക് നാവിഗേറ്റ് ചെയ്യുക</string>
+    <string name="sesl_switch_off">ഓഫ്</string>
+    <string name="sesl_searchview_description_voice">വോയ്സ് തിരയല്‍</string>
+    <string name="sesl_switch_on">ഓൺ</string>
+</resources>

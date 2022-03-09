@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Máis</string>
+    <string name="sesl_searchview_description_query">Consulta de busca</string>
+    <string name="sesl_searchview_description_submit">Enviar consulta</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_badge_description">Novo contido dispoñible</string>
+    <string name="sesl_search_hint">Buscar</string>
+    <string name="sesl_action_menu_overflow_description">Máis opcións</string>
+    <string name="sesl_switchbar_off_text">Desactivado</string>
+    <string name="sesl_switchbar_on_text">Activado</string>
+    <string name="sesl_searchview_description_clear">Borrar campo de busca</string>
+    <string name="sesl_searchview_description_search">Buscar</string>
+    <string name="sesl_toolbar_collapse_description">Contraer</string>
+    <string name="sesl_action_bar_up_description">Navega cara a arriba</string>
+    <string name="sesl_switch_off">Desactivado</string>
+    <string name="sesl_searchview_description_voice">Busca de voz</string>
+    <string name="sesl_switch_on">Activado</string>
+</resources>

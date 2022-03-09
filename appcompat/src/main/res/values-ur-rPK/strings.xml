@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">مزید</string>
+    <string name="sesl_searchview_description_query">سوال تلاش کریں</string>
+    <string name="sesl_searchview_description_submit">سوال ارسال کریں</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_badge_description">نیا مواد دستیاب ہے</string>
+    <string name="sesl_search_hint">تلاش کریں</string>
+    <string name="sesl_action_menu_overflow_description">مزيد اختیارات</string>
+    <string name="sesl_switchbar_off_text">آف</string>
+    <string name="sesl_switchbar_on_text">آن</string>
+    <string name="sesl_searchview_description_clear">تلاش فیلڈ صاف کریں</string>
+    <string name="sesl_searchview_description_search">تلاش کریں</string>
+    <string name="sesl_toolbar_collapse_description">ڈھیر کریں</string>
+    <string name="sesl_action_bar_up_description">اوپر کی طرف نیویگیٹ کریں</string>
+    <string name="sesl_switch_off">آف</string>
+    <string name="sesl_searchview_description_voice">آواز کے ذریعے تلاش</string>
+    <string name="sesl_switch_on">آن</string>
+</resources>

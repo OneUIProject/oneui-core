@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Lebih</string>
+    <string name="sesl_searchview_description_query">Carian pertanyaan</string>
+    <string name="sesl_searchview_description_submit">Serah pertanyaan</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">B</string>
+    <string name="sesl_action_menu_overflow_badge_description">Kandungan baru tersedia</string>
+    <string name="sesl_search_hint">Cari</string>
+    <string name="sesl_action_menu_overflow_description">Lbh byk pilihan</string>
+    <string name="sesl_switchbar_off_text">Matikan</string>
+    <string name="sesl_switchbar_on_text">Hidupkan</string>
+    <string name="sesl_searchview_description_clear">Kosongkan medan carian</string>
+    <string name="sesl_searchview_description_search">Cari</string>
+    <string name="sesl_toolbar_collapse_description">Runtuh</string>
+    <string name="sesl_action_bar_up_description">Pandu arah ke atas</string>
+    <string name="sesl_switch_off">Mati</string>
+    <string name="sesl_searchview_description_voice">Carian suara</string>
+    <string name="sesl_switch_on">Hidup</string>
+</resources>

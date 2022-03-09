@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">વધુ</string>
+    <string name="sesl_searchview_description_query">શોધ પ્રશ્ન</string>
+    <string name="sesl_searchview_description_submit">પ્રશ્ન મોકલો</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">N</string>
+    <string name="sesl_action_menu_overflow_badge_description">નવી સામગ્રી ઉપલબ્ધ છે</string>
+    <string name="sesl_search_hint">શોધો</string>
+    <string name="sesl_action_menu_overflow_description">વધુ વિકલ્પો</string>
+    <string name="sesl_switchbar_off_text">બંધ</string>
+    <string name="sesl_switchbar_on_text">ચાલુ</string>
+    <string name="sesl_searchview_description_clear">શોધ ક્ષેત્રને સાફ કરો</string>
+    <string name="sesl_searchview_description_search">શોધો</string>
+    <string name="sesl_toolbar_collapse_description">સંક્ષિપ્ત કરો</string>
+    <string name="sesl_action_bar_up_description">ઉપર નેવિગેટ કરો</string>
+    <string name="sesl_switch_off">બંધ કરો</string>
+    <string name="sesl_searchview_description_voice">ધ્વનિ શોધ</string>
+    <string name="sesl_switch_on">ચાલુ કરો</string>
+</resources>

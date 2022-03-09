@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">अधिक</string>
+    <string name="sesl_searchview_description_query">क्वेरी शोधा</string>
+    <string name="sesl_searchview_description_submit">क्वेरी सबमिट करा.</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">नव.</string>
+    <string name="sesl_action_menu_overflow_badge_description">नवीन सामग्री उपलब्ध</string>
+    <string name="sesl_search_hint">शोधा</string>
+    <string name="sesl_action_menu_overflow_description">अधिक पर्याय</string>
+    <string name="sesl_switchbar_off_text">बंद</string>
+    <string name="sesl_switchbar_on_text">चालू</string>
+    <string name="sesl_searchview_description_clear">शोध क्षेत्र साफ करा</string>
+    <string name="sesl_searchview_description_search">शोधा</string>
+    <string name="sesl_toolbar_collapse_description">संक्षिप्त करा</string>
+    <string name="sesl_action_bar_up_description">वरती नेव्हिगेट करा.</string>
+    <string name="sesl_switch_off">बंद आहे</string>
+    <string name="sesl_searchview_description_voice">आवाज शोध</string>
+    <string name="sesl_switch_on">चालू आहे</string>
+</resources>

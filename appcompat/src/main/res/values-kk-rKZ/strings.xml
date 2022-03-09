@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">Басқалар</string>
+    <string name="sesl_searchview_description_query">Сұрауды іздеу</string>
+    <string name="sesl_searchview_description_submit">Сұрауды жіберу</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">Ж</string>
+    <string name="sesl_action_menu_overflow_badge_description">Жаңа мазмұн қолжетімді</string>
+    <string name="sesl_search_hint">Іздеу</string>
+    <string name="sesl_action_menu_overflow_description">Қосымша опциялар</string>
+    <string name="sesl_switchbar_off_text">Өшірілген</string>
+    <string name="sesl_switchbar_on_text">Қосылған</string>
+    <string name="sesl_searchview_description_clear">Іздеу өрісін тазалау</string>
+    <string name="sesl_searchview_description_search">Іздеу</string>
+    <string name="sesl_toolbar_collapse_description">Қайыру</string>
+    <string name="sesl_action_bar_up_description">Жоғары шарлау</string>
+    <string name="sesl_switch_off">Өшірулі</string>
+    <string name="sesl_searchview_description_voice">Дауыспен іздеу</string>
+    <string name="sesl_switch_on">Қосулы</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_more_item_label">තවත්</string>
+    <string name="sesl_searchview_description_query">සෙවීම් විමසුම</string>
+    <string name="sesl_searchview_description_submit">විමසුම ඉදිරිපත් කරන්න</string>
+    <string name="sesl_action_menu_overflow_badge_text_n">න</string>
+    <string name="sesl_action_menu_overflow_badge_description">නව අන්තර්ගතය ඇත</string>
+    <string name="sesl_search_hint">සොයන්න</string>
+    <string name="sesl_action_menu_overflow_description">තවත් විකල්ප</string>
+    <string name="sesl_switchbar_off_text">අක්‍රියයි</string>
+    <string name="sesl_switchbar_on_text">සක්‍රියයි</string>
+    <string name="sesl_searchview_description_clear">සෙවුම් ක්ෂේත්‍රය හිස් කරන්න</string>
+    <string name="sesl_searchview_description_search">සොයන්න</string>
+    <string name="sesl_toolbar_collapse_description">හකුළන්න</string>
+    <string name="sesl_action_bar_up_description">ඉහලට යන්න</string>
+    <string name="sesl_switch_off">ක්‍රියා විරහිතයි</string>
+    <string name="sesl_searchview_description_voice">කටහඬින් සෙවුම</string>
+    <string name="sesl_switch_on">ක්‍රියාත්මකයි</string>
+</resources>

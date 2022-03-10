@@ -1,7 +1,7 @@
 package androidx.appcompat.widget;
 
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,16 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.util.TypedValue;
@@ -45,12 +48,17 @@ import android.widget.TextView;
 import androidx.appcompat.R;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.ResourceCursorAdapter;
+import androidx.reflect.text.SeslTextUtilsReflector;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.WeakHashMap;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Provides the contents for the suggestion drop-down list.in {@link SearchView}.
@@ -60,6 +68,8 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
     private static final boolean DBG = false;
     private static final String LOG_TAG = "SuggestionsAdapter";
     private static final int QUERY_LIMIT = 50;
+
+    private static final int DEFAULT_SPANNABLE_COLOR = -16736050;
 
     static final int REFINE_NONE = 0;
     static final int REFINE_BY_ENTRY = 1;
@@ -75,6 +85,8 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
 
     // URL color
     private ColorStateList mUrlColor;
+
+    private int mSpannableTextColor = DEFAULT_SPANNABLE_COLOR;
 
     static final int INVALID_INDEX = -1;
 
@@ -101,6 +113,10 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
         mProviderContext = context;
 
         mOutsideDrawablesCache = outsideDrawablesCache;
+
+        TypedArray a = context.obtainStyledAttributes(new TypedValue().data, new int[]{android.R.attr.colorPrimaryDark});
+        mSpannableTextColor = a.getColor(0, DEFAULT_SPANNABLE_COLOR);
+        a.recycle();
     }
 
     /**
@@ -272,21 +288,62 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
     public void bindView(View view, Context context, Cursor cursor) {
         ChildViewCache views = (ChildViewCache) view.getTag();
 
+        String query = mSearchView.getQuery().toString();
+        int queryLength = query.length();
+
         int flags = 0;
         if (mFlagsCol != INVALID_INDEX) {
             flags = cursor.getInt(mFlagsCol);
         }
         if (views.mText1 != null) {
             String text1 = getStringOrNull(cursor, mText1Col);
-            setViewText(views.mText1, text1);
+            if (text1 != null) {
+                int queryIndex;
+
+                if (queryLength == 0) {
+                    queryIndex = INVALID_INDEX;
+                } else {
+                    char[] prefixChar = SeslTextUtilsReflector.semGetPrefixCharForSpan(views.mText1.getPaint(),
+                            text1, query.toCharArray());
+                    if (prefixChar != null) {
+                        String str = new String(prefixChar);
+                        queryIndex = text1.toLowerCase().indexOf(str.toLowerCase());
+                        queryLength = str.length();
+                    } else {
+                        queryIndex = text1.toLowerCase().indexOf(query.toLowerCase());
+                    }
+                }
+
+                Log.d(LOG_TAG, " queryIndex = " + queryIndex + "\nqueryLength = " + queryLength);
+
+                SpannableStringBuilder matchText1;
+
+                if (queryIndex != INVALID_INDEX && queryLength > 0) {
+                    matchText1 = new SpannableStringBuilder(text1);
+                    matchText1.setSpan(new ForegroundColorSpan(mSpannableTextColor),
+                            queryIndex, queryIndex + queryLength,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    matchText1 = null;
+                }
+
+                Log.d(LOG_TAG, " matchText1 = " + matchText1);
+
+                setViewText(views.mText1, matchText1 != null ? matchText1 : text1);
+            } else {
+                setViewText(views.mText1, text1);
+            }
         }
         if (views.mText2 != null) {
             // First check TEXT_2_URL
+            boolean text2NotNull;
             CharSequence text2 = getStringOrNull(cursor, mText2UrlCol);
             if (text2 != null) {
                 text2 = formatUrl(text2);
+                text2NotNull = true;
             } else {
                 text2 = getStringOrNull(cursor, mText2Col);
+                text2NotNull = false;
             }
 
             // If no second line of text is indicated, allow the first line of text
@@ -302,7 +359,47 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements OnClickListene
                     views.mText1.setMaxLines(1);
                 }
             }
-            setViewText(views.mText2, text2);
+
+            if (!text2NotNull){
+                String strText2 = getStringOrNull(cursor, mText2Col);
+
+                int queryIndex;
+
+                if (queryLength != 0 && strText2 != null) {
+                    char[] prefixChar = SeslTextUtilsReflector.semGetPrefixCharForSpan(views.mText1.getPaint(),
+                            strText2, query.toCharArray());
+                    if (prefixChar != null) {
+                        String str = new String(prefixChar);
+                        queryIndex = strText2.toLowerCase().indexOf(str.toLowerCase());
+                        queryLength = str.length();
+                    } else {
+                        queryIndex = strText2.toLowerCase().indexOf(query.toLowerCase());
+                    }
+                } else {
+                    queryIndex = INVALID_INDEX;
+                }
+
+                SpannableStringBuilder matchText2;
+
+                if (queryIndex != INVALID_INDEX && queryLength > 0 && strText2 != null) {
+                    matchText2 = new SpannableStringBuilder(strText2);
+                    matchText2.setSpan(new ForegroundColorSpan(mSpannableTextColor),
+                            queryIndex, queryLength + queryIndex,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    matchText2 = null;
+                }
+
+                if (matchText2 != null) {
+                    setViewText(views.mText2, matchText2);
+                } else if (strText2 != null) {
+                    setViewText(views.mText2, strText2);
+                } else {
+                    views.mText2.setVisibility(View.GONE);
+                }
+            } else  {
+                setViewText(views.mText2, text2);
+            }
         }
 
         if (views.mIcon1 != null) {

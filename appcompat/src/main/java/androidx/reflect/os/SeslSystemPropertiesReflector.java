@@ -36,6 +36,9 @@ import java.lang.reflect.Method;
 public class SeslSystemPropertiesReflector {
     private static final String mClassName = "android.os.SemSystemProperties";
 
+    /**
+     * Calls <b>SemSystemProperties.getSalesCode()</b>.
+     */
     public static String getSalesCode() {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -54,6 +57,9 @@ public class SeslSystemPropertiesReflector {
         return null;
     }
 
+    /**
+     * Calls <b>SemSystemProperties.get(String)</b>.
+     */
     public static String getStringProperties(String key) {
         Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

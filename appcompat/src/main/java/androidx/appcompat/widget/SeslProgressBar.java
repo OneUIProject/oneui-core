@@ -687,6 +687,9 @@ public class SeslProgressBar extends View {
     public void setIndeterminateDrawable(Drawable d) {
         if (mIndeterminateDrawable != d) {
             if (mIndeterminateDrawable != null) {
+                if (mUseHorizontalProgress) {
+                    stopAnimation();
+                }
                 mIndeterminateDrawable.setCallback(null);
                 unscheduleDrawable(mIndeterminateDrawable);
             }
@@ -695,7 +698,7 @@ public class SeslProgressBar extends View {
 
             if (d != null) {
                 d.setCallback(this);
-                d.setLayoutDirection(getLayoutDirection());
+                DrawableCompat.setLayoutDirection(d, getLayoutDirection());
                 if (d.isStateful()) {
                     d.setState(getDrawableState());
                 }
@@ -703,6 +706,9 @@ public class SeslProgressBar extends View {
             }
 
             if (mIndeterminate) {
+                if (mUseHorizontalProgress) {
+                    startAnimation();
+                }
                 swapCurrentDrawable(d);
                 postInvalidate();
             }
@@ -859,7 +865,7 @@ public class SeslProgressBar extends View {
                 }
 
                 // Make sure the ProgressBar is always tall enough
-                if (mCurrentMode == MODE_VERTICAL || mCurrentMode == MODE_EXPAND_VERTICAL) {
+                if (mCurrentMode == MODE_VERTICAL) {
                     int drawableWidth = d.getMinimumWidth();
                     if (mMaxWidth < drawableWidth) {
                         mMaxWidth = drawableWidth;

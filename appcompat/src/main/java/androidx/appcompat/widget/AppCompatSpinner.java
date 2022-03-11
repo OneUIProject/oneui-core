@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -45,6 +48,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -59,6 +63,9 @@ import androidx.appcompat.view.menu.ShowableListMenu;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.view.ViewCompat;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link Spinner} which supports compatible features on older versions of the platform,
@@ -100,8 +107,11 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
     private final boolean mPopupSet;
 
     private SpinnerPopup mPopup;
+    ListPopupWindow mListPopupWindow;
 
     int mDropDownWidth;
+    int mDropDownHorizontalOffset;
+    int mDropDownGravity = Gravity.NO_GRAVITY;
 
     final Rect mTempRect = new Rect();
 
@@ -255,12 +265,12 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
                         mPopupContext, attrs, R.styleable.Spinner, defStyleAttr, 0);
                 mDropDownWidth = pa.getLayoutDimension(R.styleable.Spinner_android_dropDownWidth,
                         LayoutParams.WRAP_CONTENT);
-                popup.setBackgroundDrawable(
-                        pa.getDrawable(R.styleable.Spinner_android_popupBackground));
+                mDropDownHorizontalOffset = popup.getHorizontalOffset();
                 popup.setPromptText(a.getString(R.styleable.Spinner_android_prompt));
                 pa.recycle();
 
                 mPopup = popup;
+                mListPopupWindow = popup;
                 mForwardingListener = new ForwardingListener(this) {
                     @Override
                     public ShowableListMenu getPopup() {
@@ -437,9 +447,15 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
 
         if (mPopup != null && MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
             final int measuredWidth = getMeasuredWidth();
-            setMeasuredDimension(Math.min(Math.max(measuredWidth,
-                                    compatMeasureContentWidth(getAdapter(), getBackground())),
-                            MeasureSpec.getSize(widthMeasureSpec)),
+            final int contentWidth;
+            if (getSelectedItemPosition() <= INVALID_POSITION
+                    || getSelectedItemPosition() >= getAdapter().getCount()) {
+                contentWidth = compatMeasureContentWidth(getAdapter(), getBackground());
+            } else {
+                contentWidth = getCurrentContentWidth(getAdapter(), getBackground());
+            }
+            setMeasuredDimension(Math.min(contentWidth,
+                    MeasureSpec.getSize(widthMeasureSpec)),
                     getMeasuredHeight());
         }
     }
@@ -448,6 +464,7 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
     public boolean performClick() {
         if (mPopup != null) {
             // If we have a popup, show it if needed, or just consume the click...
+            playSoundEffect(SoundEffectConstants.CLICK);
             if (!mPopup.isShowing()) {
                 showPopup();
             }
@@ -968,6 +985,7 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
         public DropdownPopup(Context context, AttributeSet attrs, int defStyleAttr) {
             super(context, attrs, defStyleAttr);
 
+            setDropDownGravity(AppCompatSpinner.this.mDropDownGravity);
             setAnchorView(AppCompatSpinner.this);
             setModal(true);
             setPromptPosition(POSITION_PROMPT_ABOVE);
@@ -1025,7 +1043,7 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
                     contentWidth = contentWidthLimit;
                 }
                 setContentWidth(Math.max(
-                        contentWidth, spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight));
+                        contentWidth + 4, spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight));
             } else if (mDropDownWidth == MATCH_PARENT) {
                 setContentWidth(spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight);
             } else {
@@ -1037,7 +1055,11 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
             } else {
                 hOffset += spinnerPaddingLeft + getHorizontalOriginalOffset();
             }
-            setHorizontalOffset(hOffset);
+            if (mDropDownHorizontalOffset != 0) {
+                setHorizontalOffset(mDropDownHorizontalOffset + hOffset);
+            } else {
+                setHorizontalOffset(hOffset);
+            }
         }
 
         @Override
@@ -1049,18 +1071,19 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
             setInputMethodMode(ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
             super.show();
             final ListView listView = getListView();
-            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 listView.setTextDirection(textDirection);
                 listView.setTextAlignment(textAlignment);
             }
-            setSelection(AppCompatSpinner.this.getSelectedItemPosition());
 
             if (wasShowing) {
                 // Skip setting up the layout/dismiss listener below. If we were previously
                 // showing it will still stick around.
                 return;
             }
+
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            setSelection(AppCompatSpinner.this.getSelectedItemPosition());
 
             // Make sure we hide if our anchor goes away.
             // TODO: This might be appropriate to push all the way down to PopupWindow,
@@ -1071,15 +1094,8 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
                         = new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (!isVisibleToUser(AppCompatSpinner.this)) {
-                            dismiss();
-                        } else {
-                            computeContentWidth();
-
-                            // Use super.show here to update; we don't want to move the selected
-                            // position or adjust other things that would be reset otherwise.
-                            DropdownPopup.super.show();
-                        }
+                        computeContentWidth();
+                        DropdownPopup.super.show();
                     }
                 };
                 vto.addOnGlobalLayoutListener(layoutListener);
@@ -1111,5 +1127,74 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
         public int getHorizontalOriginalOffset() {
             return mOriginalHorizontalOffset;
         }
+    }
+
+    private int getCurrentContentWidth(SpinnerAdapter adapter, Drawable background) {
+        if (adapter == null) {
+            return 0;
+        }
+
+        final int widthMeasureSpec =
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        final int heightMeasureSpec =
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+        View itemView = adapter.getView(getSelectedItemPosition(), null, this);
+        if (itemView.getLayoutParams() == null) {
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT));
+        }
+        itemView.measure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = itemView.getMeasuredWidth();
+        if (background != null) {
+            background.getPadding(mTempRect);
+            return width + mTempRect.left + mTempRect.right;
+        }
+
+        return width;
+    }
+
+    public void seslDismissPopup() {
+        if (mPopup != null && mPopup.isShowing()) {
+            mPopup.dismiss();
+        }
+    }
+
+    public void seslSetDropDownGravity(int gravity) {
+        mDropDownGravity = gravity;
+        if (mListPopupWindow != null) {
+            mListPopupWindow.setDropDownGravity(gravity);
+        }
+    }
+
+    @Override
+    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo nodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(nodeInfo);
+
+        View selectedView = getSelectedView();
+
+        StringBuilder sb = new StringBuilder();
+        if (selectedView instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) selectedView;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                if (child instanceof TextView) {
+                    TextView textView = (TextView) child;
+                    if (sb.length() == 0) {
+                        sb = new StringBuilder(textView.getText());
+                    } else {
+                        sb.append(" ");
+                        sb.append(textView.getText());
+                    }
+                }
+            }
+        } else if (selectedView instanceof TextView) {
+            sb = new StringBuilder(((TextView) selectedView).getText());
+        }
+
+        nodeInfo.setContentDescription(sb.toString());
+        nodeInfo.setClassName(Spinner.class.getName());
     }
 }

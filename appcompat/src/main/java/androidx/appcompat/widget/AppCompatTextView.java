@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,14 @@ import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
 import androidx.core.widget.TintableCompoundDrawablesView;
+import androidx.reflect.widget.SeslTextViewReflector;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link TextView} which supports compatible features on older versions of the platform,
@@ -725,5 +730,13 @@ public class AppCompatTextView extends TextView implements TintableBackgroundVie
             mIsSetTypefaceProcessing = false;
         }
 
+    }
+
+    public void seslSetButtonShapeEnabled(boolean enabled) {
+        SeslTextViewReflector.semSetButtonShapeEnabled(this, enabled);
+    }
+
+    public void seslSetButtonShapeEnabled(boolean enabled, int textColor) {
+        SeslTextViewReflector.semSetButtonShapeEnabled(this, enabled, textColor);
     }
 }

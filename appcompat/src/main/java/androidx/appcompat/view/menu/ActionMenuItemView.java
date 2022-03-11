@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,27 +23,43 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
+import androidx.appcompat.util.SeslMisc;
+import androidx.appcompat.util.SeslShowButtonShapesHelper;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.ForwardingListener;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * @hide
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class ActionMenuItemView extends AppCompatTextView
-        implements MenuView.ItemView, View.OnClickListener, ActionMenuView.ActionMenuChildView {
+        implements MenuView.ItemView, View.OnClickListener, ActionMenuView.ActionMenuChildView, View.OnLongClickListener {
 
     private static final String TAG = "ActionMenuItemView";
+
+    private static final float MAX_FONT_SCALE = 1.2f;
 
     MenuItemImpl mItemData;
     private CharSequence mTitle;
@@ -51,14 +67,19 @@ public class ActionMenuItemView extends AppCompatTextView
     MenuBuilder.ItemInvoker mItemInvoker;
     private ForwardingListener mForwardingListener;
     PopupCallback mPopupCallback;
+    private SeslShowButtonShapesHelper mSBSHelper;
 
     private boolean mAllowTextWithIcon;
     private boolean mExpandedFormat;
     private int mMinWidth;
     private int mSavedPaddingLeft;
 
+    private boolean mIsChangedRelativePadding = false;
+    private boolean mIsLastItem = false;
+
     private static final int MAX_ICON_SIZE = 32; // dp
     private int mMaxIconSize;
+    private float mDefaultTextSize = 0;
 
     public ActionMenuItemView(Context context) {
         this(context, null);
@@ -82,9 +103,44 @@ public class ActionMenuItemView extends AppCompatTextView
         mMaxIconSize = (int) (MAX_ICON_SIZE * density + 0.5f);
 
         setOnClickListener(this);
+        setOnLongClickListener(this);
 
         mSavedPaddingLeft = -1;
         setSaveEnabled(false);
+
+        TypedArray a2 = context.getTheme().obtainStyledAttributes(null, R.styleable.AppCompatTheme, 0, 0);
+        final int actionMeneTextAppearnceId = a2.getResourceId(R.styleable.AppCompatTheme_actionMenuTextAppearance, 0);
+        a2.recycle();
+
+        TypedArray a3 = context.obtainStyledAttributes(actionMeneTextAppearnceId, R.styleable.TextAppearance);
+        TypedValue outValue = a3.peekValue(R.styleable.TextAppearance_android_textSize);
+        a3.recycle();
+        if (outValue != null) {
+            mDefaultTextSize = TypedValue.complexToFloat(outValue.data);
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+            seslSetButtonShapeEnabled(true);
+        } else {
+            mSBSHelper = new SeslShowButtonShapesHelper(this,
+                    ResourcesCompat.getDrawable(getResources(), R.drawable.sesl_action_text_button_show_button_shapes_background, null),
+                    getBackground());
+        }
+    }
+
+    @Override
+    public void setBackground(Drawable background) {
+        super.setBackground(background);
+        if (mSBSHelper != null) {
+            mSBSHelper.setBackgroundOff(background);
+        }
+    }
+
+    @Override
+    public void setPaddingRelative(int start, int top, int end, int bottom) {
+        mSavedPaddingLeft = start;
+        mIsChangedRelativePadding = true;
+        super.setPaddingRelative(start, top, end, bottom);
     }
 
     @Override
@@ -152,6 +208,11 @@ public class ActionMenuItemView extends AppCompatTextView
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
+    }
+
     public void setItemInvoker(MenuBuilder.ItemInvoker invoker) {
         mItemInvoker = invoker;
     }
@@ -191,6 +252,15 @@ public class ActionMenuItemView extends AppCompatTextView
 
         setText(visible ? mTitle : null);
 
+        if (visible) {
+            if (SeslMisc.isLightTheme(getContext())) {
+                setBackgroundResource(R.drawable.sesl_action_bar_item_text_background_light);
+            } else {
+                setBackgroundResource(R.drawable.sesl_action_bar_item_text_background_dark);
+            }
+
+        }
+
         // Show the tooltip for items that do not already show text.
         final CharSequence contentDescription = mItemData.getContentDescription();
         if (TextUtils.isEmpty(contentDescription)) {
@@ -208,6 +278,12 @@ public class ActionMenuItemView extends AppCompatTextView
         } else {
             TooltipCompat.setTooltipText(this, tooltipText);
         }
+
+        if (mDefaultTextSize > 0) {
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, mDefaultTextSize * Math.min(getResources().getConfiguration().fontScale, MAX_FONT_SCALE));
+        }
+
+        setText(visible ? mTitle : null);
     }
 
     @Override
@@ -230,7 +306,81 @@ public class ActionMenuItemView extends AppCompatTextView
         }
         setCompoundDrawables(icon, null, null, null);
 
+        if (!hasText() ||
+                ViewCompat.getLayoutDirection(this) != ViewCompat.LAYOUT_DIRECTION_RTL) {
+            setCompoundDrawables(icon, null, null, null);
+        } else {
+            setCompoundDrawables(null, null, icon, null);
+        }
+
         updateTextButtonVisibility();
+    }
+
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    public void setIsLastItem(boolean isLastItem) {
+        mIsLastItem = isLastItem;
+    }
+
+    @Override
+    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo nodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(nodeInfo);
+        nodeInfo.setClassName(android.widget.Button.class.getName());
+    }
+
+    @Override
+    public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
+        onPopulateAccessibilityEvent(event);
+        return true;
+    }
+
+    @Override
+    public void onPopulateAccessibilityEvent(AccessibilityEvent event) {
+        super.onPopulateAccessibilityEvent(event);
+        CharSequence cdesc = getContentDescription();
+        if (!TextUtils.isEmpty(cdesc)) {
+            event.getText().add(cdesc);
+        }
+    }
+
+    @Override
+    protected boolean setFrame(int l, int t, int r, int b) {
+        final boolean changed = super.setFrame(l, t, r, b);
+
+        if (!mIsChangedRelativePadding) {
+            return changed;
+        }
+
+        Drawable bg = getBackground();
+        if (mIcon != null && bg != null) {
+            final int width = getWidth();
+            final int height = getHeight();
+            final int offsetX = getPaddingLeft() - getPaddingRight();
+            final int halfOffsetX = offsetX / 2;
+            DrawableCompat.setHotspotBounds(bg, halfOffsetX, 0, width + halfOffsetX, height);
+        } else if (bg != null) {
+            DrawableCompat.setHotspotBounds(bg, 0, 0, getWidth(), getHeight());
+        }
+
+        return changed;
+    }
+
+    @Override
+    public void onHoverChanged(boolean hovered) {
+        TooltipCompat.seslSetNextTooltipForceActionBarPosX(true);
+        TooltipCompat.seslSetNextTooltipForceBelow(true);
+        super.onHoverChanged(hovered);
+    }
+
+    @Override
+    public boolean performLongClick() {
+        if (mIcon == null) {
+            TooltipCompat.setTooltipNull(true);
+            return true;
+        }
+
+        TooltipCompat.seslSetNextTooltipForceActionBarPosX(true);
+        TooltipCompat.seslSetNextTooltipForceBelow(true);
+        return super.performLongClick();
     }
 
     public boolean hasText() {
@@ -246,6 +396,7 @@ public class ActionMenuItemView extends AppCompatTextView
     public void setTitle(CharSequence title) {
         mTitle = title;
 
+        setContentDescription(title);
         updateTextButtonVisibility();
     }
 
@@ -272,6 +423,27 @@ public class ActionMenuItemView extends AppCompatTextView
                     getPaddingRight(), getPaddingBottom());
         }
 
+        if (mSBSHelper != null) {
+            final int paddingLeft = getPaddingLeft();
+            final int paddingRight = getPaddingRight();
+
+            int backgroundOnRes;
+            if (hasText()) {
+                backgroundOnRes =
+                        R.drawable.sesl_action_text_button_show_button_shapes_background;
+            } else if (mIsLastItem) {
+                backgroundOnRes =
+                        R.drawable.sesl_more_button_show_button_shapes_background;
+            } else {
+                backgroundOnRes =
+                        R.drawable.sesl_action_icon_button_show_button_shapes_background;
+            }
+
+            mSBSHelper.setBackgroundOn(ContextCompat.getDrawable(getContext(), backgroundOnRes));
+            mSBSHelper.updateButtonBackground();
+            setPadding(paddingLeft, getPaddingTop(), paddingRight, getPaddingBottom());
+        }
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -291,7 +463,9 @@ public class ActionMenuItemView extends AppCompatTextView
             // a little coercion. Pad in to center the icon after we've measured.
             final int w = getMeasuredWidth();
             final int dw = mIcon.getBounds().width();
-            super.setPadding((w - dw) / 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+            if (!mIsChangedRelativePadding) {
+                super.setPadding((w - dw) / 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+            }
         }
     }
 

@@ -978,7 +978,7 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
         }
         try {
             return Integer.parseInt(str);
-        } catch (NumberFormatException unused) {
+        } catch (NumberFormatException e) {
             return 1;
         }
     }

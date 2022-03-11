@@ -889,8 +889,8 @@ class ActionMenuPresenter extends BaseMenuPresenter
             if (d != null && bg != null) {
                 final int width = getWidth();
                 final int height = getHeight();
-                int offsetX = getPaddingLeft() - getPaddingRight();
-                int halfOffsetX = offsetX / 2;
+                final int offsetX = getPaddingLeft() - getPaddingRight();
+                final int halfOffsetX = offsetX / 2;
                 DrawableCompat.setHotspotBounds(bg, halfOffsetX, 0,
                         halfOffsetX + width, height);
             }

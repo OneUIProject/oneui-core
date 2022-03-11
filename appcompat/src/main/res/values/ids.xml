@@ -23,4 +23,5 @@
     <item type="id" name="action_menu_presenter"/>
     <item type="id" name="progress_circular"/>
     <item type="id" name="progress_horizontal"/>
+    <item type="id" name="sesl_action_bar_overflow_button" />
 </resources>

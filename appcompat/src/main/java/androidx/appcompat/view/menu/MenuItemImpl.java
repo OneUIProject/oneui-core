@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,15 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.internal.view.SupportMenuItem;
 import androidx.core.view.ActionProvider;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * @hide
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
-public final class MenuItemImpl implements SupportMenuItem {
+public final class MenuItemImpl implements SupportMenuItem, SeslMenuItem {
 
     private static final String TAG = "MenuItemImpl";
 
@@ -87,6 +91,7 @@ public final class MenuItemImpl implements SupportMenuItem {
     private Runnable mItemCallback;
     private SupportMenuItem.OnMenuItemClickListener mClickListener;
 
+    private String mBadgeText;
     private CharSequence mContentDescription;
     private CharSequence mTooltipText;
 
@@ -903,5 +908,18 @@ public final class MenuItemImpl implements SupportMenuItem {
     @Override
     public CharSequence getTooltipText() {
         return mTooltipText;
+    }
+
+    @Override
+    public String getBadgeText() {
+        return mBadgeText;
+    }
+
+    @Override
+    public void setBadgeText(String badgeText) {
+        if (mBadgeText == null || !mBadgeText.equals(badgeText)) {
+            mBadgeText = badgeText;
+            mMenu.onItemsChanged(false);
+        }
     }
 }

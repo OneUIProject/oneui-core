@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,35 @@
 
 package androidx.appcompat.widget;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
+import androidx.appcompat.util.SeslMisc;
+import androidx.appcompat.util.SeslShowButtonShapesHelper;
 import androidx.appcompat.view.ActionBarPolicy;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.view.menu.BaseMenuPresenter;
@@ -42,11 +54,20 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.ShowableListMenu;
 import androidx.appcompat.view.menu.SubMenuBuilder;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ActionProvider;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.TextViewCompat;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * MenuPresenter for building action menus as seen in the action bar and action modes.
@@ -61,6 +82,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
     private boolean mPendingOverflowIconSet;
     private boolean mReserveOverflow;
     private boolean mReserveOverflowSet;
+    private CharSequence mTooltipText;
     private int mWidthLimit;
     private int mActionItemWidthLimit;
     private int mMaxItems;
@@ -69,10 +91,16 @@ class ActionMenuPresenter extends BaseMenuPresenter
     private boolean mWidthLimitSet;
     private boolean mExpandedActionViewsExclusive;
 
+    private boolean mHasNavigationBar = false;
+    private boolean mIsLightTheme = false;
+    private boolean mUseTextItemMode;
+
     private int mMinCellSize;
 
     // Group IDs that have been added as actions - used temporarily, allocated here for reuse.
     private final SparseBooleanArray mActionButtonGroups = new SparseBooleanArray();
+
+    private NumberFormat mNumberFormat = NumberFormat.getInstance(Locale.getDefault());
 
     OverflowPopup mOverflowPopup;
     ActionButtonSubmenu mActionButtonPopup;
@@ -84,7 +112,9 @@ class ActionMenuPresenter extends BaseMenuPresenter
     int mOpenSubMenuId;
 
     public ActionMenuPresenter(Context context) {
-        super(context, R.layout.abc_action_menu_layout, R.layout.abc_action_menu_item_layout);
+        super(context, R.layout.sesl_action_menu_layout, R.layout.sesl_action_menu_item_layout);
+        mUseTextItemMode = context.getResources().getBoolean(R.bool.sesl_action_bar_text_item_mode);
+        mHasNavigationBar = ActionBarPolicy.get(context).hasNavigationBar();
     }
 
     @Override
@@ -111,8 +141,11 @@ class ActionMenuPresenter extends BaseMenuPresenter
         if (mReserveOverflow) {
             if (mOverflowButton == null) {
                 mOverflowButton = new OverflowMenuButton(mSystemContext);
+                mOverflowButton.setId(R.id.sesl_action_bar_overflow_button);
                 if (mPendingOverflowIconSet) {
-                    mOverflowButton.setImageDrawable(mPendingOverflowIcon);
+                    if (mUseTextItemMode) {
+                        ((AppCompatImageView) mOverflowButton.getInnerView()).setImageDrawable(mPendingOverflowIcon);
+                    }
                     mPendingOverflowIcon = null;
                     mPendingOverflowIconSet = false;
                 }
@@ -130,8 +163,17 @@ class ActionMenuPresenter extends BaseMenuPresenter
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
+        final ActionBarPolicy abp = ActionBarPolicy.get(mContext);
         if (!mMaxItemsSet) {
-            mMaxItems = ActionBarPolicy.get(mContext).getMaxActionButtons();
+            mMaxItems = abp.getMaxActionButtons();
+        }
+        if (!mWidthLimitSet) {
+            mWidthLimit = abp.getEmbeddedMenuWidthLimit();
+        }
+        if (mReserveOverflow && mOverflowButton != null) {
+            mActionItemWidthLimit = mWidthLimit - mOverflowButton.getMeasuredWidth();
+        } else {
+            mActionItemWidthLimit = mWidthLimit;
         }
         if (mMenu != null) {
             mMenu.onItemsChanged(true);
@@ -159,8 +201,11 @@ class ActionMenuPresenter extends BaseMenuPresenter
     }
 
     public void setOverflowIcon(Drawable icon) {
+        if (mUseTextItemMode) {
+            return;
+        }
         if (mOverflowButton != null) {
-            mOverflowButton.setImageDrawable(icon);
+            ((AppCompatImageView) mOverflowButton.getInnerView()).setImageDrawable(icon);
         } else {
             mPendingOverflowIconSet = true;
             mPendingOverflowIcon = icon;
@@ -168,10 +213,12 @@ class ActionMenuPresenter extends BaseMenuPresenter
     }
 
     public Drawable getOverflowIcon() {
-        if (mOverflowButton != null) {
-            return mOverflowButton.getDrawable();
-        } else if (mPendingOverflowIconSet) {
-            return mPendingOverflowIcon;
+        if (!mUseTextItemMode) {
+            if (mOverflowButton != null) {
+                return ((AppCompatImageView) mOverflowButton.getInnerView()).getDrawable();
+            } else if (mPendingOverflowIconSet) {
+                return mPendingOverflowIcon;
+            }
         }
         return null;
     }
@@ -225,7 +272,9 @@ class ActionMenuPresenter extends BaseMenuPresenter
     public void updateMenuView(boolean cleared) {
         super.updateMenuView(cleared);
 
-        ((View) mMenuView).requestLayout();
+        if (mMenuView != null) {
+            ((View) mMenuView).requestLayout();
+        }
 
         if (mMenu != null) {
             final ArrayList<MenuItemImpl> actionItems = mMenu.getActionItems();
@@ -254,6 +303,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
         if (hasOverflow) {
             if (mOverflowButton == null) {
                 mOverflowButton = new OverflowMenuButton(mSystemContext);
+                mOverflowButton.setId(R.id.sesl_action_bar_overflow_button);
             }
             ViewGroup parent = (ViewGroup) mOverflowButton.getParent();
             if (parent != mMenuView) {
@@ -264,10 +314,24 @@ class ActionMenuPresenter extends BaseMenuPresenter
                 menuView.addView(mOverflowButton, menuView.generateOverflowButtonLayoutParams());
             }
         } else if (mOverflowButton != null && mOverflowButton.getParent() == mMenuView) {
-            ((ViewGroup) mMenuView).removeView(mOverflowButton);
+            if (mMenuView != null) {
+                ((ViewGroup) mMenuView).removeView(mOverflowButton);
+            }
+            if (isOverflowMenuShowing()) {
+                hideOverflowMenu();
+            }
         }
 
-        ((ActionMenuView) mMenuView).setOverflowReserved(mReserveOverflow);
+        if (mOverflowButton != null && mMenuView != null) {
+            mOverflowButton.setBadgeText(((ActionMenuView) mMenuView).getOverflowBadgeText(),
+                    ((ActionMenuView) mMenuView).getSumOfDigitsInBadges());
+        }
+        if ((mOverflowButton == null || mOverflowButton.getVisibility() != View.GONE) && isOverflowMenuShowing()) {
+            hideOverflowMenu();
+        }
+        if (mMenuView != null) {
+            ((ActionMenuView) mMenuView).setOverflowReserved(mReserveOverflow);
+        }
     }
 
     @Override
@@ -278,7 +342,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
 
     @Override
     public boolean onSubMenuSelected(SubMenuBuilder subMenu) {
-        if (!subMenu.hasVisibleItems()) return false;
+        if (subMenu == null || !subMenu.hasVisibleItems()) return false;
 
         SubMenuBuilder topSubMenu = subMenu;
         while (topSubMenu.getParentMenu() != mMenu) {
@@ -622,59 +686,83 @@ class ActionMenuPresenter extends BaseMenuPresenter
         };
     }
 
-    private class OverflowMenuButton extends AppCompatImageView
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    class OverflowMenuButton extends FrameLayout
             implements ActionMenuView.ActionMenuChildView {
+        private static final int BADGE_LIMIT_NUMBER = 99;
+
+        private View mInnerView;
+
+        private CharSequence mContentDescription;
+
+        private ViewGroup mBadgeBackground;
+        private TextView mBadgeText;
+        private CharSequence mBadgeContentDescription;
+
 
         public OverflowMenuButton(Context context) {
-            super(context, null, R.attr.actionOverflowButtonStyle);
+            super(context);
 
-            setClickable(true);
-            setFocusable(true);
-            setVisibility(VISIBLE);
-            setEnabled(true);
+            mInnerView = mUseTextItemMode ?
+                    new OverflowTextView(context) : new OverflowImageView(context);
+            addView(mInnerView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            TooltipCompat.setTooltipText(this, getContentDescription());
+            if (mInnerView instanceof OverflowImageView) {
+                mContentDescription = mInnerView.getContentDescription();
+                mBadgeContentDescription = ((Object) mContentDescription) + " , "
+                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
+            }
 
-            setOnTouchListener(new ForwardingListener(this) {
-                @Override
-                public ShowableListMenu getPopup() {
-                    if (mOverflowPopup == null) {
-                        return null;
-                    }
-
-                    return mOverflowPopup.getPopup();
+            if (TextUtils.isEmpty(mContentDescription)) {
+                mContentDescription = getResources().getString(R.string.sesl_action_menu_overflow_description);
+                if (mInnerView != null) {
+                    mInnerView.setContentDescription(mContentDescription);
                 }
+            }
 
-                @Override
-                public boolean onForwardingStarted() {
-                    showOverflowMenu();
-                    return true;
-                }
-
-                @Override
-                public boolean onForwardingStopped() {
-                    // Displaying the popup occurs asynchronously, so wait for
-                    // the runnable to finish before deciding whether to stop
-                    // forwarding.
-                    if (mPostedOpenRunnable != null) {
-                        return false;
-                    }
-
-                    hideOverflowMenu();
-                    return true;
-                }
-            });
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mBadgeBackground = (ViewGroup) inflater.inflate(R.layout.sesl_action_menu_item_badge, this, false);
+            mBadgeText = (TextView) mBadgeBackground.getChildAt(0);
+            addView(mBadgeBackground);
         }
 
         @Override
-        public boolean performClick() {
-            if (super.performClick()) {
-                return true;
+        public void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+
+            mBadgeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) getResources().getDimension(R.dimen.sesl_menu_item_badge_text_size));
+
+            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mBadgeBackground.getLayoutParams();
+            lp.width = (int) (getResources().getDimension(R.dimen.sesl_badge_default_width)
+                    + (mBadgeText.getText().length() * getResources().getDimension(R.dimen.sesl_badge_additional_width)));
+            lp.height = (int) getResources().getDimension(R.dimen.sesl_menu_item_badge_size);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                lp.setMarginEnd((int) getResources().getDimension(R.dimen.sesl_menu_item_badge_end_margin));
+            }
+            mBadgeBackground.setLayoutParams(lp);
+
+            if (mInnerView instanceof OverflowImageView) {
+                mContentDescription = getContentDescription();
+                mBadgeContentDescription = ((Object) mContentDescription) + " , "
+                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
             }
 
-            playSoundEffect(SoundEffectConstants.CLICK);
-            showOverflowMenu();
-            return true;
+            if (TextUtils.isEmpty(mContentDescription)) {
+                mContentDescription = getResources().getString(R.string.sesl_action_menu_overflow_description);
+                mBadgeContentDescription = ((Object) mContentDescription) + " , "
+                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
+            }
+
+            if (mBadgeBackground.getVisibility() == VISIBLE) {
+                if (mInnerView instanceof OverflowImageView) {
+                    mInnerView.setContentDescription(mBadgeContentDescription);
+                }
+            } else {
+                if (mInnerView instanceof OverflowImageView) {
+                    mInnerView.setContentDescription(mContentDescription);
+                }
+            }
         }
 
         @Override
@@ -687,6 +775,110 @@ class ActionMenuPresenter extends BaseMenuPresenter
             return false;
         }
 
+        public View getInnerView() {
+            return mInnerView;
+        }
+
+        public void setBadgeText(String badgeText, int badgeCount) {
+            if (badgeCount > BADGE_LIMIT_NUMBER) {
+                badgeCount = BADGE_LIMIT_NUMBER;
+            }
+            if (badgeText == null && !badgeText.equals("")) {
+                badgeText = mNumberFormat.format(badgeCount);
+            }
+            mBadgeText.setText(badgeText);
+
+            int badgeWidth = (int) (getResources().getDimension(R.dimen.sesl_badge_default_width)
+                    + (badgeText.length() * getResources().getDimension(R.dimen.sesl_badge_additional_width)));
+            ViewGroup.LayoutParams lp = mBadgeBackground.getLayoutParams();
+            lp.width = badgeWidth;
+            mBadgeBackground.setLayoutParams(lp);
+
+            mBadgeBackground.setVisibility(badgeCount > 0 ?
+                    View.VISIBLE : View.GONE);
+            if (mBadgeBackground.getVisibility() == View.VISIBLE) {
+                if (mInnerView instanceof OverflowImageView) {
+                    mInnerView.setContentDescription(mBadgeContentDescription);
+                }
+            } else {
+                if (mInnerView instanceof OverflowImageView) {
+                    mInnerView.setContentDescription(mContentDescription);
+                }
+            }
+        }
+    }
+
+    private class OverflowImageView extends AppCompatImageView {
+        private SeslShowButtonShapesHelper mSBSHelper;
+
+        public OverflowImageView(Context context) {
+            super(context, null, R.attr.actionOverflowButtonStyle);
+
+            setClickable(true);
+            setFocusable(true);
+            setLongClickable(true);
+
+            mTooltipText = getResources().getString(R.string.sesl_action_menu_overflow_description);
+
+            TooltipCompat.setTooltipText(this, mTooltipText);
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+                mSBSHelper = new SeslShowButtonShapesHelper(this,
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.sesl_more_button_show_button_shapes_background, null),
+                        getBackground());
+            }
+        }
+
+        @Override
+        protected void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+
+            TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.View, R.attr.actionOverflowButtonStyle, 0);
+            setMinimumHeight(a.getDimensionPixelSize(R.styleable.View_android_minHeight, 0));
+            mTooltipText = getContext().getResources().getString(R.string.sesl_action_menu_overflow_description);
+            a.recycle();
+
+            TypedArray a2 = getContext().obtainStyledAttributes(null, R.styleable.AppCompatImageView, R.attr.actionOverflowButtonStyle, 0);
+            Drawable d = ContextCompat.getDrawable(getContext(), a2.getResourceId(R.styleable.AppCompatImageView_android_src, -1));
+            if (d != null) {
+                setImageDrawable(d);
+            }
+            a2.recycle();
+
+            if (mSBSHelper != null) {
+                mSBSHelper.updateOverflowButtonBackground(ContextCompat.getDrawable(getContext(),
+                        R.drawable.sesl_more_button_show_button_shapes_background));
+            }
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            if (mSBSHelper != null) {
+                mSBSHelper.updateButtonBackground();
+            }
+        }
+
+        @Override
+        public boolean performLongClick() {
+            TooltipCompat.seslSetNextTooltipForceActionBarPosX(true);
+            TooltipCompat.seslSetNextTooltipForceBelow(true);
+            return super.performLongClick();
+        }
+
+        @Override
+        public boolean performClick() {
+            if (super.performClick()) {
+                return true;
+            }
+
+            playSoundEffect(SoundEffectConstants.CLICK);
+            if (showOverflowMenu() && isHovered()) {
+                TooltipCompat.setTooltipNull(true);
+            }
+            return true;
+        }
+
         @Override
         protected boolean setFrame(int l, int t, int r, int b) {
             final boolean changed = super.setFrame(l, t, r, b);
@@ -697,16 +889,72 @@ class ActionMenuPresenter extends BaseMenuPresenter
             if (d != null && bg != null) {
                 final int width = getWidth();
                 final int height = getHeight();
-                final int halfEdge = Math.max(width, height) / 2;
-                final int offsetX = getPaddingLeft() - getPaddingRight();
-                final int offsetY = getPaddingTop() - getPaddingBottom();
-                final int centerX = (width + offsetX) / 2;
-                final int centerY = (height + offsetY) / 2;
-                DrawableCompat.setHotspotBounds(bg, centerX - halfEdge, centerY - halfEdge,
-                        centerX + halfEdge, centerY + halfEdge);
+                int offsetX = getPaddingLeft() - getPaddingRight();
+                int halfOffsetX = offsetX / 2;
+                DrawableCompat.setHotspotBounds(bg, halfOffsetX, 0,
+                        halfOffsetX + width, height);
             }
 
             return changed;
+        }
+    }
+
+    private class OverflowTextView extends AppCompatTextView {
+        private SeslShowButtonShapesHelper mSBBHelper;
+
+        public OverflowTextView(Context context) {
+            super(context, null, R.attr.actionOverflowButtonStyle);
+
+            setClickable(true);
+            setFocusable(true);
+
+            TypedArray a = context.getTheme().obtainStyledAttributes(null, R.styleable.AppCompatTheme, 0, 0);
+            TextViewCompat.setTextAppearance(this, a.getResourceId(R.styleable.AppCompatTheme_actionMenuTextAppearance, 0));
+            a.recycle();
+
+            setText(getResources().getString(R.string.sesl_more_item_label));
+
+            mIsLightTheme = SeslMisc.isLightTheme(context);
+            if (mIsLightTheme) {
+                setBackgroundResource(R.drawable.sesl_action_bar_item_text_background_light);
+            } else {
+                setBackgroundResource(R.drawable.sesl_action_bar_item_text_background_dark);
+            }
+
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+                seslSetButtonShapeEnabled(true);
+            } else {
+                mSBBHelper = new SeslShowButtonShapesHelper(this,
+                        ResourcesCompat.getDrawable(getResources(), R.drawable.sesl_action_text_button_show_button_shapes_background, null),
+                        getBackground());
+            }
+        }
+
+        @Override
+        protected void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+            if (mSBBHelper != null) {
+                mSBBHelper.updateButtonBackground();
+            }
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            if (mSBBHelper != null) {
+                mSBBHelper.updateButtonBackground();
+            }
+        }
+
+        @Override
+        public boolean performClick() {
+            if (super.performClick()) {
+                return true;
+            }
+
+            playSoundEffect(SoundEffectConstants.CLICK);
+            showOverflowMenu();
+            return true;
         }
     }
 

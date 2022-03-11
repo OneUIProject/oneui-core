@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,11 @@ import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
 import androidx.core.widget.TintableCompoundDrawablesView;
+import androidx.reflect.widget.SeslTextViewReflector;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link Button} which supports compatible features on older versions of the platform,
@@ -419,5 +424,13 @@ public class AppCompatButton extends Button implements TintableBackgroundView,
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     public PorterDuff.Mode getSupportCompoundDrawablesTintMode() {
         return mTextHelper.getCompoundDrawableTintMode();
+    }
+
+    public void seslSetButtonShapeEnabled(boolean enabled) {
+        SeslTextViewReflector.semSetButtonShapeEnabled(this, enabled);
+    }
+
+    public void seslSetButtonShapeEnabled(boolean enabled, int textColor) {
+        SeslTextViewReflector.semSetButtonShapeEnabled(this, enabled, textColor);
     }
 }

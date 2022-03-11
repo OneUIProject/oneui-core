@@ -19,6 +19,7 @@ package androidx.appcompat.widget;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -26,7 +27,6 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionSet;
 import android.util.AttributeSet;
-import android.view.Surface;
 import android.view.View;
 import android.widget.PopupWindow;
 
@@ -184,7 +184,7 @@ class AppCompatPopupWindow extends PopupWindow {
         if (ignoreBottomDecorations) {
             SeslViewReflector.getWindowDisplayFrame(anchor, displayFrame);
             if (mHasNavigationBar
-                    && mContext.getResources().getConfiguration().orientation != Surface.ROTATION_180) {
+                    && mContext.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 displayFrame.bottom -= mNavigationBarHeight;
             }
         } else {

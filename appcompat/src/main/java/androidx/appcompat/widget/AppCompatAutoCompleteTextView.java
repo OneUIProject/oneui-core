@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.TextViewCompat;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * A {@link AutoCompleteTextView} which supports compatible features on older versions of the
  * platform, including:
@@ -56,10 +60,6 @@ import androidx.core.widget.TextViewCompat;
 public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implements
         TintableBackgroundView {
 
-    private static final int[] TINT_ATTRS = {
-            android.R.attr.popupBackground
-    };
-
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
     private final AppCompatTextHelper mTextHelper;
 
@@ -76,13 +76,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
 
         ThemeUtils.checkAppCompatTheme(this, getContext());
-
-        TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,
-                TINT_ATTRS, defStyleAttr, 0);
-        if (a.hasValue(0)) {
-            setDropDownBackgroundDrawable(a.getDrawable(0));
-        }
-        a.recycle();
 
         mBackgroundTintHelper = new AppCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);

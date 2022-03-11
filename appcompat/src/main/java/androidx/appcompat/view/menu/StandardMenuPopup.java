@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package androidx.appcompat.view.menu;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcelable;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,8 +35,12 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 
 import androidx.appcompat.R;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.MenuPopupWindow;
-import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A standard menu popup in which when a submenu is opened, it replaces its parent menu in the
@@ -43,7 +48,8 @@ import androidx.core.view.ViewCompat;
  */
 final class StandardMenuPopup extends MenuPopup implements OnDismissListener, OnItemClickListener,
         MenuPresenter, OnKeyListener {
-    private static final int ITEM_LAYOUT = R.layout.abc_popup_menu_item_layout;
+    private static final int ITEM_LAYOUT = R.layout.sesl_popup_menu_item_layout;
+    private static final int SUB_MENU_ITEM_LAYOUT = R.layout.sesl_popup_sub_menu_item_layout;
 
     private final Context mContext;
 
@@ -56,6 +62,8 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
     // The popup window is final in order to couple its lifecycle to the lifecycle of the
     // StandardMenuPopup.
     final MenuPopupWindow mPopup;
+
+    private ListView mTmpListView = null;
 
     @SuppressWarnings("WeakerAccess") /* synthetic access */
     final OnGlobalLayoutListener mGlobalLayoutListener = new OnGlobalLayoutListener() {
@@ -113,13 +121,40 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
 
     private boolean mShowTitle;
 
+    private boolean mForceShowUpper;
+    private boolean mIsSubMenu = false;
+    private boolean mOverlapAnchor;
+    private boolean mOverlapAnchorSet;
+
     public StandardMenuPopup(Context context, MenuBuilder menu, View anchorView, int popupStyleAttr,
             int popupStyleRes, boolean overflowOnly) {
-        mContext = context;
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.popupTheme, outValue, false);
+        if (outValue.data != 0) {
+            mContext = new ContextThemeWrapper(context, outValue.data);
+        } else {
+            mContext = context;
+        }
+
         mMenu = menu;
+        mIsSubMenu = menu instanceof SubMenuBuilder;
         mOverflowOnly = overflowOnly;
         final LayoutInflater inflater = LayoutInflater.from(context);
-        mAdapter = new MenuAdapter(menu, inflater, mOverflowOnly, ITEM_LAYOUT);
+
+        boolean isExclusiveCheckable = false;
+        for (int i = 0; i < menu.size(); i++) {
+            if (((MenuItemImpl) mMenu.getItem(i)).isExclusiveCheckable()) {
+                isExclusiveCheckable = true;
+                break;
+            }
+        }
+
+        if (isExclusiveCheckable) {
+            mAdapter = new MenuAdapter(menu, inflater, mOverflowOnly, SUB_MENU_ITEM_LAYOUT);
+        } else {
+            mAdapter = new MenuAdapter(menu, inflater, mOverflowOnly, ITEM_LAYOUT);
+        }
+
         mPopupStyleAttr = popupStyleAttr;
         mPopupStyleRes = popupStyleRes;
 
@@ -130,6 +165,7 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
         mAnchorView = anchorView;
 
         mPopup = new MenuPopupWindow(mContext, null, mPopupStyleAttr, mPopupStyleRes);
+        mPopup.setIsOverflowPopup(mOverflowOnly);
 
         // Present the menu using our context, not the menu builder's context.
         menu.addMenuPresenter(this, context);
@@ -155,6 +191,11 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
         }
 
         mShownAnchorView = mAnchorView;
+
+        if (mOverlapAnchorSet) {
+            mPopup.setOverlapAnchor(mOverlapAnchor);
+            mPopup.seslForceShowUpper(mForceShowUpper);
+        }
 
         mPopup.setOnDismissListener(this);
         mPopup.setOnItemClickListener(this);
@@ -183,10 +224,12 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
         final ListView listView = mPopup.getListView();
         listView.setOnKeyListener(this);
 
-        if (mShowTitle && mMenu.getHeaderTitle() != null) {
+        mTmpListView = mIsSubMenu ? null : listView;
+
+        if (mShowTitle && mMenu.getHeaderTitle() != null && !mIsSubMenu) {
             FrameLayout titleItemView =
                     (FrameLayout) LayoutInflater.from(mContext).inflate(
-                            R.layout.abc_popup_menu_header_item_layout, listView, false);
+                            R.layout.sesl_popup_menu_header_item_layout, listView, false);
             TextView titleView = (TextView) titleItemView.findViewById(android.R.id.title);
             if (titleView != null) {
                 titleView.setText(mMenu.getHeaderTitle());
@@ -273,19 +316,9 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
             // Close this menu popup to make room for the submenu popup.
             mMenu.close(false /* closeAllMenus */);
 
-            // Show the new sub-menu popup at the same location as this popup.
-            int horizontalOffset = mPopup.getHorizontalOffset();
-            final int verticalOffset = mPopup.getVerticalOffset();
+            subPopup.setGravity(mDropDownGravity);
 
-            // As xOffset of parent menu popup is subtracted with Anchor width for Gravity.RIGHT,
-            // So, again to display sub-menu popup in same xOffset, add the Anchor width.
-            final int hgrav = Gravity.getAbsoluteGravity(mDropDownGravity,
-                    ViewCompat.getLayoutDirection(mAnchorView)) & Gravity.HORIZONTAL_GRAVITY_MASK;
-            if (hgrav == Gravity.RIGHT) {
-                horizontalOffset += mAnchorView.getWidth();
-            }
-
-            if (subPopup.tryShow(horizontalOffset, verticalOffset)) {
+            if (subPopup.tryShow(0, 0)) {
                 if (mPresenterCallback != null) {
                     mPresenterCallback.onOpenSubMenu(subMenu);
                 }
@@ -358,5 +391,14 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
     @Override
     public void setShowTitle(boolean showTitle) {
         mShowTitle = showTitle;
+    }
+
+    public void seslSetOverlapAnchor(boolean overlapAnchor) {
+        mOverlapAnchorSet = true;
+        mOverlapAnchor = overlapAnchor;
+    }
+
+    public void seslForceShowUpper(boolean force) {
+        mForceShowUpper = force;
     }
 }

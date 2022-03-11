@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package androidx.appcompat.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
@@ -22,6 +23,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
 import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * An extension of LinearLayout that automatically switches to vertical
@@ -60,7 +66,7 @@ public class ButtonBarLayout extends LinearLayout {
     public void setAllowStacking(boolean allowStacking) {
         if (mAllowStacking != allowStacking) {
             mAllowStacking = allowStacking;
-            if (!mAllowStacking && getOrientation() == LinearLayout.VERTICAL) {
+            if (!mAllowStacking && isStacked()) {
                 setStacked(false);
             }
             requestLayout();
@@ -75,6 +81,7 @@ public class ButtonBarLayout extends LinearLayout {
             if (widthSize > mLastWidthSize && isStacked()) {
                 // We're being measured wider this time, try un-stacking.
                 setStacked(false);
+                setDividerVisible(getNextVisibleChildIndex(0));
             }
 
             mLastWidthSize = widthSize;
@@ -106,6 +113,8 @@ public class ButtonBarLayout extends LinearLayout {
 
             if (stack) {
                 setStacked(true);
+                setDividerInvisible(0);
+                setGravity(Gravity.CENTER);
                 // Measure again in the new orientation.
                 needsRemeasure = true;
             }
@@ -140,9 +149,30 @@ public class ButtonBarLayout extends LinearLayout {
         }
     }
 
+    private void setDividerInvisible(int index) {
+        int count = getChildCount();
+        for (int i = index; i < count; i++) {
+            if (!(getChildAt(i) instanceof Button)) {
+                getChildAt(i).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setDividerVisible(int index) {
+        int count = getChildCount();
+        for (int i = index; i < count; i++) {
+            if (!(getChildAt(i) instanceof Button) &&
+                    i + 1 < count &&
+                    (getChildAt(i + 1) instanceof Button) &&
+                    getChildAt(i + 1).getVisibility() == View.VISIBLE) {
+                getChildAt(i).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     private int getNextVisibleChildIndex(int index) {
         for (int i = index, count = getChildCount(); i < count; i++) {
-            if (getChildAt(i).getVisibility() == View.VISIBLE) {
+            if (getChildAt(i).getVisibility() == View.VISIBLE && getChildAt(i) instanceof Button) {
                 return i;
             }
         }
@@ -157,18 +187,6 @@ public class ButtonBarLayout extends LinearLayout {
     private void setStacked(boolean stacked) {
         setOrientation(stacked ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
         setGravity(stacked ? Gravity.END : Gravity.BOTTOM);
-
-        final View spacer = findViewById(R.id.spacer);
-        if (spacer != null) {
-            spacer.setVisibility(stacked ? View.GONE : View.INVISIBLE);
-        }
-
-        // Reverse the child order. This is specific to the Material button
-        // bar's layout XML and will probably not generalize.
-        final int childCount = getChildCount();
-        for (int i = childCount - 2; i >= 0; i--) {
-            bringChildToFront(getChildAt(i));
-        }
     }
 
     private boolean isStacked() {

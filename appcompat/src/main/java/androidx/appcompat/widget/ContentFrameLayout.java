@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import static android.view.View.MeasureSpec.getMode;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -32,7 +33,12 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
+import androidx.appcompat.R;
 import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * @hide
@@ -44,6 +50,8 @@ public class ContentFrameLayout extends FrameLayout {
         void onDetachedFromWindow();
         void onAttachedFromWindow();
     }
+
+    private float mAvailableWidth;
 
     private TypedValue mMinWidthMajor;
     private TypedValue mMinWidthMinor;
@@ -68,6 +76,7 @@ public class ContentFrameLayout extends FrameLayout {
             @NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mDecorPadding = new Rect();
+        updateAvailableWidth();
     }
 
     /**
@@ -156,7 +165,8 @@ public class ContentFrameLayout extends FrameLayout {
                 if (tv.type == TypedValue.TYPE_DIMENSION) {
                     min = (int) tv.getDimension(metrics);
                 } else if (tv.type == TypedValue.TYPE_FRACTION) {
-                    min = (int) tv.getFraction(metrics.widthPixels, metrics.widthPixels);
+                    updateAvailableWidth();
+                    min = (int) tv.getFraction(mAvailableWidth, mAvailableWidth);
                 }
                 if (min > 0) {
                     min -= (mDecorPadding.left + mDecorPadding.right);
@@ -217,5 +227,27 @@ public class ContentFrameLayout extends FrameLayout {
         if (mAttachListener != null) {
             mAttachListener.onDetachedFromWindow();
         }
+    }
+
+    private void updateAvailableWidth() {
+        mAvailableWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                getResources().getConfiguration().screenWidthDp, getResources().getDisplayMetrics());
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mMinWidthMinor == null) {
+            mMinWidthMinor = new TypedValue();
+        }
+        getContext().getTheme().resolveAttribute(R.attr.windowMinWidthMinor, mMinWidthMinor, true);
+
+        if (mMinWidthMajor == null) {
+            mMinWidthMajor = new TypedValue();
+        }
+        getContext().getTheme().resolveAttribute(R.attr.windowMinWidthMajor, mMinWidthMajor, true);
+
+        updateAvailableWidth();
     }
 }

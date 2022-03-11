@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Allows components to query for various configuration policy decisions about how the action bar
@@ -36,6 +42,7 @@ import androidx.appcompat.R;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class ActionBarPolicy {
+    private static final float MENU_WIDTH_LIMIT_FACTOR = 0.7f;
 
     private Context mContext;
 
@@ -83,7 +90,8 @@ public class ActionBarPolicy {
     }
 
     public int getEmbeddedMenuWidthLimit() {
-        return mContext.getResources().getDisplayMetrics().widthPixels / 2;
+        return (int) (mContext.getResources().getDisplayMetrics().widthPixels
+                * MENU_WIDTH_LIMIT_FACTOR);
     }
 
     public boolean hasEmbeddedTabs() {
@@ -94,25 +102,20 @@ public class ActionBarPolicy {
         TypedArray a = mContext.obtainStyledAttributes(null, R.styleable.ActionBar,
                 R.attr.actionBarStyle, 0);
         int height = a.getLayoutDimension(R.styleable.ActionBar_height, 0);
-        Resources r = mContext.getResources();
-        if (!hasEmbeddedTabs()) {
-            // Stacked tabs; limit the height
-            height = Math.min(height,
-                    r.getDimensionPixelSize(R.dimen.abc_action_bar_stacked_max_height));
-        }
         a.recycle();
         return height;
     }
 
     public boolean enableHomeButtonByDefault() {
-        // Older apps get the home button interaction enabled by default.
-        // Newer apps need to enable it explicitly.
-        return mContext.getApplicationInfo().targetSdkVersion <
-                Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+        return false;
     }
 
     public int getStackedTabMaxWidth() {
-        return mContext.getResources().getDimensionPixelSize(
-                R.dimen.abc_action_bar_stacked_tab_max_width);
+        return 0;
+    }
+
+    public boolean hasNavigationBar() {
+        return !ViewConfiguration.get(mContext).hasPermanentMenuKey()
+                && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
     }
 }

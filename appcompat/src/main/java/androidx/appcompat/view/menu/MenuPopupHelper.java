@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.R;
-import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Presents a menu as a small, simple popup anchored to another view.
@@ -52,7 +55,6 @@ public class MenuPopupHelper implements MenuHelper {
 
     // Immutable cached popup menu properties.
     private final MenuBuilder mMenu;
-    private final boolean mOverflowOnly;
     private final int mPopupStyleAttr;
     private final int mPopupStyleRes;
 
@@ -60,6 +62,10 @@ public class MenuPopupHelper implements MenuHelper {
     private View mAnchorView;
     private int mDropDownGravity = Gravity.START;
     private boolean mForceShowIcon;
+    private boolean mOverflowOnly;
+    private boolean mOverlapAnchor;
+    private boolean mOverlapAnchorSet;
+    private boolean mForceShowUpper = false;
     private MenuPresenter.Callback mPresenterCallback;
 
     private MenuPopup mPopup;
@@ -238,18 +244,12 @@ public class MenuPopupHelper implements MenuHelper {
             display.getSize(displaySize);
         }
 
-        final int smallestWidth = Math.min(displaySize.x, displaySize.y);
-        final int minSmallestWidthCascading = mContext.getResources().getDimensionPixelSize(
-                R.dimen.abc_cascading_menus_min_smallest_width);
-        final boolean enableCascadingSubmenus = smallestWidth >= minSmallestWidthCascading;
+        final StandardMenuPopup popup = new StandardMenuPopup(mContext, mMenu, mAnchorView, mPopupStyleAttr,
+                mPopupStyleRes, mOverflowOnly);
 
-        final MenuPopup popup;
-        if (enableCascadingSubmenus) {
-            popup = new CascadingMenuPopup(mContext, mAnchorView, mPopupStyleAttr,
-                    mPopupStyleRes, mOverflowOnly);
-        } else {
-            popup = new StandardMenuPopup(mContext, mMenu, mAnchorView, mPopupStyleAttr,
-                    mPopupStyleRes, mOverflowOnly);
+        if (mOverlapAnchorSet) {
+            popup.seslSetOverlapAnchor(mOverlapAnchor);
+            popup.seslForceShowUpper(mForceShowUpper);
         }
 
         // Assign immutable properties.
@@ -270,16 +270,14 @@ public class MenuPopupHelper implements MenuHelper {
         popup.setShowTitle(showTitle);
 
         if (useOffsets) {
-            // If the resolved drop-down gravity is RIGHT, the popup's right
-            // edge will be aligned with the anchor view. Adjust by the anchor
-            // width such that the top-right corner is at the X offset.
-            final int hgrav = GravityCompat.getAbsoluteGravity(mDropDownGravity,
-                    ViewCompat.getLayoutDirection(mAnchorView)) & Gravity.HORIZONTAL_GRAVITY_MASK;
-            if (hgrav == Gravity.RIGHT) {
-                xOffset -= mAnchorView.getWidth();
+            final boolean isRtl = ViewCompat.getLayoutDirection(mAnchorView) ==
+                    ViewCompat.LAYOUT_DIRECTION_RTL;
+            final int hOffset = mContext.getResources().getDimensionPixelOffset(R.dimen.sesl_menu_popup_offset_horizontal);
+            if (isRtl) {
+                popup.setHorizontalOffset(xOffset + hOffset);
+            } else {
+                popup.setHorizontalOffset(xOffset - hOffset);
             }
-
-            popup.setHorizontalOffset(xOffset);
             popup.setVerticalOffset(yOffset);
 
             // Set the transition epicenter to be roughly finger (or mouse
@@ -349,5 +347,18 @@ public class MenuPopupHelper implements MenuHelper {
      */
     public ListView getListView() {
         return getPopup().getListView();
+    }
+
+    public void seslSetOverflowOnly(boolean overflowOnly) {
+        mOverflowOnly = overflowOnly;
+    }
+
+    public void seslSetOverlapAnchor(boolean overlapAnchor) {
+        mOverlapAnchorSet = true;
+        mOverlapAnchor = overlapAnchor;
+    }
+
+    public void seslForceShowUpper(boolean force) {
+        mForceShowUpper = force;
     }
 }

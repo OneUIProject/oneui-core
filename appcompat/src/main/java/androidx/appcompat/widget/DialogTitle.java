@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Google Inc.
+ * Copyright (C) 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Used by dialogs to change the font size and number of lines to try to fit
@@ -63,17 +67,16 @@ public class DialogTitle extends AppCompatTextView {
                     setSingleLine(false);
                     setMaxLines(2);
 
-                    final TypedArray a = getContext().obtainStyledAttributes(null,
-                            R.styleable.TextAppearance,
-                            android.R.attr.textAppearanceMedium,
-                            android.R.style.TextAppearance_Medium);
-                    final int textSize = a.getDimensionPixelSize(
-                            R.styleable.TextAppearance_android_textSize, 0);
+                    final int textSize = getContext().getResources().getDimensionPixelSize(R.dimen.sesl_dialog_title_text_size);
                     if (textSize != 0) {
+                        final float currentFontScale = getContext().getResources().getConfiguration().fontScale;
+                        float scaleBase = textSize;
+                        if (currentFontScale > 1.3f) {
+                            scaleBase = (textSize / currentFontScale) * 1.3f;
+                        }
                         // textSize is already expressed in pixels
-                        setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                        setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleBase);
                     }
-                    a.recycle();
 
                     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 }

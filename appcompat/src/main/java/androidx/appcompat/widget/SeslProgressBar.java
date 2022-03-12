@@ -72,7 +72,6 @@ import androidx.appcompat.R;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.math.MathUtils;
 import androidx.core.util.Pools.SynchronizedPool;
 import androidx.core.view.ViewCompat;
 import androidx.reflect.graphics.drawable.SeslStateListDrawableReflector;
@@ -82,6 +81,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Samsung ProgressBar class.
@@ -793,11 +796,13 @@ public class SeslProgressBar extends View {
                 mIndeterminateDrawable = mIndeterminateDrawable.mutate();
 
                 if (tintInfo.mHasIndeterminateTint) {
-                    DrawableCompat.setTintList(mIndeterminateDrawable, tintInfo.mIndeterminateTintList);
+                    DrawableCompat.setTintList(mIndeterminateDrawable,
+                            tintInfo.mIndeterminateTintList);
                 }
 
                 if (tintInfo.mHasIndeterminateTintMode) {
-                    DrawableCompat.setTintMode(mIndeterminateDrawable, tintInfo.mIndeterminateTintMode);
+                    DrawableCompat.setTintMode(mIndeterminateDrawable,
+                            tintInfo.mIndeterminateTintMode);
                 }
 
                 // The drawable (or one of its children) may not have been
@@ -890,8 +895,10 @@ public class SeslProgressBar extends View {
             updateDrawableBounds(getWidth(), getHeight());
             updateDrawableState();
 
-            doRefreshProgress(android.R.id.progress, mProgress, false, false, false);
-            doRefreshProgress(android.R.id.secondaryProgress, mSecondaryProgress, false, false, false);
+            doRefreshProgress(android.R.id.progress,
+                    mProgress, false, false, false);
+            doRefreshProgress(android.R.id.secondaryProgress,
+                    mSecondaryProgress, false, false, false);
         }
     }
 
@@ -1562,7 +1569,8 @@ public class SeslProgressBar extends View {
         mProgress = progress;
         if (mCurrentMode == MODE_CIRCLE) {
             if (getProgressDrawable() instanceof LayerDrawable) {
-                Drawable d = ((LayerDrawable) getProgressDrawable()).findDrawableByLayerId(android.R.id.progress);
+                Drawable d = ((LayerDrawable) getProgressDrawable())
+                        .findDrawableByLayerId(android.R.id.progress);
                 if (d != null && d instanceof CirCleProgressDrawable) {
                     ((CirCleProgressDrawable) d).setProgress(mProgress, animate);
                 }
@@ -1759,7 +1767,8 @@ public class SeslProgressBar extends View {
                 mShouldStartAnimationDrawable = true;
                 mHasAnimation = false;
                 if (mIndeterminateDrawable instanceof AnimatedVectorDrawable) {
-                    ((AnimatedVectorDrawable) mIndeterminateDrawable).registerAnimationCallback(mCircleAnimationCallback);
+                    ((AnimatedVectorDrawable) mIndeterminateDrawable)
+                            .registerAnimationCallback(mCircleAnimationCallback);
                 }
             } else {
                 mHasAnimation = true;
@@ -1798,7 +1807,8 @@ public class SeslProgressBar extends View {
         if (mIndeterminateDrawable instanceof Animatable) {
             ((Animatable) mIndeterminateDrawable).stop();
             if (mIndeterminateDrawable instanceof AnimatedVectorDrawable) {
-                ((AnimatedVectorDrawable) mIndeterminateDrawable).unregisterAnimationCallback(mCircleAnimationCallback);
+                ((AnimatedVectorDrawable) mIndeterminateDrawable)
+                        .unregisterAnimationCallback(mCircleAnimationCallback);
             }
             mShouldStartAnimationDrawable = false;
         }
@@ -1980,12 +1990,10 @@ public class SeslProgressBar extends View {
                 try {
                     mInDrawing = true;
                     d.setLevel((int) (scale * MAX_LEVEL));
-                    mInDrawing = false;
-                    ViewCompat.postInvalidateOnAnimation(this);
                 } finally {
                     mInDrawing = false;
                 }
-                postInvalidateOnAnimation();
+                ViewCompat.postInvalidateOnAnimation(this);
             }
 
             d.draw(canvas);
@@ -2240,10 +2248,12 @@ public class SeslProgressBar extends View {
 
         switch (mode) {
             case MODE_VERTICAL:
-                setProgressDrawableTiled(ContextCompat.getDrawable(getContext(), R.drawable.sesl_scrubber_progress_vertical));
+                setProgressDrawableTiled(ContextCompat.getDrawable(getContext(),
+                        R.drawable.sesl_scrubber_progress_vertical));
                 break;
             case MODE_SPLIT:
-                setProgressDrawableTiled(ContextCompat.getDrawable(getContext(), R.drawable.sesl_split_seekbar_background_progress));
+                setProgressDrawableTiled(ContextCompat.getDrawable(getContext(),
+                        R.drawable.sesl_split_seekbar_background_progress));
                 break;
             case MODE_CIRCLE:
                 initializeRoundCicleMode();
@@ -2254,7 +2264,8 @@ public class SeslProgressBar extends View {
     protected void onSlidingRefresh(int level) {
         if (mCurrentDrawable != null) {
             final Drawable layer = mCurrentDrawable instanceof LayerDrawable ?
-                    ((LayerDrawable) mCurrentDrawable).findDrawableByLayerId(android.R.id.progress) : null;
+                    ((LayerDrawable) mCurrentDrawable).findDrawableByLayerId(android.R.id.progress)
+                    : null;
             if (layer != null) {
                 layer.setLevel(level);
             }
@@ -2355,7 +2366,8 @@ public class SeslProgressBar extends View {
     }
 
     private ColorStateList colorToColorStateList(int color) {
-        return new ColorStateList(new int[][]{new int[0]}, new int[]{color});
+        int[][] EMPTY = {new int[0]};
+        return new ColorStateList(EMPTY, new int[]{color});
     }
 
     private void initializeRoundCicleMode() {
@@ -2397,16 +2409,6 @@ public class SeslProgressBar extends View {
         };
         public int mProgress = 0;
 
-        private int modulateAlpha(int paintAlpha, int alpha) {
-            int scale = alpha + (alpha >>> 7);
-            return (paintAlpha * scale) >>> 8;
-        }
-
-        @Override
-        public boolean isStateful() {
-            return true;
-        }
-
         public CirCleProgressDrawable(boolean isBackground, ColorStateList colorStateList) {
             mPaint = new Paint();
             mIsBackground = isBackground;
@@ -2420,34 +2422,47 @@ public class SeslProgressBar extends View {
         @Override
         public void draw(Canvas canvas) {
             mPaint.setStrokeWidth(mRoundStrokeWidth);
-            int prevAlpha = mPaint.getAlpha();
+
+            final int prevAlpha = mPaint.getAlpha();
             mPaint.setAlpha(modulateAlpha(prevAlpha, mAlpha));
             mPaint.setAntiAlias(true);
             mArcRect.set((((float) mRoundStrokeWidth) / 2.0f) + ((float) mCirclePadding),
                     (((float) mRoundStrokeWidth) / 2.0f) + ((float) mCirclePadding),
                     (((float) SeslProgressBar.this.getWidth()) - (((float) mRoundStrokeWidth) / 2.0f)) - ((float) mCirclePadding),
                     (((float) SeslProgressBar.this.getWidth()) - (((float) mRoundStrokeWidth) / 2.0f)) - ((float) mCirclePadding));
-            int range = mMax - mMin;
-            float angle = range > 0 ? ((float) (mProgress - mMin)) / ((float) range) : 0.0f;
+
+            final int range = mMax - mMin;
+            final float scale = range > 0 ? ((float) (mProgress - mMin)) / ((float) range) : 0.0f;
             canvas.save();
             if (mIsBackground) {
                 canvas.drawArc(mArcRect, 270.0f, 360.0f, false, mPaint);
             } else {
-                canvas.drawArc(mArcRect, 270.0f, angle * 360.0f, false, mPaint);
+                canvas.drawArc(mArcRect, 270.0f, scale * 360.0f, false, mPaint);
             }
             canvas.restore();
+
             mPaint.setAlpha(prevAlpha);
+        }
+
+        private int modulateAlpha(int paintAlpha, int alpha) {
+            int scale = alpha + (alpha >>> 7);
+            return (paintAlpha * scale) >>> 8;
+        }
+
+        @Override
+        public boolean isStateful() {
+            return true;
         }
 
         public void setProgress(int progress, boolean animate) {
             if (animate) {
-                ObjectAnimator ofInt = ObjectAnimator.ofInt(this, VISUAL_CIRCLE_PROGRESS, progress);
+                ObjectAnimator animator = ObjectAnimator.ofInt(this, VISUAL_CIRCLE_PROGRESS, progress);
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    ofInt.setAutoCancel(true);
+                    animator.setAutoCancel(true);
                 }
-                ofInt.setDuration(PROGRESS_ANIM_DURATION);
-                ofInt.setInterpolator(PROGRESS_ANIM_INTERPOLATOR);
-                ofInt.start();
+                animator.setDuration(PROGRESS_ANIM_DURATION);
+                animator.setInterpolator(PROGRESS_ANIM_INTERPOLATOR);
+                animator.start();
             } else {
                 mProgress = progress;
                 SeslProgressBar.this.invalidate();
@@ -2493,15 +2508,17 @@ public class SeslProgressBar extends View {
         }
 
         @Override
-        protected boolean onStateChange(int[] state) {
-            boolean onStateChange = super.onStateChange(state);
-            int color = mColorStateList.getColorForState(state, mColor);
+        protected boolean onStateChange(int[] stateSet) {
+            final boolean changed = super.onStateChange(stateSet);
+
+            final int color = mColorStateList.getColorForState(stateSet, mColor);
             if (mColor != color) {
                 mColor = color;
                 mPaint.setColor(color);
                 invalidateSelf();
             }
-            return onStateChange;
+
+            return changed;
         }
 
         @Override

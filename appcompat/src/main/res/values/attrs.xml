@@ -33,6 +33,7 @@
 
     <!-- These are the standard attributes that make up a complete theme. -->
     <declare-styleable name="AppCompatTheme">
+        <attr name="android:disabledAlpha" />
 
         <!-- ============= -->
         <!-- Window styles -->
@@ -1319,6 +1320,7 @@
     </declare-styleable>
 
     <declare-styleable name="AppCompatSeekBar">
+        <attr name="android:splitTrack" />
         <attr name="android:thumb" />
         <attr name="android:thumbOffset" />
         <attr name="android:thumbTint" />

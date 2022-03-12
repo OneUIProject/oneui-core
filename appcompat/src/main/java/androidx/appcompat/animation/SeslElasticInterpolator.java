@@ -28,8 +28,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Samsung custom interpolator that simulates an elastic behavior.
- *
- * @hide
  */
 @RestrictTo(LIBRARY_GROUP)
 class SeslElasticInterpolator implements Interpolator {
@@ -41,12 +39,12 @@ class SeslElasticInterpolator implements Interpolator {
         mPeriod = period;
     }
 
-    public void setAmplitude(float amplitude) {
-        mAmplitude = amplitude;
+    public void setAmplitude(float value) {
+        mAmplitude = value;
     }
 
-    public void setPeriod(float period) {
-        mPeriod = period;
+    public void setPeriod(float value) {
+        mPeriod = value;
     }
 
     public float getAmplitude() {
@@ -58,30 +56,30 @@ class SeslElasticInterpolator implements Interpolator {
     }
 
     @Override
-    public float getInterpolation(float input) {
-        return out(input, mAmplitude, mPeriod);
+    public float getInterpolation(float t) {
+        return out(t, mAmplitude, mPeriod);
     }
 
-    private float out(float input, float amplitude, float period) {
-        if (input == 0.0f) {
+    private float out(float t, float a, float p) {
+        if (t == 0.0f) {
             return 0.0f;
         }
-        if (input >= 1.0f) {
+        if (t >= 1.0f) {
             return 1.0f;
         }
 
-        if (period == 0.0f) {
-            period = 0.3f;
+        if (p == 0.0f) {
+            p = 0.3f;
         }
 
-        double s;
-        if (amplitude == 0.0f || amplitude < 1.0f) {
-            s = period / 4.0f;
-            amplitude = 1.0f;
+        float s;
+        if (a == 0.0f || a < 1.0f) {
+            s = p / 4.0f;
+            a = 1.0f;
         } else {
-            s = period / (2 * Math.PI) * Math.asin(1.0f / amplitude);
+            s = (float) (p / (2 * Math.PI) * Math.asin(1.0f / a));
         }
 
-        return (float) (amplitude * Math.pow(2.0d, (-10.0f * input)) * Math.sin((input - s) * (2 * Math.PI)) / period + 1.0d);
+        return (float) (a * Math.pow(2.0d, (-10.0f * t)) * Math.sin((t - s) * (2 * Math.PI)) / p + 1.0d);
     }
 }

@@ -1037,7 +1037,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
                 mMenu.changeMenuMode();
             }
             final View menuView = (View) mMenuView;
-            if (menuView != null && menuView.getWindowToken() != null && mPopup.tryShow()) {
+            if (menuView != null && menuView.getWindowToken() != null && mPopup.tryShow(0, 0)) {
                 mOverflowPopup = mPopup;
             }
             mPostedOpenRunnable = null;

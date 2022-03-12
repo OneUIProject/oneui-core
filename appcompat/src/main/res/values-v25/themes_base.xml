@@ -21,7 +21,7 @@
     <style name="Platform.AppCompat" parent="Platform.V25.AppCompat" />
     <style name="Platform.AppCompat.Light" parent="Platform.V25.AppCompat.Light" />
 
-    <style name="Platform.V25.AppCompat" parent="Platform.V21.AppCompat.Light" />
+    <style name="Platform.V25.AppCompat" parent="Platform.V21.AppCompat" />
 
     <style name="Platform.V25.AppCompat.Light" parent="Platform.V21.AppCompat.Light" />
 

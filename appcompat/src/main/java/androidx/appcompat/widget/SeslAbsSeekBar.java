@@ -2100,6 +2100,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         public SliderDrawable(float minWidth, float maxWidth, ColorStateList color, boolean isVertical) {
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeCap(Paint.Cap.ROUND);
+            mPaint.setAntiAlias(true);
 
             mColorStateList = color;
             mColor = color.getDefaultColor();

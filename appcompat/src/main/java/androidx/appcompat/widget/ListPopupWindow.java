@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,21 @@ package androidx.appcompat.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -50,20 +56,23 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.R;
+import androidx.appcompat.util.SeslMisc;
 import androidx.appcompat.view.menu.ShowableListMenu;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.PopupWindowCompat;
+import androidx.reflect.provider.SeslSettingsReflector;
+import androidx.reflect.view.SeslSemBlurInfoReflector;
+import androidx.reflect.view.SeslSemWindowManagerReflector;
+import androidx.reflect.view.SeslViewRuneReflector;
 
 import java.lang.reflect.Method;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * Static library support version of the framework's {@link android.widget.ListPopupWindow}.
- * Used to write apps that run on platforms prior to Android L. When running
- * on Android L or above, this implementation is still used; it does not try
- * to switch to the framework's implementation. See the framework SDK
- * documentation for a class overview.
- *
- * @see android.widget.ListPopupWindow
+ * Samsung ListPopupWindow class.
  */
 public class ListPopupWindow implements ShowableListMenu {
     private static final String TAG = "ListPopupWindow";
@@ -120,11 +129,14 @@ public class ListPopupWindow implements ShowableListMenu {
     private boolean mDropDownVerticalOffsetSet;
     private boolean mOverlapAnchor;
     private boolean mOverlapAnchorSet;
+    private boolean mIsAnimatedFromAnchor = true;
+    private boolean mIsOverflowPopup;
 
     private int mDropDownGravity = Gravity.NO_GRAVITY;
 
     private boolean mDropDownAlwaysVisible = false;
     private boolean mForceIgnoreOutsideTouch = false;
+    private boolean mForceShowUpper = false;
     int mListItemExpandMaximum = Integer.MAX_VALUE;
 
     private View mPromptView;
@@ -157,7 +169,7 @@ public class ListPopupWindow implements ShowableListMenu {
 
     private boolean mModal;
 
-    PopupWindow mPopup;
+    AppCompatPopupWindow mPopup;
 
     /**
      * The provided prompt view should appear above list content.
@@ -189,6 +201,8 @@ public class ListPopupWindow implements ShowableListMenu {
      * If used to specify a popup width, the popup will use the width of its content.
      */
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+    private static final int INVALID_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     /**
      * Mode for {@link #setInputMethodMode(int)}: the requirements for the
@@ -703,9 +717,17 @@ public class ListPopupWindow implements ShowableListMenu {
 
             mPopup.setOutsideTouchable(!mForceIgnoreOutsideTouch && !mDropDownAlwaysVisible);
 
+            int verticalOffset = mDropDownVerticalOffset;
+            if (mForceShowUpper) {
+                verticalOffset -= height;
+                if (!mOverlapAnchor) {
+                    verticalOffset -= getAnchorView().getHeight();
+                }
+            }
+
             mPopup.update(getAnchorView(), mDropDownHorizontalOffset,
-                            mDropDownVerticalOffset, (widthSpec < 0)? -1 : widthSpec,
-                            (heightSpec < 0)? -1 : heightSpec);
+                    verticalOffset, (widthSpec < 0)? -1 : widthSpec,
+                    (heightSpec < 0) ? -1 : heightSpec);
         } else {
             final int widthSpec;
             if (mDropDownWidth == ViewGroup.LayoutParams.MATCH_PARENT) {
@@ -728,6 +750,8 @@ public class ListPopupWindow implements ShowableListMenu {
                     heightSpec = mDropDownHeight;
                 }
             }
+
+            setBlurEffect();
 
             mPopup.setWidth(widthSpec);
             mPopup.setHeight(heightSpec);
@@ -1424,7 +1448,8 @@ public class ListPopupWindow implements ShowableListMenu {
     }
 
     private static boolean isConfirmKey(int keyCode) {
-        return keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER;
+        return keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER;
     }
 
     private void setPopupClipToScreenEnabled(boolean clip) {
@@ -1454,7 +1479,150 @@ public class ListPopupWindow implements ShowableListMenu {
             }
             return mPopup.getMaxAvailableHeight(anchor, yOffset);
         } else {
-            return mPopup.getMaxAvailableHeight(anchor, yOffset, ignoreBottomDecorations);
+            final int maxAvailableHeight = mPopup.getMaxAvailableHeight(anchor, yOffset, ignoreBottomDecorations);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && mIsOverflowPopup) {
+                final int foldablePopupHeight = updatePopupHeightForFoldableModel(anchor);
+                if (foldablePopupHeight > 0 && foldablePopupHeight < maxAvailableHeight) {
+                    return foldablePopupHeight;
+                }
+            }
+            return maxAvailableHeight;
         }
+    }
+
+    // TODO rework this method
+    /* JADX WARN: Removed duplicated region for block: B:37:0x00a6  */
+    /* JADX WARN: Removed duplicated region for block: B:45:? A[RETURN, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    // kang
+    private int updatePopupHeightForFoldableModel(View anchor) {
+        Point var2 = new Point();
+        DisplayManager var3 = (DisplayManager) mContext.getSystemService(Context.DISPLAY_SERVICE);
+        int var4 = -2;
+        if (var3 == null) {
+            Log.w("ListPopupWindow", "displayManager is null, can not update height");
+            return -2;
+        } else {
+            byte var5 = 0;
+            Display var9 = var3.getDisplay(0);
+            if (var9 == null) {
+                Log.w("ListPopupWindow", "display is null, can not update height");
+                return -2;
+            } else {
+                var9.getRealSize(var2);
+                if (!SeslSemWindowManagerReflector.isTableMode()) {
+                    return -2;
+                } else {
+                    Activity var10 = this.getActivity(mContext);
+                    if (var10 != null && var10.isInMultiWindowMode()) {
+                        return -2;
+                    } else {
+                        int var6;
+                        int[] var11;
+                        label50: {
+                            var11 = new int[2];
+                            anchor.getLocationOnScreen(var11);
+                            if (SeslViewRuneReflector.supportFoldableDualDisplay()) {
+                                if (this.mContext.getResources().getConfiguration().orientation == 2) {
+                                    if (var2.y > var2.x) {
+                                        var6 = var2.x;
+                                    } else {
+                                        var6 = var2.y;
+                                    }
+
+                                    var6 /= 2;
+                                    break label50;
+                                }
+                            } else if (SeslViewRuneReflector.supportFoldableNoSubDisplay() && this.mContext.getResources().getConfiguration().orientation == 1) {
+                                if (var2.y > var2.x) {
+                                    var6 = var2.y;
+                                } else {
+                                    var6 = var2.x;
+                                }
+
+                                var6 /= 2;
+                                break label50;
+                            }
+
+                            var6 = 0;
+                        }
+
+                        Log.e("ListPopupWindow", "center = " + var6 + " , anchor top = " + var11[1]);
+                        if (var6 != 0) {
+                            int var7 = this.mContext.getResources().getDimensionPixelSize(R.dimen.sesl_menu_popup_top_margin);
+                            var4 = this.mContext.getResources().getDimensionPixelSize(R.dimen.sesl_menu_popup_bottom_margin);
+                            if (var6 > var11[1]) {
+                                var4 = var6 - var11[1] - var7 - var4;
+                            } else {
+                                int var8 = this.mContext.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+                                var6 = var5;
+                                if (var8 > 0) {
+                                    var6 = this.mContext.getResources().getDimensionPixelSize(var8);
+                                }
+
+                                var4 = var2.y - var11[1] - var7 - var4 - var6;
+                            }
+                        }
+
+                        return var4;
+                    }
+                }
+            }
+        }
+    }
+    // kang
+
+    private Activity getActivity(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
+    }
+
+    private void setBlurEffect() {
+        if (mPopup.getContentView() != null && mContext != null) {
+            final boolean isThemeApplied = Settings.System.getString(mContext.getContentResolver(),
+                    "current_sec_active_themepackage") != null;
+
+            if (!isThemeApplied && !isReduceTransparencySettingsEnabled() && mPopup.seslIsAvailableBlurBackground()) {
+                Object builder = SeslSemBlurInfoReflector.semCreateBlurBuilder(0);
+
+                if (builder != null) {
+                    SeslSemBlurInfoReflector.semSetBuilderBlurRadius(builder, 120);
+                    SeslSemBlurInfoReflector.semSetBuilderBlurBackgroundColor(builder,
+                            mContext.getResources().getColor(SeslMisc.isLightTheme(mContext)
+                                    ? R.color.sesl_popup_menu_blur_background : R.color.sesl_popup_menu_blur_background_dark,
+                                    mContext.getTheme()));
+                    SeslSemBlurInfoReflector.semSetBuilderBlurBackgroundCornerRadius(builder,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.sesl_menu_popup_corner_radius));
+                    SeslSemBlurInfoReflector.semBuildSetBlurInfo(builder, mPopup.getContentView());
+
+                    if (mDropDownList != null) {
+                        mDropDownList.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isReduceTransparencySettingsEnabled() {
+        final String accessibility_reduce_transparency = SeslSettingsReflector.SeslSystemReflector
+                .getField_SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY();
+        return !accessibility_reduce_transparency.equals("not_supported")
+                && Settings.System.getInt(mContext.getContentResolver(), accessibility_reduce_transparency, 0) == 1;
+    }
+
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    public void setIsOverflowPopup(boolean overflowPopup) {
+        mIsOverflowPopup = overflowPopup;
+    }
+
+    public void seslForceShowUpper(boolean force) {
+        mForceShowUpper = force;
     }
 }

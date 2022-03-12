@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,13 @@ import androidx.appcompat.graphics.drawable.DrawableWrapper;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewPropertyAnimatorCompat;
 import androidx.core.widget.ListViewAutoScrollHelper;
+import androidx.reflect.widget.SeslAdapterViewReflector;
 
 import java.lang.reflect.Field;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * <p>Wrapper class for a ListView. This wrapper can hijack the focus to
@@ -447,14 +452,16 @@ class DropDownListView extends ListView {
                 || action == MotionEvent.ACTION_HOVER_MOVE) {
             final int position = pointToPosition((int) ev.getX(), (int) ev.getY());
 
-            if (position != INVALID_POSITION && position != getSelectedItemPosition()) {
+            if (position != INVALID_POSITION
+                    && position != SeslAdapterViewReflector.getField_mSelectedPosition(this)) {
                 final View hoveredItem = getChildAt(position - getFirstVisiblePosition());
                 if (hoveredItem.isEnabled()) {
-                    // Force a focus on the hovered item so that
-                    // the proper selector state gets used when we update.
-                    setSelectionFromTop(position, hoveredItem.getTop() - this.getTop());
+                    requestFocus();
+                    if (!isHovered()) {
+                        setHovered(true);
+                    }
                 }
-                updateSelectorStateCompat();
+                drawableStateChanged();
             }
         } else {
             // Do not cancel the selected position if the selection is visible

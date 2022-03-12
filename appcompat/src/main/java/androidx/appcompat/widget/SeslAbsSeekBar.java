@@ -33,7 +33,6 @@ import android.graphics.Rect;
 import android.graphics.Region.Op;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -2104,9 +2103,6 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
             mDrawable = getResources().getDrawable(R.drawable.sesl_scrubber_progress_expand, null);
             mDrawable.setTint(mColor);
-            if (mDrawable instanceof GradientDrawable) {
-                ((GradientDrawable) mDrawable).setCornerRadius(minWidth);
-            }
 
             mSliderMinWidth = minWidth;
             mSliderMaxWidth = maxWidth;
@@ -2247,9 +2243,6 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         }
 
         public void setStrokeWidth(float height) {
-            if (mDrawable instanceof GradientDrawable) {
-                ((GradientDrawable) mDrawable).setCornerRadius(height);
-            }
             mRadius = height / 2.0f;
         }
 

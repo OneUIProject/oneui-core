@@ -2496,4 +2496,36 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             }
         }
     }
+
+    @Override
+    public int getPaddingLeft() {
+        final boolean isInVerticalMode = mCurrentMode == MODE_VERTICAL
+                || mCurrentMode == MODE_EXPAND_VERTICAL;
+        return isInVerticalMode ? super.getPaddingTop()
+                : super.getPaddingLeft();
+    }
+
+    @Override
+    public int getPaddingTop() {
+        final boolean isInVerticalMode = mCurrentMode == MODE_VERTICAL
+                || mCurrentMode == MODE_EXPAND_VERTICAL;
+        return isInVerticalMode ? super.getPaddingLeft()
+                : super.getPaddingTop();
+    }
+
+    @Override
+    public int getPaddingRight() {
+        final boolean isInVerticalMode = mCurrentMode == MODE_VERTICAL
+                || mCurrentMode == MODE_EXPAND_VERTICAL;
+        return isInVerticalMode ? super.getPaddingBottom()
+                : super.getPaddingRight();
+    }
+
+    @Override
+    public int getPaddingBottom() {
+        final boolean isInVerticalMode = mCurrentMode == MODE_VERTICAL
+                || mCurrentMode == MODE_EXPAND_VERTICAL;
+        return isInVerticalMode ? super.getPaddingRight()
+                : super.getPaddingBottom();
+    }
 }

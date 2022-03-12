@@ -870,7 +870,7 @@ public class SeslProgressBar extends View {
                 }
 
                 // Make sure the ProgressBar is always tall enough
-                if (mCurrentMode == MODE_VERTICAL) {
+                if (mCurrentMode == MODE_VERTICAL || mCurrentMode == MODE_EXPAND_VERTICAL) {
                     int drawableWidth = d.getMinimumWidth();
                     if (mMaxWidth < drawableWidth) {
                         mMaxWidth = drawableWidth;

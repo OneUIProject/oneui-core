@@ -20,6 +20,7 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class SeslDropDownItemTextView extends SeslCheckedTextView {
         setTypeface(Typeface.create("sec-roboto-light", checked ? Typeface.BOLD : Typeface.NORMAL));
 
         Context context = getContext();
-        if (checked && context != null && getCurrentTextColor() == -65281) {
+        if (checked && context != null && getCurrentTextColor() == Color.MAGENTA) {
             Log.w(TAG, "text color reload!");
 
             ColorStateList textColor = ResourcesCompat.getColorStateList(context.getResources(),

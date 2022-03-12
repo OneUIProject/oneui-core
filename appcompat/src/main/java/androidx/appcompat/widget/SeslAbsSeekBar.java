@@ -2079,7 +2079,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         private final SliderState mState = new SliderState();
         ColorStateList mColorStateList;
-        private final Paint mPaint = new Paint();
+        private Drawable mDrawable;
         ValueAnimator mPressedAnimator;
         ValueAnimator mReleasedAnimator;
 
@@ -2098,14 +2098,12 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         }
 
         public SliderDrawable(float minWidth, float maxWidth, ColorStateList color, boolean isVertical) {
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setStrokeCap(Paint.Cap.ROUND);
-
             mColorStateList = color;
             mColor = color.getDefaultColor();
-            mPaint.setColor(mColor);
 
-            mPaint.setStrokeWidth(minWidth);
+            mDrawable = getResources().getDrawable(R.drawable.sesl_scrubber_progress_expand, null);
+            mDrawable.setTint(mColor);
+
             mSliderMinWidth = minWidth;
             mSliderMaxWidth = maxWidth;
             mRadius = minWidth / 2.0f;
@@ -2144,24 +2142,30 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         @Override
         public void draw(Canvas canvas) {
-            final int prevAlpha = mPaint.getAlpha();
-            mPaint.setAlpha(modulateAlpha(prevAlpha, mAlpha));
+            final int prevAlpha = mDrawable.getAlpha();
+            mDrawable.setAlpha(modulateAlpha(prevAlpha, mAlpha));
 
             canvas.save();
-            if (!mIsVertical) {
-                final float width = SeslAbsSeekBar.this.getWidth() - SeslAbsSeekBar.this.getPaddingLeft()
-                        - SeslAbsSeekBar.this.getPaddingRight() - mRadius;
-                canvas.drawLine(mRadius, SeslAbsSeekBar.this.getHeight() / 2.0f, width,
-                        SeslAbsSeekBar.this.getHeight() / 2.0f, mPaint);
+            if (mIsVertical) {
+                final int center = (SeslAbsSeekBar.this.getWidth() - (SeslAbsSeekBar.this.getPaddingLeft()
+                        + SeslAbsSeekBar.this.getPaddingRight())) / 2;
+                mDrawable.setBounds((int) (center - mRadius),
+                        0,
+                        (int) (center + mRadius),
+                        (int) (float) (SeslAbsSeekBar.this.getHeight() - SeslAbsSeekBar.this.getPaddingTop() - SeslAbsSeekBar.this.getPaddingBottom()));
+                mDrawable.draw(canvas);
             } else {
-                final float height = SeslAbsSeekBar.this.getHeight() - SeslAbsSeekBar.this.getPaddingTop()
-                        - SeslAbsSeekBar.this.getPaddingBottom() - mRadius;
-                canvas.drawLine(SeslAbsSeekBar.this.getWidth() / 2.0f, height,
-                        SeslAbsSeekBar.this.getWidth() / 2.0f, mRadius, mPaint);
+                final int center = (SeslAbsSeekBar.this.getHeight() - (SeslAbsSeekBar.this.getPaddingTop()
+                        + SeslAbsSeekBar.this.getPaddingBottom())) / 2;
+                mDrawable.setBounds(0,
+                        (int) (center - mRadius),
+                        (int) (float) (SeslAbsSeekBar.this.getWidth() - SeslAbsSeekBar.this.getPaddingLeft() - SeslAbsSeekBar.this.getPaddingRight()),
+                        (int) (center + mRadius));
+                mDrawable.draw(canvas);
             }
             canvas.restore();
 
-            mPaint.setAlpha(prevAlpha);
+            mDrawable.setAlpha(prevAlpha);
         }
 
         private int modulateAlpha(int paintAlpha, int alpha) {
@@ -2182,23 +2186,13 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         @Override
         public void setColorFilter(ColorFilter colorFilter) {
-            mPaint.setColorFilter(colorFilter);
+            mDrawable.setColorFilter(colorFilter);
             invalidateSelf();
         }
 
         @Override
         public int getOpacity() {
-            if (mPaint.getXfermode() != null) {
-                return PixelFormat.TRANSLUCENT;
-            }
-            if (mPaint.getAlpha() == 0) {
-                return PixelFormat.TRANSPARENT;
-            }
-            if (mPaint.getAlpha() == 255) {
-                return PixelFormat.OPAQUE;
-            } else {
-                return PixelFormat.TRANSLUCENT;
-            }
+            return mDrawable.getOpacity();
         }
 
         @Override
@@ -2207,7 +2201,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             if (tint != null) {
                 mColorStateList = tint;
                 mColor = tint.getColorForState(SeslAbsSeekBar.this.getDrawableState(), mColor);
-                mPaint.setColor(mColor);
+                mDrawable.setTint(mColor);
                 invalidateSelf();
             }
         }
@@ -2219,7 +2213,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             final int color = mColorStateList.getColorForState(stateSet, mColor);
             if (mColor != color) {
                 mColor = color;
-                mPaint.setColor(color);
+                mDrawable.setTint(color);
                 invalidateSelf();
             }
 
@@ -2249,7 +2243,6 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         }
 
         public void setStrokeWidth(float height) {
-            mPaint.setStrokeWidth(height);
             mRadius = height / 2.0f;
         }
 
@@ -2368,11 +2361,15 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
             canvas.save();
             if (mIsVertical) {
-                canvas.drawCircle(SeslAbsSeekBar.this.getWidth() / 2.0f,
-                        SeslAbsSeekBar.this.mThumbPosX, mRadiusForAni, mPaint);
+                canvas.drawCircle((float) (SeslAbsSeekBar.this.getWidth() - (SeslAbsSeekBar.this.getPaddingLeft() + SeslAbsSeekBar.this.getPaddingRight())) / 2.0f,
+                        (float) SeslAbsSeekBar.this.mThumbPosX - SeslAbsSeekBar.this.getPaddingLeft(),
+                        mRadiusForAni,
+                        mPaint);
             } else {
-                canvas.drawCircle(SeslAbsSeekBar.this.mThumbPosX,
-                        SeslAbsSeekBar.this.getHeight() / 2.0f, mRadiusForAni, mPaint);
+                canvas.drawCircle((float) SeslAbsSeekBar.this.mThumbPosX,
+                        (float) (SeslAbsSeekBar.this.getHeight() - (SeslAbsSeekBar.this.getPaddingTop() + SeslAbsSeekBar.this.getPaddingBottom())) / 2.0f,
+                        mRadiusForAni,
+                        mPaint);
             }
             canvas.restore();
 

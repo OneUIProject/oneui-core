@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.R;
 import androidx.appcompat.app.AlertDialog;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Helper for menus that appear as Dialogs (context and submenus).
@@ -57,7 +61,7 @@ class MenuDialogHelper implements DialogInterface.OnKeyListener,
         final AlertDialog.Builder builder = new AlertDialog.Builder(menu.getContext());
 
         mPresenter = new ListMenuPresenter(builder.getContext(),
-                R.layout.abc_list_menu_item_layout);
+                R.layout.sesl_list_menu_item_layout);
 
         mPresenter.setCallback(this);
         mMenu.addMenuPresenter(mPresenter);

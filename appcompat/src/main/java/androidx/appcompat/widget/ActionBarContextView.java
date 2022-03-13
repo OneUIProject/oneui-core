@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@ package androidx.appcompat.widget;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +40,19 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.view.ViewCompat;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * @hide
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class ActionBarContextView extends AbsActionBarView {
+    private static final String TAG = "ActionBarContextView";
+
+    private static float MAX_FONT_SCALE = 1.2f;
+
     private CharSequence mTitle;
     private CharSequence mSubtitle;
 
@@ -54,6 +66,9 @@ public class ActionBarContextView extends AbsActionBarView {
     private int mSubtitleStyleRes;
     private boolean mTitleOptional;
     private int mCloseItemLayout;
+
+    private boolean mIsActionModeAccessibilityOn;
+    private boolean mCheckActionModeOn;
 
     public ActionBarContextView(@NonNull Context context) {
         this(context, null);
@@ -80,9 +95,46 @@ public class ActionBarContextView extends AbsActionBarView {
 
         mCloseItemLayout = a.getResourceId(
                 R.styleable.ActionMode_closeItemLayout,
-                R.layout.abc_action_mode_close_item_material);
+                R.layout.sesl_action_mode_close_item);
 
         a.recycle();
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.ActionMode,
+                android.R.attr.actionModeStyle, 0);
+
+        final int height = a.getDimensionPixelSize(R.styleable.ActionMode_height, -1);
+        if (height >= 0) {
+            setContentHeight(height);
+        }
+
+        setPadding(0,
+                getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_top_padding),
+                0,
+                0);
+
+        a.recycle();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        final int top = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_top_padding);
+        setPadding(0, top, 0, 0);
+
+        TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.ActionMode,
+                android.R.attr.actionModeStyle, 0);
+        final int height = a.getDimensionPixelSize(R.styleable.ActionMode_height, -1);
+        a.recycle();
+
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        lp.height = height + top;
+        setLayoutParams(lp);
     }
 
     @Override
@@ -135,7 +187,7 @@ public class ActionBarContextView extends AbsActionBarView {
     private void initTitle() {
         if (mTitleLayout == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            inflater.inflate(R.layout.abc_action_bar_title_item, this);
+            inflater.inflate(R.layout.sesl_action_bar_title_item, this);
             mTitleLayout = (LinearLayout) getChildAt(getChildCount() - 1);
             mTitleView = (TextView) mTitleLayout.findViewById(R.id.action_bar_title);
             mSubtitleView = (TextView) mTitleLayout.findViewById(R.id.action_bar_subtitle);
@@ -260,15 +312,18 @@ public class ActionBarContextView extends AbsActionBarView {
 
         final int contentWidth = MeasureSpec.getSize(widthMeasureSpec);
 
+        final int topPadding =
+                getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_top_padding);
+
         int maxHeight = mContentHeight > 0 ?
-                mContentHeight : MeasureSpec.getSize(heightMeasureSpec);
+                mContentHeight + topPadding : MeasureSpec.getSize(heightMeasureSpec);
 
         final int verticalPadding = getPaddingTop() + getPaddingBottom();
         int availableWidth = contentWidth - getPaddingLeft() - getPaddingRight();
         final int height = maxHeight - verticalPadding;
         final int childSpecHeight = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
 
-        if (mClose != null) {
+        if (mClose != null && mClose.getVisibility() == View.VISIBLE) {
             availableWidth = measureChildView(mClose, availableWidth, childSpecHeight, 0);
             MarginLayoutParams lp = (MarginLayoutParams) mClose.getLayoutParams();
             availableWidth -= lp.leftMargin + lp.rightMargin;
@@ -280,6 +335,46 @@ public class ActionBarContextView extends AbsActionBarView {
         }
 
         if (mTitleLayout != null && mCustomView == null) {
+            if (mTitleView != null) {
+                TypedArray a = getContext().obtainStyledAttributes(mTitleStyleRes,
+                        R.styleable.TextAppearance);
+                TypedValue value = a.peekValue(R.styleable.TextAppearance_android_textSize);
+                a.recycle();
+
+                final float textSize = TypedValue.complexToFloat(value.data);
+                if (TextUtils.isEmpty(mSubtitle)) {
+                    mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+                            textSize
+                                    * Math.min(getContext().getResources().getConfiguration().fontScale,
+                                    MAX_FONT_SCALE));
+                } else {
+                    mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                }
+            }
+            if (mClose == null || mClose.getVisibility() == View.GONE) {
+                final int contentInsetStart =
+                        (int) getContext().getResources().getDimension(R.dimen.sesl_toolbar_content_inset);
+                boolean isRtl =
+                        ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR;
+                if (mTitleView != null && mTitleView.getVisibility() == View.VISIBLE) {
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTitleView.getLayoutParams();
+                    if (isRtl) {
+                        lp.rightMargin = contentInsetStart;
+                    } else {
+                        lp.leftMargin = contentInsetStart;
+                    }
+                    mTitleView.setLayoutParams(lp);
+                }
+                if (mSubtitleView != null && mSubtitleView.getVisibility() == View.VISIBLE) {
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mSubtitleView.getLayoutParams();
+                    if (isRtl) {
+                        lp.rightMargin = contentInsetStart;
+                    } else {
+                        lp.leftMargin = contentInsetStart;
+                    }
+                    mSubtitleView.setLayoutParams(lp);
+                }
+            }
             if (mTitleOptional) {
                 final int titleWidthSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                 mTitleLayout.measure(titleWidthSpec, childSpecHeight);
@@ -364,6 +459,16 @@ public class ActionBarContextView extends AbsActionBarView {
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             // Action mode started
+            Log.d(TAG, "onInitializeAccessibilityEvent Check ActionMode :"
+                    + mCheckActionModeOn);
+            if (mCheckActionModeOn) {
+                mIsActionModeAccessibilityOn = true;
+                mCheckActionModeOn = false;
+            } else {
+                mIsActionModeAccessibilityOn = false;
+            }
+            Log.d(TAG, "onInitializeAccessibilityEvent mIsActionModeAccessibilityOn :"
+                    + mIsActionModeAccessibilityOn);
             event.setSource(this);
             event.setClassName(getClass().getName());
             event.setPackageName(getContext().getPackageName());
@@ -371,6 +476,10 @@ public class ActionBarContextView extends AbsActionBarView {
         } else {
             super.onInitializeAccessibilityEvent(event);
         }
+    }
+
+    public boolean getIsActionModeAccessibilityOn() {
+        return mIsActionModeAccessibilityOn;
     }
 
     public void setTitleOptional(boolean titleOptional) {

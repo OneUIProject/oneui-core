@@ -1,1 +1,2 @@
 include ':appcompat'
+include ':core'

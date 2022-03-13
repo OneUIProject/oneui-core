@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.R;
 import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * This class acts as a container for the action bar view and action mode context views.
@@ -137,7 +141,8 @@ public class ActionBarContainer extends FrameLayout {
         if (bg != null) {
             bg.setCallback(this);
             if (mIsSplit && mSplitBackground != null) {
-                mSplitBackground.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                mSplitBackground.setBounds(0, 0, getMeasuredWidth(),
+                        getMeasuredHeight() + getPaddingBottom());
             }
         }
         setWillNotDraw(mIsSplit ? mSplitBackground == null :
@@ -323,11 +328,13 @@ public class ActionBarContainer extends FrameLayout {
             if (mBackground != null) {
                 if (mActionBarView.getVisibility() == View.VISIBLE) {
                     mBackground.setBounds(mActionBarView.getLeft(), mActionBarView.getTop(),
-                            mActionBarView.getRight(), mActionBarView.getBottom());
+                            mActionBarView.getRight(), mActionBarView.getBottom()
+                                    + getPaddingBottom());
                 } else if (mContextView != null &&
                         mContextView.getVisibility() == View.VISIBLE) {
                     mBackground.setBounds(mContextView.getLeft(), mContextView.getTop(),
-                            mContextView.getRight(), mContextView.getBottom());
+                            mContextView.getRight(), mContextView.getBottom()
+                                    + getPaddingBottom());
                 } else {
                     mBackground.setBounds(0, 0, 0, 0);
                 }

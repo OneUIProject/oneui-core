@@ -63,7 +63,8 @@ import java.util.List;
  */
 final class CascadingMenuPopup extends MenuPopup implements MenuPresenter, OnKeyListener,
         PopupWindow.OnDismissListener {
-    private static final int ITEM_LAYOUT = R.layout.abc_cascading_menu_item_layout;
+    private static final int ITEM_LAYOUT = R.layout.sesl_cascading_menu_item_layout;
+    private static final int SUB_MENU_ITEM_LAYOUT = R.layout.sesl_popup_sub_menu_item_layout;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({HORIZ_POSITION_LEFT, HORIZ_POSITION_RIGHT})
@@ -367,7 +368,21 @@ final class CascadingMenuPopup extends MenuPopup implements MenuPresenter, OnKey
      */
     private void showMenu(@NonNull MenuBuilder menu) {
         final LayoutInflater inflater = LayoutInflater.from(mContext);
-        final MenuAdapter adapter = new MenuAdapter(menu, inflater, mOverflowOnly, ITEM_LAYOUT);
+
+        boolean isExclusiveCheckable = false;
+        for (int i = 0; i < menu.size(); i++) {
+            if (((MenuItemImpl) menu.getItem(i)).isExclusiveCheckable()) {
+                isExclusiveCheckable = true;
+                break;
+            }
+        }
+
+        final MenuAdapter adapter;
+        if (isExclusiveCheckable) {
+            adapter = new MenuAdapter(menu, inflater, mOverflowOnly, SUB_MENU_ITEM_LAYOUT);
+        } else {
+            adapter = new MenuAdapter(menu, inflater, mOverflowOnly, ITEM_LAYOUT);
+        }
 
         // Apply "force show icon" setting. There are 3 cases:
         // (1) This is the top level menu and icon spacing is forced. Add spacing.
@@ -491,7 +506,7 @@ final class CascadingMenuPopup extends MenuPopup implements MenuPresenter, OnKey
         // If this is the root menu, show the title if requested.
         if (parentInfo == null && mShowTitle && menu.getHeaderTitle() != null) {
             final FrameLayout titleItemView = (FrameLayout) inflater.inflate(
-                    R.layout.abc_popup_menu_header_item_layout, listView, false);
+                    R.layout.sesl_popup_menu_header_item_layout, listView, false);
             final TextView titleView = (TextView) titleItemView.findViewById(android.R.id.title);
             titleItemView.setEnabled(false);
             titleView.setText(menu.getHeaderTitle());

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.R;
@@ -38,6 +39,10 @@ import androidx.appcompat.view.SupportMenuInflater;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.view.menu.ShowableListMenu;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Static library support version of the framework's {@link android.widget.PopupMenu}.
@@ -51,6 +56,9 @@ public class PopupMenu {
     private final MenuBuilder mMenu;
     private final View mAnchor;
     final MenuPopupHelper mPopup;
+
+    private int mXOffset = 0;
+    private int mYOffset = 0;
 
     OnMenuItemClickListener mMenuItemClickListener;
     OnDismissListener mOnDismissListener;
@@ -121,6 +129,7 @@ public class PopupMenu {
         });
 
         mPopup = new MenuPopupHelper(context, mMenu, anchor, false, popupStyleAttr, popupStyleRes);
+        mPopup.seslSetOverflowOnly(true);
         mPopup.setGravity(gravity);
         mPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -235,7 +244,20 @@ public class PopupMenu {
      * @see #dismiss()
      */
     public void show() {
-        mPopup.show();
+        mPopup.show(mXOffset, mYOffset);
+    }
+
+    /**
+     * Sets a custom offset for the popup.
+     */
+    @RequiresApi(17)
+    public void seslSetOffset(int x, int y) {
+        if (mAnchor.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+            mXOffset = -x;
+        } else {
+            mXOffset = x;
+        }
+        mYOffset = y;
     }
 
     /**
@@ -307,5 +329,9 @@ public class PopupMenu {
             return null;
         }
         return mPopup.getListView();
+    }
+
+    public void seslSetOverflowOnly(boolean overflowOnly) {
+        mPopup.seslSetOverflowOnly(overflowOnly);
     }
 }

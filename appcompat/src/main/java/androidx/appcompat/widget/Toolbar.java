@@ -1713,9 +1713,10 @@ public class Toolbar extends ViewGroup {
             Drawable navButtonDrawable = mNavButtonView.getDrawable();
             Drawable navButtonBackground = mNavButtonView.getBackground();
             if (navButtonDrawable != null && navButtonBackground != null) {
-                final int left = (mNavButtonView.getPaddingLeft() - mNavButtonView.getPaddingRight()) / 2;
-                final int right = left + navWidth;
-                DrawableCompat.setHotspotBounds(navButtonBackground, left, 0, right, height);
+                final int offsetX = mNavButtonView.getPaddingLeft() - mNavButtonView.getPaddingRight();
+                final int halfOffsetX = offsetX / 2;
+                DrawableCompat.setHotspotBounds(navButtonBackground, halfOffsetX, 0,
+                        halfOffsetX + navWidth, height);
             }
         }
 
@@ -2126,7 +2127,7 @@ public class Toolbar extends ViewGroup {
         final int alignmentOffset = alignmentHeight > 0 ? (childHeight - alignmentHeight) / 2 : 0;
         switch (getChildVerticalGravity(lp.gravity)) {
             case Gravity.TOP:
-                return getPaddingTop() - alignmentOffset;
+                return getPaddingTop();
 
             case Gravity.BOTTOM:
                 return getHeight() - getPaddingBottom() - childHeight

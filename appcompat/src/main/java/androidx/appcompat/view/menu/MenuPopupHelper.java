@@ -225,6 +225,12 @@ public class MenuPopupHelper implements MenuHelper {
         return true;
     }
 
+    public void seslUpdate() {
+        if (mPopup instanceof StandardMenuPopup) {
+            ((StandardMenuPopup) mPopup).seslUpdate();
+        }
+    }
+
     /**
      * Creates the popup and assigns cached properties.
      *

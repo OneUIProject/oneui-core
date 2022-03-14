@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.R;
 import androidx.appcompat.util.SeslMisc;
+import androidx.core.content.res.ResourcesCompat;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.
@@ -61,7 +62,7 @@ public class SeslMenuDivider extends ImageView {
 
         mPaint = new Paint();
         mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(getResources().getColor(SeslMisc.isLightTheme(context) ?
+        mPaint.setColor(ResourcesCompat.getColor(getResources(), SeslMisc.isLightTheme(context) ?
                 R.color.sesl_popup_menu_divider_color_light : R.color.sesl_popup_menu_divider_color_dark, null));
     }
 

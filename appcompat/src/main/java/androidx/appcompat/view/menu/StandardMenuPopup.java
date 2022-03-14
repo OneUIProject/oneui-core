@@ -56,7 +56,7 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
     private final MenuBuilder mMenu;
     private final MenuAdapter mAdapter;
     private final boolean mOverflowOnly;
-    private final int mPopupMaxWidth;
+    private int mPopupMaxWidth;
     private final int mPopupStyleAttr;
     private final int mPopupStyleRes;
     // The popup window is final in order to couple its lifecycle to the lifecycle of the
@@ -400,5 +400,14 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
 
     public void seslForceShowUpper(boolean force) {
         mForceShowUpper = force;
+    }
+
+    public void seslUpdate() {
+        if (mPopup != null && mPopup.isShowing() && mHasContentWidth) {
+            mPopupMaxWidth = mContext.getResources().getDisplayMetrics().widthPixels
+                    - mContext.getResources().getDimensionPixelOffset(R.dimen.sesl_menu_popup_offset_horizontal) * 2;
+            mContentWidth = measureIndividualMenuWidth(mAdapter, null, mContext, mPopupMaxWidth);
+            mPopup.setContentWidth(mContentWidth);
+        }
     }
 }

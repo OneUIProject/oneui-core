@@ -334,4 +334,14 @@ public class PopupMenu {
     public void seslSetOverflowOnly(boolean overflowOnly) {
         mPopup.seslSetOverflowOnly(overflowOnly);
     }
+
+    public void seslUpdate() {
+        if (mPopup != null) {
+            mPopup.seslUpdate();
+        }
+    }
+
+    public boolean seslIsShowing() {
+        return mPopup != null && mPopup.isShowing();
+    }
 }

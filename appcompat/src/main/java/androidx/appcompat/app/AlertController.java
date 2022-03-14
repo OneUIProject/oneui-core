@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
@@ -617,7 +618,7 @@ class AlertController {
         final ListView listView = mListView;
         if (listView != null && mAdapter != null) {
             listView.setAdapter(mAdapter);
-            SeslAdapterViewReflector.semSetBottomColor(listView, 0);
+            SeslAdapterViewReflector.semSetBottomColor(listView, Color.TRANSPARENT);
             final int checkedItem = mCheckedItem;
             if (checkedItem > -1) {
                 listView.setItemChecked(checkedItem, true);
@@ -771,7 +772,7 @@ class AlertController {
         float currentFontScale = mContext.getResources().getConfiguration().fontScale;
         if (currentFontScale > 1.3f) {
             float scaleBase = baseSize / currentFontScale;
-            textview.setTextSize(0, scaleBase * 1.3f);
+            textview.setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleBase * 1.3f);
         }
     }
 
@@ -906,7 +907,7 @@ class AlertController {
         mContext.getTheme().resolveAttribute(android.R.attr.colorBackground, colorBackground, true);
 
         int buttonBackgroundColor = colorBackground.resourceId > 0
-                ? mContext.getResources().getColor(colorBackground.resourceId) : -1;
+                ? mContext.getResources().getColor(colorBackground.resourceId) : Color.WHITE;
 
         TypedValue colorPrimaryDark = new TypedValue();
         mContext.getTheme().resolveAttribute(R.attr.colorPrimaryDark, colorPrimaryDark, true);

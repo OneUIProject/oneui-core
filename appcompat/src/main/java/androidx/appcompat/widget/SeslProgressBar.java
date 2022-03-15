@@ -72,6 +72,7 @@ import androidx.appcompat.R;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.math.MathUtils;
 import androidx.core.util.Pools.SynchronizedPool;
 import androidx.core.view.ViewCompat;
 import androidx.reflect.graphics.drawable.SeslStateListDrawableReflector;
@@ -1557,9 +1558,7 @@ public class SeslProgressBar extends View {
             return false;
         }
 
-        // TODO add constrain(int, int, int) in MathUtils
-        //progress = MathUtils.constrain(progress, mMin, mMax);
-        progress = constrain(progress, mMin, mMax);
+        progress = MathUtils.constrain(progress, mMin, mMax);
 
         if (progress == mProgress) {
             // No change from current.
@@ -2537,12 +2536,6 @@ public class SeslProgressBar extends View {
                 return CirCleProgressDrawable.this;
             }
         }
-    }
-
-    // TODO add constrain(int, int, int) in MathUtils
-    /*kang from MathUtils.smali*/
-    private int constrain(int amount, int low, int high) {
-        return amount < low ? low : (amount > high ? high : amount);
     }
 
     /**

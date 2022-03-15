@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 
 package androidx.core.math;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A utility class providing functions useful for common mathematical operations.
@@ -35,13 +39,8 @@ public class MathUtils {
      *
      * @return the clamped value.
      */
-    public static float clamp(float value, float min, float max) {
-        if (value < min) {
-            return min;
-        } else if (value > max) {
-            return max;
-        }
-        return value;
+    public static double clamp(double value, double min, double max) {
+        return value < min ? min : (value > max ? max : value);
     }
 
     /**
@@ -56,13 +55,8 @@ public class MathUtils {
      *
      * @return the clamped value.
      */
-    public static double clamp(double value, double min, double max) {
-        if (value < min) {
-            return min;
-        } else if (value > max) {
-            return max;
-        }
-        return value;
+    public static float clamp(float value, float min, float max) {
+        return value < min ? min : (value > max ? max : value);
     }
 
     /**
@@ -78,12 +72,7 @@ public class MathUtils {
      * @return the clamped value.
      */
     public static int clamp(int value, int min, int max) {
-        if (value < min) {
-            return min;
-        } else if (value > max) {
-            return max;
-        }
-        return value;
+        return value < min ? min : (value > max ? max : value);
     }
 
     /**
@@ -99,11 +88,18 @@ public class MathUtils {
      * @return the clamped value.
      */
     public static long clamp(long value, long min, long max) {
-        if (value < min) {
-            return min;
-        } else if (value > max) {
-            return max;
-        }
-        return value;
+        return value < min ? min : (value > max ? max : value);
+    }
+
+    public static int constrain(int amount, int low, int high) {
+        return amount < low ? low : (amount > high ? high : amount);
+    }
+
+    public static long constrain(long amount, long low, long high) {
+        return amount < low ? low : (amount > high ? high : amount);
+    }
+
+    public static float constrain(float amount, float low, float high) {
+        return amount < low ? low : (amount > high ? high : amount);
     }
 }

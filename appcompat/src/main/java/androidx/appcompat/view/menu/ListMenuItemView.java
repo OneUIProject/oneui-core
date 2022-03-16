@@ -83,7 +83,7 @@ public class ListMenuItemView extends LinearLayout
     private boolean mPreserveIconSpacing;
     private Drawable mSubMenuArrow;
     private boolean mHasListDivider;
-    private boolean mIsSubMenu;
+    private boolean mIsSubMenu = false;
 
     private LayoutInflater mInflater;
 
@@ -133,6 +133,10 @@ public class ListMenuItemView extends LinearLayout
             if (mTextAppearance != -1) {
                 mTitleView.setTextAppearance(mTextAppearanceContext,
                         mTextAppearance);
+            }
+            if (mTitleView != null) {
+                mTitleView.setSingleLine(false);
+                mTitleView.setMaxLines(2);
             }
 
             mShortcutView = findViewById(R.id.shortcut);
@@ -213,48 +217,49 @@ public class ListMenuItemView extends LinearLayout
             return;
         }
 
-        if (mIsSubMenu) {
-            mDropDownItemTextView.setChecked(mItemData.isChecked());
-            return;
-        }
+        if (!mIsSubMenu) {
+            // Depending on whether its exclusive check or not, the checkbox or
+            // radio button will be the one in use (and the other will be otherCompoundButton)
+            final CompoundButton compoundButton;
+            final CompoundButton otherCompoundButton;
 
-        // Depending on whether its exclusive check or not, the checkbox or
-        // radio button will be the one in use (and the other will be otherCompoundButton)
-        final CompoundButton compoundButton;
-        final CompoundButton otherCompoundButton;
-
-        if (mItemData.isExclusiveCheckable()) {
-            if (mRadioButton == null) {
-                insertRadioButton();
+            if (mItemData.isExclusiveCheckable()) {
+                if (mRadioButton == null) {
+                    insertRadioButton();
+                }
+                compoundButton = mRadioButton;
+                otherCompoundButton = mCheckBox;
+            } else {
+                if (mCheckBox == null) {
+                    insertCheckBox();
+                }
+                compoundButton = mCheckBox;
+                otherCompoundButton = mRadioButton;
             }
-            compoundButton = mRadioButton;
-            otherCompoundButton = mCheckBox;
+
+            if (checkable) {
+                compoundButton.setChecked(mItemData.isChecked());
+
+                final int newVisibility = checkable ? VISIBLE : GONE;
+                if (compoundButton.getVisibility() != newVisibility) {
+                    compoundButton.setVisibility(newVisibility);
+                }
+
+                // Make sure the other compound button isn't visible
+                if (otherCompoundButton != null && otherCompoundButton.getVisibility() != GONE) {
+                    otherCompoundButton.setVisibility(GONE);
+                }
+            } else {
+                if (mCheckBox != null) {
+                    mCheckBox.setVisibility(GONE);
+                }
+                if (mRadioButton != null) {
+                    mRadioButton.setVisibility(GONE);
+                }
+            }
         } else {
-            if (mCheckBox == null) {
-                insertCheckBox();
-            }
-            compoundButton = mCheckBox;
-            otherCompoundButton = mRadioButton;
-        }
-
-        if (checkable) {
-            compoundButton.setChecked(mItemData.isChecked());
-
-            final int newVisibility = checkable ? VISIBLE : GONE;
-            if (compoundButton.getVisibility() != newVisibility) {
-                compoundButton.setVisibility(newVisibility);
-            }
-
-            // Make sure the other compound button isn't visible
-            if (otherCompoundButton != null && otherCompoundButton.getVisibility() != GONE) {
-                otherCompoundButton.setVisibility(GONE);
-            }
-        } else {
-            if (mCheckBox != null) {
-                mCheckBox.setVisibility(GONE);
-            }
-            if (mRadioButton != null) {
-                mRadioButton.setVisibility(GONE);
+            if (checkable) {
+                mDropDownItemTextView.setChecked(mItemData.isChecked());
             }
         }
     }
@@ -284,7 +289,7 @@ public class ListMenuItemView extends LinearLayout
     }
 
     private void setSubMenuArrowVisible(boolean hasSubmenu) {
-        if (mSubMenuArrowView != null) {
+        if (mSubMenuArrowView != null && !mIsSubMenu) {
             mSubMenuArrowView.setVisibility(hasSubmenu ? View.VISIBLE : View.GONE);
         }
     }
@@ -339,7 +344,7 @@ public class ListMenuItemView extends LinearLayout
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mIconView != null && mPreserveIconSpacing) {
+        if (mIconView != null && mPreserveIconSpacing && !mIsSubMenu) {
             // Enforce minimum icon spacing
             ViewGroup.LayoutParams lp = getLayoutParams();
             LayoutParams iconLp = (LayoutParams) mIconView.getLayoutParams();
@@ -351,10 +356,12 @@ public class ListMenuItemView extends LinearLayout
     }
 
     private void insertIconView() {
-        LayoutInflater inflater = getInflater();
-        mIconView = (ImageView) inflater.inflate(R.layout.abc_list_menu_item_icon,
-                this, false);
-        addContentView(mIconView, 0);
+        if (!mIsSubMenu) {
+            LayoutInflater inflater = getInflater();
+            mIconView = (ImageView) inflater.inflate(R.layout.abc_list_menu_item_icon,
+                    this, false);
+            addContentView(mIconView, 0);
+        }
     }
 
     private void insertRadioButton() {

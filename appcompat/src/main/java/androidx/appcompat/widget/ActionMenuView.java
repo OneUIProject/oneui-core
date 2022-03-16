@@ -171,6 +171,7 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
         super.onConfigurationChanged(newConfig);
 
         if (mPresenter != null) {
+            mPresenter.onConfigurationChanged(newConfig);
             mPresenter.updateMenuView(false);
 
             if (mPresenter.isOverflowMenuShowing()) {
@@ -238,10 +239,10 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
                         ActionMenuItemView itemView = (ActionMenuItemView) child;
                         if (itemView.hasText()) {
                             if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR) {
-                                lp.rightMargin = mActionButtonPaddingEnd;
+                                lp.rightMargin = mLastItemEndPadding;
                                 child.setLayoutParams(lp);
                             } else {
-                                lp.leftMargin = mActionButtonPaddingEnd;
+                                lp.leftMargin = mLastItemEndPadding;
                                 child.setLayoutParams(lp);
                             }
                         } else if (mIsOneUI41) {
@@ -725,7 +726,10 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
     @Override
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     public boolean invokeItem(MenuItemImpl item) {
-        return mMenu.performItemAction(item, 0);
+        if (mMenu != null) {
+            return mMenu.performItemAction(item, 0);
+        }
+        return false;
     }
 
     /** @hide */

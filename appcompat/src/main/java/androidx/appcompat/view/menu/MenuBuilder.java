@@ -592,7 +592,6 @@ public class MenuBuilder implements SupportMenu {
         mPreventDispatchingItemsChanged = true;
         clear();
         clearHeader();
-        mPresenters.clear();
         mPreventDispatchingItemsChanged = false;
         mItemsChangedWhileDispatchPrevented = false;
         mStructureChangedWhileDispatchPrevented = false;

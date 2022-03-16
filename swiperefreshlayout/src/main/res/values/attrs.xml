@@ -20,6 +20,11 @@
     <declare-styleable name="SwipeRefreshLayout">
         <!-- Background color for SwipeRefreshLayout progress spinner. -->
         <attr name="swipeRefreshLayoutProgressSpinnerBackgroundColor" format="color" />
+
+        <attr name="swipeRefreshLayoutTheme" format="reference" />
+
+        <attr name="swipeRefreshCircleDotColor1" format="color" />
+        <attr name="swipeRefreshCircleDotColor2" format="color" />
     </declare-styleable>
 
 </resources>

@@ -398,4 +398,8 @@ public class AccessibilityDelegateCompat {
                 view.getTag(R.id.tag_accessibility_actions);
         return actions == null ? Collections.<AccessibilityActionCompat>emptyList() : actions;
     }
+
+    public void seslNotifyPerformAction(int virtualViewId,
+                                        int action, Bundle arguments) {
+    }
 }

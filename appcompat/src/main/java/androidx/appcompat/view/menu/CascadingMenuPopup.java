@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.SystemClock;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.R;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.MenuItemHoverListener;
 import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.core.internal.view.SupportMenu;
@@ -222,7 +224,14 @@ final class CascadingMenuPopup extends MenuPopup implements MenuPresenter, OnKey
     @SuppressWarnings("deprecation")
     public CascadingMenuPopup(@NonNull Context context, @NonNull View anchor,
             @AttrRes int popupStyleAttr, @StyleRes int popupStyleRes, boolean overflowOnly) {
-        mContext = context;
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.popupTheme, outValue, false);
+        if (outValue.data != 0) {
+            mContext = new ContextThemeWrapper(context, outValue.data);
+        } else {
+            mContext = context;
+        }
+
         mAnchorView = anchor;
         mPopupStyleAttr = popupStyleAttr;
         mPopupStyleRes = popupStyleRes;

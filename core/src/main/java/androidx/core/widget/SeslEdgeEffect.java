@@ -154,7 +154,7 @@ public class SeslEdgeEffect extends EdgeEffect {
     public SeslEdgeEffect(Context context) {
         super(context);
         mPaint.setAntiAlias(true);
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        final TypedArray a = context.getTheme().obtainStyledAttributes(ATTRS);
         final int themeColor = a.getColor(0, 0xff666666);
         a.recycle();
         mPaint.setColor(themeColor & 0xffffff);
@@ -167,9 +167,9 @@ public class SeslEdgeEffect extends EdgeEffect {
         mTabHeightBuffer = dipToPixels(TAB_HEIGHT_BUFFER_IN_DIP);
     }
 
-    public static boolean isLightTheme(Context context) {
+    private boolean isLightTheme(Context context) {
         TypedValue typedValue = new TypedValue();
-        if (!context.getTheme().resolveAttribute(android.R.attr.isLightTheme,
+        if (context.getTheme().resolveAttribute(android.R.attr.isLightTheme,
                 typedValue, true)) {
             return false;
         }

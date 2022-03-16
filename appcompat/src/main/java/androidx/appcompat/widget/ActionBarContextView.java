@@ -212,6 +212,8 @@ public class ActionBarContextView extends AbsActionBarView {
     }
 
     public void initForMode(final ActionMode mode) {
+        mCheckActionModeOn = true;
+
         if (mClose == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             mClose = inflater.inflate(mCloseItemLayout, this, false);
@@ -359,18 +361,18 @@ public class ActionBarContextView extends AbsActionBarView {
                 if (mTitleView != null && mTitleView.getVisibility() == View.VISIBLE) {
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTitleView.getLayoutParams();
                     if (isRtl) {
-                        lp.rightMargin = contentInsetStart;
-                    } else {
                         lp.leftMargin = contentInsetStart;
+                    } else {
+                        lp.rightMargin = contentInsetStart;
                     }
                     mTitleView.setLayoutParams(lp);
                 }
                 if (mSubtitleView != null && mSubtitleView.getVisibility() == View.VISIBLE) {
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mSubtitleView.getLayoutParams();
                     if (isRtl) {
-                        lp.rightMargin = contentInsetStart;
-                    } else {
                         lp.leftMargin = contentInsetStart;
+                    } else {
+                        lp.rightMargin = contentInsetStart;
                     }
                     mSubtitleView.setLayoutParams(lp);
                 }

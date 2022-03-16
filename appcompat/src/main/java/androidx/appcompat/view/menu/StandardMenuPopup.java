@@ -72,7 +72,7 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
             // Only move the popup if it's showing and non-modal. We don't want
             // to be moving around the only interactive window, since there's a
             // good chance the user is interacting with it.
-            if (isShowing() && !mPopup.isModal()) {
+            if (isShowing()) {
                 final View anchor = mShownAnchorView;
                 if (anchor == null || !anchor.isShown()) {
                     dismiss();
@@ -313,10 +313,10 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
             subPopup.setOnDismissListener(mOnDismissListener);
             mOnDismissListener = null;
 
+            subPopup.setGravity(mDropDownGravity);
+
             // Close this menu popup to make room for the submenu popup.
             mMenu.close(false /* closeAllMenus */);
-
-            subPopup.setGravity(mDropDownGravity);
 
             if (subPopup.tryShow(0, 0)) {
                 if (mPresenterCallback != null) {

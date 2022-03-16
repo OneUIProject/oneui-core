@@ -465,7 +465,7 @@ public class SeslCheckedTextView extends TextView implements Checkable {
         super.drawableHotspotChanged(x, y);
 
         if (mCheckMarkDrawable != null) {
-            mCheckMarkDrawable.setHotspot(x, y);
+            DrawableCompat.setHotspot(mCheckMarkDrawable, x, y);
         }
     }
 

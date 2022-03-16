@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,17 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import androidx.core.view.ViewCompat;
 import androidx.swiperefreshlayout.R;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Private class created to work around issues with AnimationListeners being
@@ -40,7 +45,6 @@ import androidx.swiperefreshlayout.R;
  */
 class CircleImageView extends ImageView {
 
-    private static final int DEFAULT_BACKGROUND_COLOR = 0xFFFAFAFA;
     private static final int FILL_SHADOW_COLOR = 0x3D000000;
     private static final int KEY_SHADOW_COLOR = 0x1E000000;
 
@@ -48,7 +52,7 @@ class CircleImageView extends ImageView {
     private static final float X_OFFSET = 0f;
     private static final float Y_OFFSET = 1.75f;
     private static final float SHADOW_RADIUS = 3.5f;
-    private static final int SHADOW_ELEVATION = 4;
+    private static final int SHADOW_ELEVATION = 8;
 
     private Animation.AnimationListener mListener;
     private int mShadowRadius;
@@ -69,7 +73,9 @@ class CircleImageView extends ImageView {
         TypedArray colorArray = getContext().obtainStyledAttributes(R.styleable.SwipeRefreshLayout);
         mBackgroundColor = colorArray.getColor(
                 R.styleable.SwipeRefreshLayout_swipeRefreshLayoutProgressSpinnerBackgroundColor,
-                DEFAULT_BACKGROUND_COLOR);
+                getContext().getResources().getColor(isLightTheme(context) ?
+                        R.color.sesl_swipe_refresh_background_light : R.color.sesl_swipe_refresh_background_dark
+                        , null));
         colorArray.recycle();
 
         ShapeDrawable circle;
@@ -87,6 +93,15 @@ class CircleImageView extends ImageView {
         }
         circle.getPaint().setColor(mBackgroundColor);
         ViewCompat.setBackground(this, circle);
+    }
+
+    private boolean isLightTheme(Context context) {
+        TypedValue typedValue = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.isLightTheme,
+                typedValue, true)) {
+            return false;
+        }
+        return typedValue.data != 0;
     }
 
     private boolean elevationSupported() {

@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -311,7 +312,9 @@ class ActionMenuPresenter extends BaseMenuPresenter
                     parent.removeView(mOverflowButton);
                 }
                 ActionMenuView menuView = (ActionMenuView) mMenuView;
-                menuView.addView(mOverflowButton, menuView.generateOverflowButtonLayoutParams());
+                if (menuView != null) {
+                    menuView.addView(mOverflowButton, menuView.generateOverflowButtonLayoutParams());
+                }
             }
         } else if (mOverflowButton != null && mOverflowButton.getParent() == mMenuView) {
             if (mMenuView != null) {
@@ -485,6 +488,10 @@ class ActionMenuPresenter extends BaseMenuPresenter
         int maxActions = mMaxItems;
         int widthLimit = mActionItemWidthLimit;
         final int querySpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        if (mMenuView == null) {
+            Log.d(TAG, "mMenuView is null, maybe Menu has not been initialized.");
+            return false;
+        }
         final ViewGroup parent = (ViewGroup) mMenuView;
 
         int requiredItems = 0;
@@ -573,12 +580,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
                         firstActionWidth = measuredWidth;
                     }
 
-                    if (mStrictWidthLimit) {
-                        isAction &= widthLimit >= 0;
-                    } else {
-                        // Did this push the entire first item past the limit?
-                        isAction &= widthLimit + firstActionWidth > 0;
-                    }
+                    isAction &= widthLimit >= 0;
                 }
 
                 if (isAction && groupId != 0) {
@@ -628,10 +630,12 @@ class ActionMenuPresenter extends BaseMenuPresenter
 
         SavedState saved = (SavedState) state;
         if (saved.openSubMenuId > 0) {
-            MenuItem item = mMenu.findItem(saved.openSubMenuId);
-            if (item != null) {
-                SubMenuBuilder subMenu = (SubMenuBuilder) item.getSubMenu();
-                onSubMenuSelected(subMenu);
+            if (mMenu != null) {
+                MenuItem item = mMenu.findItem(saved.openSubMenuId);
+                if (item != null) {
+                    SubMenuBuilder subMenu = (SubMenuBuilder) item.getSubMenu();
+                    onSubMenuSelected(subMenu);
+                }
             }
         }
     }

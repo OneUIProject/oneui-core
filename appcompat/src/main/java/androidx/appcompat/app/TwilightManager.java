@@ -130,6 +130,9 @@ class TwilightManager {
 
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
     private Location getLastKnownLocationForProvider(String provider) {
+        if (mLocationManager == null) {
+            return null;
+        }
         try {
             if (mLocationManager.isProviderEnabled(provider)) {
                 return mLocationManager.getLastKnownLocation(provider);

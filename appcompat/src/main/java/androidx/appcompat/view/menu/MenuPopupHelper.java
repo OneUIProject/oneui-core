@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.R;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 
 /*
@@ -276,6 +277,9 @@ public class MenuPopupHelper implements MenuHelper {
         popup.setShowTitle(showTitle);
 
         if (useOffsets) {
+            GravityCompat.getAbsoluteGravity(mDropDownGravity,
+                    ViewCompat.getLayoutDirection(mAnchorView));
+
             final boolean isRtl = ViewCompat.getLayoutDirection(mAnchorView) ==
                     ViewCompat.LAYOUT_DIRECTION_RTL;
             final int hOffset = mContext.getResources().getDimensionPixelOffset(R.dimen.sesl_menu_popup_offset_horizontal);

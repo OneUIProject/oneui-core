@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 package androidx.core.widget;
 
@@ -63,6 +62,10 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityRecordCompat;
 
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * NestedScrollView is just like {@link android.widget.ScrollView}, but it supports acting
@@ -237,6 +240,12 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public void dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
             int dyUnconsumed, @Nullable int[] offsetInWindow, int type, @NonNull int[] consumed) {
         mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+                offsetInWindow, type, consumed);
+    }
+
+    private boolean seslDispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
+                                     int dyUnconsumed, @Nullable int[] offsetInWindow, int type, @NonNull int[] consumed) {
+        return mChildHelper.seslDispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
                 offsetInWindow, type, consumed);
     }
 
@@ -1081,7 +1090,11 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                                 newScrollY = range;
                             }
                             if (newScrollY != oldScrollY) {
-                                super.scrollTo(getScrollX(), newScrollY);
+                                startNestedScroll(newScrollY, ViewCompat.TYPE_NON_TOUCH);
+                                if (!dispatchNestedPreScroll(0, newScrollY, null, null,
+                                        ViewCompat.TYPE_NON_TOUCH)) {
+                                    super.scrollTo(getScrollX(), newScrollY);
+                                }
                                 return true;
                             }
                         }
@@ -1390,6 +1403,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
             nextFocused.getDrawingRect(mTempRect);
             offsetDescendantRectToMyCoords(nextFocused, mTempRect);
             int scrollDelta = computeScrollDeltaToGetChildRectOnScreen(mTempRect);
+            mLastScrollerY = getScrollY();
             doScrollY(scrollDelta);
             nextFocused.requestFocus(direction);
         } else {
@@ -1685,8 +1699,18 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
             // Nested Scrolling Post Pass
             mScrollConsumed[1] = 0;
-            dispatchNestedScroll(0, scrolledByMe, 0, unconsumed, mScrollOffset,
-                    ViewCompat.TYPE_NON_TOUCH, mScrollConsumed);
+
+            if (seslDispatchNestedScroll(0, scrolledByMe, 0, unconsumed, mScrollOffset,
+                    ViewCompat.TYPE_NON_TOUCH, mScrollConsumed)) {
+                mScrollOffset[0] = 0;
+                mScrollOffset[1] = 0;
+            }
+
+            if (mScrollOffset[0] < 0 || mScrollOffset[1] < 0) {
+                mScrollOffset[0] = 0;
+                mScrollOffset[1] = 0;
+            }
+
             unconsumed -= mScrollConsumed[1];
         }
 
@@ -2226,7 +2250,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                     final int targetScrollY = Math.min(nsvHost.getScrollY() + viewportHeight,
                             nsvHost.getScrollRange());
                     if (targetScrollY != nsvHost.getScrollY()) {
-                        nsvHost.smoothScrollTo(0, targetScrollY, true);
+                        nsvHost.scrollTo(0, targetScrollY);
                         return true;
                     }
                 }
@@ -2237,7 +2261,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                             - nsvHost.getPaddingTop();
                     final int targetScrollY = Math.max(nsvHost.getScrollY() - viewportHeight, 0);
                     if (targetScrollY != nsvHost.getScrollY()) {
-                        nsvHost.smoothScrollTo(0, targetScrollY, true);
+                        nsvHost.scrollTo(0, targetScrollY);
                         return true;
                     }
                 }

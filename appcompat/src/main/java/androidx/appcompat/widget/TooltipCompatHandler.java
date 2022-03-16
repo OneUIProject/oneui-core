@@ -91,17 +91,17 @@ class TooltipCompatHandler implements View.OnLongClickListener, View.OnHoverList
     private static TooltipCompatHandler sPendingHandler;
 
     // The handler currently showing a tooltip (there can be only one).
-    private static TooltipCompatHandler sActiveHandler;
+    private static TooltipCompatHandler sActiveHandler = null;
 
-    private static boolean sIsCustomTooltipPosition;
-    private static boolean sIsForceActionBarX;
-    private static boolean sIsForceBelow;
-    private static boolean sIsTooltipNull;
-    private boolean mIsSPenPointChanged;
-    private boolean mIsShowRunnablePostDelayed;
+    private static boolean sIsCustomTooltipPosition = false;
+    private static boolean sIsForceActionBarX = false;
+    private static boolean sIsForceBelow = false;
+    private static boolean sIsTooltipNull = false;
+    private boolean mIsSPenPointChanged = false;
+    private boolean mIsShowRunnablePostDelayed = false;
     private int mLastHoverEvent = -1;
-    private boolean mInitialWindowFocus;
-    private boolean mIsForceExitDelay;
+    private boolean mInitialWindowFocus = false;
+    private boolean mIsForceExitDelay = false;
 
     /**
      * Set the tooltip text for the view.

@@ -1166,7 +1166,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             // First, check for enter or search (both of which we'll treat as a
             // "click")
             if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEARCH
-                    || keyCode == KeyEvent.KEYCODE_TAB) {
+                    || keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
                 int position = mSearchSrcTextView.getListSelection();
                 return onItemClicked(position, KeyEvent.KEYCODE_UNKNOWN, null);
             }
@@ -1214,7 +1214,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
 
     private void updateQueryHint() {
         final CharSequence hint = getQueryHint();
-        mSearchSrcTextView.setHint(getDecoratedHint(hint == null ? "" : hint));
+        mSearchSrcTextView.setHint(hint == null ? "" : hint);
     }
 
     /**
@@ -1359,21 +1359,21 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
                 if (searchable.getVoiceSearchLaunchWebSearch()) {
                     Intent webSearchIntent = createVoiceWebSearchIntent(mVoiceWebSearchIntent,
                             searchable);
-                    getContext().startActivity(webSearchIntent);
+                    mContext.startActivity(webSearchIntent);
                 } else if (searchable.getVoiceSearchLaunchRecognizer()) {
                     Intent sVoiceIntent = createSVoiceSearchIntent(mSVoiceSearchIntent,
                             searchable);
-                    getContext().startActivity(sVoiceIntent);
+                    mContext.startActivity(sVoiceIntent);
                 }
             } else {
                 if (searchable.getVoiceSearchLaunchWebSearch()) {
                     Intent webSearchIntent = createVoiceWebSearchIntent(mVoiceWebSearchIntent,
                             searchable);
-                    getContext().startActivity(webSearchIntent);
+                    mContext.startActivity(webSearchIntent);
                 } else if (searchable.getVoiceSearchLaunchRecognizer()) {
                     Intent appSearchIntent = createVoiceAppSearchIntent(mVoiceAppSearchIntent,
                             searchable);
-                    getContext().startActivity(appSearchIntent);
+                    mContext.startActivity(appSearchIntent);
                 }
             }
         } catch (ActivityNotFoundException e) {
@@ -1510,6 +1510,9 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             final int width = mDropDownAnchor.getWidth() + dropDownPadding.left
                     + dropDownPadding.right + iconOffset + anchorPadding;
             mSearchSrcTextView.setDropDownWidth(width);
+            if (mSearchSrcTextView.isPopupShowing()) {
+                mSearchSrcTextView.showDropDown();
+            }
         }
     }
 
@@ -2261,6 +2264,12 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     public void seslSetUpButtonIcon(Drawable drawable) {
         if (mBackButton != null) {
             mBackButton.setImageDrawable(drawable);
+        }
+    }
+
+    public void seslSetOverflowMenuButtonIcon(Drawable drawable) {
+        if (mMoreButton != null) {
+            mMoreButton.setImageDrawable(drawable);
         }
     }
 

@@ -483,7 +483,8 @@ public class SeslProgressBar extends View {
             final StateListDrawable in = (StateListDrawable) dr;
             final int N = StateListDrawableCompat.getStateCount(in);
             for (int i = 0; i < N; i++) {
-                if (needsTileify(StateListDrawableCompat.getStateDrawable(in, i))) {
+                Drawable d = StateListDrawableCompat.getStateDrawable(in, i);
+                if (d != null && needsTileify(d)) {
                     return true;
                 }
             }
@@ -542,8 +543,11 @@ public class SeslProgressBar extends View {
             final StateListDrawable out = new StateListDrawable();
             final int N = StateListDrawableCompat.getStateCount(in);
             for (int i = 0; i < N; i++) {
-                out.addState(StateListDrawableCompat.getStateSet(in, i),
-                        tileify(StateListDrawableCompat.getStateDrawable(in, i), clip));
+                Drawable d = StateListDrawableCompat.getStateDrawable(in, i);
+                if (d != null) {
+                    out.addState(StateListDrawableCompat.getStateSet(in, i),
+                            tileify(d, clip));
+                }
             }
 
             return out;
@@ -702,7 +706,8 @@ public class SeslProgressBar extends View {
 
             if (d != null) {
                 d.setCallback(this);
-                DrawableCompat.setLayoutDirection(d, getLayoutDirection());
+                DrawableCompat.setLayoutDirection(d,
+                        ViewCompat.getLayoutDirection(this));
                 if (d.isStateful()) {
                     d.setState(getDrawableState());
                 }
@@ -865,7 +870,8 @@ public class SeslProgressBar extends View {
 
             if (d != null) {
                 d.setCallback(this);
-                DrawableCompat.setLayoutDirection(d, getLayoutDirection());
+                DrawableCompat.setLayoutDirection(d,
+                        ViewCompat.getLayoutDirection(this));
                 if (d.isStateful()) {
                     d.setState(getDrawableState());
                 }
@@ -1317,6 +1323,7 @@ public class SeslProgressBar extends View {
     // @Override : hidden method
     public void onResolveDrawables(int layoutDirection) {
         final Drawable d = mCurrentDrawable;
+        layoutDirection = ViewCompat.getLayoutDirection(this);
         if (d != null) {
             DrawableCompat.setLayoutDirection(d, layoutDirection);
         }
@@ -1435,18 +1442,6 @@ public class SeslProgressBar extends View {
         if (isPrimary && callBackToApp) {
             onProgressRefresh(scale, fromUser, progress);
         }
-    }
-
-    private float getPercent(int progress) {
-        final float maxProgress = getMax();
-        final float minProgress = getMin();
-        final float currentProgress = progress;
-        final float diffProgress = maxProgress - minProgress;
-        if (diffProgress <= 0.0f) {
-            return 0.0f;
-        }
-        final float percent = (currentProgress - minProgress) / diffProgress;
-        return Math.max(0.0f, Math.min(1.0f, percent));
     }
 
     void onProgressRefresh(float scale, boolean fromUser, int progress) {
@@ -1756,7 +1751,7 @@ public class SeslProgressBar extends View {
     /**
      * <p>Start the indeterminate progress animation.</p>
      */
-    void startAnimation() {
+    private void startAnimation() {
         if (getVisibility() != VISIBLE || getWindowVisibility() != VISIBLE) {
             return;
         }
@@ -1801,7 +1796,7 @@ public class SeslProgressBar extends View {
     /**
      * <p>Stop the indeterminate progress animation.</p>
      */
-    void stopAnimation() {
+    private void stopAnimation() {
         mHasAnimation = false;
         if (mIndeterminateDrawable instanceof Animatable) {
             ((Animatable) mIndeterminateDrawable).stop();
@@ -1931,7 +1926,7 @@ public class SeslProgressBar extends View {
                 final int intrinsicHeight = mIndeterminateDrawable.getIntrinsicHeight();
                 final float intrinsicAspect = (float) intrinsicWidth / intrinsicHeight;
                 final float boundAspect = (float) w / h;
-                if (intrinsicAspect != boundAspect) {
+                if (Math.abs(intrinsicAspect - boundAspect) < 1.0E-7d) {
                     if (boundAspect > intrinsicAspect) {
                         // New width is larger. Make it smaller to match height.
                         final int width = (int) (h * intrinsicAspect);
@@ -1975,7 +1970,7 @@ public class SeslProgressBar extends View {
             // rotates properly in its animation
             final int saveCount = canvas.save();
 
-            if (mCurrentMode != MODE_VERTICAL && ViewUtils.isLayoutRtl(this) && mMirrorForRtl) {
+            if (mCurrentMode != MODE_VERTICAL && mMirrorForRtl && ViewUtils.isLayoutRtl(this)) {
                 canvas.translate(getWidth() - getPaddingRight(), getPaddingTop());
                 canvas.scale(-1.0f, 1.0f);
             } else {
@@ -2024,7 +2019,7 @@ public class SeslProgressBar extends View {
         final int measuredWidth = resolveSizeAndState(dw, widthMeasureSpec, 0);
         final int measuredHeight = resolveSizeAndState(dh, heightMeasureSpec, 0);
         initCirCleStrokeWidth(measuredWidth - getPaddingLeft() - getPaddingRight());
-        if (mIndeterminate && mUseHorizontalProgress) {
+        if (mUseHorizontalProgress && mIndeterminate) {
             seslSetIndeterminateProgressDrawable(measuredWidth - getPaddingLeft() - getPaddingRight());
         }
         setMeasuredDimension(measuredWidth, measuredHeight);
@@ -2060,11 +2055,11 @@ public class SeslProgressBar extends View {
         super.drawableHotspotChanged(x, y);
 
         if (mProgressDrawable != null) {
-            mProgressDrawable.setHotspot(x, y);
+            DrawableCompat.setHotspot(mProgressDrawable, x, y);
         }
 
         if (mIndeterminateDrawable != null) {
-            mIndeterminateDrawable.setHotspot(x, y);
+            DrawableCompat.setHotspot(mIndeterminateDrawable, x, y);
         }
     }
 

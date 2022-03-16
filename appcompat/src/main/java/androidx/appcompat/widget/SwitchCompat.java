@@ -1034,10 +1034,9 @@ public class SwitchCompat extends CompoundButton {
             final float xvel = mVelocityTracker.getXVelocity();
             if (Math.abs(xvel) > CHANGE_FLING_VELOCITY || Math.abs(xvel) > MIN_FLING_VELOCITY) {
                 newState = ViewUtils.isLayoutRtl(this) ? (xvel < 0) : (xvel > 0);
-            } else {
-                if (mThumbPosition == 0.0f || mThumbPosition == 1.0f) {
-                    newState = getTargetCheckedState();
-                }
+            }
+            if (mThumbPosition == 0.0f || mThumbPosition == 1.0f) {
+                newState = getTargetCheckedState();
             }
         } else {
             newState = oldState;
@@ -1481,7 +1480,8 @@ public class SwitchCompat extends CompoundButton {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setClassName(ACCESSIBILITY_EVENT_CLASS_NAME);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            CharSequence switchText = isChecked() ? mTextOn : mTextOff;
+            CharSequence switchText = isChecked() ? mAccessibilityTextOn
+                    : mAccessibilityTextOff;
             if (!TextUtils.isEmpty(switchText)) {
                 CharSequence oldText = info.getText();
                 if (TextUtils.isEmpty(oldText)) {

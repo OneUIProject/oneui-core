@@ -38,7 +38,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 
 import androidx.annotation.GuardedBy;

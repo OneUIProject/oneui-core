@@ -16,15 +16,11 @@
 
 package androidx.core.widget;
 
-import static android.os.Build.VERSION.SDK_INT;
-
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.EdgeEffect;
-import android.widget.OverScroller;
-import android.widget.Scroller;
 
 import androidx.annotation.DoNotInline;
 import androidx.annotation.NonNull;
@@ -83,10 +79,10 @@ public final class EdgeEffectCompat {
      * This can be used in conjunction with {@link #onPullDistance(EdgeEffect, float, float)} to
      * release the currently showing effect.
      *
-     * On API level 30 and earlier, this will return 0.
+     * On {@link Build.VERSION_CODES#R} and earlier, this will return 0.
      *
      * @return The pull distance that must be released to remove the showing effect or 0 for
-     * API level 30 and earlier.
+     * versions {@link Build.VERSION_CODES#R} and earlier.
      */
     public static float getDistance(@NonNull EdgeEffect edgeEffect) {
         if (BuildCompat.isAtLeastS() && SeslViewRuneReflector.isEdgeEffectStretchType()) {
@@ -136,7 +132,7 @@ public final class EdgeEffectCompat {
     /**
      * A view should call this when content is pulled away from an edge by the user.
      * This will update the state of the current visual effect and its associated animation.
-     * The host view should always {@link View#invalidate()} if this method
+     * The host view should always {@link android.view.View#invalidate()} if this method
      * returns true and draw the results accordingly.
      *
      * @param deltaDistance Change in distance since the last call. Values may be 0 (no change) to
@@ -155,7 +151,7 @@ public final class EdgeEffectCompat {
     /**
      * A view should call this when content is pulled away from an edge by the user.
      * This will update the state of the current visual effect and its associated animation.
-     * The host view should always {@link View#invalidate()} if this method
+     * The host view should always {@link android.view.View#invalidate()} if this method
      * returns true and draw the results accordingly.
      *
      * Views using {@link EdgeEffect} should favor {@link EdgeEffect#onPull(float, float)} when
@@ -180,7 +176,7 @@ public final class EdgeEffectCompat {
     /**
      * A view should call this when content is pulled away from an edge by the user.
      * This will update the state of the current visual effect and its associated animation.
-     * The host view should always {@link View#invalidate()} after call this method
+     * The host view should always {@link android.view.View#invalidate()} after call this method
      * and draw the results accordingly.
      *
      * @param edgeEffect The EdgeEffect that is attached to the view that is getting pulled away
@@ -195,8 +191,8 @@ public final class EdgeEffectCompat {
      * @see EdgeEffect#onPull(float, float)
      */
     public static void onPull(@NonNull EdgeEffect edgeEffect, float deltaDistance,
-                              float displacement) {
-        if (SDK_INT >= 21) {
+            float displacement) {
+        if (Build.VERSION.SDK_INT >= 21) {
             edgeEffect.onPull(deltaDistance, displacement);
         } else {
             edgeEffect.onPull(deltaDistance);
@@ -206,16 +202,13 @@ public final class EdgeEffectCompat {
     /**
      * A view should call this when content is pulled away from an edge by the user.
      * This will update the state of the current visual effect and its associated animation.
-     * The host view should always {@link View#invalidate()} after this
+     * The host view should always {@link android.view.View#invalidate()} after this
      * and draw the results accordingly. This works similarly to {@link #onPull(float, float)},
-     * but returns the amount of <code>deltaDistance</code> that has been consumed.
-     *
-     * For API level 31 and above, if the {@link #getDistance(EdgeEffect)} is currently 0 and
-     * <code>deltaDistance</code> is negative, this function will return 0 and the drawn value
-     * will remain unchanged.
-     *
-     * For API level 30 and below, this will consume all of the provided value and return
-     * <code>deltaDistance</code>.
+     * but returns the amount of <code>deltaDistance</code> that has been consumed. For versions
+     * {@link Build.VERSION_CODES#S} and above, if the {@link #getDistance(EdgeEffect)} is currently
+     * 0 and <code>deltaDistance</code> is negative, this function will return 0 and the drawn value
+     * will remain unchanged. For versions {@link Build.VERSION_CODES#R} and below, this will
+     * consume all of the provided value and return <code>deltaDistance</code>.
      *
      * This method can be used to reverse the effect from a pull or absorb and partially consume
      * some of a motion:
@@ -254,7 +247,7 @@ public final class EdgeEffectCompat {
     /**
      * Call when the object is released after being pulled.
      * This will begin the "decay" phase of the effect. After calling this method
-     * the host view should {@link View#invalidate()} if this method
+     * the host view should {@link android.view.View#invalidate()} if this method
      * returns true and thereby draw the results accordingly.
      *
      * @return true if the host view should invalidate, false if it should not.
@@ -271,7 +264,7 @@ public final class EdgeEffectCompat {
      * Call when the effect absorbs an impact at the given velocity.
      * Used when a fling reaches the scroll boundary.
      *
-     * <p>When using a {@link Scroller} or {@link OverScroller},
+     * <p>When using a {@link android.widget.Scroller} or {@link android.widget.OverScroller},
      * the method <code>getCurrVelocity</code> will provide a reasonable approximation
      * to use here.</p>
      *
@@ -303,7 +296,8 @@ public final class EdgeEffectCompat {
         return mEdgeEffect.draw(canvas);
     }
 
-    @RequiresApi(30)
+    // TODO(b/181171227): This actually requires S, but we don't have a version for S yet.
+    @RequiresApi(Build.VERSION_CODES.R)
     private static class Api31Impl {
         private Api31Impl() {}
 

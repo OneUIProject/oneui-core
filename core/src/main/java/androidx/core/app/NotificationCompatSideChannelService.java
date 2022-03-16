@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.v4.app.INotificationSideChannel;
 
 /**
  * Abstract service to receive side channel notifications sent from

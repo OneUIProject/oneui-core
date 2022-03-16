@@ -263,7 +263,7 @@ public class SeslSwitchBar extends LinearLayout implements CompoundButton.OnChec
         return (getVisibility() == View.VISIBLE);
     }
 
-    public void propagateChecked(boolean isChecked) {
+    private void propagateChecked(boolean isChecked) {
         final int count = mSwitchChangeListeners.size();
         for (int n = 0; n < count; n++) {
             mSwitchChangeListeners.get(n).onSwitchChanged(mSwitch, isChecked);

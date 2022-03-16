@@ -258,7 +258,6 @@ public class ActionMenuItemView extends AppCompatTextView
             } else {
                 setBackgroundResource(R.drawable.sesl_action_bar_item_text_background_dark);
             }
-
         }
 
         // Show the tooltip for items that do not already show text.

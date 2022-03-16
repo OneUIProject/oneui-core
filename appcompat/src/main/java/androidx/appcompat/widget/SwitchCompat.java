@@ -1032,11 +1032,13 @@ public class SwitchCompat extends CompoundButton {
         if (commitChange) {
             mVelocityTracker.computeCurrentVelocity(1000);
             final float xvel = mVelocityTracker.getXVelocity();
-            if (Math.abs(xvel) > CHANGE_FLING_VELOCITY || Math.abs(xvel) > MIN_FLING_VELOCITY) {
-                newState = ViewUtils.isLayoutRtl(this) ? (xvel < 0) : (xvel > 0);
+            if (Math.abs(xvel) <= CHANGE_FLING_VELOCITY && Math.abs(xvel) <= MIN_FLING_VELOCITY) {
+                if (mThumbPosition == 0.0f || mThumbPosition == 1.0f) {
+                    newState = getTargetCheckedState();
+                }
             }
-            if (mThumbPosition == 0.0f || mThumbPosition == 1.0f) {
-                newState = getTargetCheckedState();
+            if (ViewUtils.isLayoutRtl(this) ? (xvel >= 0.0f) : (xvel <= 0.0f)) {
+                newState = false;
             }
         } else {
             newState = oldState;

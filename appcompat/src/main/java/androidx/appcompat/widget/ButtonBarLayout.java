@@ -66,7 +66,7 @@ public class ButtonBarLayout extends LinearLayout {
     public void setAllowStacking(boolean allowStacking) {
         if (mAllowStacking != allowStacking) {
             mAllowStacking = allowStacking;
-            if (!mAllowStacking && isStacked()) {
+            if (!mAllowStacking && getOrientation() == VERTICAL) {
                 setStacked(false);
             }
             requestLayout();

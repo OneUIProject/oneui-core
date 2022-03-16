@@ -371,6 +371,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         mHasThumbTint = true;
 
         applyThumbTint();
+        mDefaultActivatedThumbColor = tint;
     }
 
     /**
@@ -636,6 +637,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         }
 
         super.setMax(max);
+        mIsFirstSetProgress = true;
         int range = getMax() - getMin();
 
         if ((mKeyProgressIncrement == 0) || (range / mKeyProgressIncrement > 20)) {
@@ -2368,12 +2370,12 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             mPaint.setAlpha(modulateAlpha(prevAlpha, mAlpha));
 
             canvas.save();
-            if (mIsVertical) {
-                canvas.drawCircle(SeslAbsSeekBar.this.getWidth() / 2.0f,
-                        SeslAbsSeekBar.this.mThumbPosX, mRadiusForAni, mPaint);
-            } else {
+            if (!mIsVertical) {
                 canvas.drawCircle(SeslAbsSeekBar.this.mThumbPosX,
                         SeslAbsSeekBar.this.getHeight() / 2.0f, mRadiusForAni, mPaint);
+            } else {
+                canvas.drawCircle(SeslAbsSeekBar.this.getWidth() / 2.0f,
+                        SeslAbsSeekBar.this.mThumbPosX, mRadiusForAni, mPaint);
             }
             canvas.restore();
 

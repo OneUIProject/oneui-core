@@ -70,6 +70,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -118,6 +119,7 @@ import androidx.core.view.ViewPropertyAnimatorCompat;
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.accessibility.AccessibilityEventCompat;
 import androidx.core.widget.PopupWindowCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -1397,6 +1399,8 @@ class AppCompatDelegateImpl extends AppCompatDelegate
                             @Override
                             public void onAnimationStart(View view) {
                                 mActionModeView.setVisibility(VISIBLE);
+                                mActionModeView.sendAccessibilityEvent(
+                                        AccessibilityEventCompat.CONTENT_CHANGE_TYPE_PANE_DISAPPEARED);
                                 if (mActionModeView.getParent() instanceof View) {
                                     ViewCompat.requestApplyInsets((View) mActionModeView.getParent());
                                 }
@@ -1412,6 +1416,8 @@ class AppCompatDelegateImpl extends AppCompatDelegate
                     } else {
                         mActionModeView.setAlpha(1f);
                         mActionModeView.setVisibility(VISIBLE);
+                        mActionModeView.sendAccessibilityEvent(
+                                AccessibilityEventCompat.CONTENT_CHANGE_TYPE_PANE_DISAPPEARED);
                         if (mActionModeView.getParent() instanceof View) {
                             ViewCompat.requestApplyInsets((View) mActionModeView.getParent());
                         }

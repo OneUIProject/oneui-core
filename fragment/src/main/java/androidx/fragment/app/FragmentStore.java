@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 class FragmentStore {
     private static final String TAG = FragmentManager.TAG;
 
@@ -49,6 +53,9 @@ class FragmentStore {
 
     void resetActiveFragments() {
         mActive.clear();
+        Log.d(TAG, this +
+                " clear Active Fragments: " + mActive +
+                ", mActive size: " + mActive.size());
     }
 
     void restoreAddedFragments(@Nullable List<String> added) {
@@ -73,6 +80,9 @@ class FragmentStore {
             return;
         }
         mActive.put(f.mWho, newlyActive);
+        Log.d(TAG, this +
+                " put " + newlyActive.getFragment() +
+                " to Active Fragments, mActive size: " + mActive.size());
         if (f.mRetainInstanceChangedWhileDetached) {
             if (f.mRetainInstance) {
                 mNonConfig.addRetainedFragment(f);
@@ -115,6 +125,7 @@ class FragmentStore {
 
         // Now iterate through all active fragments. These will include those that are removed
         // and detached.
+        final int activeSize = mActive.size();
         for (FragmentStateManager fragmentStateManager : mActive.values()) {
             if (fragmentStateManager != null) {
                 fragmentStateManager.moveToExpectedState();
@@ -124,6 +135,11 @@ class FragmentStore {
                 if (beingRemoved) {
                     makeInactive(fragmentStateManager);
                 }
+            }
+            if (activeSize != mActive.size()) {
+                Log.d(TAG, this +
+                        "[enhanced for loop] expected Active size is " + activeSize +
+                        ", but " + mActive.size());
             }
         }
     }
@@ -145,6 +161,9 @@ class FragmentStore {
         // Don't remove yet. That happens in burpActive(). This prevents
         // concurrent modification while iterating over mActive
         FragmentStateManager removedStateManager = mActive.put(f.mWho, null);
+        Log.d(TAG, this +
+                "put null to Active Fragments, mActive size: " + mActive.size() +
+                ", fragment: " + f);
         if (removedStateManager == null) {
             // It was already removed, so there's nothing more to do
             return;
@@ -373,7 +392,7 @@ class FragmentStore {
 
         if (!mActive.isEmpty()) {
             writer.print(prefix);
-            writer.print("Active Fragments:");
+            writer.println("Active Fragments:");
             for (FragmentStateManager fragmentStateManager : mActive.values()) {
                 writer.print(prefix);
                 if (fragmentStateManager != null) {

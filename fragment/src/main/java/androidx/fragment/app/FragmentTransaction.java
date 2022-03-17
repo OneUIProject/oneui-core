@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * Static library support version of the framework's {@link android.app.FragmentTransaction}.
  * Used to write apps that run on platforms prior to Android 3.0.  When running
@@ -63,7 +67,6 @@ public abstract class FragmentTransaction {
     static final class Op {
         int mCmd;
         Fragment mFragment;
-        boolean mTopmostFragment;
         int mEnterAnim;
         int mExitAnim;
         int mPopEnterAnim;
@@ -77,15 +80,6 @@ public abstract class FragmentTransaction {
         Op(int cmd, Fragment fragment) {
             this.mCmd = cmd;
             this.mFragment = fragment;
-            this.mTopmostFragment = false;
-            this.mOldMaxState = Lifecycle.State.RESUMED;
-            this.mCurrentMaxState = Lifecycle.State.RESUMED;
-        }
-
-        Op(int cmd, Fragment fragment, boolean topmostFragment) {
-            this.mCmd = cmd;
-            this.mFragment = fragment;
-            this.mTopmostFragment = topmostFragment;
             this.mOldMaxState = Lifecycle.State.RESUMED;
             this.mCurrentMaxState = Lifecycle.State.RESUMED;
         }
@@ -93,7 +87,6 @@ public abstract class FragmentTransaction {
         Op(int cmd, @NonNull Fragment fragment, Lifecycle.State state) {
             this.mCmd = cmd;
             this.mFragment = fragment;
-            this.mTopmostFragment = false;
             this.mOldMaxState = fragment.mMaxState;
             this.mCurrentMaxState = state;
         }
@@ -831,6 +824,11 @@ public abstract class FragmentTransaction {
             mCommitRunnables = new ArrayList<>();
         }
         mCommitRunnables.add(runnable);
+        return this;
+    }
+
+    @NonNull
+    public FragmentTransaction setAnimations() {
         return this;
     }
 

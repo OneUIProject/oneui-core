@@ -33,7 +33,6 @@ import androidx.core.os.CancellationSignal;
 import androidx.core.util.Preconditions;
 import androidx.core.view.OneShotPreDrawListener;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewGroupCompat;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,7 +88,7 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
             CancellationSignal animCancellationSignal = new CancellationSignal();
             operation.markStartedSpecialEffect(animCancellationSignal);
             // Add the animation special effect
-            animations.add(new AnimationInfo(operation, animCancellationSignal));
+            animations.add(new AnimationInfo(operation, animCancellationSignal, isPop));
 
             // Create the transition CancellationSignal
             CancellationSignal transitionCancellationSignal = new CancellationSignal();
@@ -112,8 +111,8 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
         }
 
         // Start transition special effects
-        Map<Operation, Boolean> startedTransitions = startTransitions(transitions, isPop,
-                firstOut, lastIn);
+        Map<Operation, Boolean> startedTransitions = startTransitions(transitions,
+                awaitingContainerChanges, isPop, firstOut, lastIn);
         boolean startedAnyTransition = startedTransitions.containsValue(true);
 
         // Start animation special effects
@@ -282,6 +281,7 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
 
     @NonNull
     private Map<Operation, Boolean> startTransitions(@NonNull List<TransitionInfo> transitionInfos,
+            @NonNull List<Operation> awaitingContainerChanges,
             final boolean isPop, @Nullable final Operation firstOut,
             @Nullable final Operation lastIn) {
         Map<Operation, Boolean> startedTransitions = new HashMap<>();
@@ -565,6 +565,11 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
                             null, null, null, null);
                     if (operation.getFinalState() == Operation.State.GONE) {
                         // We're hiding the Fragment. This requires a bit of extra work
+                        // First, we need to avoid immediately applying the container change as
+                        // that will stop the Transition from occurring.
+                        awaitingContainerChanges.remove(operation);
+                        // Then schedule the actual hide of the fragment's view,
+                        // essentially doing what applyState() would do for us
                         transitionImpl.scheduleHideFragmentView(transition,
                                 operation.getFragment().mView,
                                 transitioningViews);
@@ -621,17 +626,34 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
             boolean involvedInSharedElementTransition = sharedElementTransition != null
                     && (operation == firstOut || operation == lastIn);
             if (transition != null || involvedInSharedElementTransition) {
-                transitionImpl.setListenerForTransitionEnd(
-                        transitionInfo.getOperation().getFragment(),
-                        mergedTransition,
-                        transitionInfo.getSignal(),
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                transitionInfo.completeSpecialEffect();
-                            }
-                        });
+                // If the container has never been laid out, transitions will not start so
+                // so lets instantly complete them.
+                if (!ViewCompat.isLaidOut(getContainer())) {
+                    if (FragmentManager.isLoggingEnabled(Log.VERBOSE)) {
+                        Log.v(FragmentManager.TAG,
+                                "SpecialEffectsController: Container " + getContainer()
+                                        + " has not been laid out. Completing operation "
+                                        + operation);
+                    }
+                    transitionInfo.completeSpecialEffect();
+                } else {
+                    transitionImpl.setListenerForTransitionEnd(
+                            transitionInfo.getOperation().getFragment(),
+                            mergedTransition,
+                            transitionInfo.getSignal(),
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    transitionInfo.completeSpecialEffect();
+                                }
+                            });
+                }
             }
+        }
+        // Transitions won't run if the container isn't laid out so
+        // we can return early here to avoid doing unnecessary work.
+        if (!ViewCompat.isLaidOut(getContainer())) {
+            return startedTransitions;
         }
         // First, hide all of the entering views so they're in
         // the correct initial state
@@ -671,27 +693,29 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
     /**
      * Gets the Views in the hierarchy affected by entering and exiting transitions.
      *
-     * @param transitioningViews This View will be added to transitioningViews if it is VISIBLE and
-     *                           a normal View or a ViewGroup with
+     * @param transitioningViews This View will be added to transitioningViews if it has a
+     *                           transition name, is VISIBLE and a normal View, or a ViewGroup with
      *                           {@link android.view.ViewGroup#isTransitionGroup()} true.
      * @param view               The base of the view hierarchy to look in.
      */
     void captureTransitioningViews(ArrayList<View> transitioningViews, View view) {
         if (view instanceof ViewGroup) {
+            if (!transitioningViews.contains(view)
+                    && ViewCompat.getTransitionName(view) != null) {
+                transitioningViews.add(view);
+            }
             ViewGroup viewGroup = (ViewGroup) view;
-            if (ViewGroupCompat.isTransitionGroup(viewGroup)) {
-                transitioningViews.add(viewGroup);
-            } else {
-                int count = viewGroup.getChildCount();
-                for (int i = 0; i < count; i++) {
-                    View child = viewGroup.getChildAt(i);
-                    if (child.getVisibility() == View.VISIBLE) {
-                        captureTransitioningViews(transitioningViews, child);
-                    }
+            int count = viewGroup.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = viewGroup.getChildAt(i);
+                if (child.getVisibility() == View.VISIBLE) {
+                    captureTransitioningViews(transitioningViews, child);
                 }
             }
         } else {
-            transitioningViews.add(view);
+            if (!transitioningViews.contains(view)) {
+                transitioningViews.add(view);
+            }
         }
     }
 
@@ -758,12 +782,15 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
 
     private static class AnimationInfo extends SpecialEffectsInfo {
 
+        private boolean mIsPop;
         private boolean mLoadedAnim = false;
         @Nullable
         private FragmentAnim.AnimationOrAnimator mAnimation;
 
-        AnimationInfo(@NonNull Operation operation, @NonNull CancellationSignal signal) {
+        AnimationInfo(@NonNull Operation operation, @NonNull CancellationSignal signal,
+                boolean isPop) {
             super(operation, signal);
+            mIsPop = isPop;
         }
 
         @Nullable
@@ -773,7 +800,8 @@ class DefaultSpecialEffectsController extends SpecialEffectsController {
             }
             mAnimation = FragmentAnim.loadAnimation(context,
                     getOperation().getFragment(),
-                    getOperation().getFinalState() == Operation.State.VISIBLE);
+                    getOperation().getFinalState() == Operation.State.VISIBLE,
+                    mIsPop);
             mLoadedAnim = true;
             return mAnimation;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,22 @@
 
 package androidx.fragment.app;
 
+import android.content.Context;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.R;
 import androidx.lifecycle.Lifecycle;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Entry of an operation on the fragment back stack.
@@ -176,6 +184,23 @@ final class BackStackRecord extends FragmentTransaction implements
             return mManager.getHost().getContext().getText(mBreadCrumbShortTitleRes);
         }
         return mBreadCrumbShortTitleText;
+    }
+
+    private static boolean isDefaultTheme(Context context) {
+        return TextUtils.isEmpty(Settings.System.getString(context.getContentResolver(),
+                "current_sec_active_themepackage"));
+    }
+
+    @NonNull
+    @Override
+    public FragmentTransaction setAnimations() {
+        if (isDefaultTheme(mManager.getHost().getContext())) {
+            mEnterAnim = R.anim.sesl_fragment_open_enter;
+            mExitAnim = R.anim.sesl_fragment_open_exit;
+            mPopEnterAnim = R.anim.sesl_fragment_close_enter;
+            mPopExitAnim = R.anim.sesl_fragment_close_exit;
+        }
+        return this;
     }
 
     @Override
@@ -404,34 +429,35 @@ final class BackStackRecord extends FragmentTransaction implements
             final Op op = mOps.get(opNum);
             final Fragment f = op.mFragment;
             if (f != null) {
+                f.setPopDirection(false);
                 f.setNextTransition(mTransition);
                 f.setSharedElementNames(mSharedElementSourceNames, mSharedElementTargetNames);
             }
             switch (op.mCmd) {
                 case OP_ADD:
-                    f.setNextAnim(op.mEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, false);
                     mManager.addFragment(f);
                     break;
                 case OP_REMOVE:
-                    f.setNextAnim(op.mExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.removeFragment(f);
                     break;
                 case OP_HIDE:
-                    f.setNextAnim(op.mExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.hideFragment(f);
                     break;
                 case OP_SHOW:
-                    f.setNextAnim(op.mEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, false);
                     mManager.showFragment(f);
                     break;
                 case OP_DETACH:
-                    f.setNextAnim(op.mExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.detachFragment(f);
                     break;
                 case OP_ATTACH:
-                    f.setNextAnim(op.mEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, false);
                     mManager.attachFragment(f);
                     break;
@@ -471,35 +497,36 @@ final class BackStackRecord extends FragmentTransaction implements
             final Op op = mOps.get(opNum);
             Fragment f = op.mFragment;
             if (f != null) {
+                f.setPopDirection(true);
                 f.setNextTransition(FragmentManager.reverseTransit(mTransition));
                 // Reverse the target and source names for pop operations
                 f.setSharedElementNames(mSharedElementTargetNames, mSharedElementSourceNames);
             }
             switch (op.mCmd) {
                 case OP_ADD:
-                    f.setNextAnim(op.mPopExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, true);
                     mManager.removeFragment(f);
                     break;
                 case OP_REMOVE:
-                    f.setNextAnim(op.mPopEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.addFragment(f);
                     break;
                 case OP_HIDE:
-                    f.setNextAnim(op.mPopEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.showFragment(f);
                     break;
                 case OP_SHOW:
-                    f.setNextAnim(op.mPopExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, true);
                     mManager.hideFragment(f);
                     break;
                 case OP_DETACH:
-                    f.setNextAnim(op.mPopEnterAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.attachFragment(f);
                     break;
                 case OP_ATTACH:
-                    f.setNextAnim(op.mPopExitAnim);
+                    f.setAnimations(op.mEnterAnim, op.mExitAnim, op.mPopEnterAnim, op.mPopExitAnim);
                     mManager.setExitAnimationOrder(f, true);
                     mManager.detachFragment(f);
                     break;
@@ -580,11 +607,11 @@ final class BackStackRecord extends FragmentTransaction implements
                                 // This is duplicated from above since we only make
                                 // a single pass for expanding ops. Unset any outgoing primary nav.
                                 if (old == oldPrimaryNav) {
-                                    mOps.add(opNum, new Op(OP_UNSET_PRIMARY_NAV, old, true));
+                                    mOps.add(opNum, new Op(OP_UNSET_PRIMARY_NAV, old));
                                     opNum++;
                                     oldPrimaryNav = null;
                                 }
-                                final Op removeOp = new Op(OP_REMOVE, old, true);
+                                final Op removeOp = new Op(OP_REMOVE, old);
                                 removeOp.mEnterAnim = op.mEnterAnim;
                                 removeOp.mPopEnterAnim = op.mPopEnterAnim;
                                 removeOp.mExitAnim = op.mExitAnim;

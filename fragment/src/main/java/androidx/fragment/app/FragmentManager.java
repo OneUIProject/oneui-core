@@ -674,23 +674,6 @@ public abstract class FragmentManager implements FragmentResultOwner {
     }
 
     /**
-     * Save the back stack. While this functions similarly to
-     * {@link #popBackStack(String, int)}, it <strong>does not</strong> throw away the
-     * state of any fragments that were added through those transactions. Instead, the
-     * back stack that is saved by this method can later be restored with its state
-     * in tact.
-     * <p>
-     * This function is asynchronous -- it enqueues the
-     * request to pop, but the action will not be performed until the application
-     * returns to its event loop.
-     *
-     * @param name The name set by {@link FragmentTransaction#addToBackStack(String)}.
-     */
-    public void saveBackStack(@NonNull String name) {
-        enqueueAction(new SaveBackStackState(name), false);
-    }
-
-    /**
      * Pop the top state off the back stack. This function is asynchronous -- it enqueues the
      * request to pop, but the action will not be performed until the application
      * returns to its event loop.
@@ -1032,6 +1015,19 @@ public abstract class FragmentManager implements FragmentResultOwner {
             return (Fragment) tag;
         }
         return null;
+    }
+
+    void onContainerAvailable(@NonNull FragmentContainerView container) {
+        for (FragmentStateManager fragmentStateManager:
+                mFragmentStore.getActiveFragmentStateManagers()) {
+            Fragment fragment = fragmentStateManager.getFragment();
+            if (fragment.mContainerId == container.getId() && fragment.mView != null
+                    && fragment.mView.getParent() == null
+            ) {
+                fragment.mContainer = container;
+                fragmentStateManager.addViewToContainer();
+            }
+        }
     }
 
     /**
@@ -1423,7 +1419,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
                                         && f.mView.getVisibility() == View.VISIBLE
                                         && f.mPostponedAlpha >= 0) {
                                     anim = FragmentAnim.loadAnimation(mHost.getContext(),
-                                            f, false);
+                                            f, false, f.getPopDirection());
                                 }
                                 f.mPostponedAlpha = 0;
                                 // Robolectric tests do not post the animation like a real device
@@ -1539,7 +1535,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
     private void completeShowHideFragment(@NonNull final Fragment fragment) {
         if (fragment.mView != null) {
             FragmentAnim.AnimationOrAnimator anim = FragmentAnim.loadAnimation(
-                    mHost.getContext(), fragment, !fragment.mHidden);
+                    mHost.getContext(), fragment, !fragment.mHidden, fragment.getPopDirection());
             if (anim != null && anim.animator != null) {
                 anim.animator.setTarget(fragment.mView);
                 if (fragment.mHidden) {
@@ -1580,9 +1576,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
                 }
             }
         }
-        if (fragment.mAdded && isMenuAvailable(fragment)) {
-            mNeedMenuInvalidate = true;
-        }
+        invalidateMenuForFragment(fragment);
         fragment.mHiddenChanged = false;
         fragment.onHiddenChanged(fragment.mHidden);
     }
@@ -1613,7 +1607,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
                 f.mIsNewlyAdded = false;
                 // run animations:
                 FragmentAnim.AnimationOrAnimator anim = FragmentAnim.loadAnimation(
-                        mHost.getContext(), f, true);
+                        mHost.getContext(), f, true, f.getPopDirection());
                 if (anim != null) {
                     if (anim.animation != null) {
                         f.mView.startAnimation(anim.animation);
@@ -1710,7 +1704,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
         return fragmentStateManager;
     }
 
-    void addFragment(@NonNull Fragment fragment) {
+    FragmentStateManager addFragment(@NonNull Fragment fragment) {
         if (isLoggingEnabled(Log.VERBOSE)) Log.v(TAG, "add: " + fragment);
         FragmentStateManager fragmentStateManager = createOrGetFragmentStateManager(fragment);
         fragment.mFragmentManager = this;
@@ -1725,6 +1719,7 @@ public abstract class FragmentManager implements FragmentResultOwner {
                 mNeedMenuInvalidate = true;
             }
         }
+        return fragmentStateManager;
     }
 
     void removeFragment(@NonNull Fragment fragment) {
@@ -2419,12 +2414,14 @@ public abstract class FragmentManager implements FragmentResultOwner {
      */
     private void setVisibleRemovingFragment(@NonNull Fragment f) {
         ViewGroup container = getFragmentContainer(f);
-        if (container != null && f.getNextAnim() > 0) {
+        if (container != null
+                && f.getEnterAnim() + f.getExitAnim() + f.getPopEnterAnim() + f.getPopExitAnim() > 0
+        ) {
             if (container.getTag(R.id.visible_removing_fragment_view_tag) == null) {
                 container.setTag(R.id.visible_removing_fragment_view_tag, f);
             }
             ((Fragment) container.getTag(R.id.visible_removing_fragment_view_tag))
-                    .setNextAnim(f.getNextAnim());
+                    .setPopDirection(f.getPopDirection());
         }
     }
 
@@ -2577,67 +2574,6 @@ public abstract class FragmentManager implements FragmentResultOwner {
             mBackStack = new ArrayList<>();
         }
         mBackStack.add(state);
-    }
-
-    boolean saveBackStackState(@NonNull ArrayList<BackStackRecord> records,
-            @NonNull ArrayList<Boolean> isRecordPop, @NonNull String name) {
-        int index = findBackStackIndex(name, -1, true);
-        if (index < 0) {
-            return false;
-        }
-
-        // Assert that all of the transactions use setReorderingAllowed(true)
-        // to ensure that when they are restored, they are restored as a single
-        // atomic operation and intermediate fragments aren't moved all the way
-        // up to the RESUMED state
-        for (int i = index; i < mBackStack.size(); i++) {
-            BackStackRecord record = mBackStack.get(index);
-            if (!record.mReorderingAllowed) {
-                throwException(new IllegalArgumentException("saveBackStack(\"" + name + "\") "
-                        + "included FragmentTransactions must use setReorderingAllowed(true) "
-                        + "to ensure that the back stack can be restored as an atomic operation. "
-                        + "Found " + record + " that did not use setReorderingAllowed(true)."));
-            }
-        }
-
-        // Assert that the set of affected fragments are entirely self contained within
-        // the set of transactions being saved by ensuring that the first transaction including
-        // that fragment includes an OP_ADD
-        HashSet<Fragment> allFragments = new HashSet<>();
-        for (int i = index; i < mBackStack.size(); i++) {
-            BackStackRecord record = mBackStack.get(index);
-            HashSet<Fragment> affectedFragments = new HashSet<>();
-            HashSet<Fragment> addedFragments = new HashSet<>();
-            for (FragmentTransaction.Op op : record.mOps) {
-                Fragment f = op.mFragment;
-                if (f != null && !op.mTopmostFragment && !allFragments.contains(f)) {
-                    allFragments.add(f);
-                    affectedFragments.add(f);
-                    if (op.mCmd == FragmentTransaction.OP_ADD) {
-                        addedFragments.add(f);
-                    }
-                }
-            }
-            affectedFragments.removeAll(addedFragments);
-            if (!affectedFragments.isEmpty()) {
-                throwException(new IllegalArgumentException("saveBackStack(\"" + name + "\") "
-                        + "must be self contained and not reference fragments from "
-                        + "non-saved FragmentTransactions. Found reference to fragment"
-                        + (affectedFragments.size() == 1
-                        ? " " + affectedFragments.iterator().next()
-                        : "s " + affectedFragments)
-                        + " in " + record + " that were previously "
-                        + "added to the FragmentManager through a separate FragmentTransaction."));
-            }
-        }
-
-        // Now actually record each save
-        for (int i = mBackStack.size() - 1; i >= index; i--) {
-            // TODO: Pre-process each BackStackRecord so that they actually save state
-            records.add(mBackStack.remove(i));
-            isRecordPop.add(true);
-        }
-        return true;
     }
 
     @SuppressWarnings({"unused", "WeakerAccess"}) /* synthetic access */
@@ -2887,7 +2823,9 @@ public abstract class FragmentManager implements FragmentResultOwner {
         ArrayList<String> savedResultKeys = fms.mResultKeys;
         if (savedResultKeys != null) {
             for (int i = 0; i < savedResultKeys.size(); i++) {
-                mResults.put(savedResultKeys.get(i), fms.mResults.get(i));
+                Bundle savedResult = fms.mResults.get(i);
+                savedResult.setClassLoader(mHost.getContext().getClassLoader());
+                mResults.put(savedResultKeys.get(i), savedResult);
             }
         }
         mLaunchedFragments = new ArrayDeque<>(fms.mLaunchedFragments);
@@ -3550,6 +3488,12 @@ public abstract class FragmentManager implements FragmentResultOwner {
         return (f.mHasMenu && f.mMenuVisible) || f.mChildFragmentManager.checkForMenus();
     }
 
+    void invalidateMenuForFragment(@NonNull Fragment f) {
+        if (f.mAdded && isMenuAvailable(f)) {
+            mNeedMenuInvalidate = true;
+        }
+    }
+
     static int reverseTransit(int transit) {
         int rev = 0;
         switch (transit) {
@@ -3621,21 +3565,6 @@ public abstract class FragmentManager implements FragmentResultOwner {
                 }
             }
             return popBackStackState(records, isRecordPop, mName, mId, mFlags);
-        }
-    }
-
-    private class SaveBackStackState implements OpGenerator {
-
-        private final String mName;
-
-        SaveBackStackState(@NonNull String name) {
-            mName = name;
-        }
-
-        @Override
-        public boolean generateOps(@NonNull ArrayList<BackStackRecord> records,
-                @NonNull ArrayList<Boolean> isRecordPop) {
-            return saveBackStackState(records, isRecordPop, mName);
         }
     }
 

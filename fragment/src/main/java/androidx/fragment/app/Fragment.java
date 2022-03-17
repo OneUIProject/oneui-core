@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,11 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +75,7 @@ import androidx.arch.core.util.Function;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.view.LayoutInflaterCompat;
+import androidx.fragment.R;
 import androidx.lifecycle.HasDefaultViewModelProviderFactory;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -99,6 +103,10 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Static library support version of the framework's {@link android.app.Fragment}.
@@ -292,7 +300,7 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
     @Nullable FragmentViewLifecycleOwner mViewLifecycleOwner;
     MutableLiveData<LifecycleOwner> mViewLifecycleOwnerLiveData = new MutableLiveData<>();
 
-    private ViewModelProvider.Factory mDefaultFactory;
+    ViewModelProvider.Factory mDefaultFactory;
 
     SavedStateRegistryController mSavedStateRegistryController;
 
@@ -567,6 +575,9 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
     private void initLifecycle() {
         mLifecycleRegistry = new LifecycleRegistry(this);
         mSavedStateRegistryController = SavedStateRegistryController.create(this);
+        // The default factory depends on the SavedStateRegistry so it
+        // needs to be reset when the SavedStateRegistry is reset
+        mDefaultFactory = null;
     }
 
     /**
@@ -680,16 +691,15 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
         sb.append("}");
         sb.append(" (");
         sb.append(mWho);
-        sb.append(")");
         if (mFragmentId != 0) {
             sb.append(" id=0x");
             sb.append(Integer.toHexString(mFragmentId));
         }
         if (mTag != null) {
-            sb.append(" ");
+            sb.append(" tag=");
             sb.append(mTag);
         }
-        sb.append('}');
+        sb.append(")");
         return sb.toString();
     }
 
@@ -1814,6 +1824,24 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
     @MainThread
     @Nullable
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (nextAnim == R.anim.sesl_fragment_open_exit) {
+            getView().setTranslationZ(0.0f);
+            getView().setForeground(new ColorDrawable(getResources().getColor(R.color.sesl_fragment_fgcolor)));
+            return null;
+        } else if (nextAnim == R.anim.sesl_fragment_open_enter) {
+            getView().setTranslationZ(1.0f);
+            getView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            getView().setBackgroundTintMode(PorterDuff.Mode.SRC);
+            getView().setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.sesl_fragment_bgcolor)));
+            return null;
+        } else if (nextAnim == R.anim.sesl_fragment_close_enter) {
+            getView().setForeground(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+            getView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            getView().setBackgroundTintMode(PorterDuff.Mode.SRC);
+            getView().setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.sesl_fragment_bgcolor)));
+            getActivity().getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.sesl_fragment_fgcolor));
+            return null;
+        }
         return null;
     }
 
@@ -2848,8 +2876,19 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
                     writer.print(" mTargetRequestCode=");
                     writer.println(mTargetRequestCode);
         }
-        if (getNextAnim() != 0) {
-            writer.print(prefix); writer.print("mNextAnim="); writer.println(getNextAnim());
+        writer.print(prefix); writer.print("mPopDirection="); writer.println(getPopDirection());
+        if (getEnterAnim() != 0) {
+            writer.print(prefix); writer.print("getEnterAnim="); writer.println(getEnterAnim());
+        }
+        if (getExitAnim() != 0) {
+            writer.print(prefix); writer.print("getExitAnim="); writer.println(getExitAnim());
+        }
+        if (getPopEnterAnim() != 0) {
+            writer.print(prefix); writer.print("getPopEnterAnim=");
+            writer.println(getPopEnterAnim());
+        }
+        if (getPopExitAnim() != 0) {
+            writer.print(prefix); writer.print("getPopExitAnim="); writer.println(getPopExitAnim());
         }
         if (mContainer != null) {
             writer.print(prefix); writer.print("mContainer="); writer.println(mContainer);
@@ -2946,7 +2985,7 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
             @Nullable Bundle savedInstanceState) {
         mChildFragmentManager.noteStateNotSaved();
         mPerformedCreateView = true;
-        mViewLifecycleOwner = new FragmentViewLifecycleOwner();
+        mViewLifecycleOwner = new FragmentViewLifecycleOwner(this, getViewModelStore());
         mView = onCreateView(inflater, container, savedInstanceState);
         if (mView != null) {
             // Initialize the view lifecycle
@@ -2955,7 +2994,7 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
             // to mViewLifecycleOwnerLiveData and before onViewCreated, so that calls to
             // ViewTree get() methods return something meaningful
             ViewTreeLifecycleOwner.set(mView, mViewLifecycleOwner);
-            ViewTreeViewModelStoreOwner.set(mView, this);
+            ViewTreeViewModelStoreOwner.set(mView, mViewLifecycleOwner);
             ViewTreeSavedStateRegistryOwner.set(mView, mViewLifecycleOwner);
             // Then inform any Observers of the new LifecycleOwner
             mViewLifecycleOwnerLiveData.setValue(mViewLifecycleOwner);
@@ -3253,18 +3292,56 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
         return mAnimationInfo;
     }
 
-    int getNextAnim() {
+    void setAnimations(int enter, int exit, int popEnter, int popExit) {
+        if (mAnimationInfo == null && enter == 0 && exit == 0 && popEnter == 0 && popExit == 0) {
+            return; // no change!
+        }
+        ensureAnimationInfo().mEnterAnim = enter;
+        ensureAnimationInfo().mExitAnim = exit;
+        ensureAnimationInfo().mPopEnterAnim = popEnter;
+        ensureAnimationInfo().mPopExitAnim = popExit;
+    }
+
+    int getEnterAnim() {
         if (mAnimationInfo == null) {
             return 0;
         }
-        return mAnimationInfo.mNextAnim;
+        return mAnimationInfo.mEnterAnim;
     }
 
-    void setNextAnim(int animResourceId) {
-        if (mAnimationInfo == null && animResourceId == 0) {
+    int getExitAnim() {
+        if (mAnimationInfo == null) {
+            return 0;
+        }
+        return mAnimationInfo.mExitAnim;
+    }
+
+    int getPopEnterAnim() {
+        if (mAnimationInfo == null) {
+            return 0;
+        }
+        return mAnimationInfo.mPopEnterAnim;
+    }
+
+    int getPopExitAnim() {
+        if (mAnimationInfo == null) {
+            return 0;
+        }
+        return mAnimationInfo.mPopExitAnim;
+    }
+
+    boolean getPopDirection() {
+        if (mAnimationInfo == null) {
+            return false;
+        }
+        return mAnimationInfo.mIsPop;
+    }
+
+    void setPopDirection(boolean isPop) {
+        if (mAnimationInfo == null) {
             return; // no change!
         }
-        ensureAnimationInfo().mNextAnim = animResourceId;
+        ensureAnimationInfo().mIsPop = isPop;
     }
 
     int getNextTransition() {
@@ -3514,8 +3591,14 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
         // animator instead of an animation.
         Animator mAnimator;
 
-        // If app has requested a specific animation, this is the one to use.
-        int mNextAnim;
+        // If app requests the animation direction, this is what to use
+        boolean mIsPop;
+
+        // All possible animations
+        int mEnterAnim;
+        int mExitAnim;
+        int mPopEnterAnim;
+        int mPopExitAnim;
 
         // If app has requested a specific transition, this is the one to use.
         int mNextTransition;

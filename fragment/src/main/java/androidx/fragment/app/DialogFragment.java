@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package androidx.fragment.app;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
-import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -43,9 +42,16 @@ import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewTreeLifecycleOwner;
+import androidx.lifecycle.ViewTreeViewModelStoreOwner;
+import androidx.savedstate.ViewTreeSavedStateRegistryOwner;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Static library support version of the framework's {@link android.app.DialogFragment}.
@@ -56,6 +62,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class DialogFragment extends Fragment
         implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+    private static final String TAG = "SeslDialogFragment";
 
     /** @hide */
     @RestrictTo(LIBRARY_GROUP_PREFIX)
@@ -504,19 +511,15 @@ public class DialogFragment extends Fragment
             @Nullable
             @Override
             public View onFindViewById(int id) {
-                View dialogView = DialogFragment.this.onFindViewById(id);
-                if (dialogView != null) {
-                    return dialogView;
-                }
                 if (fragmentContainer.onHasView()) {
                     return fragmentContainer.onFindViewById(id);
                 }
-                return null;
+                return DialogFragment.this.onFindViewById(id);
             }
 
             @Override
             public boolean onHasView() {
-                return DialogFragment.this.onHasView() || fragmentContainer.onHasView();
+                return fragmentContainer.onHasView() || DialogFragment.this.onHasView();
             }
         };
     }
@@ -686,6 +689,11 @@ public class DialogFragment extends Fragment
         if (mDialog != null) {
             mViewDestroyed = false;
             mDialog.show();
+            // Only after we show does the dialog window actually return a decor view.
+            View decorView = mDialog.getWindow().getDecorView();
+            ViewTreeLifecycleOwner.set(decorView, this);
+            ViewTreeViewModelStoreOwner.set(decorView, this);
+            ViewTreeSavedStateRegistryOwner.set(decorView, this);
         }
     }
 

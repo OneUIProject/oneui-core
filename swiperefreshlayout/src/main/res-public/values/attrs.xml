@@ -17,4 +17,7 @@
 <!-- Definitions of attributes to be exposed as public -->
 <resources>
     <public type="attr" name="swipeRefreshLayoutProgressSpinnerBackgroundColor" format="color"/>
+    <public type="attr" name="swipeRefreshLayoutTheme" format="reference"/>
+    <public type="attr" name="swipeRefreshCircleDotColor1" format="color"/>
+    <public type="attr" name="swipeRefreshCircleDotColor2" format="color"/>
 </resources>

@@ -1649,10 +1649,11 @@ public class ViewPager extends ViewGroup {
                         + oldMargin;
                 final int xpos = getScrollStart();
                 final float pageOffset = (float) xpos / oldWidthWithMargin;
-                final int newOffsetPixels = (int) (pageOffset * widthWithMargin);
+                final int newOffsetPixels = seslIsDatePickerLayoutRtl() ?
+                        (int) ((1 << 24) - (pageOffset * widthWithMargin))
+                        : (int) (pageOffset * widthWithMargin);
 
-                scrollTo(seslIsDatePickerLayoutRtl() ?
-                        (int) (((float) (1 << 24)) - newOffsetPixels) : newOffsetPixels, getScrollY());
+                scrollTo(newOffsetPixels, getScrollY());
             }
         } else {
             final ItemInfo ii = infoForPosition(mCurItem);

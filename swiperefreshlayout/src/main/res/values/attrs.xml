@@ -22,7 +22,9 @@
         <attr name="swipeRefreshLayoutProgressSpinnerBackgroundColor" format="color" />
 
         <attr name="swipeRefreshLayoutTheme" format="reference" />
+    </declare-styleable>
 
+    <declare-styleable name="SwipeRefreshLayoutProgress">
         <attr name="swipeRefreshCircleDotColor1" format="color" />
         <attr name="swipeRefreshCircleDotColor2" format="color" />
     </declare-styleable>

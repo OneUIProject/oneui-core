@@ -97,11 +97,9 @@ class CircleImageView extends ImageView {
 
     private boolean isLightTheme(Context context) {
         TypedValue typedValue = new TypedValue();
-        if (context.getTheme().resolveAttribute(android.R.attr.isLightTheme,
-                typedValue, true)) {
-            return false;
-        }
-        return typedValue.data != 0;
+        final boolean valid = context.getTheme().resolveAttribute(android.R.attr.isLightTheme,
+                typedValue, true);
+        return !valid || typedValue.data != 0;
     }
 
     private boolean elevationSupported() {

@@ -26,7 +26,7 @@ dependencies {
     api("androidx.annotation:annotation:1.1.0")
     api(project(":core"))
     api("androidx.collection:collection:1.1.0")
-    api("androidx.viewpager:viewpager:1.0.0")
+    api(project(":viewpager"))
     api("androidx.loader:loader:1.0.0")
     api("androidx.activity:activity:1.2.2")
     api("androidx.lifecycle:lifecycle-livedata-core:2.3.1")

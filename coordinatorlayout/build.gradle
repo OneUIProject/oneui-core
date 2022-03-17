@@ -1,0 +1,32 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 31
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    sourceSets {
+        main.res.srcDirs = [
+                "src/main/res",
+                "src/main/res-public"
+        ]
+    }
+
+    buildTypes.all {
+        consumerProguardFiles "proguard-rules.pro"
+    }
+}
+
+dependencies {
+    api("androidx.annotation:annotation:1.1.0")
+    api(project(":core"))
+    implementation("androidx.collection:collection:1.0.0")
+    api("androidx.customview:customview:1.0.0")
+}

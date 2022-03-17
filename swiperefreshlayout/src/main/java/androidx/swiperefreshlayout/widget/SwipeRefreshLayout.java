@@ -937,7 +937,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
 
         // Not sure why we have to make sure the child can't scroll up... but seems dangerous to
         // remove.
-        if (remainingDistanceToScroll < 0 && !canChildScrollUp()) {
+        if (remainingDistanceToScroll < 0 && !canChildScrollUp() && mActionDown) {
             mTotalUnconsumed += Math.abs(remainingDistanceToScroll);
             moveSpinner(mTotalUnconsumed);
 
@@ -1017,7 +1017,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         // If we are in the middle of consuming, a scroll, then we want to move the spinner back up
         // before allowing the list to scroll
-        if (dy > 0 && mTotalUnconsumed > 0) {
+        if (dy > 0 && mTotalUnconsumed > 0 && mActionDown) {
             if (dy > mTotalUnconsumed) {
                 consumed[1] = (int) mTotalUnconsumed;
                 mTotalUnconsumed = 0;
@@ -1317,6 +1317,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
             case MotionEvent.ACTION_UP: {
                 pointerIndex = ev.findPointerIndex(mActivePointerId);
                 Log.d(LOG_TAG, "onTouchEvent() ACTION_UP!");
+                mActionDown = false;
                 if (pointerIndex < 0) {
                     Log.e(LOG_TAG, "Got ACTION_UP event but don't have an active pointer id.");
                     return false;
@@ -1362,23 +1363,6 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
         mCircleView.startAnimation(mAnimateToCorrectPosition);
     }
 
-    private void animateOffsetToStartPosition(int from, AnimationListener listener) {
-        if (mScale) {
-            // Scale the item back down
-            startScaleDownReturnToStartAnimation(from, listener);
-        } else {
-            mFrom = from;
-            mAnimateToStartPosition.reset();
-            mAnimateToStartPosition.setDuration(ANIMATE_TO_START_DURATION);
-            mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
-            if (listener != null) {
-                mCircleView.setAnimationListener(listener);
-            }
-            mCircleView.clearAnimation();
-            mCircleView.startAnimation(mAnimateToStartPosition);
-        }
-    }
-
     private final Animation mAnimateToCorrectPosition = new Animation() {
         @Override
         public void applyTransformation(float interpolatedTime, Transformation t) {
@@ -1406,26 +1390,6 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
             moveToStart(interpolatedTime);
         }
     };
-
-    private void startScaleDownReturnToStartAnimation(int from,
-            Animation.AnimationListener listener) {
-        mFrom = from;
-        mStartingScale = mCircleView.getScaleX();
-        mScaleDownToStartAnimation = new Animation() {
-            @Override
-            public void applyTransformation(float interpolatedTime, Transformation t) {
-                float targetScale = (mStartingScale + (-mStartingScale  * interpolatedTime));
-                setAnimationProgress(targetScale);
-                moveToStart(interpolatedTime);
-            }
-        };
-        mScaleDownToStartAnimation.setDuration(SCALE_DOWN_DURATION);
-        if (listener != null) {
-            mCircleView.setAnimationListener(listener);
-        }
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(mScaleDownToStartAnimation);
-    }
 
     void setTargetOffsetTopAndBottom(int offset) {
         mCircleView.bringToFront();

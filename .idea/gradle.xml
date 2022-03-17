@@ -12,6 +12,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/appcompat" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/fragment" />
+            <option value="$PROJECT_DIR$/swiperefreshlayout" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

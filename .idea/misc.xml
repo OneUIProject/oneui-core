@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="1.0" />
+        <entry key="appcompat/src/main/res/drawable/sesl_action_bar_item_text_background_light.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_btn_colored.xml" value="0.208" />
         <entry key="appcompat/src/main/res/drawable/sesl_list_selector_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_list_selector_light.xml" value="0.212" />
@@ -11,14 +12,27 @@
         <entry key="appcompat/src/main/res/drawable/sesl_menu_popup_background.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_menu_popup_background_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_noti_badge.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress_horizontal.xml" value="0.208" />
         <entry key="appcompat/src/main/res/drawable/sesl_scrubber_progress_expand.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_scrubber_progress_horizontal.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_scrubber_progress_vertical.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_seekbar_background_borderless_expand.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_seekbar_thumb_unpressed_to_pressed.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_seekbar_thumb_unpressed_to_pressed_anim.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_am_alpha_dark.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_am_alpha_light.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_dark.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_light.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_toast_frame.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_top_left_round.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_vector_drawable_progress.xml" value="0.208" />
         <entry key="appcompat/src/main/res/layout/sesl_action_menu_layout.xml" value="0.2" />
         <entry key="appcompat/src/main/res/layout/sesl_list_menu_item_badge.xml" value="0.1721014492753623" />
         <entry key="appcompat/src/main/res/layout/sesl_popup_menu_item_layout.xml" value="0.67" />
         <entry key="appcompat/src/main/res/layout/sesl_search_view.xml" value="0.31927083333333334" />
+        <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_animated.xml" value="0.212" />
+        <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_dot.xml" value="0.212" />
       </map>
     </option>
   </component>

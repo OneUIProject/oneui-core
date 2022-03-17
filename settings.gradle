@@ -1,3 +1,4 @@
 include ':appcompat'
 include ':core'
+include ':fragment'
 include ':swiperefreshlayout'

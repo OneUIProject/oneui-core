@@ -24,6 +24,7 @@ import static android.view.View.TEXT_DIRECTION_LOCALE;
 import static android.view.View.TEXT_DIRECTION_LTR;
 import static android.view.View.TEXT_DIRECTION_RTL;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.app.Activity;
@@ -105,6 +106,9 @@ public final class TextViewCompat {
     private static Field sMinModeField;
     private static boolean sMinModeFieldFetched;
 
+    private static Field mTweakTypeField;
+    private static boolean mTweakTypeFieldFetched;
+
     private static final int LINES = 1;
 
     // Hide constructor
@@ -119,6 +123,18 @@ public final class TextViewCompat {
             Log.e(LOG_TAG, "Could not retrieve " + fieldName + " field.");
         }
         return field;
+    }
+
+    @RestrictTo(LIBRARY_GROUP)
+    public static int getUniformTweakType(TextView textView) {
+        if (!mTweakTypeFieldFetched) {
+            mTweakTypeField = retrieveField("AUTO_SIZE_TEXT_TYPE_UNIFORM_TWEAK");
+            mTweakTypeFieldFetched = true;
+        }
+        if (mTweakTypeField != null) {
+            return retrieveIntFromField(mTweakTypeField, textView);
+        }
+        return -1;
     }
 
     private static int retrieveIntFromField(Field field, TextView textView) {

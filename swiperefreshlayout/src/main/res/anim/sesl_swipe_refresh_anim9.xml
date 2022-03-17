@@ -23,13 +23,13 @@
 
         <objectAnimator
             android:duration="500"
-            android:propertyName="translateX"
+            android:propertyName="translateY"
             android:valueFrom="-35"
             android:valueTo="-15"
             android:interpolator="@anim/sine_in_out_70"/>
 
         <objectAnimator
-            android:propertyName="translateX"
+            android:propertyName="translateY"
             android:duration="483"
             android:valueFrom="-15"
             android:valueTo="-34.989353"

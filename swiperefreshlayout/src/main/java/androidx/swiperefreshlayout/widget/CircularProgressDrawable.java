@@ -368,7 +368,11 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                // do nothing
+                fourDot.setRotation(0);
+                fourDot.setIsRunning(true);
+                mDotAnimation.setAlpha(255);
+                fourDot.setAlpha(0);
+                startDotAnimation();
             }
 
             @Override
@@ -378,11 +382,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-                fourDot.setRotation(0);
-                fourDot.setIsRunning(true);
-                mDotAnimation.setAlpha(255);
-                fourDot.setAlpha(0);
-                startDotAnimation();
+                // do nothing
             }
         });
         mAnimator = animator;

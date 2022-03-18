@@ -1,6 +1,7 @@
 include ':appcompat'
 include ':coordinatorlayout'
 include ':core'
+include ':customview'
 include ':drawerlayout'
 include ':fragment'
 include ':swiperefreshlayout'

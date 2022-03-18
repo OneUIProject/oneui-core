@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/appcompat" />
             <option value="$PROJECT_DIR$/coordinatorlayout" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/drawerlayout" />
             <option value="$PROJECT_DIR$/fragment" />
             <option value="$PROJECT_DIR$/swiperefreshlayout" />

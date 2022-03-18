@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,35 +80,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * CoordinatorLayout is a super-powered {@link android.widget.FrameLayout FrameLayout}.
- *
- * <p>CoordinatorLayout is intended for two primary use cases:</p>
- * <ol>
- *     <li>As a top-level application decor or chrome layout</li>
- *     <li>As a container for a specific interaction with one or more child views</li>
- * </ol>
- *
- * <p>By specifying {@link Behavior Behaviors} for child views of a
- * CoordinatorLayout you can provide many different interactions within a single parent and those
- * views can also interact with one another. View classes can specify a default behavior when
- * used as a child of a CoordinatorLayout by implementing the
- * {@link AttachedBehavior} interface.</p>
- *
- * <p>Behaviors may be used to implement a variety of interactions and additional layout
- * modifications ranging from sliding drawers and panels to swipe-dismissable elements and buttons
- * that stick to other elements as they move and animate.</p>
- *
- * <p>Children of a CoordinatorLayout may have an
- * {@link LayoutParams#setAnchorId(int) anchor}. This view id must correspond
- * to an arbitrary descendant of the CoordinatorLayout, but it may not be the anchored child itself
- * or a descendant of the anchored child. This can be used to place floating views relative to
- * other arbitrary content panes.</p>
- *
- * <p>Children can specify {@link LayoutParams#insetEdge} to describe how the
- * view insets the CoordinatorLayout. Any child views which are set to dodge the same inset edges by
- * {@link LayoutParams#dodgeInsetEdges} will be moved appropriately so that the
- * views do not overlap.</p>
+ * Samsung CoordinatorLayout class.
  */
 public class CoordinatorLayout extends ViewGroup implements NestedScrollingParent2,
         NestedScrollingParent3 {
@@ -169,6 +147,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     private final DirectedAcyclicGraph<View> mChildDag = new DirectedAcyclicGraph<>();
 
     private final List<View> mTempList1 = new ArrayList<>();
+    private final List<View> mTempDependenciesList = new ArrayList<>();
     private Paint mScrimPaint;
 
     // Array to be mutated by calls to nested scrolling related methods of Behavior to satisfy the
@@ -184,10 +163,15 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
 
     private boolean mIsAttachedToWindow;
 
+    private boolean mEnableAutoCollapsingKeyEvent = true;
+    private boolean mToolIsMouse;
+
     private int[] mKeylines;
 
     private View mBehaviorTouchView;
     private View mNestedScrollingTarget;
+
+    private View mLastNestedScrollingChild;
 
     private OnPreDrawListener mOnPreDrawListener;
     private boolean mNeedsPreDrawListener;
@@ -219,13 +203,15 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
                 0, R.style.Widget_Support_CoordinatorLayout)
                 : context.obtainStyledAttributes(attrs, R.styleable.CoordinatorLayout,
                         defStyleAttr, 0);
-        if (defStyleAttr == 0) {
-            ViewCompat.saveAttributeDataForStyleable(this,
-                    context, R.styleable.CoordinatorLayout, attrs, a, 0,
-                    R.style.Widget_Support_CoordinatorLayout);
-        } else {
-            ViewCompat.saveAttributeDataForStyleable(this,
-                    context, R.styleable.CoordinatorLayout, attrs, a, defStyleAttr, 0);
+        if (Build.VERSION.SDK_INT >= 29) {
+            if (defStyleAttr == 0) {
+                saveAttributeDataForStyleable(
+                        context, R.styleable.CoordinatorLayout, attrs, a, 0,
+                        R.style.Widget_Support_CoordinatorLayout);
+            } else {
+                saveAttributeDataForStyleable(
+                        context, R.styleable.CoordinatorLayout, attrs, a, defStyleAttr, 0);
+            }
         }
 
         final int keylineArrayRes = a.getResourceId(R.styleable.CoordinatorLayout_keylines, 0);
@@ -259,7 +245,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        resetTouchBehaviors();
+        resetTouchBehaviors(false);
         if (mNeedsPreDrawListener) {
             if (mOnPreDrawListener == null) {
                 mOnPreDrawListener = new OnPreDrawListener();
@@ -275,15 +261,91 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
         mIsAttachedToWindow = true;
     }
 
+    public void seslSetNestedScrollingChild(View child) {
+        mLastNestedScrollingChild = child;
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent ev) {
+        for (int i = getChildCount() - 1; i >= 0; i--) {
+            final View child = getChildAt(i);
+
+            final Behavior behavior = ((LayoutParams) child.getLayoutParams()).getBehavior();
+            if (behavior != null) {
+                behavior.dispatchGenericMotionEvent(ev);
+            }
+
+            if (child instanceof AppBarLayoutBehavior) {
+                final AppBarLayoutBehavior ablBehavior = (AppBarLayoutBehavior) child;
+
+                final boolean isMouseEvent = isMouseEvent(ev);
+                if (mToolIsMouse != isMouseEvent) {
+                    mToolIsMouse = isMouseEvent;
+                    ablBehavior.seslSetIsMouse(isMouseEvent);
+                }
+
+                if (ev.getAction() == MotionEvent.ACTION_SCROLL) {
+                    if (mLastNestedScrollingChild != null) {
+                        if (ev.getAxisValue(MotionEvent.AXIS_VSCROLL) < 0) {
+                            ablBehavior.seslSetExpanded(false);
+                        } else if (ev.getAxisValue(MotionEvent.AXIS_VSCROLL) > 0
+                                && !mLastNestedScrollingChild.canScrollVertically(-1)) {
+                            ablBehavior.seslSetExpanded(true);
+                        }
+                    } else if (ev.getAxisValue(MotionEvent.AXIS_VSCROLL) < 0) {
+                        ablBehavior.seslSetExpanded(false);
+                    } else if (ev.getAxisValue(MotionEvent.AXIS_VSCROLL) > 0) {
+                        ablBehavior.seslSetExpanded(true);
+                    }
+                }
+
+                break;
+            }
+        }
+
+        return super.dispatchGenericMotionEvent(ev);
+    }
+
+    private boolean isMouseEvent(@NonNull MotionEvent ev) {
+        return ev.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (mEnableAutoCollapsingKeyEvent) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_TAB
+                    || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP
+                    || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN
+                    || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT
+                    || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                final int childCount = getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    final View child = getChildAt(i);
+                    
+                    if (child instanceof AppBarLayoutBehavior) {
+                        AppBarLayoutBehavior behavior = (AppBarLayoutBehavior) child;
+                        if (!behavior.seslIsCollapsed()) {
+                            behavior.seslSetExpanded(false);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return super.dispatchKeyEvent(event);
+    }
+
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        resetTouchBehaviors();
+        resetTouchBehaviors(false);
         if (mNeedsPreDrawListener && mOnPreDrawListener != null) {
             final ViewTreeObserver vto = getViewTreeObserver();
             vto.removeOnPreDrawListener(mOnPreDrawListener);
         }
         if (mNestedScrollingTarget != null) {
+            mLastNestedScrollingChild = mNestedScrollingTarget;
             onStopNestedScroll(mNestedScrollingTarget);
         }
         mIsAttachedToWindow = false;
@@ -398,28 +460,6 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
         return mLastInsets;
     }
 
-    @SuppressWarnings("unchecked")
-    private void cancelInterceptBehaviors() {
-        MotionEvent cancelEvent = null;
-        final int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = getChildAt(i);
-            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            final Behavior b = lp.getBehavior();
-            if (b != null) {
-                if (cancelEvent == null) {
-                    final long now = SystemClock.uptimeMillis();
-                    cancelEvent = MotionEvent.obtain(now, now,
-                            MotionEvent.ACTION_CANCEL, 0.0f, 0.0f, 0);
-                }
-                b.onInterceptTouchEvent(this, child, cancelEvent);
-            }
-        }
-        if (cancelEvent != null) {
-            cancelEvent.recycle();
-        }
-    }
-
     /**
      * Reset all Behavior-related tracking records either to clean up or in preparation
      * for a new event stream. This should be called when attached or detached from a window,
@@ -427,26 +467,31 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
      * and similar cases where an event stream in progress will be aborted.
      */
     @SuppressWarnings("unchecked")
-    private void resetTouchBehaviors() {
-        if (mBehaviorTouchView != null) {
-            final LayoutParams lp = (LayoutParams) mBehaviorTouchView.getLayoutParams();
+    private void resetTouchBehaviors(boolean notifyOnInterceptTouchEvent) {
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = getChildAt(i);
+            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
             final Behavior b = lp.getBehavior();
             if (b != null) {
                 final long now = SystemClock.uptimeMillis();
                 final MotionEvent cancelEvent = MotionEvent.obtain(now, now,
                         MotionEvent.ACTION_CANCEL, 0.0f, 0.0f, 0);
-                b.onTouchEvent(this, mBehaviorTouchView, cancelEvent);
+                if (notifyOnInterceptTouchEvent) {
+                    b.onInterceptTouchEvent(this, child, cancelEvent);
+                } else {
+                    b.onTouchEvent(this, child, cancelEvent);
+                }
                 cancelEvent.recycle();
             }
-            mBehaviorTouchView = null;
         }
 
-        final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
             lp.resetTouchBehaviorTracking();
         }
+        mBehaviorTouchView = null;
         mDisallowInterceptReset = false;
     }
 
@@ -471,13 +516,13 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     }
 
     @SuppressWarnings("unchecked")
-    private boolean performIntercept(final MotionEvent ev, final int type) {
+    private boolean performIntercept(MotionEvent ev, final int type) {
         boolean intercepted = false;
         boolean newBlock = false;
 
-        final int action = ev.getActionMasked();
-
         MotionEvent cancelEvent = null;
+
+        final int action = ev.getActionMasked();
 
         final List<View> topmostChildList = mTempList1;
         getTopSortedChildren(topmostChildList);
@@ -493,29 +538,34 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
                 // Cancel all behaviors beneath the one that intercepted.
                 // If the event is "down" then we don't have anything to cancel yet.
                 if (b != null) {
-                    if (cancelEvent == null) cancelEvent = obtainCancelEvent(ev);
-                    performEvent(b, child, cancelEvent, type);
+                    if (cancelEvent == null) {
+                        final long now = SystemClock.uptimeMillis();
+                        cancelEvent = MotionEvent.obtain(now, now,
+                                MotionEvent.ACTION_CANCEL, 0.0f, 0.0f, 0);
+                    }
+                    switch (type) {
+                        case TYPE_ON_INTERCEPT:
+                            b.onInterceptTouchEvent(this, child, cancelEvent);
+                            break;
+                        case TYPE_ON_TOUCH:
+                            b.onTouchEvent(this, child, cancelEvent);
+                            break;
+                    }
                 }
                 continue;
             }
 
-            if (!newBlock && !intercepted && b != null) {
-                intercepted = performEvent(b, child, ev, type);
+            if (!intercepted && b != null) {
+                switch (type) {
+                    case TYPE_ON_INTERCEPT:
+                        intercepted = b.onInterceptTouchEvent(this, child, ev);
+                        break;
+                    case TYPE_ON_TOUCH:
+                        intercepted = b.onTouchEvent(this, child, ev);
+                        break;
+                }
                 if (intercepted) {
                     mBehaviorTouchView = child;
-                    // If a behavior intercepted an event then send cancel events to all the prior
-                    // behaviors.
-                    if (action != MotionEvent.ACTION_CANCEL && action != MotionEvent.ACTION_UP) {
-                        for (int j = 0; j < i; j++) {
-                            final View priorChild = topmostChildList.get(j);
-                            final Behavior priorBehavior =
-                                    ((LayoutParams) priorChild.getLayoutParams()).getBehavior();
-                            if (priorBehavior != null) {
-                                if (cancelEvent == null) cancelEvent = obtainCancelEvent(ev);
-                                performEvent(priorBehavior, priorChild, cancelEvent, type);
-                            }
-                        }
-                    }
                 }
             }
 
@@ -533,29 +583,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
 
         topmostChildList.clear();
 
-        if (cancelEvent != null) {
-            cancelEvent.recycle();
-        }
-
         return intercepted;
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private boolean performEvent(final Behavior behavior, final View child, final MotionEvent ev,
-            final int type) {
-        switch (type) {
-            case TYPE_ON_INTERCEPT:
-                return behavior.onInterceptTouchEvent(this, child, ev);
-            case TYPE_ON_TOUCH:
-                return behavior.onTouchEvent(this, child, ev);
-        }
-        throw new IllegalArgumentException();
-    }
-
-    private MotionEvent obtainCancelEvent(MotionEvent other) {
-        MotionEvent event = MotionEvent.obtain(other);
-        event.setAction(MotionEvent.ACTION_CANCEL);
-        return event;
     }
 
     @Override
@@ -564,16 +592,27 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
 
         // Make sure we reset in case we had missed a previous important event.
         if (action == MotionEvent.ACTION_DOWN) {
-            resetTouchBehaviors();
+            for (int i = getChildCount() - 1; i >= 0; i--) {
+                final View child = getChildAt(i);
+
+                if (child instanceof AppBarLayoutBehavior) {
+                    AppBarLayoutBehavior behavior = (AppBarLayoutBehavior) child;
+
+                    final boolean isMouseEvent = isMouseEvent(ev);
+                    if (mToolIsMouse != isMouseEvent) {
+                        mToolIsMouse = isMouseEvent;
+                        behavior.seslSetIsMouse(isMouseEvent);
+                    }
+                }
+            }
+
+            resetTouchBehaviors(true);
         }
 
         final boolean intercepted = performIntercept(ev, TYPE_ON_INTERCEPT);
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            // We have already sent this event to the behavior that was handling the touch so clear
-            // it out before reseting the touch state to avoid sending it another cancel event.
-            mBehaviorTouchView = null;
-            resetTouchBehaviors();
+            resetTouchBehaviors(true);
         }
 
         return intercepted;
@@ -584,34 +623,42 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     public boolean onTouchEvent(MotionEvent ev) {
         boolean handled = false;
         boolean cancelSuper = false;
+        MotionEvent cancelEvent = null;
 
         final int action = ev.getActionMasked();
 
-        if (mBehaviorTouchView != null) {
+        if (mBehaviorTouchView != null || (cancelSuper = performIntercept(ev, TYPE_ON_TOUCH))) {
+            // Safe since performIntercept guarantees that
+            // mBehaviorTouchView != null if it returns true
             final LayoutParams lp = (LayoutParams) mBehaviorTouchView.getLayoutParams();
             final Behavior b = lp.getBehavior();
             if (b != null) {
                 handled = b.onTouchEvent(this, mBehaviorTouchView, ev);
             }
-        } else {
-            handled = performIntercept(ev, TYPE_ON_TOUCH);
-            cancelSuper = action != MotionEvent.ACTION_DOWN && handled;
         }
 
         // Keep the super implementation correct
-        if (mBehaviorTouchView == null || action == MotionEvent.ACTION_CANCEL) {
+        if (mBehaviorTouchView == null) {
             handled |= super.onTouchEvent(ev);
         } else if (cancelSuper) {
-            MotionEvent cancelEvent = obtainCancelEvent(ev);
+            if (cancelEvent == null) {
+                final long now = SystemClock.uptimeMillis();
+                cancelEvent = MotionEvent.obtain(now, now,
+                        MotionEvent.ACTION_CANCEL, 0.0f, 0.0f, 0);
+            }
             super.onTouchEvent(cancelEvent);
+        }
+
+        if (!handled && action == MotionEvent.ACTION_DOWN) {
+
+        }
+
+        if (cancelEvent != null) {
             cancelEvent.recycle();
         }
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            // We have already sent this event to the behavior that was handling the touch so clear
-            // it out before reseting the touch state to avoid sending it another cancel event.
-            mBehaviorTouchView = null;
-            resetTouchBehaviors();
+            resetTouchBehaviors(false);
         }
 
         return handled;
@@ -621,12 +668,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         super.requestDisallowInterceptTouchEvent(disallowIntercept);
         if (disallowIntercept && !mDisallowInterceptReset) {
-            // If there is no behavior currently handling touches then send a cancel event to all
-            // behavior's intercept methods.
-            if (mBehaviorTouchView == null) {
-                cancelInterceptBehaviors();
-            }
-            resetTouchBehaviors();
+            resetTouchBehaviors(false);
             mDisallowInterceptReset = true;
         }
     }
@@ -1022,7 +1064,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
         }
     }
 
-    private void getDesiredAnchoredChildRectWithoutConstraints(int layoutDirection,
+    private void getDesiredAnchoredChildRectWithoutConstraints(View child, int layoutDirection,
             Rect anchorRect, Rect out, LayoutParams lp, int childWidth, int childHeight) {
         final int absGravity = GravityCompat.getAbsoluteGravity(
                 resolveAnchoredChildGravity(lp.gravity), layoutDirection);
@@ -1125,7 +1167,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
         final LayoutParams lp = (LayoutParams) child.getLayoutParams();
         final int childWidth = child.getMeasuredWidth();
         final int childHeight = child.getMeasuredHeight();
-        getDesiredAnchoredChildRectWithoutConstraints(layoutDirection, anchorRect, out, lp,
+        getDesiredAnchoredChildRectWithoutConstraints(child, layoutDirection, anchorRect, out, lp,
                 childWidth, childHeight);
         constrainChildRect(lp, out, childWidth, childHeight);
     }
@@ -1555,7 +1597,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
      */
     @SuppressWarnings("unchecked")
     public void dispatchDependentViewsChanged(@NonNull View view) {
-        final List<View> dependents = mChildDag.getIncomingEdgesInternal(view);
+        final List<View> dependents = mChildDag.getIncomingEdges(view);
         if (dependents != null && !dependents.isEmpty()) {
             for (int i = 0; i < dependents.size(); i++) {
                 final View child = dependents.get(i);
@@ -1570,27 +1612,40 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     }
 
     /**
-     * Returns a new list containing the views on which the provided view depends.
+     * Returns the list of views which the provided view depends on. Do not store this list as its
+     * contents may not be valid beyond the caller.
      *
-     * @param child the view to find dependencies for
-     * @return a new list of views on which {@code child} depends
+     * @param child the view to find dependencies for.
+     *
+     * @return the list of views which {@code child} depends on.
      */
     @NonNull
     public List<View> getDependencies(@NonNull View child) {
-        List<View> result = mChildDag.getOutgoingEdges(child);
-        return result == null ? Collections.<View>emptyList() : result;
+        final List<View> dependencies = mChildDag.getOutgoingEdges(child);
+        mTempDependenciesList.clear();
+        if (dependencies != null) {
+            mTempDependenciesList.addAll(dependencies);
+        }
+        return mTempDependenciesList;
     }
 
     /**
-     * Returns a new list of views which depend on the provided view.
+     * Returns the list of views which depend on the provided view. Do not store this list as its
+     * contents may not be valid beyond the caller.
      *
-     * @param child the view to find dependents of
-     * @return a new list of views which depend on {@code child}
+     * @param child the view to find dependents of.
+     *
+     * @return the list of views which depend on {@code child}.
      */
     @NonNull
+    @SuppressWarnings("unchecked")
     public List<View> getDependents(@NonNull View child) {
-        List<View> result = mChildDag.getIncomingEdges(child);
-        return result == null ? Collections.<View>emptyList() : result;
+        final List<View> edges = mChildDag.getIncomingEdges(child);
+        mTempDependenciesList.clear();
+        if (edges != null) {
+            mTempDependenciesList.addAll(edges);
+        }
+        return mTempDependenciesList;
     }
 
     @VisibleForTesting
@@ -1683,7 +1738,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
 
             int childWidth = child.getMeasuredWidth();
             int childHeight = child.getMeasuredHeight();
-            getDesiredAnchoredChildRectWithoutConstraints(layoutDirection, anchorRect,
+            getDesiredAnchoredChildRectWithoutConstraints(child, layoutDirection, anchorRect,
                     desiredChildRect, lp, childWidth, childHeight);
             boolean changed = desiredChildRect.left != childRect.left ||
                     desiredChildRect.top != childRect.top;
@@ -1823,6 +1878,7 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     public void onNestedScrollAccepted(View child, View target, int axes, int type) {
         mNestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes, type);
         mNestedScrollingTarget = target;
+        mLastNestedScrollingChild = target;
 
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -1849,6 +1905,8 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
     @SuppressWarnings("unchecked")
     public void onStopNestedScroll(View target, int type) {
         mNestedScrollingParentHelper.onStopNestedScroll(target, type);
+
+        mLastNestedScrollingChild = target;
 
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -2143,6 +2201,10 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
          * called if the associated view is removed from the CoordinatorLayout or similar.</p>
          */
         public void onDetachedFromLayoutParams() {
+        }
+
+        protected boolean dispatchGenericMotionEvent(MotionEvent ev) {
+            return false;
         }
 
         /**
@@ -2915,8 +2977,16 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
             mBehaviorResolved = a.hasValue(
                     R.styleable.CoordinatorLayout_Layout_layout_behavior);
             if (mBehaviorResolved) {
-                mBehavior = parseBehavior(context, attrs, a.getString(
-                        R.styleable.CoordinatorLayout_Layout_layout_behavior));
+                final String behaviorName = a.getString(
+                        R.styleable.CoordinatorLayout_Layout_layout_behavior);
+                if (Build.VERSION.SDK_INT < 30
+                        && behaviorName != null
+                        && behaviorName.equals(
+                                "com.google.android.material.appbar.SeslImmersiveScrollBehavior")) {
+                    mBehaviorResolved = false;
+                } else {
+                    mBehavior = parseBehavior(context, attrs, behaviorName);
+                }
             }
             a.recycle();
 
@@ -3323,7 +3393,6 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
         return super.requestChildRectangleOnScreen(child, rectangle, immediate);
     }
 
-    @SuppressWarnings("deprecation") /* SYSTEM_UI_FLAG_LAYOUT_* */
     private void setupForInsets() {
         if (Build.VERSION.SDK_INT < 21) {
             return;
@@ -3410,5 +3479,9 @@ public class CoordinatorLayout extends ViewGroup implements NestedScrollingParen
                         return new SavedState[size];
                     }
                 };
+    }
+
+    public void seslEnableAutoCollapsingKeyEvent(boolean enable) {
+        mEnableAutoCollapsingKeyEvent = enable;
     }
 }

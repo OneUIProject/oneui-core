@@ -73,6 +73,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * Samsung ViewPager class.
  */

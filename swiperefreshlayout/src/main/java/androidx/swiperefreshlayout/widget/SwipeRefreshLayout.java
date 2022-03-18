@@ -564,7 +564,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
             @Override
             public void applyTransformation(float interpolatedTime, Transformation t) {
                 mCircleView.setAlpha(mStartingOpacity + ((-mStartingOpacity) * interpolatedTime));
-                mCircleView.getBackground().setAlpha((int) (mStartingOpacity + ((-mStartingOpacity) * interpolatedTime) * MAX_ALPHA));
+                mCircleView.getBackground().setAlpha((int) ((mStartingOpacity + ((-mStartingOpacity) * interpolatedTime)) * MAX_ALPHA));
                 setAnimationProgress(((mStartingScale + ((-mStartingScale) * interpolatedTime)) * 0.8f) + 0.2f);
                 if (interpolatedTime == 1) {
                     mProgress.stop();
@@ -790,7 +790,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
         }
 
         if (mActionDown &&
-                (action == MotionEvent.ACTION_DOWN || (action == MotionEvent.ACTION_MOVE && canChildScrollUp()))) {
+                (action == MotionEvent.ACTION_UP || (action == MotionEvent.ACTION_MOVE && canChildScrollUp()))) {
             Log.d(LOG_TAG, "onInterceptTouchEvent() refresh cancelled by list scrolling or touch release, mActionDown = false");
             mActionDown = false;
         }

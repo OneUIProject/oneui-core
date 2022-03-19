@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="19dp" android:height="40dp"
+    android:viewportWidth="57.0" android:viewportHeight="120.0"
+    android:autoMirrored="true">
+
+    <path
+        android:fillAlpha="0.749"
+        android:fillColor="#ff231f20"
+        android:pathData="M28.5,5.25C16.07,5.25 6,15.32 6,27.75v64.5c0,12.43 10.07,22.5 22.5,22.5S51,104.68 51,92.25v-64.5C51,15.32 40.93,5.25 28.5,5.25L28.5,5.25zM28.87,84.74l-9.38,-9.28l1.98,-1.96l7.4,7.33l7.4,-7.33l1.98,1.96L28.87,84.74L28.87,84.74zM36.28,46.5l-7.4,-7.33l-7.4,7.33l-1.98,-1.96l9.38,-9.28l9.38,9.28L36.28,46.5L36.28,46.5z" />
+
+</vector>

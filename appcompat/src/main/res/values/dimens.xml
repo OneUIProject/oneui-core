@@ -148,10 +148,6 @@
     <dimen name="sesl_edit_textfield_cursor_inset">0.0px</dimen>
     <dimen name="sesl_edit_textfield_cursor_width">2.0px</dimen>
 
-    <dimen name="sesl_go_to_top_elevation">8.0dip</dimen>
-    <dimen name="sesl_go_to_top_scrollable_view_gap">20.0dip</dimen>
-    <dimen name="sesl_go_to_top_scrollable_view_size">40.0dip</dimen>
-
     <dimen name="sesl_hover_popup_corner_radius">22.0dip</dimen>
     <dimen name="sesl_hover_popup_elevation">8.0dip</dimen>
     <dimen name="sesl_hover_popup_padding_bottom">16.0dip</dimen>

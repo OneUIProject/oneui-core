@@ -25,4 +25,23 @@
     <dimen name="fastscroll_default_thickness">8dp</dimen>
     <dimen name="fastscroll_minimum_range">50dp</dimen>
     <dimen name="fastscroll_margin">0dp</dimen>
+
+    <dimen name="sesl_fast_scroll_additional_touch_area">11dp</dimen>
+    <dimen name="sesl_fast_scroll_preview_margin_end">24dp</dimen>
+    <dimen name="sesl_fast_scroll_thumb_margin_end">8dp</dimen>
+    <dimen name="sesl_fast_scroller_additional_bottom_padding">14dp</dimen>
+    <dimen name="sesl_fast_scroller_touch_target_min_size">48dp</dimen>
+    <dimen name="sesl_fast_scroller_track_padding">6dp</dimen>
+
+    <dimen name="sesl_index_tip_min_width">25dp</dimen>
+    <dimen name="sesl_index_tip_max_width">150dp</dimen>
+    <dimen name="sesl_index_tip_height">29dp</dimen>
+    <dimen name="sesl_index_tip_margin_top">6dp</dimen>
+    <dimen name="sesl_index_tip_padding">14dp</dimen>
+    <dimen name="sesl_index_tip_radius">15dp</dimen>
+    <dimen name="sesl_index_tip_text_size">13sp</dimen>
+
+    <dimen name="sesl_go_to_top_elevation">8dp</dimen>
+    <dimen name="sesl_go_to_top_scrollable_view_size">40dp</dimen>
+    <dimen name="sesl_go_to_top_scrollable_view_gap">20dp</dimen>
 </resources>

@@ -23,6 +23,7 @@ android {
 
 dependencies {
     api("androidx.annotation:annotation:1.3.0")
+    implementation(project(":appcompat"))
     api project(path: ':core')
     implementation("androidx.collection:collection:1.0.0")
     api(project(":customview"))

@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -291,7 +292,7 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
         }
         int invalidGapDir = mShouldReverseLayout ? LayoutState.LAYOUT_START : LayoutState.LAYOUT_END;
         final LazySpanLookup.FullSpanItem invalidFsi = mLazySpanLookup
-                .getFirstFullSpanItemInRange(minPos, maxPos + 1, invalidGapDir, true);
+                .getFirstFullSpanItemInRange(minPos - 1, maxPos + 1, invalidGapDir, true);
         if (invalidFsi == null) {
             mLaidOutInvalidFullSpan = false;
             mLazySpanLookup.forceInvalidateAfter(maxPos + 1);
@@ -1290,6 +1291,29 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
     }
 
     @Override
+    public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler,
+            RecyclerView.State state, View host,
+            AccessibilityNodeInfoCompat info) {
+        ViewGroup.LayoutParams lp = host.getLayoutParams();
+        if (!(lp instanceof LayoutParams)) {
+            super.onInitializeAccessibilityNodeInfoForItem(host, info);
+            return;
+        }
+        StaggeredGridLayoutManager.LayoutParams glp = (StaggeredGridLayoutManager.LayoutParams) lp;
+        if (mOrientation == RecyclerView.HORIZONTAL) {
+            info.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(
+                    glp.getSpanIndex(),
+                    glp.mFullSpan ? mSpanCount : 1,
+                    -1, -1, false, false));
+        } else {
+            info.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(
+                    -1, -1,
+                    glp.getSpanIndex(), glp.mFullSpan ? mSpanCount : 1,
+                    false, false));
+        }
+    }
+
+    @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
         if (getChildCount() > 0) {
@@ -1319,6 +1343,23 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
         final View first = mShouldReverseLayout ? findFirstVisibleItemClosestToEnd(true) :
                 findFirstVisibleItemClosestToStart(true);
         return first == null ? RecyclerView.NO_POSITION : getPosition(first);
+    }
+
+    @Override
+    public int getRowCountForAccessibility(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (mOrientation == RecyclerView.HORIZONTAL) {
+            return mSpanCount;
+        }
+        return super.getRowCountForAccessibility(recycler, state);
+    }
+
+    @Override
+    public int getColumnCountForAccessibility(RecyclerView.Recycler recycler,
+            RecyclerView.State state) {
+        if (mOrientation == RecyclerView.VERTICAL) {
+            return mSpanCount;
+        }
+        return super.getColumnCountForAccessibility(recycler, state);
     }
 
     /**
@@ -2042,6 +2083,9 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,
             int position) {
         LinearSmoothScroller scroller = new LinearSmoothScroller(recyclerView.getContext());
+        if (recyclerView != null) {
+            recyclerView.showGoToTop();
+        }
         scroller.setTargetPosition(position);
         startSmoothScroll(scroller);
     }
@@ -2053,6 +2097,9 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
         }
         mPendingScrollPosition = position;
         mPendingScrollPositionOffset = INVALID_OFFSET;
+        if (mRecyclerView != null) {
+            mRecyclerView.showGoToTop();
+        }
         requestLayout();
     }
 
@@ -2070,11 +2117,22 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
      * @see #scrollToPosition(int)
      */
     public void scrollToPositionWithOffset(int position, int offset) {
+        scrollToPositionWithOffset(position, offset, false);
+    }
+
+    @RestrictTo(LIBRARY)
+    public void scrollToPositionWithOffset(int position, int offset, boolean invalidate) {
         if (mPendingSavedState != null) {
             mPendingSavedState.invalidateAnchorPositionInfo();
         }
         mPendingScrollPosition = position;
         mPendingScrollPositionOffset = offset;
+        if (mRecyclerView != null) {
+            mRecyclerView.showGoToTop();
+        }
+        if (invalidate) {
+            mLazySpanLookup.clear();
+        }
         requestLayout();
     }
 
@@ -2168,6 +2226,9 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
         mPrimaryOrientation.offsetChildren(-totalScroll);
         // always reset this if we scroll for a proper save instance state
         mLastLayoutFromEnd = mShouldReverseLayout;
+        if (mRecyclerView != null) {
+            mRecyclerView.showGoToTop();
+        }
         mLayoutState.mAvailable = 0;
         recycle(recycler, mLayoutState);
         return totalScroll;
@@ -3027,6 +3088,9 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
             if (mFullSpanItems == null) {
                 return null;
             }
+            if (minPos < 0) {
+                minPos = 0;
+            }
             final int limit = mFullSpanItems.size();
             for (int i = 0; i < limit; i++) {
                 FullSpanItem fsi = mFullSpanItems.get(i);
@@ -3071,7 +3135,8 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
             }
 
             int getGapForSpan(int spanIndex) {
-                return mGapPerSpan == null ? 0 : mGapPerSpan[spanIndex];
+                return mGapPerSpan == null || mGapPerSpan.length <= spanIndex
+                        ? 0 : mGapPerSpan[spanIndex];
             }
 
             @Override

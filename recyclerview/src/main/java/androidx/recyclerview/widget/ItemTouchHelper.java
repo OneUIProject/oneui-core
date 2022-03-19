@@ -768,7 +768,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         }
         mCallback.onSelectedChanged(mSelected, mActionState);
         if (actionState == ACTION_STATE_DRAG) {
-            mSelected.itemView.performHapticFeedback(0);
+            mSelected.itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             if (mStartDraggingText != null && !mStartDraggingText.isEmpty()) {
                 mSelected.itemView.announceForAccessibility(mStartDraggingText);
             } else {
@@ -1436,8 +1436,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         }
     }
 
-    public void seslSetPagingTouchSlopForStylus(boolean stylus) {
-        mUsePagingTouchSlopForStylus = stylus;
+    public void seslSetPagingTouchSlopForStylus(boolean enabled) {
+        mUsePagingTouchSlopForStylus = enabled;
     }
 
     public boolean seslIsPagingTouchSlopForStylusEnabled() {

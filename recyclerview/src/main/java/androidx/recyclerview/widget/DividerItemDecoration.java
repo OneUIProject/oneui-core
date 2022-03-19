@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package androidx.recyclerview.widget;
 
 import android.content.Context;
@@ -28,6 +27,10 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * DividerItemDecoration is a {@link RecyclerView.ItemDecoration} that can be used as a divider
@@ -48,6 +51,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private static final int[] ATTRS = new int[]{ android.R.attr.listDivider };
 
     private Drawable mDivider;
+
+    private boolean mAllowDividerAfterLastItem = false;
 
     /**
      * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}.
@@ -135,7 +140,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             right = parent.getWidth();
         }
 
-        final int childCount = parent.getChildCount();
+        final int childCount = mAllowDividerAfterLastItem ?
+                parent.getChildCount() : parent.getChildCount() - 1;
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             parent.getDecoratedBoundsWithMargins(child, mBounds);
@@ -186,5 +192,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
+    }
+
+    public void seslSetAllowDividerAfterLastItem(boolean allow) {
+        mAllowDividerAfterLastItem = allow;
     }
 }

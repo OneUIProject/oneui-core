@@ -43,7 +43,7 @@ import java.util.List;
 public class LinearLayoutManager extends RecyclerView.LayoutManager implements
         ItemTouchHelper.ViewDropHandler, RecyclerView.SmoothScroller.ScrollVectorProvider {
 
-    private static final String TAG = "LinearLayoutManager";
+    private static final String TAG = "SeslLinearLayoutManager";
 
     static final boolean DEBUG = false;
 
@@ -91,7 +91,7 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
      *
      * @see #mShouldReverseLayout
      */
-    private boolean mReverseLayout = false;
+    boolean mReverseLayout = false;
 
     /**
      * This keeps the final value for how LayoutManager should start laying out views.
@@ -105,7 +105,7 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
      * it supports both orientations.
      * see {@link android.widget.AbsListView#setStackFromBottom(boolean)}
      */
-    private boolean mStackFromEnd = false;
+    boolean mStackFromEnd = false;
 
     /**
      * Works the same way as {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}.
@@ -504,8 +504,10 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
             int position) {
         LinearSmoothScroller linearSmoothScroller =
                 new LinearSmoothScroller(recyclerView.getContext());
+        recyclerView.showGoToTop();
         linearSmoothScroller.setTargetPosition(position);
         startSmoothScroll(linearSmoothScroller);
+        Log.d(TAG, "SS pos to : " + position);
     }
 
     @Override
@@ -1080,6 +1082,9 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
         if (mPendingSavedState != null) {
             mPendingSavedState.invalidateAnchor();
         }
+        if (mRecyclerView != null) {
+            mRecyclerView.showGoToTop();
+        }
         requestLayout();
     }
 
@@ -1107,6 +1112,9 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
         mPendingScrollPositionOffset = offset;
         if (mPendingSavedState != null) {
             mPendingSavedState.invalidateAnchor();
+        }
+        if (mRecyclerView != null) {
+            mRecyclerView.showGoToTop();
         }
         requestLayout();
     }
@@ -1405,6 +1413,9 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager implements
             Log.d(TAG, "scroll req: " + delta + " scrolled: " + scrolled);
         }
         mLayoutState.mLastScrollDelta = scrolled;
+        if (state.mLayoutStep != RecyclerView.State.STEP_LAYOUT) {
+            mRecyclerView.showGoToTop();
+        }
         return scrolled;
     }
 

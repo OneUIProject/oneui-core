@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/drawerlayout" />
             <option value="$PROJECT_DIR$/fragment" />
+            <option value="$PROJECT_DIR$/slidingpanelayout" />
             <option value="$PROJECT_DIR$/swiperefreshlayout" />
             <option value="$PROJECT_DIR$/viewpager" />
           </set>

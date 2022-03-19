@@ -31,6 +31,7 @@
         <entry key="appcompat/src/main/res/layout/sesl_list_menu_item_badge.xml" value="0.1721014492753623" />
         <entry key="appcompat/src/main/res/layout/sesl_popup_menu_item_layout.xml" value="0.67" />
         <entry key="appcompat/src/main/res/layout/sesl_search_view.xml" value="0.31927083333333334" />
+        <entry key="slidingpanelayout/src/main/res/layout/sesl_spl_action_mode_view_stub.xml" value="0.31927083333333334" />
         <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_animated.xml" value="0.212" />
         <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_dot.xml" value="0.212" />
       </map>

@@ -12,6 +12,9 @@
 - SwipeRefreshLayout
 - ViewPager
 
+## Uncomplete modules:
+- SlidingPaneLayout
+
 ## Modules to be added:
 - AppPickerView
 - IndexScroll
@@ -20,5 +23,4 @@
 - PickerColor
 - Preference
 - RecyclerView
-- SlidingPaneLayout
 - ViewPager2 (?)

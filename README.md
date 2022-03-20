@@ -13,7 +13,8 @@
 - ViewPager
 
 ## Uncomplete modules:
-- SlidingPaneLayout
+- RecyclerView (needs minor adjustments)
+- SlidingPaneLayout (broken, needs fixes)
 
 ## Modules to be added:
 - AppPickerView
@@ -22,5 +23,4 @@
 - PickerBasic
 - PickerColor
 - Preference
-- RecyclerView
 - ViewPager2 (?)

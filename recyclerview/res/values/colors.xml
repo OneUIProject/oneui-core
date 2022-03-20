@@ -16,4 +16,6 @@
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
     <color name="sesl_fast_scrollbar_bg_color">#e64d4d4d</color>
+
+    <color name="sesl_scrollbar_index_tip_color">#ff4d4d4d</color>
 </resources>

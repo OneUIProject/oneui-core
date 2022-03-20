@@ -53,8 +53,8 @@ public class SPLToolbarContainer extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         TypedArray a = getContext()
-                .obtainStyledAttributes(androidx.appcompat.R.styleable.AppCompatTheme);
-        if (!a.getBoolean(androidx.appcompat.R.styleable.AppCompatTheme_windowActionModeOverlay, false)) {
+                .obtainStyledAttributes(R.styleable.AppCompatTheme);
+        if (!a.getBoolean(R.styleable.AppCompatTheme_windowActionModeOverlay, false)) {
             LayoutInflater.from(context).inflate(R.layout.sesl_spl_action_mode_view_stub, this, true);
             mViewStubCompat = findViewById(R.id.action_mode_bar_stub);
         }

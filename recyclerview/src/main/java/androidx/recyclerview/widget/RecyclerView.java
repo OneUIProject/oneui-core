@@ -1081,16 +1081,13 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         final Resources resources = context.getResources();
         TypedValue outValue = new TypedValue();
 
-        mPenDragBlockImage = resources.getDrawable(
-                androidx.appcompat.R.drawable.sesl_pen_block_selection);
+        mPenDragBlockImage = resources.getDrawable(R.drawable.sesl_pen_block_selection);
 
-        if (context.getTheme().resolveAttribute(
-                androidx.appcompat.R.attr.goToTopStyle, outValue, true)) {
+        if (context.getTheme().resolveAttribute(R.attr.goToTopStyle, outValue, true)) {
             mGoToTopImageLight = resources.getDrawable(outValue.resourceId);
         }
 
-        context.getTheme().resolveAttribute(
-                androidx.appcompat.R.attr.roundedCornerColor, outValue, true);
+        context.getTheme().resolveAttribute(R.attr.roundedCornerColor, outValue, true);
         if (outValue.resourceId > 0) {
             mRectColor = resources.getColor(outValue.resourceId);
         }
@@ -15292,7 +15289,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     public void seslSetGoToTopEnabled(boolean enabled, boolean lightStyle) {
         mGoToTopImage = lightStyle
                 ? mGoToTopImageLight : mContext.getResources().getDrawable(
-                        androidx.appcompat.R.drawable.sesl_list_go_to_top_dark);
+                        R.drawable.sesl_list_go_to_top_dark);
 
         if (mGoToTopImage != null) {
             if (enabled) {
@@ -15687,10 +15684,10 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             mTextPaint = new Paint();
             mTextPaint.setAntiAlias(true);
             mTextPaint.setTypeface(Typeface.create(mContext.getString(
-                    androidx.appcompat.R.string.sesl_font_family_regular), Typeface.NORMAL));
+                    R.string.sesl_font_family_regular), Typeface.NORMAL));
             mTextPaint.setTextAlign(Paint.Align.CENTER);
             mTextPaint.setTextSize(resources.getDimensionPixelSize(R.dimen.sesl_index_tip_text_size));
-            mTextPaint.setColor(resources.getColor(androidx.appcompat.R.color.sesl_white));
+            mTextPaint.setColor(resources.getColor(R.color.sesl_white));
             
             mTextBounds = new Rect();
 

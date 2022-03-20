@@ -31,9 +31,9 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
-import androidx.appcompat.R;
 import androidx.appcompat.util.SeslMisc;
 import androidx.core.view.ViewCompat;
+import androidx.slidingpanelayout.R;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.

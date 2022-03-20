@@ -2121,7 +2121,7 @@ public class StaggeredGridLayoutManager extends RecyclerView.LayoutManager imple
     }
 
     @RestrictTo(LIBRARY)
-    public void scrollToPositionWithOffset(int position, int offset, boolean invalidate) {
+    void scrollToPositionWithOffset(int position, int offset, boolean invalidate) {
         if (mPendingSavedState != null) {
             mPendingSavedState.invalidateAnchorPositionInfo();
         }

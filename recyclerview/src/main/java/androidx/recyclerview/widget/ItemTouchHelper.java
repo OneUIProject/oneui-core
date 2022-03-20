@@ -801,9 +801,12 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     // animations. Instead, we wait and batch.
                     if ((animator == null || !animator.isRunning(null))
                             && !hasRunningRecoverAnim()) {
+                        Log.i(TAG, "postDispatchSwipe$run: mCallback.onSwiped " +
+                                "anim.mViewHolder = " + anim.mViewHolder
+                                + ", anim.mViewHolder.itemView = " + anim.mViewHolder.itemView
+                                + " swipeDir=" + swipeDir);
                         mCallback.onSwiped(anim.mViewHolder, swipeDir);
-                    } else {
-                        mRecyclerView.post(this);
+                        endRecoverAnimation(anim.mViewHolder, false);
                     }
                 } else {
                     Log.i(TAG, "Failed to call mCallback.onSwiped()!, " +
@@ -812,6 +815,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     mCallback.seslOnSwipeFailed(anim.mViewHolder, swipeDir);
                     endRecoverAnimation(anim.mViewHolder, false);
                 }
+                mRecyclerView.post(this);
             }
         });
     }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Item solto na posição %d.</string>
+    <string name="dragndroplist_drag_start">O item começou a ser arrastado na posição %d.</string>
+    <string name="dragndroplist_drag_move">Agora na posição %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Não é possível arrastar o item na posição %d.</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">הפריט שוחרר במיקום %d.</string>
+    <string name="dragndroplist_drag_start">גרירת הפריט החלה במיקום %d.</string>
+    <string name="dragndroplist_drag_move">כעת נמצא במיקום %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">לא ניתן לגרור פריטים במיקום %d.</string>
+</resources>

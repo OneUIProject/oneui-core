@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Đã thả mục vào vị trí %d.</string>
+    <string name="dragndroplist_drag_start">Đã bắt đầu kéo mục tại vị trí %d.</string>
+    <string name="dragndroplist_drag_move">Hiện đang ở vị trí %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Không thể kéo mục tại vị trí %d.</string>
+</resources>

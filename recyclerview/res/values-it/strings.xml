@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Elemento rilasciato nella posizione %d.</string>
+    <string name="dragndroplist_drag_start">"È stato iniziato il trascinamento dell'elemento nella posizione %d."</string>
+    <string name="dragndroplist_drag_move">Ora alla posizione %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">"Impossibile trascinare l'elemento nella posizione %d."</string>
+</resources>

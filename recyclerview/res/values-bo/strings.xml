@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">སྡེ་ཚན་གནས་ %d. ལ་བཞག་སོང་།</string>
+    <string name="dragndroplist_drag_start">གནས་ %d ལ་སྡེ་ཚན་སྤོ་འགོ་བཙུགས་སོང་།</string>
+    <string name="dragndroplist_drag_move">现在位于位置 %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d ལ་ཡོད་པའི་སྡེ་ཚན་འཐེན་འགུལ་བྱེད་མི་ཐུབ།</string>
+</resources>

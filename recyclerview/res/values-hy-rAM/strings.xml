@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Միույթը գցված է %d դիրքում։</string>
+    <string name="dragndroplist_drag_start">Սկսված է միույթի քաշումը %d դիրք։</string>
+    <string name="dragndroplist_drag_move">Ներկա դիրքը՝ %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d դիրքի միույթը անհնար է քաշել։</string>
+</resources>

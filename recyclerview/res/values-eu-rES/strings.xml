@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Elementua %d posizioan utzi da.</string>
+    <string name="dragndroplist_drag_start">Elementua %d posiziora arrastatzen hasi da.</string>
+    <string name="dragndroplist_drag_move">Oraingo posizioa %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d posizioko elementua ezin da arrastatu.</string>
+</resources>

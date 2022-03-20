@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Item dijatuhkan pada kedudukan %d.</string>
+    <string name="dragndroplist_drag_start">Mula menyeret item pada kedudukan %d.</string>
+    <string name="dragndroplist_drag_move">Kini di kedudukan %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Item pada kedudukan %d tidak boleh diseret.</string>
+</resources>

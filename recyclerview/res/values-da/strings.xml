@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Element sluppet i position %d.</string>
+    <string name="dragndroplist_drag_start">Er begyndt at trække element i position %d.</string>
+    <string name="dragndroplist_drag_move">Nu på positionen %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Element i position %d kan ikke trækkes.</string>
+</resources>

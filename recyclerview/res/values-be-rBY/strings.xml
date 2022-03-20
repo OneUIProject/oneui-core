@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Элемент перацягнуты ў пазіцыю %d.</string>
+    <string name="dragndroplist_drag_start">Пачалося перацягванне элемента ў пазіцыю %d.</string>
+    <string name="dragndroplist_drag_move">Зараз у пазіцыі %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Элемент у пазіцыі %d немагчыма перацягнуць.</string>
+</resources>

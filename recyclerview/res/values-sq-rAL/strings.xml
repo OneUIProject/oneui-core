@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Objekti u lëshua në pozicionin %d.</string>
+    <string name="dragndroplist_drag_start">Fillova të zvarrit objektin në pozicionin %d.</string>
+    <string name="dragndroplist_drag_move">Tani në pozicionin %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Objekti në pozicionin %d nuk mund të zvarritet.</string>
+</resources>

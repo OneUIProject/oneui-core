@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Element arrossegat a la posició %d.</string>
+    <string name="dragndroplist_drag_start">"S'ha començat a arrossegar l'element de la posició %d."</string>
+    <string name="dragndroplist_drag_move">Ara a la posició %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">"L'element de la posició %d no es pot arrossegar."</string>
+</resources>

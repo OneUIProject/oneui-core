@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Madda %d orna oklandy.</string>
+    <string name="dragndroplist_drag_start">%d orundaky maddanyň süýşürilmegi başlandy.</string>
+    <string name="dragndroplist_drag_move">Häzir %d orunda</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d orundaky maddany tutup süýşürip bolmaýar.</string>
+</resources>

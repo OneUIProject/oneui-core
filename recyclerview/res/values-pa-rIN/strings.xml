@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">ਸਥਾਨ %d ਤੇ ਆਈਟਮ ਡ੍ਰੌਪ ਕੀਤੀ ਗਈ।</string>
+    <string name="dragndroplist_drag_start">ਸਥਾਨ %d ਤੋਂ ਆਈਟਮ ਨੂੰ ਡ੍ਰੈਗ ਕਰਨਾ ਅਰੰਭ ਕੀਤਾ ਗਿਆ।</string>
+    <string name="dragndroplist_drag_move">ਹੁਣ %d ਸਥਿਤੀ ਤੇ</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d ਸਥਾਨ ਤੇ ਆਈਟਮ ਡ੍ਰੈਗ ਨਹੀਂ ਹੋ ਸਕਦੀ ਹੈ।</string>
+</resources>

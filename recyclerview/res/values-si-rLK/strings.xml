@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">පිහිටීම %d තුළට අයිතමය අදින ලදී.</string>
+    <string name="dragndroplist_drag_start">පිහිටීම් %d අසල අයිතමය ඇදීම අරඹන ලදී.</string>
+    <string name="dragndroplist_drag_move">දැන් %d පිහිටුමේ ඇත</string>
+    <string name="dragndroplist_item_cannot_be_dragged">පිහිටීම් %d අයිතමය ඇදිය නොහැක.</string>
+</resources>

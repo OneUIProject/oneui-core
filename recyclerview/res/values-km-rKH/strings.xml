@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">បាន​ទម្លាក់​ធាតុ​ទៅក្នុង​ទីតាំង %d។</string>
+    <string name="dragndroplist_drag_start">បាន​ចាប់ផ្ដើម​អូស​ធាតុ​នៅ​ទីតាំង %d។</string>
+    <string name="dragndroplist_drag_move">ឥឡូវ​នៅ​ទីតាំង %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">ធាតុ​នៅ​ទីតាំង %d មិន​អាច​អូស​បាន​ទេ។</string>
+</resources>

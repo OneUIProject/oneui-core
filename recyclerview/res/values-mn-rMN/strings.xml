@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Зүйлийг байршил %d-д тавьсан.</string>
+    <string name="dragndroplist_drag_start">Зүйлийг байршил %d-д чирж эхэллээ.</string>
+    <string name="dragndroplist_drag_move">Одоо %d байрлалд</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Байршил %d дахь зүйлийг чирэх боломжгүй.</string>
+</resources>

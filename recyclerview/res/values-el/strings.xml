@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Έγινε απόθεση του στοιχείου στη θέση %d.</string>
+    <string name="dragndroplist_drag_start">Ξεκίνησε η μεταφορά του στοιχείου στη θέση %d.</string>
+    <string name="dragndroplist_drag_move">Τώρα στη θέση %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Δεν είναι δυνατή η μεταφορά του στοιχείου στη θέση %d.</string>
+</resources>

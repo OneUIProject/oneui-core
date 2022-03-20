@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Mír scaoilte isteach i suí %d.</string>
+    <string name="dragndroplist_drag_start">Tarraingt míre tosaithe ag suí %d.</string>
+    <string name="dragndroplist_drag_move">Ag suíomh %d anois</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Ní féidir mír i suí %d a tharraingt.</string>
+</resources>

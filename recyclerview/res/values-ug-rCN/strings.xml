@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">بۇيۇم %d ئورۇنغا تاشلاندى.</string>
+    <string name="dragndroplist_drag_start">%d ئورۇندىكى بۇيۇمنى سۆرەشكە باشلىدى.</string>
+    <string name="dragndroplist_drag_move">现在位于位置 %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d ئورۇندىكى بۇيۇمنى سۆرىگىلى بولمايدۇ.</string>
+</resources>

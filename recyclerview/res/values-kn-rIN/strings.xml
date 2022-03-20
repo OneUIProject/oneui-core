@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">ಅಂಶವನ್ನು %d ಸ್ಥಾನಕ್ಕೆ ಡ್ರಾಪ್ ಮಾಡಲಾಗಿದೆ.</string>
+    <string name="dragndroplist_drag_start">ಅಂಶವನ್ನು %d ಸ್ಥಾನದಲ್ಲಿ ಡ್ರ್ಯಾಗ್ ಮಾಡುವುದಕ್ಕೆ ಆರಂಭಿಸಲಾಗಿದೆ.</string>
+    <string name="dragndroplist_drag_move">ಇದೀಗ %d ಸ್ಥಾನದಲ್ಲಿದೆ</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d ಸ್ಥಾನದಲ್ಲಿರುವ ಅಂಶವನ್ನು ಡ್ರ್ಯಾಗ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ.</string>
+</resources>

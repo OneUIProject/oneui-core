@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">ელემენტი გადასულია პოზიცია %d-ში.</string>
+    <string name="dragndroplist_drag_start">დაწყებულია ელემენტის გადატანა პოზიცია %d-ში.</string>
+    <string name="dragndroplist_drag_move">ახლა მისი პოზიციაა %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">პოზიცია %d-ში მყოფი ელემენტის გადატანა შეუძლებელია.</string>
+</resources>

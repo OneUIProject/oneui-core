@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Item neergezet op positie %d.</string>
+    <string name="dragndroplist_drag_start">Begonnen met item naar positie %d slepen.</string>
+    <string name="dragndroplist_drag_move">Nu op positie %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Item op positie %d kan niet worden gesleept.</string>
+</resources>

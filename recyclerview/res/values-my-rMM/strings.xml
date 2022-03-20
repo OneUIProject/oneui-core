@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">%d တည်နေရာ အတွင်းသို့ ဆွဲယူထည့်ထားသော အရာ။</string>
+    <string name="dragndroplist_drag_start">%d တည်နေရာမှာ အရာပစ္စည်းအား ဆွဲယူခြင်းကို စတင်ခဲ့ပြီးပြီ။</string>
+    <string name="dragndroplist_drag_move">ယခု အနေအထား %d တွင်ရှိသည်</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d တည်နေရာတွင် ရှိနေသော အရာများကို ဆွဲယူလို့ မရပါ။</string>
+</resources>

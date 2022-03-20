@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Objekts nomests %d. pozīcijā.</string>
+    <string name="dragndroplist_drag_start">Sākta objekta vilkšana uz %d. pozīciju.</string>
+    <string name="dragndroplist_drag_move">Tagad pozīcijā %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Objektu, kas atrodas %d. pozīcijā, nevar vilkt.</string>
+</resources>

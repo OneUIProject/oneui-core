@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">مورد در وضعیت ‎%d رها شد.</string>
+    <string name="dragndroplist_drag_start">مورد به وضعیت ‎%d کشیده می‌شود.</string>
+    <string name="dragndroplist_drag_move">اکنون در وضعیت %d است</string>
+    <string name="dragndroplist_item_cannot_be_dragged">کشیدن موردی که در وضعیت ‎%d قرار دارد ممکن نیست.</string>
+</resources>

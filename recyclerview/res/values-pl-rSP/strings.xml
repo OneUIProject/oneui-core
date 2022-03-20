@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Ôstawiŏnŏ elemynt w położyniu %d.</string>
+    <string name="dragndroplist_drag_start">Zaczyntŏ przeciōnganie elemyntu kery je w położyniu %d.</string>
+    <string name="dragndroplist_drag_move">Teraz na pozycji %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Niy idzie przeciōngnōnć elemyntu kery je w położyniu %d.</string>
+</resources>

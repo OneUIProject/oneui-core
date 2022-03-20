@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Element %d mövqeyinə gətirilmişdir.</string>
+    <string name="dragndroplist_drag_start">%d mövqeyindəki elementi dartmağa başlayır.</string>
+    <string name="dragndroplist_drag_move">İndi %d mövqeyindədir</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d mövqedəki element dartıla bilməz.</string>
+</resources>

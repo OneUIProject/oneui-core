@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">آئٹم کو پوزیشن %d پر ڈالا گیا۔</string>
+    <string name="dragndroplist_drag_start">پوزیشن %d سے کارڈ کو گھسیٹنا شروع کیا۔</string>
+    <string name="dragndroplist_drag_move">اب %d پوزیشن پر ہے</string>
+    <string name="dragndroplist_item_cannot_be_dragged">آئٹم پوزیشن %d کو گھسیٹا نہیں جاسکتا۔</string>
+</resources>

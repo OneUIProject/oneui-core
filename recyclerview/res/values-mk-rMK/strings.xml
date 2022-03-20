@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Ставката е одвлечена на положба %d.</string>
+    <string name="dragndroplist_drag_start">Почна да се влече ставката на положба %d.</string>
+    <string name="dragndroplist_drag_move">Сега го положбата %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Ставката на положба %d не може да се одвлече.</string>
+</resources>

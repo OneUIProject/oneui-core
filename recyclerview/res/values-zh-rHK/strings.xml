@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">項目已拖放至位置 %d。</string>
+    <string name="dragndroplist_drag_start">已開始拖曳位於 %d 的項目。</string>
+    <string name="dragndroplist_drag_move">目前位置為 %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">無法拖曳位於 %d 的項目。</string>
+</resources>

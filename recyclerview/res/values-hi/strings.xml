@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">मद को स्थान %d पर ड्रॉप किया गया।</string>
+    <string name="dragndroplist_drag_start">स्थान %d पर स्थित मद को ड्रैग करना प्रारंभ किया गया।</string>
+    <string name="dragndroplist_drag_move">अब %d स्थिति पर है</string>
+    <string name="dragndroplist_item_cannot_be_dragged">स्थान %d पर स्थित मद को ड्रैग नहीं किया जा सकता।</string>
+</resources>

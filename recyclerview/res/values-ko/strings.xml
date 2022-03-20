@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">항목을 %d번 위치로 이동했습니다.</string>
+    <string name="dragndroplist_drag_start">%d 위치에 있는 항목을 이동하기 시작했습니다.</string>
+    <string name="dragndroplist_drag_move">현재 %d번째에 있음</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d번 위치에 있는 항목은 이동할 수 없습니다.</string>
+</resources>

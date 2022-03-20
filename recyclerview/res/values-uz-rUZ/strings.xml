@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Element %d holatga olib borib qo‘yildi.</string>
+    <string name="dragndroplist_drag_start">Elementni %d holatiga tortib o‘tkazish boshlandi.</string>
+    <string name="dragndroplist_drag_move">Hozir %d holatda</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d holatidagi elementni tortib o‘tkazib bo‘lmaydi.</string>
+</resources>

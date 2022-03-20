@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">ଆଇଟମକୁ ସ୍ଥିତି %dରେ ଡ୍ରପ୍ କରାଯାଇଛି।</string>
+    <string name="dragndroplist_drag_start">ସ୍ଥିତି %dରୁ ଆଇଟମ୍ ଡ୍ରାଗ୍ କରିବା ଆରମ୍ଭ ହୋଇଛି।</string>
+    <string name="dragndroplist_drag_move">ବର୍ତ୍ତମାନ %d ସ୍ଥିତିରେ</string>
+    <string name="dragndroplist_item_cannot_be_dragged">ସ୍ଥିତି %dରେ ରହିଥିବା ଆଇଟମ୍ ଡ୍ରାଗ୍ କରାଯାଇ ପାରିବ ନାହିଁ।</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Üksus on lohistatud asukohta %d.</string>
+    <string name="dragndroplist_drag_start">Alustati üksuse lohistamist asukohas %d.</string>
+    <string name="dragndroplist_drag_move">Nüüd kohas %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Üksust asukohas %d ei saa lohistada.</string>
+</resources>

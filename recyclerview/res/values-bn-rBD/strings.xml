@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">%d অবস্থানে আইটেম ছাড়া হয়েছে।</string>
+    <string name="dragndroplist_drag_start">%d অবস্থানে আইটেম টানা শুরু হয়েছে।</string>
+    <string name="dragndroplist_drag_move">এখন অবস্থান %d-তে আছে</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d অবস্থানের আইটেম টেনে আনা যাবে না।</string>
+</resources>

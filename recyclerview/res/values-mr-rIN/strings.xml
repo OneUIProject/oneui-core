@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">%d जागेवर आयटेम्स ड्रॉप केले.</string>
+    <string name="dragndroplist_drag_start">%d जागेवर आयटेम ड्रॅग करणे सुरू करा.</string>
+    <string name="dragndroplist_drag_move">आता स्थिती %d वर</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d जागेवरील आयटेम्स ड्रॅग केले जाऊ शकत नाहीत.</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Kohde pudotettu sijaintiin %d.</string>
+    <string name="dragndroplist_drag_start">Sijainnissa %d olevan kohteen vetäminen on aloitettu.</string>
+    <string name="dragndroplist_drag_move">Nyt sijainnissa %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Sijainnissa %d olevaa kohdetta ei voi vetää.</string>
+</resources>

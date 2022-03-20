@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Объект ба навбати%d партофта шуд.</string>
+    <string name="dragndroplist_drag_start">Объект дар навбати %d кашонида мешавад.</string>
+    <string name="dragndroplist_drag_move">Ҳоло дар мавқеи %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Объект дар навбати %d кашонида шуда наметавонад.</string>
+</resources>

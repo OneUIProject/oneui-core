@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">アイテムをポジション%dにドロップしました。</string>
+    <string name="dragndroplist_drag_start">ポジション%dのアイテムのドラッグを開始しました。</string>
+    <string name="dragndroplist_drag_move">現在の位置%d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">ポジション%dのアイテムをドラッグすることはできません。</string>
+</resources>

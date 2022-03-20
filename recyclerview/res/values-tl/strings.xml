@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Na-drop ang item sa posisyon %d.</string>
+    <string name="dragndroplist_drag_start">Sinimulan ang pag-drag ng item sa posisyon %d.</string>
+    <string name="dragndroplist_drag_move">Nasa posisyon na %d ngayon</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Hindi mada-drag ang item sa posisyon %d.</string>
+</resources>

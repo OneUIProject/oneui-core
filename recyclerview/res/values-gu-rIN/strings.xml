@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">વસ્તુને %d સ્થાન પર મૂકી છે.</string>
+    <string name="dragndroplist_drag_start">વસ્તુને %d સ્થાન પર ખેંચવાનું પ્રારંભ કર્યુ.</string>
+    <string name="dragndroplist_drag_move">હવે સ્થાન %d પર છે</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d સ્થાન પરની વસ્તુને ખેંચી શકાતી નથી.</string>
+</resources>

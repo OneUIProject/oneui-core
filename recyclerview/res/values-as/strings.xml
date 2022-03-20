@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">অৱস্থান %d-ত আইটেম ৰখা হৈছে৷</string>
+    <string name="dragndroplist_drag_start">অৱস্থান %d-ত আইটেম টানি অনা আৰম্ভ কৰিছে৷</string>
+    <string name="dragndroplist_drag_move">এতিয়া স্থান %d-ত আছে</string>
+    <string name="dragndroplist_item_cannot_be_dragged">অৱস্থান %d-ৰ থকা আইটেম টানি আনিব নোৱাৰে৷</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">วางรายการลงในตำแหน่ง %d แล้ว</string>
+    <string name="dragndroplist_drag_start">เริ่มลากรายการที่ตำแหน่ง %d</string>
+    <string name="dragndroplist_drag_move">อยู่ที่ตำแหน่ง %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">ไม่สามารถลากรายการที่ตำแหน่ง %d ได้</string>
+</resources>

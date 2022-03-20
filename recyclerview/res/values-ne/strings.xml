@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">वस्तुलाई %d मा झारिएको छ।</string>
+    <string name="dragndroplist_drag_start">वस्तुलाई स्थिति %d मा तान्न सुरू गरिएको छ।</string>
+    <string name="dragndroplist_drag_move">अहिले %d स्थानमा छ</string>
+    <string name="dragndroplist_item_cannot_be_dragged">स्थिति %d मा रहेको वस्तुलाई तान्न सकिँदैन।</string>
+</resources>

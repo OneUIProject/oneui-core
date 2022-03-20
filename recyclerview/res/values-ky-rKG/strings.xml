@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Нерсе %d турагына ташталды.</string>
+    <string name="dragndroplist_drag_start">Нерсе сүйрөөнү %d турагынан баштоо.</string>
+    <string name="dragndroplist_drag_move">Эми %d абалында</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d туракты алган нерсени сүйрөөгө болбойт.</string>
+</resources>

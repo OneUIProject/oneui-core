@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">உருப்படியானது %d நிலையில் ட்ராப் செய்யப்பட்டது.</string>
+    <string name="dragndroplist_drag_start">%d நிலையில் உருப்படியை ட்ராக் செய்ய துவங்கியது.</string>
+    <string name="dragndroplist_drag_move">இப்போது %d-இல் நிலைப்படுத்தவும்</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d நிலையிலுள்ள உருப்படியை ட்ராக் செய்ய .</string>
+</resources>

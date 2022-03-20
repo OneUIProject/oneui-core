@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">ഇനത്തെ സ്ഥാനം %d-ലേക്ക് ഇട്ടു.</string>
+    <string name="dragndroplist_drag_start">സ്ഥാനം %d-ലെ ഇനത്തെ ഇഴയ്ക്കാനാരംഭിച്ചു.</string>
+    <string name="dragndroplist_drag_move">ഇപ്പോൾ %d സ്ഥാനത്ത്</string>
+    <string name="dragndroplist_item_cannot_be_dragged">സ്ഥാനം %d-ലെ ഇനത്തെ ഇഴയ്ക്കാനാവില്ല.</string>
+</resources>

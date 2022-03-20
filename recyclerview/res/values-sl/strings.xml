@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Element je spuščen na položaj %d.</string>
+    <string name="dragndroplist_drag_start">Element ste začeli vleči na položaj %d.</string>
+    <string name="dragndroplist_drag_move">Zdaj na položaju %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Elementa na položaju %d ni mogoče vleči.</string>
+</resources>

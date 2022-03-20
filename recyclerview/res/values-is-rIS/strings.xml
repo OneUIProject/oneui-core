@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Atriði sleppt í stöðu %d.</string>
+    <string name="dragndroplist_drag_start">Byrjaði að draga atriði í stöðu %d.</string>
+    <string name="dragndroplist_drag_move">Nú í stöðunni %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Ekki er hægt að draga atriði í stöðu %d.</string>
+</resources>

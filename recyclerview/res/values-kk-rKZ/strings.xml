@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Элемент %d күйіне сүйреп апарылды.</string>
+    <string name="dragndroplist_drag_start">%d күйіндегі элементті сүйреу басталды.</string>
+    <string name="dragndroplist_drag_move">Қазір %d орнында</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d күйіндегі элементті сүйреу мүмкін емес.</string>
+</resources>

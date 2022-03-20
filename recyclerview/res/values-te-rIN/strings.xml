@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">అంశం %d స్థానంలో పడిపోయింది.</string>
+    <string name="dragndroplist_drag_start">%d స్థానంలోని ఐటెమ్ లాగడం ప్రారంభించారు.</string>
+    <string name="dragndroplist_drag_move">ఇప్పుడు స్థితి %dలో ఉన్నారు</string>
+    <string name="dragndroplist_item_cannot_be_dragged">%d స్థానంలోని అంశాన్ని లాగలేరు.</string>
+</resources>

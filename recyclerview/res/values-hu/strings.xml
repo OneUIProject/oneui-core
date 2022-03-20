@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Tétel a %d. helyre húzva.</string>
+    <string name="dragndroplist_drag_start">%d. helyen található tétel húzása megkezdve.</string>
+    <string name="dragndroplist_drag_move">Jelenlegi helye: %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">A %d. helyen található tétel nem húzható át.</string>
+</resources>

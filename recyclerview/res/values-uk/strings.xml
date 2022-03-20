@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="dragndroplist_drag_release">Об’єкт перетягнуто в положення %d.</string>
+    <string name="dragndroplist_drag_start">Розпочато перетягування об’єкта в положення %d.</string>
+    <string name="dragndroplist_drag_move">Переміщено в положення %d</string>
+    <string name="dragndroplist_item_cannot_be_dragged">Об’єкт у положенні %d не можна перетягнути.</string>
+</resources>

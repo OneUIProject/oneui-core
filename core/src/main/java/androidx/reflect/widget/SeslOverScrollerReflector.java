@@ -41,7 +41,7 @@ public class SeslOverScrollerReflector {
     /**
      * Calls {@link OverScroller#fling(int, int, int, int, int, int, int, int)}.
      */
-    public void fling(@NonNull OverScroller overScroller, int startX, int startY, int velocityX, int velocityY, int minX, int maxX, int minY, int maxY, boolean isSkipMove, float frameLatencyY) {
+    public static void fling(@NonNull OverScroller overScroller, int startX, int startY, int velocityX, int velocityY, int minX, int maxX, int minY, int maxY, boolean isSkipMove, float frameLatencyY) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_fling", Integer.TYPE, Integer.TYPE, Boolean.TYPE, Float.TYPE);
             if (method != null) {

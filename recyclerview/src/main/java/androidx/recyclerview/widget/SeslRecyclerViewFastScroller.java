@@ -370,8 +370,7 @@ class SeslRecyclerViewFastScroller {
 
     private void updateAppearance() {
         TypedValue outValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary,
-                outValue, true);
+        mContext.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
 
         mColorPrimary = getColorWithAlpha(mContext.getResources().getColor(outValue.resourceId), 0.9f);
 
@@ -1327,99 +1326,130 @@ class SeslRecyclerViewFastScroller {
      * @param totalItemCount Total number of items, >= 0.
      * @return
      */
-    // TODO rework this method
-    // kang
     private float getPosFromItemCount(
             int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int paddingTop = 0;
-        float f;
-        float f2;
-        float f3;
-        int i4;
-        int i5;
-        int i6;
-        int i7;
-        Object[] objArr;
-        if (this.mSectionIndexer == null || this.mListAdapter == null) {
+        final SectionIndexer sectionIndexer = mSectionIndexer;
+        if (sectionIndexer == null || mListAdapter == null) {
             getSectionsFromIndexer();
         }
-        float f4 = 0.0f;
+
         if (visibleItemCount == 0 || totalItemCount == 0) {
-            return 0.0f;
+            // No items are visible.
+            return 0;
         }
-        SectionIndexer sectionIndexer = this.mSectionIndexer;
-        if (this.mRecyclerView.getPaddingTop() > 0 && (this.mRecyclerView.mLayout instanceof LinearLayoutManager)) {
-            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mRecyclerView.mLayout;
-            while (firstVisibleItem > 0) {
-                int i8 = firstVisibleItem - 1;
-                if (linearLayoutManager.findViewByPosition(i8) == null) {
-                    break;
+
+        if (mRecyclerView.getPaddingTop() > 0) {
+            RecyclerView.LayoutManager layoutManager = mRecyclerView.mLayout;
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager llm = (LinearLayoutManager) layoutManager;
+                while (firstVisibleItem > 0) {
+                    final int previousVisibleItem = firstVisibleItem - 1;
+                    if (llm.findViewByPosition(previousVisibleItem) == null) {
+                        break;
+                    }
+                    firstVisibleItem = previousVisibleItem;
                 }
-                firstVisibleItem = i8;
             }
         }
-        boolean z = false;
-        View childAt = this.mRecyclerView.getChildAt(0);
-        if (childAt == null || childAt.getHeight() == 0) {
-            f = 0.0f;
+
+        // Hidden portion of the first visible row.
+        final View child = mRecyclerView.getChildAt(0);
+        final float incrementalPos;
+        if (child == null || child.getHeight() == 0) {
+            incrementalPos = 0;
         } else if (firstVisibleItem == 0) {
-            f = (paddingTop - childAt.getTop()) / (childAt.getHeight() + paddingTop);
+            incrementalPos = (float) (mRecyclerView.getPaddingTop() - child.getTop()) / (child.getHeight() + mRecyclerView.getPaddingTop());
         } else {
-            f = (-childAt.getTop()) / childAt.getHeight();
+            incrementalPos = (float) (-child.getTop()) / child.getHeight();
         }
-        if (!(sectionIndexer == null || (objArr = this.mSections) == null || objArr.length <= 0)) {
-            z = true;
-        }
-        if (!z || !this.mMatchDragPosition) {
+
+        final int section;
+        final float posWithinSection;
+        final int sectionCount;
+
+        final boolean hasSections = sectionIndexer != null && mSections != null
+                && mSections.length > 0;
+        if (!hasSections || !mMatchDragPosition) {
             if (visibleItemCount == totalItemCount) {
-                return (!(this.mRecyclerView.mLayout instanceof StaggeredGridLayoutManager)
-                        || firstVisibleItem == 0
-                        || childAt == null
-                        || !((StaggeredGridLayoutManager.LayoutParams) childAt.getLayoutParams()).isFullSpan()) ? 0.0f : 1.0f;
-            }
-            if (this.mRecyclerView.mLayout instanceof GridLayoutManager) {
-                i6 = ((GridLayoutManager) this.mRecyclerView.mLayout).getSpanCount()
-                        / ((GridLayoutManager) this.mRecyclerView.mLayout).getSpanSizeLookup().getSpanSize(firstVisibleItem);
+                // All items are visible.
+                if (mRecyclerView.mLayout instanceof StaggeredGridLayoutManager) {
+                    StaggeredGridLayoutManager.LayoutParams lp
+                            = (StaggeredGridLayoutManager.LayoutParams) child.getLayoutParams();
+                    if (firstVisibleItem != 0 && child != null && lp.isFullSpan()) {
+                        return 1;
+                    }
+                }
+                return 0;
             } else {
-                i6 = this.mRecyclerView.mLayout instanceof StaggeredGridLayoutManager
-                        ? ((StaggeredGridLayoutManager) this.mRecyclerView.mLayout).getSpanCount() : 1;
+                int span = 1;
+
+                if (mRecyclerView.mLayout instanceof GridLayoutManager) {
+                    GridLayoutManager glm = (GridLayoutManager) mRecyclerView.mLayout;
+                    span = glm.getSpanCount() / glm.getSpanSizeLookup().getSpanSize(firstVisibleItem);
+                } else if (mRecyclerView.mLayout instanceof StaggeredGridLayoutManager) {
+                    StaggeredGridLayoutManager sglm = (StaggeredGridLayoutManager) mRecyclerView.mLayout;
+                    span = sglm.getSpanCount();
+                }
+
+                section = firstVisibleItem;
+                posWithinSection = incrementalPos * span;
+                sectionCount = totalItemCount;
             }
-            f2 = firstVisibleItem + (f * i6);
-            f3 = totalItemCount;
-        } else if (firstVisibleItem < 0) {
-            return 0.0f;
         } else {
-            int sectionForPosition = sectionIndexer.getSectionForPosition(firstVisibleItem);
-            int positionForSection = sectionIndexer.getPositionForSection(sectionForPosition);
-            int length = this.mSections.length;
-            if (sectionForPosition < length - 1) {
-                int i9 = sectionForPosition + 1;
-                i7 = (i9 < length ? sectionIndexer.getPositionForSection(i9) : totalItemCount - 1) - positionForSection;
+            if (firstVisibleItem < 0) {
+                return 0;
+            }
+
+            // Number of rows in this section.
+            section = sectionIndexer.getSectionForPosition(firstVisibleItem);
+            final int sectionPos = sectionIndexer.getPositionForSection(section);
+            sectionCount = mSections.length;
+            final int positionsInSection;
+            if (section < sectionCount - 1) {
+                final int nextSectionPos;
+                if (section + 1 < sectionCount) {
+                    nextSectionPos = sectionIndexer.getPositionForSection(section + 1);
+                } else {
+                    nextSectionPos = totalItemCount - 1;
+                }
+                positionsInSection = nextSectionPos - sectionPos;
             } else {
-                i7 = totalItemCount - positionForSection;
+                positionsInSection = totalItemCount - sectionPos;
             }
-            if (i7 != 0) {
-                f4 = ((firstVisibleItem + f) - positionForSection) / i7;
+
+            // Position within this section.
+            if (positionsInSection == 0) {
+                posWithinSection = 0;
+            } else {
+                posWithinSection = (firstVisibleItem + incrementalPos - sectionPos)
+                        / positionsInSection;
             }
-            f2 = sectionForPosition + f4;
-            f3 = length;
         }
-        float f5 = f2 / f3;
-        if (firstVisibleItem <= 0 || firstVisibleItem + visibleItemCount != totalItemCount) {
-            return f5;
+
+        float result = (section + posWithinSection) / sectionCount;
+
+        // Fake out the scroll bar for the last item. Since the section indexer
+        // won't ever actually move the list in this end space, make scrolling
+        // across the last item account for whatever space is remaining.
+        if (firstVisibleItem > 0 && firstVisibleItem + visibleItemCount == totalItemCount) {
+            final View lastChild = mRecyclerView.getChildAt(visibleItemCount - 1);
+            final int bottomPadding = mRecyclerView.getPaddingBottom();
+            final int maxSize;
+            final int currentVisibleSize;
+            if (mRecyclerView.getClipToPadding()) {
+                maxSize = lastChild.getHeight();
+                currentVisibleSize = mRecyclerView.getHeight() - bottomPadding - lastChild.getTop();
+            } else {
+                maxSize = lastChild.getHeight() + bottomPadding;
+                currentVisibleSize = mRecyclerView.getHeight() - lastChild.getTop();
+            }
+            if (currentVisibleSize > 0 && maxSize > 0) {
+                result += (1 - result) * ((float) currentVisibleSize / maxSize );
+            }
         }
-        View childAt2 = this.mRecyclerView.getChildAt(visibleItemCount - 1);
-        int paddingBottom = this.mRecyclerView.getPaddingBottom();
-        if (this.mRecyclerView.getClipToPadding()) {
-            i4 = childAt2.getHeight();
-            i5 = (this.mRecyclerView.getHeight() - paddingBottom) - childAt2.getTop();
-        } else {
-            i4 = childAt2.getHeight() + paddingBottom;
-            i5 = this.mRecyclerView.getHeight() - childAt2.getTop();
-        }
-        return (i5 <= 0 || i4 <= 0) ? f5 : f5 + ((1.0f - f5) * (i5 / i4));
+
+        return result;
     }
-    // kang
 
     /**
      * Cancels an ongoing fling event by injecting a

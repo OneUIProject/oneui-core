@@ -88,6 +88,8 @@
 
     <color name="sesl_error_color">#ffdb332a</color>
 
+    <color name="sesl_fast_scrollbar_bg_color">#e64d4d4d</color>
+
     <color name="sesl_functional_green_dark">#ff5ad69e</color>
     <color name="sesl_functional_green_light">#ff14a866</color>
     <color name="sesl_functional_orange_dark">#fff6874f</color>
@@ -169,6 +171,8 @@
 
     <color name="sesl_scrollbar_handle_tint_color_dark">#ff595959</color>
     <color name="sesl_scrollbar_handle_tint_color_light">#ffdedede</color>
+
+    <color name="sesl_scrollbar_index_tip_color">#ff4d4d4d</color>
 
     <color name="sesl_search_result_subtitle_text_color">#99252525</color>
     <color name="sesl_search_result_title_text_color">@color/sesl_black</color>

@@ -15,12 +15,9 @@
   ~ limitations under the License.
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
-
 <resources>
 
-    <color name="sesl_design_snackbar_action_text_color">#ff3e91ff</color>
-    <color name="sesl_design_snackbar_text_color">#fffafafa</color>
-
-    <color name="sesl_snackbar_action_ripple_color">#4d000000</color>
+    <color name="sesl_extended_appbar_subtitle_dark">#ffa9a9a9</color>
+    <color name="sesl_extended_appbar_subtitle_light">#ff636363</color>
 
 </resources>

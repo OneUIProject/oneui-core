@@ -13,14 +13,16 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
--->
+  -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-<resources>
+    <item
+        android:state_enabled="false"
+        android:alpha="@dimen/sesl_bottom_navigation_disabled_color_alpha"
+        android:color="@color/sesl_navigation_bar_text_dark" />
 
-    <color name="sesl_design_snackbar_action_text_color">#ff3e91ff</color>
-    <color name="sesl_design_snackbar_text_color">#fffafafa</color>
+    <item
+        android:color="@color/sesl_navigation_bar_text_dark" />
 
-    <color name="sesl_snackbar_action_ripple_color">#4d000000</color>
-
-</resources>
+</selector>

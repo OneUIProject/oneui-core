@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2018 The Android Open Source Project
+  ~ Copyright 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <!-- Color for the text field's disabled state: 12% black -->
@@ -24,7 +25,7 @@
   <color name="mtrl_textinput_hovered_box_stroke_color">#DE000000</color>
   <!-- Color for the text field's focused box stroke: transparent -->
   <color name="mtrl_textinput_focused_box_stroke_color">#00000000</color>
-  <!-- Color for the text field's default box background: 4% black -->
-  <color name="mtrl_textinput_filled_box_default_background_color">#0A000000</color>
+
+  <color name="sesl_text_input_layout_hint_text_color">#ff8c8c8c</color>
 
 </resources>

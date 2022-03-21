@@ -13,14 +13,33 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
--->
+  -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-<resources>
+    <item
+        android:state_pressed="true"
+        android:alpha="0.16"
+        android:color="?attr/colorOnPrimary"/>
 
-    <color name="sesl_design_snackbar_action_text_color">#ff3e91ff</color>
-    <color name="sesl_design_snackbar_text_color">#fffafafa</color>
+    <item
+        android:state_focused="true"
+        android:state_hovered="true"
+        android:alpha="0.32"
+        android:color="?attr/colorOnPrimary"/>
 
-    <color name="sesl_snackbar_action_ripple_color">#4d000000</color>
+    <item
+        android:state_focused="true"
+        android:alpha="0.24"
+        android:color="?attr/colorOnPrimary"/>
 
-</resources>
+    <item
+        android:state_hovered="true"
+        android:alpha="0.08"
+        android:color="?attr/colorOnPrimary"/>
+
+    <item
+        android:alpha="0.0"
+        android:color="?attr/colorOnPrimary" />
+
+</selector>

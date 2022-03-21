@@ -41,8 +41,4 @@
     <dimen name="sesl_index_tip_padding">14dp</dimen>
     <dimen name="sesl_index_tip_radius">15dp</dimen>
     <dimen name="sesl_index_tip_text_size">13sp</dimen>
-
-    <dimen name="sesl_go_to_top_elevation">8dp</dimen>
-    <dimen name="sesl_go_to_top_scrollable_view_size">40dp</dimen>
-    <dimen name="sesl_go_to_top_scrollable_view_gap">20dp</dimen>
 </resources>

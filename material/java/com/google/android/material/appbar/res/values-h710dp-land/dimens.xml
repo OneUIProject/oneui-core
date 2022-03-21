@@ -16,22 +16,5 @@
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
-
-  <item type="dimen" name="sesl_appbar_height_proportion">0.0</item>
-
-  <dimen name="sesl_appbar_elevation">0.0dip</dimen>
-
-  <dimen name="sesl_appbar_extended_title_text_view_height">105.0dip</dimen>
-
-  <dimen name="sesl_appbar_extended_title_text_size">34.0sp</dimen>
-  <dimen name="sesl_appbar_extended_title_text_size_with_subtitle">34.0dip</dimen>
-
-  <dimen name="sesl_appbar_extended_title_padding">24.0dip</dimen>
-
-  <dimen name="sesl_appbar_extended_subtitle_text_size">15.0dip</dimen>
-
-  <dimen name="sesl_extended_appbar_bottom_padding">0.0dip</dimen>
-
-  <item type="dimen" name="sesl_immersive_height_proportion">0.0</item>
-
+    <item type="dimen" name="sesl_appbar_height_proportion">0.36</item>
 </resources>

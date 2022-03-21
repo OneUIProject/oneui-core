@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <dimen name="design_snackbar_min_width">-1px</dimen>
@@ -31,7 +32,7 @@
        the Snackbar will change to vertical stacking -->
   <dimen name="design_snackbar_action_inline_max_width">128dp</dimen>
 
-  <dimen name="design_snackbar_text_size">14sp</dimen>
+  <dimen name="design_snackbar_text_size">16sp</dimen>
 
   <dimen name="design_snackbar_padding_vertical">14dp</dimen>
   <dimen name="design_snackbar_padding_vertical_2lines">16dp</dimen>
@@ -42,5 +43,18 @@
   <dimen name="mtrl_snackbar_margin">8dp</dimen>
   <item name="mtrl_snackbar_background_overlay_color_alpha" format="float" type="dimen">0.8</item>
   <item name="mtrl_snackbar_action_text_color_alpha" format="float" type="dimen">0.5</item>
+
+  <item type="dimen" name="sesl_config_prefSnackWidth">84.0%</item>
+
+  <dimen name="sesl_design_snackbar_action_padding_left">20.0dip</dimen>
+  <dimen name="sesl_design_snackbar_action_padding_right">20.0dip</dimen>
+  <dimen name="sesl_design_snackbar_action_padding_top">2.0dip</dimen>
+  <dimen name="sesl_design_snackbar_action_text_size">18.0sp</dimen>
+
+  <dimen name="sesl_design_snackbar_layout_padding_bottom">55.0dip</dimen>
+  <dimen name="sesl_design_snackbar_layout_sip_padding_bottom">3.0dip</dimen>
+
+  <dimen name="sesl_design_snackbar_text_padding_left">20.0dip</dimen>
+  <dimen name="sesl_design_snackbar_text_padding_right">20.0dip</dimen>
 
 </resources>

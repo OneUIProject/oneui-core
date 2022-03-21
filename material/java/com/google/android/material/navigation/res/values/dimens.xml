@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2018 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <dimen name="mtrl_navigation_bar_item_default_margin">8dp</dimen>
@@ -31,4 +32,45 @@
   <dimen name="mtrl_navigation_item_horizontal_padding">22dp</dimen>
   <dimen name="mtrl_navigation_item_shape_horizontal_margin">8dp</dimen>
   <dimen name="mtrl_navigation_item_shape_vertical_margin">4dp</dimen>
+
+  <dimen name="sesl_navigation_bar_N_badge_start_margin">3.0dip</dimen>
+  <dimen name="sesl_navigation_bar_N_badge_top_margin">6.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_active_item_max_width">810.0dip</dimen>
+  <dimen name="sesl_navigation_bar_active_item_min_width">96.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_baseline_margin_top">30.0dip</dimen>
+
+  <item type="dimen" name="sesl_navigation_bar_disabled_color_alpha">0.4</item>
+
+  <dimen name="sesl_navigation_bar_dot_badge_size">6.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_elevation">0.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_icon_inset">5.0dip</dimen>
+  <dimen name="sesl_navigation_bar_icon_mode_height">60.0dip</dimen>
+  <dimen name="sesl_navigation_bar_icon_mode_min_padding_horizontal">2.5dip</dimen>
+  <dimen name="sesl_navigation_bar_icon_mode_padding_horizontal">5.0dip</dimen>
+  <dimen name="sesl_navigation_bar_icon_mode_text_size">12.0sp</dimen>
+  <dimen name="sesl_navigation_bar_icon_size">24.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_item_min_width">56.0dip</dimen>
+  <dimen name="sesl_navigation_bar_item_max_width">96.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_label_padding_bottom">1.0dip</dimen>
+  <dimen name="sesl_navigation_bar_label_padding_horizontal">6.0dip</dimen>
+  <dimen name="sesl_navigation_bar_label_padding_vertical">4.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_margin">8.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_shadow_height">0.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_show_button_shapes_inset_vertical">2.0dip</dimen>
+  <dimen name="sesl_navigation_bar_show_button_shapes_padding_horizontal">11.0dip</dimen>
+
+  <dimen name="sesl_navigation_bar_text_mode_height">56.0dip</dimen>
+  <dimen name="sesl_navigation_bar_text_mode_padding_horizontal">24.0dip</dimen>
+  <dimen name="sesl_navigation_bar_text_mode_text_size">18.0sp</dimen>
+
+  <item type="dimen" name="sesl_navigation_bar_width_proportion">1.0</item>
 </resources>

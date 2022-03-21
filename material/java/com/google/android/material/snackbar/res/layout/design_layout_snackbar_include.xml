@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2015 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,40 +14,51 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <view
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/snackbar_layout"
     class="com.google.android.material.snackbar.SnackbarContentLayout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:minHeight="44dp"
+    android:layout_marginBottom="@dimen/sesl_design_snackbar_layout_padding_bottom"
+    android:layout_gravity="bottom|center"
+    android:orientation="horizontal"
+    android:background="@drawable/sem_snackbar_frame_mtrl">
 
   <TextView
       android:id="@+id/snackbar_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:layout_gravity="center_vertical|left|start"
-      android:paddingTop="@dimen/design_snackbar_padding_vertical"
-      android:paddingBottom="@dimen/design_snackbar_padding_vertical"
-      android:paddingLeft="@dimen/design_snackbar_padding_horizontal"
-      android:paddingRight="@dimen/design_snackbar_padding_horizontal"
-      android:ellipsize="end"
-      android:maxLines="@integer/design_snackbar_text_max_lines"
+      android:minHeight="17dp"
+      android:layout_gravity="start|center"
+      android:gravity="center_vertical"
+      android:paddingStart="@dimen/sesl_design_snackbar_text_padding_left"
+      android:paddingEnd="@dimen/sesl_design_snackbar_text_padding_right"
       android:textAlignment="viewStart"
-      android:textAppearance="@style/TextAppearance.Design.Snackbar.Message"/>
+      android:textAppearance="@android:style/TextAppearance.Small"
+      android:textSize="@dimen/design_snackbar_text_size"
+      android:textColor="@color/sesl_design_snackbar_text_color"
+      android:fontFamily="sec-roboto-light"/>
 
   <Button
       android:id="@+id/snackbar_action"
-      style="?attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/design_snackbar_extra_spacing_horizontal"
-      android:layout_marginLeft="@dimen/design_snackbar_extra_spacing_horizontal"
-      android:layout_gravity="center_vertical|right|end"
-      android:minWidth="48dp"
-      android:textColor="?attr/colorAccent"
+      android:layout_height="match_parent"
+      android:minHeight="44dp"
+      android:paddingLeft="@dimen/sesl_design_snackbar_action_padding_left"
+      android:paddingRight="@dimen/sesl_design_snackbar_action_padding_right"
+      android:layout_gravity="end|center"
+      android:gravity="center"
+      android:background="@drawable/sem_snackbar_action_button_background"
+      android:textAppearance="@android:style/TextAppearance.Small"
+      android:textSize="@dimen/sesl_design_snackbar_action_text_size"
+      android:textColor="@color/sesl_design_snackbar_action_text_color"
+      android:textStyle="bold"
+      android:fontFamily="sec-roboto-light"
       android:visibility="gone"/>
 
 </view>

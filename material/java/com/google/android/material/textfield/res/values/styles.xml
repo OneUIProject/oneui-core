@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2018 The Android Open Source Project
+  ~ Copyright 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="Widget.Design.TextInputLayout" parent="android:Widget">
@@ -240,7 +241,9 @@
 
   <!-- Set of ThemeOverlays to be used internally in the TextInputLayout styles to automatically
        apply the correct TextInputEditText style to the TextInputEditText. -->
-  <style name="ThemeOverlay.Design.TextInputEditText" parent=""/>
+  <style name="ThemeOverlay.Design.TextInputEditText" parent="">
+    <item name="android:textColorHint">@color/sesl_text_input_layout_hint_text_color</item>
+  </style>
 
   <style name="ThemeOverlay.MaterialComponents.TextInputEditText" parent="ThemeOverlay.Design.TextInputEditText">
     <item name="colorControlActivated">?attr/colorPrimary</item>

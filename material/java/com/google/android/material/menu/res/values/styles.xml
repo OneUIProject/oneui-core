@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright 2018 The Android Open Source Project
+  Copyright 2022 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <resources>
 
@@ -22,23 +23,35 @@
     <item name="android:dropDownVerticalOffset">1px</item>
   </style>
 
-  <style name="Widget.MaterialComponents.PopupMenu.Overflow" parent="Base.Widget.MaterialComponents.PopupMenu.Overflow"/>
+  <style name="Widget.MaterialComponents.PopupMenu.Overflow" parent="Base.Widget.MaterialComponents.PopupMenu.Overflow">
+    <item name="android:popupBackground">?attr/popupMenuBackground</item>
+    <item name="android:popupElevation">8dp</item>
+  </style>
 
   <style name="Base.Widget.MaterialComponents.PopupMenu" parent="Widget.AppCompat.PopupMenu">
     <item name="overlapAnchor">false</item>
     <item name="android:dropDownVerticalOffset">1px</item>
   </style>
 
-  <style name="Widget.MaterialComponents.PopupMenu" parent="Base.Widget.MaterialComponents.PopupMenu"/>
+  <style name="Widget.MaterialComponents.PopupMenu" parent="Base.Widget.MaterialComponents.PopupMenu">
+    <item name="android:popupBackground">?attr/popupMenuBackground</item>
+    <item name="android:popupElevation">8dp</item>
+  </style>
 
   <!-- List Popup Window Menus -->
   <style name="Base.Widget.MaterialComponents.PopupMenu.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow"/>
 
-  <style name="Widget.MaterialComponents.PopupMenu.ListPopupWindow" parent="Base.Widget.MaterialComponents.PopupMenu.ListPopupWindow"/>
+  <style name="Widget.MaterialComponents.PopupMenu.ListPopupWindow" parent="Base.Widget.MaterialComponents.PopupMenu.ListPopupWindow">
+    <item name="android:popupBackground">?attr/popupMenuBackground</item>
+    <item name="android:popupElevation">8dp</item>
+  </style>
 
   <!-- Context Menus -->
   <style name="Base.Widget.MaterialComponents.PopupMenu.ContextMenu" parent="Widget.AppCompat.PopupMenu"/>
 
-  <style name="Widget.MaterialComponents.PopupMenu.ContextMenu" parent="Base.Widget.MaterialComponents.PopupMenu.ContextMenu"/>
+  <style name="Widget.MaterialComponents.PopupMenu.ContextMenu" parent="Base.Widget.MaterialComponents.PopupMenu.ContextMenu">
+    <item name="android:popupBackground">?attr/popupMenuBackground</item>
+    <item name="android:popupElevation">8dp</item>
+  </style>
 
 </resources>

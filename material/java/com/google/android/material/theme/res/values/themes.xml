@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2015 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <!--
@@ -29,6 +30,14 @@
 
   <!-- Platform-independent theme providing a full color scheme in a light-themed activity. -->
   <style name="Theme.MaterialComponents.Light" parent="Base.Theme.MaterialComponents.Light"/>
+
+  <style name="Theme.MaterialComponents.Light.BarSize" parent="Theme.MaterialComponents.Light">
+    <item name="actionBarSize">@dimen/action_bar_size</item>
+  </style>
+
+  <style name="Theme.MaterialComponents.Light.LargeTouch" parent="Theme.MaterialComponents.Light">
+    <item name="minTouchTargetSize">@dimen/mtrl_large_touch_target</item>
+  </style>
 
   <!-- Platform-independent theme providing an action bar in a dark-themed activity. -->
   <style name="Theme.MaterialComponents.Light.DarkActionBar" parent="Base.Theme.MaterialComponents.Light.DarkActionBar"/>

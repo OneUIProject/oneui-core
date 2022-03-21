@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2019 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <!-- Bridge themes containing only new attributes defined in MaterialComponents themes. -->
@@ -22,23 +23,23 @@
   <style name="Theme.MaterialComponents.Light.Dialog.Bridge" parent="Base.Theme.MaterialComponents.Light.Dialog.Bridge"/>
 
   <style name="Theme.MaterialComponents.Dialog.Alert.Bridge" parent="Base.Theme.MaterialComponents.Dialog.Bridge">
-    <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-    <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+    <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
   </style>
 
   <style name="Theme.MaterialComponents.Light.Dialog.Alert.Bridge" parent="Base.Theme.MaterialComponents.Light.Dialog.Bridge">
-    <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-    <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+    <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
   </style>
 
   <style name="Theme.MaterialComponents.Dialog.MinWidth.Bridge" parent="Base.Theme.MaterialComponents.Dialog.Bridge">
-    <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-    <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+    <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
   </style>
 
   <style name="Theme.MaterialComponents.Light.Dialog.MinWidth.Bridge" parent="Base.Theme.MaterialComponents.Light.Dialog.Bridge">
-    <item name="android:windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-    <item name="android:windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    <item name="android:windowMinWidthMajor">@dimen/sesl_dialog_min_width_major</item>
+    <item name="android:windowMinWidthMinor">@dimen/sesl_dialog_min_width_minor</item>
   </style>
 
   <style name="Theme.MaterialComponents.Dialog.FixedSize.Bridge" parent="Base.Theme.MaterialComponents.Dialog.Bridge">

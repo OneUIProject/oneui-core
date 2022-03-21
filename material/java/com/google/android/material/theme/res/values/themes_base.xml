@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <!-- All new attributes should be set in the following four Base.V14 themes. -->
@@ -31,7 +32,7 @@
     <item name="colorError">@color/design_dark_default_color_error</item>
 
     <!-- Action bar -->
-    <item name="actionBarSize">@dimen/mtrl_toolbar_default_height</item>
+    <item name="actionBarSize">@dimen/sesl_action_bar_default_height</item>
     <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.Dark</item>
     <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Surface</item>
     <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar.Surface</item>
@@ -88,7 +89,7 @@
     <item name="colorError">@color/design_default_color_error</item>
 
     <!-- Action bar -->
-    <item name="actionBarSize">@dimen/mtrl_toolbar_default_height</item>
+    <item name="actionBarSize">@dimen/sesl_action_bar_default_height</item>
     <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
     <item name="actionBarStyle">@style/Widget.MaterialComponents.Light.ActionBar.Solid</item>
     <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
@@ -115,7 +116,7 @@
     <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar</item>
 
     <!-- Dialog themes -->
-    <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MaterialComponents.BottomSheetDialog</item>
+    <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MaterialComponents.Light.BottomSheetDialog</item>
     <item name="alertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
     <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
     <item name="android:datePickerDialogTheme" tools:ignore="NewApi">@style/ThemeOverlay.MaterialComponents.Dialog</item>
@@ -140,16 +141,20 @@
        directly by apps. -->
   <eat-comment/>
 
-  <style name="Base.Theme.MaterialComponents" parent="Base.V14.Theme.MaterialComponents"/>
+  <style name="Base.Theme.MaterialComponents" parent="Base.V14.Theme.MaterialComponents">
+    <item name="android:alertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert.Framework</item>
+  </style>
 
-  <style name="Base.Theme.MaterialComponents.Light" parent="Base.V14.Theme.MaterialComponents.Light"/>
+  <style name="Base.Theme.MaterialComponents.Light" parent="Base.V14.Theme.MaterialComponents.Light">
+    <item name="android:alertDialogTheme">@style/ThemeOverlay.MaterialComponents.Light.Dialog.Alert.Framework</item>
+  </style>
 
   <style name="Base.Theme.MaterialComponents.Light.DarkActionBar" parent="Base.Theme.MaterialComponents.Light">
     <item name="actionBarWidgetTheme">@null</item>
     <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
 
     <!-- Panel attributes -->
-    <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
+    <item name="listChoiceBackgroundIndicator">@drawable/sesl_list_selector_dark</item>
 
     <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
     <item name="colorPrimary">@color/primary_material_dark</item>

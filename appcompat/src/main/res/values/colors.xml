@@ -106,11 +106,11 @@
     <color name="sesl_list_divider_color_light">#14000000</color>
 
     <color name="sesl_list_go_to_top_arrow_bottom_dark">#fffafafa</color>
-    <color name="sesl_list_go_to_top_arrow_bottom_light">#ff404040</color>
+    <color name="sesl_list_go_to_top_arrow_bottom_light">#ff797979</color>
     <color name="sesl_list_go_to_top_arrow_top_dark">#ffaaaaaa</color>
-    <color name="sesl_list_go_to_top_arrow_top_light">#ff888888</color>
-    <color name="sesl_list_go_to_top_inner_round_dark">#ff3d3d3d</color>
-    <color name="sesl_list_go_to_top_inner_round_light">#fffcfcfc</color>
+    <color name="sesl_list_go_to_top_arrow_top_light">#ffa9a9a9</color>
+    <color name="sesl_list_go_to_top_inner_round_dark">#ff343434</color>
+    <color name="sesl_list_go_to_top_inner_round_light">#fff2f2f2</color>
     <color name="sesl_list_go_to_top_outer_round_dark">#ff5e5e5e</color>
     <color name="sesl_list_go_to_top_outer_round_light">#33252525</color>
     <color name="sesl_list_go_to_top_ripple_dark">@color/sesl_ripple_color_dark</color>

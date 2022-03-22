@@ -437,6 +437,17 @@
         <!-- Animated Drawable to use for multiple choice indicators. -->
         <attr name="listChoiceIndicatorMultipleAnimated" format="reference" />
 
+        <attr name="android:progressBarStyle" />
+        <attr name="android:progressBarStyleHorizontal" />
+        <attr name="android:progressBarStyleInverse" />
+        <attr name="android:progressBarStyleLarge" />
+        <attr name="android:progressBarStyleLargeInverse" />
+        <attr name="android:progressBarStyleSmall" />
+        <attr name="android:progressBarStyleSmallInverse" />
+        <attr name="android:progressBarStyleSmallTitle" />
+        <attr name="android:scrollbarThumbHorizontal" />
+        <attr name="android:scrollbarThumbVertical" />
+
         <attr name="ignoreRemoveSystemTopInset" format="boolean" />
 
         <attr name="searchViewIconColor" format="color" />

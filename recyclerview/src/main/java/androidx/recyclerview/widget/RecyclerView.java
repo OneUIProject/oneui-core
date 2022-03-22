@@ -347,13 +347,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         }
     };
 
-    // TODO rework
-    // kang
     private Handler mHoverHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            int i2;
-
             if (msg.what == MSG_HOVERSCROLL_MOVE) {
                 if (mAdapter == null) {
                     Log.e(TAG, "No adapter attached; skipping MSG_HOVERSCROLL_MOVE");
@@ -361,8 +357,10 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 }
 
                 mHoverRecognitionCurrentTime = System.currentTimeMillis();
-                mHoverRecognitionDurationTime = (mHoverRecognitionCurrentTime - mHoverRecognitionStartTime) / 1000;
-                if (mIsPenHovered && mHoverRecognitionCurrentTime - mHoverScrollStartTime < mHoverScrollTimeInterval) {
+                mHoverRecognitionDurationTime
+                        = (mHoverRecognitionCurrentTime - mHoverRecognitionStartTime) / 1000;
+                if (mIsPenHovered
+                        && mHoverRecognitionCurrentTime - mHoverScrollStartTime < mHoverScrollTimeInterval) {
                     return;
                 }
 
@@ -370,42 +368,63 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                     if (mIsPenHovered && !mIsSendHoverScrollState) {
                         if (mScrollListener != null) {
                             mHoverScrollStateForListener = HOVERSCROLL_UP;
-                            mScrollListener.onScrollStateChanged(RecyclerView.this, HOVERSCROLL_UP);
+                            mScrollListener.onScrollStateChanged(RecyclerView.this,
+                                    HOVERSCROLL_UP);
                         }
                         mIsSendHoverScrollState = true;
                     }
 
-                    boolean canScrollVertically = mLayout.canScrollVertically();
-                    boolean canScrollHorizontally = mLayout.canScrollHorizontally();
-                    boolean z2 = mLayout.getLayoutDirection() == 1;
-                    int childCount = getChildCount();
-                    boolean z3 = findFirstChildPosition() + childCount < mAdapter.getItemCount();
-                    if (!z3 && childCount > 0) {
-                        getDecoratedBoundsWithMargins(getChildAt(childCount - 1), mChildBound);
-                        z3 = !canScrollHorizontally ? mChildBound.bottom > getBottom() - mListPadding.bottom || mChildBound.bottom > getHeight() - mListPadding.bottom : !z2 ? mChildBound.right > getRight() - mListPadding.right || mChildBound.right > getWidth() - mListPadding.right : mChildBound.left < mListPadding.left;
-                    }
-                    boolean z4 = findFirstChildPosition() > 0;
-                    if (!z4 && childCount > 0) {
-                        getDecoratedBoundsWithMargins(getChildAt(0), mChildBound);
-                        z4 = !canScrollHorizontally ? mChildBound.top < mListPadding.top : !(!z2 ? mChildBound.left >= mListPadding.left : mChildBound.right <= getRight() - mListPadding.right && mChildBound.right <= getWidth() - mListPadding.right);
+                    final boolean canScrollVertically = mLayout.canScrollVertically();
+                    final boolean canScrollHorizontally = mLayout.canScrollHorizontally();
+
+                    final boolean isRtl = mLayout.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+
+                    final int count = getChildCount();
+
+                    boolean canScrollDown = findFirstChildPosition() + count < mAdapter.getItemCount();
+                    if (!canScrollDown && count > 0) {
+                        View child = getChildAt(count - 1);
+                        getDecoratedBoundsWithMargins(child, mChildBound);
+                        canScrollDown = !canScrollHorizontally ?
+                                mChildBound.bottom > getBottom() - mListPadding.bottom
+                                    || mChildBound.bottom > getHeight() - mListPadding.bottom
+                                : (!isRtl ?
+                                    mChildBound.right > getRight() - mListPadding.right
+                                        || mChildBound.right > getWidth() - mListPadding.right
+                                    : mChildBound.left < mListPadding.left);
                     }
 
-                    mHoverScrollSpeed = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HOVERSCROLL_SPEED, mContext.getResources().getDisplayMetrics()) + 0.5f);
-                    if (mHoverRecognitionDurationTime > 2 && RecyclerView.this.mHoverRecognitionDurationTime < 4) {
-                        mHoverScrollSpeed += (int) (((double) mHoverScrollSpeed) * 0.1d);
-                    } else if (mHoverRecognitionDurationTime >= 4 && mHoverRecognitionDurationTime < 5) {
-                        mHoverScrollSpeed += (int) (((double) mHoverScrollSpeed) * 0.2d);
-                    } else if (mHoverRecognitionDurationTime >= 5) {
-                        mHoverScrollSpeed += (int) (((double) mHoverScrollSpeed) * 0.3d);
+                    boolean canScrollUp = findFirstChildPosition() > 0;
+                    if (!canScrollUp && count > 0) {
+                        getDecoratedBoundsWithMargins(getChildAt(0), mChildBound);
+                        canScrollUp = !canScrollHorizontally ?
+                                mChildBound.top < mListPadding.top
+                                : (!isRtl ?
+                                    mChildBound.left < mListPadding.left
+                                    : mChildBound.right > getRight() - mListPadding.right
+                                        || mChildBound.right > getWidth() - mListPadding.right);
                     }
-                    int i3 = 2;
+
+                    mHoverScrollSpeed = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            HOVERSCROLL_SPEED, mContext.getResources().getDisplayMetrics()) + 0.5f);
+                    if (mHoverRecognitionDurationTime == 3) {
+                        mHoverScrollSpeed += (int) (mHoverScrollSpeed * 0.1d);
+                    } else if (mHoverRecognitionDurationTime == 4) {
+                        mHoverScrollSpeed += (int) (mHoverScrollSpeed * 0.2d);
+                    } else if (mHoverRecognitionDurationTime >= 5) {
+                        mHoverScrollSpeed += (int) (mHoverScrollSpeed * 0.3d);
+                    }
+
+                    int offset;
+
                     if (mHoverScrollDirection == HOVERSCROLL_DOWN) {
-                        if (!canScrollHorizontally || !z2) {
-                            i2 = mHoverScrollSpeed * -1;
+                        if (!canScrollHorizontally || !isRtl) {
+                            offset = mHoverScrollSpeed * -1;
                         } else {
-                            i2 = mHoverScrollSpeed * 1;
+                            offset = mHoverScrollSpeed * 1;
                         }
-                        if ((mPenTrackedChild == null && mCloseChildByBottom != null) || (mOldHoverScrollDirection != mHoverScrollDirection && mIsCloseChildSetted)) {
+                        if ((mPenTrackedChild == null && mCloseChildByBottom != null)
+                                || (mOldHoverScrollDirection != mHoverScrollDirection && mIsCloseChildSetted)) {
                             mPenTrackedChild = mCloseChildByBottom;
                             mPenDistanceFromTrackedChildTop = mDistanceFromCloseChildBottom;
                             mPenTrackedChildPosition = mCloseChildPositionByBottom;
@@ -413,12 +432,13 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                             mIsCloseChildSetted = true;
                         }
                     } else {
-                        if (!canScrollHorizontally || !z2) {
-                            i2 = mHoverScrollSpeed * 1;
+                        if (!canScrollHorizontally || !isRtl) {
+                            offset = mHoverScrollSpeed * 1;
                         } else {
-                            i2 = mHoverScrollSpeed * -1;
+                            offset = mHoverScrollSpeed * -1;
                         }
-                        if ((mPenTrackedChild == null && mCloseChildByTop != null) || (mOldHoverScrollDirection != mHoverScrollDirection && mIsCloseChildSetted)) {
+                        if ((mPenTrackedChild == null && mCloseChildByTop != null)
+                                || (mOldHoverScrollDirection != mHoverScrollDirection && mIsCloseChildSetted)) {
                             mPenTrackedChild = mCloseChildByTop;
                             mPenDistanceFromTrackedChildTop = mDistanceFromCloseChildTop;
                             mPenTrackedChildPosition = mCloseChildPositionByTop;
@@ -428,10 +448,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                     }
 
                     if (getChildAt(getChildCount() - 1) != null) {
-                        if ((i2 >= 0 || !z4) && (i2 <= 0 || !z3)) {
-                            int overScrollMode = getOverScrollMode();
-                            boolean z5 = overScrollMode == 0 || (overScrollMode == 1 && !contentFits());
-                            if (z5 && !mIsHoverOverscrolled) {
+                        if ((offset >= 0 || !canScrollUp) && (offset <= 0 || !canScrollDown)) {
+                            final int overScrollMode = getOverScrollMode();
+                            final boolean canOverScroll = overScrollMode == OVER_SCROLL_ALWAYS
+                                    || (overScrollMode == OVER_SCROLL_IF_CONTENT_SCROLLS
+                                        && !contentFits());
+                            if (canOverScroll && !mIsHoverOverscrolled) {
                                 if (canScrollHorizontally) {
                                     ensureLeftGlow();
                                     ensureRightGlow();
@@ -469,39 +491,39 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                                 invalidate();
                                 mIsHoverOverscrolled = true;
                             }
+
                             if (mScrollState == SCROLL_STATE_DRAGGING) {
                                 setScrollState(SCROLL_STATE_IDLE);
                             }
-                            if (!z5 && !mIsHoverOverscrolled) {
+
+                            if (!canOverScroll && !mIsHoverOverscrolled) {
                                 mIsHoverOverscrolled = true;
-                                return;
-                            }
-                            return;
-                        }
-                        if (canScrollHorizontally) {
-                            i3 = 1;
-                        }
-                        startNestedScroll(i3, TYPE_NON_TOUCH);
-                        if (!dispatchNestedPreScroll(canScrollHorizontally ? z2 ? -i2 : i2 : 0, canScrollVertically ? i2 : 0, null, null, TYPE_NON_TOUCH)) {
-                            int i4 = canScrollHorizontally ? z2 ? -i2 : i2 : 0;
-                            if (!canScrollVertically) {
-                                i2 = 0;
-                            }
-                            scrollByInternal(i4, i2, null, 0);
-                            setScrollState(SCROLL_STATE_DRAGGING);
-                            if (mIsLongPressMultiSelection) {
-                                updateLongPressMultiSelection(mPenDragEndX, mPenDragEndY, false);
                             }
                         } else {
-                            adjustNestedScrollRangeBy(i2);
+                            startNestedScroll(canScrollHorizontally
+                                    ? ViewCompat.SCROLL_AXIS_HORIZONTAL
+                                    : ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_NON_TOUCH);
+
+                            final int dx = canScrollHorizontally ? (isRtl ? -offset : offset) : 0;
+                            final int dy = canScrollVertically ? offset : 0;
+                            if (!dispatchNestedPreScroll(dx, dy, null, null,
+                                    TYPE_NON_TOUCH)) {
+                                scrollByInternal(dx, dy, null, TYPE_TOUCH);
+                                setScrollState(SCROLL_STATE_DRAGGING);
+                                if (mIsLongPressMultiSelection) {
+                                    updateLongPressMultiSelection(mPenDragEndX, mPenDragEndY,
+                                            false);
+                                }
+                            } else {
+                                adjustNestedScrollRangeBy(offset);
+                            }
+                            mHoverHandler.sendEmptyMessageDelayed(MSG_HOVERSCROLL_MOVE, 0);
                         }
-                        mHoverHandler.sendEmptyMessageDelayed(0, 0);
                     }
                 }
             }
         }
     };
-    // kang
 
     private final Runnable mGoToTopEdgeEffectRunnable = new Runnable() {
         @Override
@@ -6488,42 +6510,32 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             adjustNestedScrollRangeBy(dy);
         }
 
-
-        // TODO rework this method
-        // kang
         private float distanceInfluenceForSnapDuration(float f) {
-            return (float) Math.sin((double) ((f - 0.5f) * 0.47123894f));
+            f -= 0.5f; // center the values about 0.
+            f *= 0.3f * (float) Math.PI / 2.0f;
+            return (float) Math.sin(f);
         }
-        // kang
 
-        // TODO rework this method
-        // kang
-        /**
-         * Computes of an animated scroll in milliseconds.
-         */
-        private int computeScrollDuration(int i, int i2, int i3, int i4) {
-            int i5;
-            int abs = Math.abs(i);
-            int abs2 = Math.abs(i2);
-            boolean z = abs > abs2;
-            int sqrt = (int) Math.sqrt((double) ((i3 * i3) + (i4 * i4)));
-            int sqrt2 = (int) Math.sqrt((double) ((i * i) + (i2 * i2)));
-            int width = z ? getWidth() : getHeight();
-            int i6 = width / 2;
-            float f = (float) width;
-            float f2 = (float) i6;
-            float distanceInfluenceForSnapDuration = f2 + (distanceInfluenceForSnapDuration(Math.min(1.0f, (((float) sqrt2) * 1f) / f)) * f2);
-            if (sqrt > 0) {
-                i5 = Math.round(Math.abs(distanceInfluenceForSnapDuration / ((float) sqrt)) * 1000.0f) * 4;
+        private int computeScrollDuration(int dx, int dy, int vx, int vy) {
+            final int absDx = Math.abs(dx);
+            final int absDy = Math.abs(dy);
+            final boolean horizontal = absDx > absDy;
+            final int velocity = (int) Math.sqrt(vx * vx + vy * vy);
+            final int delta = (int) Math.sqrt(dx * dx + dy * dy);
+            final int containerSize = horizontal ? getWidth() : getHeight();
+            final int halfContainerSize = containerSize / 2;
+            final float distanceRatio = Math.min(1.f, 1.f * delta / containerSize);
+            final float distance = halfContainerSize + halfContainerSize
+                    * distanceInfluenceForSnapDuration(distanceRatio);
+            final int duration;
+            if (velocity > 0) {
+                duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
             } else {
-                if (!z) {
-                    abs = abs2;
-                }
-                i5 = (int) (((((float) abs) / f) + 1.0f) * 300.0f);
+                float absDelta = (float) (horizontal ? absDx : absDy);
+                duration = (int) (((absDelta / containerSize) + 1) * 300);
             }
-            return Math.min(i5, MAX_SCROLL_DURATION);
+            return Math.min(duration, MAX_SCROLL_DURATION);
         }
-        // kang
 
         public void stop() {
             removeCallbacks(this);
@@ -15924,331 +15936,345 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         mIsCtrlKeyPressed = pressed;
     }
 
-    // TODO rework this method
-    // kang
-    private void updateLongPressMultiSelection(int i, int i2, boolean z) {
-        int i3;
-        int i4;
-        int i5;
-        int i6;
-        OnScrollListener onScrollListener;
-        int childCount = this.mChildHelper.getChildCount();
-        if (this.mIsFirstMultiSelectionMove) {
-            this.mPenDragStartX = i;
-            this.mPenDragStartY = i2;
-            float f = (float) i;
-            float f2 = (float) i2;
-            this.mPenTrackedChild = findChildViewUnder(f, f2);
-            if (this.mPenTrackedChild == null) {
-                this.mPenTrackedChild = seslFindNearChildViewUnder(f, f2);
-                if (this.mPenTrackedChild == null) {
-                    Log.e(TAG, "updateLongPressMultiSelection, mPenTrackedChild is NULL");
-                    this.mIsFirstMultiSelectionMove = false;
+    private void updateLongPressMultiSelection(int x, int y, boolean fromUserTouch) {
+        if (mIsFirstMultiSelectionMove) {
+            mPenDragStartX = x;
+            mPenDragStartY = y;
+
+            mPenTrackedChild = findChildViewUnder(x, y);
+            if (mPenTrackedChild == null) {
+                mPenTrackedChild = seslFindNearChildViewUnder(x, y);
+                if (mPenTrackedChild == null) {
+                    Log.e("SeslRecyclerView",
+                            "updateLongPressMultiSelection, mPenTrackedChild is NULL");
+                    mIsFirstMultiSelectionMove = false;
                     return;
                 }
             }
-            SeslLongPressMultiSelectionListener seslLongPressMultiSelectionListener = this.mLongPressMultiSelectionListener;
-            if (seslLongPressMultiSelectionListener != null) {
-                seslLongPressMultiSelectionListener.onLongPressMultiSelectionStarted(i, i2);
-            }
-            this.mPenTrackedChildPosition = getChildLayoutPosition(this.mPenTrackedChild);
-            this.mPenDragSelectedViewPosition = this.mPenTrackedChildPosition;
-            this.mPenDistanceFromTrackedChildTop = this.mPenDragStartY - this.mPenTrackedChild.getTop();
-            this.mIsFirstMultiSelectionMove = false;
-        }
-        if (this.mIsEnabledPaddingInHoverScroll) {
-            int i7 = this.mListPadding.top;
-            i4 = getHeight() - this.mListPadding.bottom;
-            i3 = i7;
-        } else {
-            i4 = getHeight();
-            i3 = 0;
-        }
-        this.mPenDragEndX = i;
-        this.mPenDragEndY = i2;
-        int i8 = this.mPenDragEndY;
-        if (i8 < 0) {
-            this.mPenDragEndY = 0;
-        } else if (i8 > i4) {
-            this.mPenDragEndY = i4;
-        }
-        View findChildViewUnder = findChildViewUnder((float) this.mPenDragEndX, (float) this.mPenDragEndY);
-        if (findChildViewUnder == null && (findChildViewUnder = seslFindNearChildViewUnder((float) this.mPenDragEndX, (float) this.mPenDragEndY)) == null) {
-            Log.e(TAG, "updateLongPressMultiSelection, touchedView is NULL");
-            return;
-        }
-        int childLayoutPosition = getChildLayoutPosition(findChildViewUnder);
-        if (childLayoutPosition != -1) {
-            this.mPenDragSelectedViewPosition = childLayoutPosition;
-            int i9 = this.mPenTrackedChildPosition;
-            int i10 = this.mPenDragSelectedViewPosition;
-            if (i9 < i10) {
-                i6 = i9;
-                i5 = i10;
-            } else {
-                i5 = i9;
-                i6 = i10;
-            }
-            int i11 = this.mPenDragStartX;
-            int i12 = this.mPenDragEndX;
-            if (i11 >= i12) {
-                i11 = i12;
-            }
-            this.mPenDragBlockLeft = i11;
-            int i13 = this.mPenDragStartY;
-            int i14 = this.mPenDragEndY;
-            if (i13 >= i14) {
-                i13 = i14;
-            }
-            this.mPenDragBlockTop = i13;
-            int i15 = this.mPenDragEndX;
-            int i16 = this.mPenDragStartX;
-            if (i15 <= i16) {
-                i15 = i16;
-            }
-            this.mPenDragBlockRight = i15;
-            int i17 = this.mPenDragEndY;
-            int i18 = this.mPenDragStartY;
-            if (i17 <= i18) {
-                i17 = i18;
-            }
-            this.mPenDragBlockBottom = i17;
-            int i19 = 0;
-            while (true) {
-                boolean z2 = true;
-                if (i19 >= childCount) {
-                    break;
-                }
-                View childAt = getChildAt(i19);
-                if (childAt != null) {
-                    this.mPenDragSelectedViewPosition = getChildLayoutPosition(childAt);
-                    if (childAt.getVisibility() == 0) {
-                        int i20 = this.mPenDragSelectedViewPosition;
-                        if (i6 > i20 || i20 > i5 || i20 == this.mPenTrackedChildPosition) {
-                            z2 = false;
-                        }
-                        if (z2) {
-                            int i21 = this.mPenDragSelectedViewPosition;
-                            if (i21 != -1 && !this.mPenDragSelectedItemArray.contains(Integer.valueOf(i21))) {
-                                this.mPenDragSelectedItemArray.add(Integer.valueOf(this.mPenDragSelectedViewPosition));
-                                SeslLongPressMultiSelectionListener seslLongPressMultiSelectionListener2 = this.mLongPressMultiSelectionListener;
-                                if (seslLongPressMultiSelectionListener2 != null) {
-                                    seslLongPressMultiSelectionListener2.onItemSelected(this, childAt, this.mPenDragSelectedViewPosition, getChildItemId(childAt));
-                                }
-                            }
-                        } else {
-                            int i22 = this.mPenDragSelectedViewPosition;
-                            if (i22 != -1 && this.mPenDragSelectedItemArray.contains(Integer.valueOf(i22))) {
-                                this.mPenDragSelectedItemArray.remove(Integer.valueOf(this.mPenDragSelectedViewPosition));
-                                SeslLongPressMultiSelectionListener seslLongPressMultiSelectionListener3 = this.mLongPressMultiSelectionListener;
-                                if (seslLongPressMultiSelectionListener3 != null) {
-                                    seslLongPressMultiSelectionListener3.onItemSelected(this, childAt, this.mPenDragSelectedViewPosition, getChildItemId(childAt));
-                                }
-                            }
-                        }
-                    }
-                }
-                i19++;
-            }
-            int i23 = this.mLastTouchY - i2;
-            if (z && Math.abs(i23) >= this.mTouchSlop) {
-                if (i2 <= i3 + this.mHoverTopAreaHeight && i23 > 0) {
-                    if (!this.mHoverAreaEnter) {
-                        this.mHoverAreaEnter = true;
-                        this.mHoverScrollStartTime = System.currentTimeMillis();
-                        OnScrollListener onScrollListener2 = this.mScrollListener;
-                        if (onScrollListener2 != null) {
-                            onScrollListener2.onScrollStateChanged(this, 1);
-                        }
-                    }
-                    if (!this.mHoverHandler.hasMessages(0)) {
-                        this.mHoverRecognitionStartTime = System.currentTimeMillis();
-                        this.mHoverScrollDirection = 2;
-                        this.mHoverHandler.sendEmptyMessage(0);
-                    }
-                } else if (i2 < (i4 - this.mHoverBottomAreaHeight) - this.mRemainNestedScrollRange || i23 >= 0) {
-                    if (this.mHoverAreaEnter && (onScrollListener = this.mScrollListener) != null) {
-                        onScrollListener.onScrollStateChanged(this, 0);
-                    }
-                    this.mHoverScrollStartTime = 0;
-                    this.mHoverRecognitionStartTime = 0;
-                    this.mHoverAreaEnter = false;
-                    if (this.mHoverHandler.hasMessages(0)) {
-                        this.mHoverHandler.removeMessages(0);
-                        if (this.mScrollState == 1) {
-                            setScrollState(0);
-                        }
-                    }
-                    this.mIsHoverOverscrolled = false;
-                } else {
-                    if (!this.mHoverAreaEnter) {
-                        this.mHoverAreaEnter = true;
-                        this.mHoverScrollStartTime = System.currentTimeMillis();
-                        OnScrollListener onScrollListener3 = this.mScrollListener;
-                        if (onScrollListener3 != null) {
-                            onScrollListener3.onScrollStateChanged(this, 1);
-                        }
-                    }
-                    if (!this.mHoverHandler.hasMessages(0)) {
-                        this.mHoverRecognitionStartTime = System.currentTimeMillis();
-                        this.mHoverScrollDirection = 1;
-                        this.mHoverHandler.sendEmptyMessage(0);
-                    }
-                }
-            }
-            invalidate();
-            return;
-        }
-        Log.e(TAG, "touchedPosition is NO_POSITION");
-    }
-    // kang
 
-    // TODO rework this method
-    // kang
-    private void multiSelection(int var1, int var2, int var3, int var4, boolean var5) {
-        if (this.mIsNeedPenSelection) {
-            RecyclerView.SeslOnMultiSelectedListener var13;
-            if (this.mIsFirstPenMoveEvent) {
-                this.mPenDragStartX = var1;
-                this.mPenDragStartY = var2;
-                this.mIsPenPressed = true;
-                float var6 = (float)var1;
-                float var7 = (float)var2;
-                View var8 = this.findChildViewUnder(var6, var7);
-                this.mPenTrackedChild = var8;
-                if (var8 == null) {
-                    var8 = this.seslFindNearChildViewUnder(var6, var7);
-                    this.mPenTrackedChild = var8;
-                    if (var8 == null) {
-                        Log.e("SeslRecyclerView", "multiSelection, mPenTrackedChild is NULL");
-                        this.mIsPenPressed = false;
-                        this.mIsFirstPenMoveEvent = false;
+            if (mLongPressMultiSelectionListener != null) {
+                mLongPressMultiSelectionListener.onLongPressMultiSelectionStarted(x, y);
+            }
+
+            final int childLayoutPosition = getChildLayoutPosition(mPenTrackedChild);
+            mPenTrackedChildPosition = childLayoutPosition;
+            mPenDragSelectedViewPosition = childLayoutPosition;
+            mPenDistanceFromTrackedChildTop = mPenDragStartY - mPenTrackedChild.getTop();
+            mIsFirstMultiSelectionMove = false;
+        }
+
+        final int contentTop;
+        final int contentBottom;
+
+        if (mIsEnabledPaddingInHoverScroll) {
+            contentTop = mListPadding.top;
+            contentBottom = getHeight() - mListPadding.bottom;
+        } else {
+            contentTop = 0;
+            contentBottom = getHeight();
+        }
+
+        mPenDragEndX = x;
+        mPenDragEndY = y;
+
+        if (mPenDragEndY < 0) {
+            mPenDragEndY = 0;
+        } else if (mPenDragEndY > contentBottom) {
+            mPenDragEndY = contentBottom;
+        }
+
+        View touchedView = findChildViewUnder(mPenDragEndX, mPenDragEndY);
+        if (touchedView == null) {
+            touchedView = seslFindNearChildViewUnder(mPenDragEndX, mPenDragEndY);
+            if (touchedView == null) {
+                Log.e("SeslRecyclerView",
+                        "updateLongPressMultiSelection, touchedView is NULL");
+                return;
+            }
+        }
+
+        final int touchedPosition = getChildLayoutPosition(touchedView);
+        if (touchedPosition == NO_POSITION) {
+            Log.e("SeslRecyclerView", "touchedPosition is NO_POSITION");
+            return;
+        }
+
+        mPenDragSelectedViewPosition = touchedPosition;
+
+        final int startPosition;
+        final int endPosition;
+        if (mPenTrackedChildPosition < mPenDragSelectedViewPosition) {
+            startPosition = mPenTrackedChildPosition;
+            endPosition = mPenDragSelectedViewPosition;
+        } else {
+            startPosition = mPenDragSelectedViewPosition;
+            endPosition = mPenTrackedChildPosition;
+        }
+
+        if (mPenDragStartX < mPenDragEndX) {
+            mPenDragBlockLeft = mPenDragStartX;
+        } else {
+            mPenDragBlockLeft = mPenDragEndX;
+        }
+
+        if (mPenDragStartY < mPenDragEndY) {
+            mPenDragBlockTop = mPenDragStartY;
+        } else {
+            mPenDragBlockTop = mPenDragEndY;
+        }
+
+        if (mPenDragEndX > mPenDragStartX) {
+            mPenDragBlockRight = mPenDragEndX;
+        } else {
+            mPenDragBlockRight = mPenDragStartX;
+        }
+
+        if (mPenDragEndY > mPenDragStartY) {
+            mPenDragBlockBottom = mPenDragEndY;
+        } else {
+            mPenDragBlockBottom = mPenDragStartY;
+        }
+
+        final int childCount = mChildHelper.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = getChildAt(i);
+            if (child != null) {
+                mPenDragSelectedViewPosition = getChildLayoutPosition(child);
+
+                if (child.getVisibility() == View.VISIBLE) {
+                    final boolean notNeedToCheck;
+                    if (startPosition > mPenDragSelectedViewPosition
+                            || mPenDragSelectedViewPosition > endPosition
+                            || mPenDragSelectedViewPosition == mPenTrackedChildPosition) {
+                        notNeedToCheck = false;
+                    } else {
+                        notNeedToCheck = true;
+                    }
+
+                    // wrap mPenDragSelectedViewPosition in order to call
+                    // remove(Object o) instead of remove(int index)
+                    if (notNeedToCheck) {
+                        if (mPenDragSelectedViewPosition != NO_POSITION
+                                && !mPenDragSelectedItemArray.contains(
+                                        Integer.valueOf(mPenDragSelectedViewPosition))) {
+                            mPenDragSelectedItemArray.add(Integer.valueOf(mPenDragSelectedViewPosition));
+                            if (mLongPressMultiSelectionListener != null) {
+                                mLongPressMultiSelectionListener.onItemSelected(this, child,
+                                        mPenDragSelectedViewPosition, getChildItemId(child));
+                            }
+                        }
+                    } else {
+                        if (mPenDragSelectedViewPosition != NO_POSITION
+                                && mPenDragSelectedItemArray.contains(
+                                        Integer.valueOf(mPenDragSelectedViewPosition))) {
+                            mPenDragSelectedItemArray.remove(Integer.valueOf(mPenDragSelectedViewPosition));
+                            if (mLongPressMultiSelectionListener != null) {
+                                mLongPressMultiSelectionListener.onItemSelected(this, child,
+                                        mPenDragSelectedViewPosition, getChildItemId(child));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fromUserTouch) {
+            final int touchYDiff = mLastTouchY - y;
+            if (Math.abs(touchYDiff) >= mTouchSlop) {
+                if (y > contentTop + mHoverTopAreaHeight || touchYDiff <= 0) {
+                    if (y >= contentBottom - mHoverBottomAreaHeight - mRemainNestedScrollRange
+                            && touchYDiff < 0) {
+                        if (!mHoverAreaEnter) {
+                            mHoverAreaEnter = true;
+                            mHoverScrollStartTime = System.currentTimeMillis();
+                            if (mScrollListener != null) {
+                                mScrollListener.onScrollStateChanged(this,
+                                        SCROLL_STATE_DRAGGING);
+                            }
+                        }
+
+                        if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                            mHoverRecognitionStartTime = System.currentTimeMillis();
+                            mHoverScrollDirection = HOVERSCROLL_UP;
+                            mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                        }
+                    } else {
+                        if (mHoverAreaEnter) {
+                            if (mScrollListener != null) {
+                                mScrollListener.onScrollStateChanged(this,
+                                        SCROLL_STATE_IDLE);
+                            }
+                        }
+
+                        mHoverScrollStartTime = 0;
+                        mHoverRecognitionStartTime = 0;
+                        mHoverAreaEnter = false;
+                        if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                            mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                            if (mScrollState == SCROLL_STATE_DRAGGING) {
+                                setScrollState(SCROLL_STATE_IDLE);
+                            }
+                        }
+
+                        mIsHoverOverscrolled = false;
+                    }
+                } else {
+                    if (!mHoverAreaEnter) {
+                        mHoverAreaEnter = true;
+                        mHoverScrollStartTime = System.currentTimeMillis();
+                        if (mScrollListener != null) {
+                            mScrollListener.onScrollStateChanged(this,
+                                    SCROLL_STATE_DRAGGING);
+                        }
+                    }
+
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        mHoverScrollDirection = HOVERSCROLL_DOWN;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
+                }
+            }
+        }
+
+        invalidate();
+    }
+
+    private void multiSelection(int x, int y, int contentTop, int contentBottom,
+                                boolean needToScroll) {
+        if (mIsNeedPenSelection) {
+            if (mIsFirstPenMoveEvent) {
+                mPenDragStartX = x;
+                mPenDragStartY = y;
+                mIsPenPressed = true;
+
+                mPenTrackedChild = findChildViewUnder(x, y);
+                if (mPenTrackedChild == null) {
+                    mPenTrackedChild = seslFindNearChildViewUnder(x, y);
+                    if (mPenTrackedChild == null) {
+                        Log.e("SeslRecyclerView",
+                                "multiSelection, mPenTrackedChild is NULL");
+                        mIsPenPressed = false;
+                        mIsFirstPenMoveEvent = false;
                         return;
                     }
                 }
 
-                var13 = this.mOnMultiSelectedListener;
-                if (var13 != null) {
-                    var13.onMultiSelectStart(var1, var2);
+                if (mOnMultiSelectedListener != null) {
+                    mOnMultiSelectedListener.onMultiSelectStart(x, y);
                 }
 
-                this.mPenTrackedChildPosition = this.getChildLayoutPosition(this.mPenTrackedChild);
-                this.mPenDistanceFromTrackedChildTop = this.mPenDragStartY - this.mPenTrackedChild.getTop();
-                this.mIsFirstPenMoveEvent = false;
+                mPenTrackedChildPosition = getChildLayoutPosition(mPenTrackedChild);
+                mPenDistanceFromTrackedChildTop = mPenDragStartY - mPenTrackedChild.getTop();
+                mIsFirstPenMoveEvent = false;
             }
 
-            if (this.mPenDragStartX == 0 && this.mPenDragStartY == 0) {
-                this.mPenDragStartX = var1;
-                this.mPenDragStartY = var2;
-                var13 = this.mOnMultiSelectedListener;
-                if (var13 != null) {
-                    var13.onMultiSelectStart(var1, var2);
+            if (mPenDragStartX == 0 && mPenDragStartY == 0) {
+                mPenDragStartX = x;
+                mPenDragStartY = y;
+
+                if (mOnMultiSelectedListener != null) {
+                    mOnMultiSelectedListener.onMultiSelectStart(x, y);
                 }
 
-                this.mIsPenPressed = true;
+                mIsPenPressed = true;
             }
 
-            this.mPenDragEndX = var1;
-            this.mPenDragEndY = var2;
-            if (var2 < 0) {
-                this.mPenDragEndY = 0;
-            } else if (var2 > var4) {
-                this.mPenDragEndY = var4;
+            mPenDragEndX = x;
+            mPenDragEndY = y;
+
+            if (mPenDragEndY < 0) {
+                mPenDragEndY = 0;
+            } else if (mPenDragEndY > contentBottom) {
+                mPenDragEndY = contentBottom;
             }
 
-            int var9 = this.mPenDragStartX;
-            int var10;
-            if (var9 < var1) {
-                var10 = var9;
+            if (mPenDragStartX < mPenDragEndX) {
+                mPenDragBlockLeft = mPenDragStartX;
             } else {
-                var10 = var1;
+                mPenDragBlockLeft = mPenDragEndX;
             }
 
-            this.mPenDragBlockLeft = var10;
-            int var11 = this.mPenDragStartY;
-            var10 = this.mPenDragEndY;
-            int var12;
-            if (var11 < var10) {
-                var12 = var11;
+            if (mPenDragStartY < mPenDragEndY) {
+                mPenDragBlockTop = mPenDragStartY;
             } else {
-                var12 = var10;
+                mPenDragBlockTop = mPenDragEndY;
             }
 
-            this.mPenDragBlockTop = var12;
-            if (var1 <= var9) {
-                var1 = var9;
+            if (mPenDragEndX > mPenDragStartX) {
+                mPenDragBlockRight = mPenDragEndX;
+            } else {
+                mPenDragBlockRight = mPenDragStartX;
             }
 
-            this.mPenDragBlockRight = var1;
-            var1 = var11;
-            if (var10 > var11) {
-                var1 = var10;
+            if (mPenDragEndY > mPenDragStartY) {
+                mPenDragBlockBottom = mPenDragEndY;
+            } else {
+                mPenDragBlockBottom = mPenDragStartY;
             }
 
-            this.mPenDragBlockBottom = var1;
-            var5 = true;
+            needToScroll = true;
         }
 
-        if (var5) {
-            RecyclerView.OnScrollListener var14;
-            if (var2 <= var3 + this.mHoverTopAreaHeight) {
-                if (!this.mHoverAreaEnter) {
-                    this.mHoverAreaEnter = true;
-                    this.mHoverScrollStartTime = System.currentTimeMillis();
-                    var14 = this.mScrollListener;
-                    if (var14 != null) {
-                        var14.onScrollStateChanged(this, 1);
+        if (needToScroll) {
+            if (y > contentTop + mHoverTopAreaHeight) {
+                if (y < contentBottom - mHoverBottomAreaHeight - mRemainNestedScrollRange) {
+                    if (mHoverAreaEnter) {
+                        if (mScrollListener != null) {
+                            mScrollListener.onScrollStateChanged(this,
+                                    SCROLL_STATE_IDLE);
+                        }
                     }
-                }
 
-                if (!this.mHoverHandler.hasMessages(0)) {
-                    this.mHoverRecognitionStartTime = System.currentTimeMillis();
-                    this.mHoverScrollDirection = 2;
-                    this.mHoverHandler.sendEmptyMessage(0);
-                }
-            } else if (var2 >= var4 - this.mHoverBottomAreaHeight - this.mRemainNestedScrollRange) {
-                if (!this.mHoverAreaEnter) {
-                    this.mHoverAreaEnter = true;
-                    this.mHoverScrollStartTime = System.currentTimeMillis();
-                    var14 = this.mScrollListener;
-                    if (var14 != null) {
-                        var14.onScrollStateChanged(this, 1);
+                    mHoverScrollStartTime = 0;
+                    mHoverRecognitionStartTime = 0;
+                    mHoverAreaEnter = false;
+                    if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                        if (mScrollState == SCROLL_STATE_DRAGGING) {
+                            setScrollState(SCROLL_STATE_IDLE);
+                        }
                     }
-                }
 
-                if (!this.mHoverHandler.hasMessages(0)) {
-                    this.mHoverRecognitionStartTime = System.currentTimeMillis();
-                    this.mHoverScrollDirection = 1;
-                    this.mHoverHandler.sendEmptyMessage(0);
+                    mIsHoverOverscrolled = false;
+                } else {
+                    if (!mHoverAreaEnter) {
+                        mHoverAreaEnter = true;
+                        mHoverScrollStartTime = System.currentTimeMillis();
+                        if (mScrollListener != null) {
+                            mScrollListener.onScrollStateChanged(this,
+                                    SCROLL_STATE_DRAGGING);
+                        }
+                    }
+
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        mHoverScrollDirection = HOVERSCROLL_UP;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
                 }
             } else {
-                if (this.mHoverAreaEnter) {
-                    var14 = this.mScrollListener;
-                    if (var14 != null) {
-                        var14.onScrollStateChanged(this, 0);
+                if (!mHoverAreaEnter) {
+                    mHoverAreaEnter = true;
+                    mHoverScrollStartTime = System.currentTimeMillis();
+                    if (mScrollListener != null) {
+                        mScrollListener.onScrollStateChanged(this,
+                                SCROLL_STATE_DRAGGING);
                     }
                 }
 
-                this.mHoverScrollStartTime = 0L;
-                this.mHoverRecognitionStartTime = 0L;
-                this.mHoverAreaEnter = false;
-                if (this.mHoverHandler.hasMessages(0)) {
-                    this.mHoverHandler.removeMessages(0);
-                    if (this.mScrollState == 1) {
-                        this.setScrollState(0);
-                    }
+                if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                    mHoverRecognitionStartTime = System.currentTimeMillis();
+                    mHoverScrollDirection = HOVERSCROLL_DOWN;
+                    mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
                 }
-
-                this.mIsHoverOverscrolled = false;
             }
 
-            if (this.mIsPenDragBlockEnabled) {
-                this.invalidate();
+            if (mIsPenDragBlockEnabled) {
+                invalidate();
             }
         }
-
     }
-    // kang
 
     private void multiSelectionEnd(int x, int y) {
         if (mIsPenPressed && mOnMultiSelectedListener != null) {
@@ -16257,7 +16283,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
         mIsPenPressed = false;
         mIsFirstPenMoveEvent = true;
-        mPenDragSelectedViewPosition = -1;
+        mPenDragSelectedViewPosition = NO_POSITION;
         mPenDragSelectedItemArray.clear();
         mPenDragStartX = 0;
         mPenDragStartY = 0;

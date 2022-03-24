@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2015 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
   <!-- Style to use for AppBarLayouts in this theme. -->
@@ -46,6 +47,11 @@
     <!-- The drawable to display in front of the layout's content, but behind the status bar.
          Only works on Lollipop when used together with android:fitSystemWindows="true". -->
     <attr name="statusBarForeground" format="color"/>
+
+    <attr name="android:paddingBottom" />
+    <attr name="seslHeightProportion" format="float" />
+    <attr name="seslUseCustomHeight" format="boolean" />
+    <attr name="seslUseCustomPadding" format="boolean" />
   </declare-styleable>
 
   <declare-styleable name="AppBarLayoutStates">
@@ -206,12 +212,14 @@
     </attr>
     <!-- The maximum number of lines to display in the expanded state. Experimental Feature. -->
     <attr name="maxLines" format="integer" />
-    <!-- Whether the system window inset top should be applied regardless of
-         what the layout_height is set to. Experimental Feature. -->
-    <attr name="forceApplySystemWindowInsetTop" format="boolean" />
     <!-- Whether extra height should be added when the title text spans across
          multiple lines. Experimental Feature. -->
     <attr name="extraMultilineHeightEnabled" format="boolean" />
+
+    <attr name="subtitle" format="string" />
+    <attr name="extendedTitleEnabled" format="boolean" />
+    <attr name="extendedTitleTextAppearance" format="reference" />
+    <attr name="extendedSubtitleTextAppearance" format="reference" />
   </declare-styleable>
 
   <declare-styleable name="CollapsingToolbarLayout_Layout">
@@ -228,6 +236,8 @@
     <!-- The multiplier used when layout_collapseMode is set to 'parallax'. The value should
          be between 0.0 and 1.0. -->
     <attr name="layout_collapseParallaxMultiplier" format="float"/>
+
+    <attr name="isCustomTitle" format="boolean" />
   </declare-styleable>
 
   <declare-styleable name="MaterialToolbar">

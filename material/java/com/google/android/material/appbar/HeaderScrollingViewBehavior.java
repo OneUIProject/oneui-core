@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior;
 import androidx.core.math.MathUtils;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * The {@link Behavior} for a scrolling view that is positioned vertically below another view. See
@@ -87,6 +91,9 @@ abstract class HeaderScrollingViewBehavior extends ViewOffsetBehavior<View> {
           child.setTranslationY(-headerHeight);
         } else {
           height -= headerHeight;
+        }
+        if (height < 0) {
+          height = 0;
         }
         final int heightMeasureSpec =
             View.MeasureSpec.makeMeasureSpec(

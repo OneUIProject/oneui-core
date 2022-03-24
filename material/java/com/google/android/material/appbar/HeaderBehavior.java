@@ -16,7 +16,11 @@
 
 package com.google.android.material.appbar;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
 import android.content.Context;
+
+import androidx.annotation.RestrictTo;
 import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -47,6 +51,11 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
   private int touchSlop = -1;
   @Nullable private VelocityTracker velocityTracker;
 
+  int mLastInterceptTouchEvent;
+  int mLastTouchEvent;
+
+  private boolean mHasNoSnapFlag;
+
   public HeaderBehavior() {}
 
   public HeaderBehavior(Context context, AttributeSet attrs) {
@@ -59,6 +68,8 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
     if (touchSlop < 0) {
       touchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
     }
+
+    mLastInterceptTouchEvent = ev.getAction();
 
     // Shortcut since we're being dragged
     if (ev.getActionMasked() == MotionEvent.ACTION_MOVE && isBeingDragged) {
@@ -108,7 +119,8 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
   @Override
   public boolean onTouchEvent(
       @NonNull CoordinatorLayout parent, @NonNull V child, @NonNull MotionEvent ev) {
-    boolean consumeUp = false;
+    mLastTouchEvent = ev.getAction();
+
     switch (ev.getActionMasked()) {
       case MotionEvent.ACTION_MOVE:
         final int activePointerIndex = ev.findPointerIndex(activePointerId);
@@ -128,8 +140,7 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
         lastMotionY = (int) (ev.getY(newIndex) + 0.5f);
         break;
       case MotionEvent.ACTION_UP:
-        if (velocityTracker != null) {
-          consumeUp = true;
+        if (mHasNoSnapFlag && velocityTracker != null) {
           velocityTracker.addMovement(ev);
           velocityTracker.computeCurrentVelocity(1000);
           float yvel = velocityTracker.getYVelocity(activePointerId);
@@ -151,7 +162,7 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
       velocityTracker.addMovement(ev);
     }
 
-    return isBeingDragged || consumeUp;
+    return isBeingDragged;
   }
 
   int setHeaderTopBottomOffset(CoordinatorLayout parent, V header, int newOffset) {
@@ -228,12 +239,19 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
     }
   }
 
+  boolean isFlingRunnable() {
+    return flingRunnable != null;
+  }
+
   /**
    * Called when a fling has finished, or the fling was initiated but there wasn't enough velocity
    * to start it.
    */
   void onFlingFinished(CoordinatorLayout parent, V layout) {
-    // no-op
+    if (flingRunnable != null) {
+      layout.removeCallbacks(flingRunnable);
+      flingRunnable = null;
+    }
   }
 
   /** Return true if the view can be dragged. */
@@ -254,6 +272,19 @@ abstract class HeaderBehavior<V extends View> extends ViewOffsetBehavior<V> {
     if (velocityTracker == null) {
       velocityTracker = VelocityTracker.obtain();
     }
+  }
+
+  public int getLastInterceptTouchEventEvent() {
+    return mLastInterceptTouchEvent;
+  }
+
+  public int getLastTouchEventEvent() {
+    return mLastTouchEvent;
+  }
+
+  @RestrictTo(LIBRARY_GROUP)
+  public void seslHasNoSnapFlag(boolean noSnapFlag) {
+    mHasNoSnapFlag = noSnapFlag;
   }
 
   private class FlingRunnable implements Runnable {

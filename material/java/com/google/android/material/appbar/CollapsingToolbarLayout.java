@@ -2026,27 +2026,29 @@ public class CollapsingToolbarLayout extends FrameLayout {
                         tbar.setTitleAccessibilityEnabled(true);
                     }
 
+                    double collapsedTitleAlpha = 255.0d;
+                    int collapsedSubTitleAlpha = 255;
+
                     if (!isExpanded) {
                         tbar.setTitleAccessibilityEnabled(true);
                     } else {
-                        double collapsedTitleAlpha = 255.0d;
-                        int collapsedSubTitleAlpha = 255;
                         double calculatedAlpha = (150.0f / alphaRange) * (layoutPosition - (getHeight() * 0.35f));
                         if (calculatedAlpha >= 0.0d && calculatedAlpha <= 255.0d) {
-                            collapsedSubTitleAlpha = (int) calculatedAlpha;
                             collapsedTitleAlpha = calculatedAlpha;
+                            collapsedSubTitleAlpha = (int) calculatedAlpha;
                         } else if (calculatedAlpha < 0.0d) {
                             collapsedTitleAlpha = 0.0d;
+                            collapsedSubTitleAlpha = 0;
                         }
+                    }
 
-                        if (mFadeToolbarTitle) {
-                            tbar.setTitleTextColor(
-                                    ColorUtils.setAlphaComponent(tbar.seslGetTitleTextColor(), (int) collapsedTitleAlpha));
-                        }
-                        if (!TextUtils.isEmpty(tbar.getSubtitle())) {
-                            tbar.setSubtitleTextColor(
-                                    ColorUtils.setAlphaComponent(tbar.seslGetSubtitleTextColor(), collapsedSubTitleAlpha));
-                        }
+                    if (mFadeToolbarTitle) {
+                        tbar.setTitleTextColor(
+                                ColorUtils.setAlphaComponent(tbar.seslGetTitleTextColor(), (int) collapsedTitleAlpha));
+                    }
+                    if (!TextUtils.isEmpty(tbar.getSubtitle())) {
+                        tbar.setSubtitleTextColor(
+                                ColorUtils.setAlphaComponent(tbar.seslGetSubtitleTextColor(), collapsedSubTitleAlpha));
                     }
                 }
             } else if (collapsingTitleEnabled) {

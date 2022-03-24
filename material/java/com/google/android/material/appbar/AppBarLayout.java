@@ -2164,6 +2164,7 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
       return -1;
     }
 
+    // TODO rework this method
     // kang
     private void snapToChildIfNeeded(CoordinatorLayout coordinatorLayout, T t) {
       int topBottomOffsetForScrollingSibling = getTopBottomOffsetForScrollingSibling();
@@ -2819,18 +2820,18 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
           mDirectTouchAppbar = true;
           touchX = ev.getX();
           touchY = ev.getY();
-          mLastMotionY_Touch = ev.getY();
+          mLastMotionY_Touch = touchY;
           mDiffY_Touch = 0.0f;
           break;
 
         case MotionEvent.ACTION_MOVE:
           mDirectTouchAppbar = true;
-          final float diffYTouch = ev.getY() - mLastMotionY_Touch;
-          if (diffYTouch != 0.0f) {
-            mDiffY_Touch = diffYTouch;
+          final float currentY = ev.getY();
+          if (currentY - mLastMotionY_Touch != 0.0f) {
+            mDiffY_Touch = currentY - mLastMotionY_Touch;
           }
           if (Math.abs(mDiffY_Touch) > mTouchSlop) {
-            mLastMotionY_Touch = diffYTouch;
+            mLastMotionY_Touch = currentY;
           }
           break;
 

@@ -22,6 +22,11 @@
   <declare-styleable name="BottomNavigationView">
     <!-- Whether the items translate horizontally when in "selected" label visibility mode. -->
     <attr name="itemHorizontalTranslationEnabled" format="boolean"/>
+
+    <attr name="android:background" />
+    <attr name="android:paddingStart" />
+    <attr name="android:paddingEnd" />
+    <attr name="seslBottomBarHasIcon" format="boolean" />
   </declare-styleable>
 
 </resources>

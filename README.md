@@ -9,17 +9,17 @@
 - CustomView
 - DrawerLayout
 - Fragment
+- RecyclerView
 - SwipeRefreshLayout
 - ViewPager
 
 ## Uncomplete modules:
-- RecyclerView (needs minor adjustments)
+- Material Components
 - SlidingPaneLayout (broken, needs fixes)
 
 ## Modules to be added:
 - AppPickerView
 - IndexScroll
-- Material Components
 - PickerBasic
 - PickerColor
 - Preference

@@ -364,12 +364,7 @@ public abstract class FragmentStateAdapter extends
 
     @Override
     public final boolean onFailedToRecycleView(@NonNull FragmentViewHolder holder) {
-        // This happens when a ViewHolder is in a transient state (e.g. during custom
-        // animation). We don't have sufficient information on how to clear up what lead to
-        // the transient state, so we are throwing away the ViewHolder to stay on the
-        // conservative side.
-        onViewRecycled(holder); // the same clean-up steps as when recycling a ViewHolder
-        return false; // don't recycle the view
+        return true;
     }
 
     private void removeFragment(long itemId) {

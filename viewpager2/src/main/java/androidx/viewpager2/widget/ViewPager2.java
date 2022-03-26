@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,10 @@ import androidx.viewpager2.R;
 import androidx.viewpager2.adapter.StatefulAdapter;
 
 import java.lang.annotation.Retention;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * ViewPager2 replaces {@link androidx.viewpager.widget.ViewPager}, addressing most of its
@@ -1438,5 +1442,9 @@ public final class ViewPager2 extends ViewGroup {
             }
             info.setScrollable(true);
         }
+    }
+
+    public RecyclerView seslGetListView() {
+        return mRecyclerView;
     }
 }

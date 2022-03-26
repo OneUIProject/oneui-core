@@ -53,9 +53,6 @@ public final class MarginPageTransformer implements ViewPager2.PageTransformer {
     @Override
     public void transformPage(@NonNull View page,
             @FloatRange(from = -1.0, to = 1.0) float position) {
-        Preconditions.checkState(position >= -1f && position <= 1f,
-                "Expected position values between -1 and 1.");
-
         ViewPager2 viewPager = requireViewPager(page);
 
         float offset = mMarginPx * position;

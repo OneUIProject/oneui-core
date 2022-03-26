@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2018 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Layout used by SeekBarPreference for the seekbar widget style. -->
 <LinearLayout
@@ -49,7 +50,6 @@
 
             <TextView
                 android:id="@android:id/title"
-                android:labelFor="@id/seekbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -105,7 +105,9 @@
                 android:paddingEnd="@dimen/preference_seekbar_padding_horizontal"
                 android:paddingTop="@dimen/preference_seekbar_padding_vertical"
                 android:paddingBottom="@dimen/preference_seekbar_padding_vertical"
-                android:background="@null"/>
+                android:background="@null"
+                android:focusable="false"
+                android:clickable="false"/>
 
             <!-- If the value is shown, we reserve a minimum width of 36dp to allow for consistent
             seekbar width for smaller values. If the value is ~4 or more digits, it will expand

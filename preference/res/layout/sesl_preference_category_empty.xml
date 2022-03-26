@@ -13,11 +13,14 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Layout used for PreferenceCategory in a PreferenceActivity. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/sesl_list_subheader_min_height"
     style="?android:attr/listSeparatorTextViewStyle"
     android:id="@android:id/title"
+    android:tag="preferencecategory"
+    android:importantForAccessibility="no"
     />

@@ -1003,17 +1003,17 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
     // Sesl
     public interface SeslFastScrollerEventListener {
-        void onPressed(float y);
+        void onPressed(float scrollY);
 
-        void onReleased(float y);
+        void onReleased(float scrollY);
     }
 
     public interface SeslLongPressMultiSelectionListener {
         void onItemSelected(RecyclerView view, View child, int position, long id);
 
-        void onLongPressMultiSelectionEnded(int x, int y);
+        void onLongPressMultiSelectionEnded(int endX, int endY);
 
-        void onLongPressMultiSelectionStarted(int x, int y);
+        void onLongPressMultiSelectionStarted(int startX, int startY);
     }
 
     public interface SeslOnGoToTopClickListener {
@@ -1021,9 +1021,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     public interface SeslOnMultiSelectedListener {
-        void onMultiSelectStart(int x, int y);
+        void onMultiSelectStart(int startX, int startY);
 
-        void onMultiSelectStop(int x, int y);
+        void onMultiSelectStop(int endX, int endY);
 
         void onMultiSelected(RecyclerView view, View child, int position, long id);
     }

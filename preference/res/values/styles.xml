@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2015 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License
   -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <resources>
     <style name="Preference">
-        <item name="android:layout">@layout/preference</item>
+        <item name="android:layout">@layout/sesl_preference</item>
     </style>
 
     <style name="PreferenceFragment">
-        <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingRight">0dp</item>
         <item name="android:paddingEnd">0dp</item>
         <item name="android:divider">?android:attr/listDivider</item>
     </style>
@@ -35,27 +34,37 @@
     </style>
 
     <style name="Preference.Category">
-        <item name="android:layout">@layout/preference_category</item>
+        <item name="android:layout">@layout/sesl_preference_category</item>
         <!-- The title should not dim if the category is disabled, instead only the preference children should dim. -->
         <item name="android:shouldDisableView">false</item>
         <item name="android:selectable">false</item>
     </style>
 
     <style name="Preference.CheckBoxPreference">
-        <item name="android:widgetLayout">@layout/preference_widget_checkbox</item>
+        <item name="android:widgetLayout">@layout/sesl_preference_widget_checkbox</item>
     </style>
 
     <style name="Preference.SwitchPreferenceCompat">
-        <item name="android:widgetLayout">@layout/preference_widget_switch_compat</item>
-        <item name="android:switchTextOn">@string/v7_preference_on</item>
-        <item name="android:switchTextOff">@string/v7_preference_off</item>
+        <item name="android:widgetLayout">@layout/sesl_preference_widget_switch</item>
+        <item name="android:switchTextOn">@string/sesl_preference_on</item>
+        <item name="android:switchTextOff">@string/sesl_preference_off</item>
+    </style>
+
+    <style name="Preference.RingtonePreference" parent="Preference">
+        <item name="android:ringtoneType">ringtone</item>
+        <item name="android:showDefault">true</item>
+        <item name="android:showSilent">true</item>
     </style>
 
     <style name="Preference.SeekBarPreference">
-        <item name="android:layout">@layout/preference_widget_seekbar</item>
+        <item name="android:layout">@layout/sesl_preference_widget_seekbar</item>
         <item name="adjustable">true</item>
         <item name="showSeekBarValue">true</item>
         <item name="updatesContinuously">false</item>
+    </style>
+
+    <style name="Preference.SeekBarPreferenceCompat" parent="Preference">
+        <item name="android:layout">@layout/sesl_preference_widget_seekbar</item>
     </style>
 
     <style name="Preference.PreferenceScreen">
@@ -67,22 +76,24 @@
     </style>
 
     <style name="Preference.DialogPreference.EditTextPreference">
-        <item name="android:dialogLayout">@layout/preference_dialog_edittext</item>
+        <item name="android:dialogLayout">@layout/sesl_preference_dialog_edittext</item>
+    </style>
+
+    <style name="Preference.DialogPreference.SeekBarPreferenceCompat" parent="Preference.DialogPreference">
+        <item name="android:dialogLayout">@layout/sesl_preference_dialog_seekbar</item>
     </style>
 
     <style name="PreferenceFragmentList">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
     </style>
 
     <style name="Preference.DropDown">
-        <item name="android:layout">@layout/preference_dropdown</item>
+        <item name="android:layout">@layout/sesl_preference_dropdown</item>
     </style>
 
     <style name="Preference.SwitchPreference">
-        <item name="android:widgetLayout">@layout/preference_widget_switch</item>
+        <item name="android:widgetLayout">@layout/sesl_preference_widget_switch</item>
         <item name="android:switchTextOn">@string/v7_preference_on</item>
         <item name="android:switchTextOff">@string/v7_preference_off</item>
     </style>
@@ -133,7 +144,7 @@
     <style name="Preference.SeekBarPreference.Material">
         <item name="android:layout">@layout/preference_widget_seekbar_material</item>
         <item name="adjustable">true</item>
-        <item name="showSeekBarValue">false</item>
+        <item name="showSeekBarValue">true</item>
         <item name="allowDividerAbove">false</item>
         <item name="allowDividerBelow">true</item>
         <item name="iconSpaceReserved">@bool/config_materialPreferenceIconSpaceReserved</item>
@@ -175,17 +186,15 @@
 
     <style name="PreferenceFragmentList.Material">
         <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
         <item name="android:paddingRight">0dp</item>
-        <item name="android:paddingEnd">0dp</item>
     </style>
 
     <style name="PreferenceSummaryTextStyle">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItemSecondary</item>
     </style>
 
     <style name="PreferenceCategoryTitleTextStyle">
         <item name="android:textAppearance">?attr/preferenceCategoryTitleTextAppearance</item>
-        <item name="android:textColor">?attr/preferenceCategoryTitleTextColor</item>
+        <item name="android:textColor">?android:attr/colorAccent</item>
     </style>
 </resources>

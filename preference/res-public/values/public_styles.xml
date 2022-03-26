@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2017 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Definitions of styles to be exposed as public -->
 <resources>
@@ -20,11 +21,14 @@
     <public type="style" name="Preference.Category" />
     <public type="style" name="Preference.CheckBoxPreference" />
     <public type="style" name="Preference.DialogPreference.EditTextPreference" />
+    <public type="style" name="Preference.DialogPreference.SeekBarPreferenceCompat" />
     <public type="style" name="Preference.DialogPreference" />
     <public type="style" name="Preference.DropDown" />
     <public type="style" name="Preference.Information" />
     <public type="style" name="Preference.PreferenceScreen" />
+    <public type="style" name="Preference.RingtonePreference" />
     <public type="style" name="Preference.SeekBarPreference" />
+    <public type="style" name="Preference.SeekBarPreferenceCompat" />
     <public type="style" name="Preference.SwitchPreferenceCompat" />
     <public type="style" name="PreferenceFragment" />
     <public type="style" name="PreferenceFragmentList" />

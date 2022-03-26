@@ -72,8 +72,8 @@ public class SwitchPreferenceCompat extends TwoStatePreference {
         super(context, attrs, defStyleAttr, defStyleRes);
 
         final Configuration configuration = context.getResources().getConfiguration();
-        if ((configuration.screenWidthDp > 320 || configuration.fontScale < FONT_SCALE_MEDIUM)
-                || (configuration.screenWidthDp >= 411 || configuration.fontScale < FONT_SCALE_LARGE)) {
+        if ((configuration.screenWidthDp <= 320 && configuration.fontScale >= FONT_SCALE_MEDIUM)
+                || (configuration.screenWidthDp < 411 && configuration.fontScale >= FONT_SCALE_LARGE)) {
             setLayoutResource(R.layout.sesl_preference_switch_large);
         }
 

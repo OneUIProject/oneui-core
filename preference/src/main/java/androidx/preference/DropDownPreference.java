@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,18 @@
 package androidx.preference;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link ListPreference} that presents the options in a drop down menu rather than a dialog.
@@ -35,7 +38,7 @@ public class DropDownPreference extends ListPreference {
     private final Context mContext;
     private final ArrayAdapter mAdapter;
 
-    private Spinner mSpinner;
+    private AppCompatSpinner mSpinner;
 
     private final OnItemSelectedListener mItemSelectedListener = new OnItemSelectedListener() {
         @Override
@@ -96,7 +99,7 @@ public class DropDownPreference extends ListPreference {
      * @return The custom {@link ArrayAdapter} that needs to be used with this class
      */
     protected ArrayAdapter createAdapter() {
-        return new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item);
+        return new ArrayAdapter<>(mContext, R.layout.support_simple_spinner_dropdown_item);
     }
 
     @SuppressWarnings("unchecked")
@@ -127,7 +130,12 @@ public class DropDownPreference extends ListPreference {
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         mSpinner = holder.itemView.findViewById(R.id.spinner);
-        mSpinner.setAdapter(mAdapter);
+        mSpinner.setSoundEffectsEnabled(false);
+        mSpinner.setDropDownHorizontalOffset(getContext().getResources()
+                .getDimensionPixelOffset(R.dimen.sesl_list_dropdown_item_start_padding));
+        if (!mAdapter.equals(mSpinner.getAdapter())) {
+            mSpinner.setAdapter(mAdapter);
+        }
         mSpinner.setOnItemSelectedListener(mItemSelectedListener);
         mSpinner.setSelection(findSpinnerIndexOfValue(getValue()));
         super.onBindViewHolder(holder);
@@ -137,12 +145,16 @@ public class DropDownPreference extends ListPreference {
         CharSequence[] entryValues = getEntryValues();
         if (value != null && entryValues != null) {
             for (int i = entryValues.length - 1; i >= 0; i--) {
-                if (TextUtils.equals(entryValues[i].toString(), value)) {
+                if (entryValues[i].equals(value)) {
                     return i;
                 }
             }
         }
-        return Spinner.INVALID_POSITION;
+        return AppCompatSpinner.INVALID_POSITION;
+    }
+
+    public AppCompatSpinner seslGetSpinner() {
+        return mSpinner;
     }
 }
 

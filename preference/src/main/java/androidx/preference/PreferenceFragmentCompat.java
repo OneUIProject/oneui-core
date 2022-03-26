@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,15 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -37,63 +39,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.XmlRes;
+import androidx.appcompat.util.SeslRoundedCorner;
+import androidx.appcompat.util.SeslSubheaderRoundedCorner;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * A PreferenceFragmentCompat is the entry point to using the Preference library. This
- * {@link Fragment} displays a hierarchy of {@link Preference} objects to the user. It also
- * handles persisting values to the device. To retrieve an instance of
- * {@link android.content.SharedPreferences} that the preference hierarchy in this fragment will
- * use by default, call
- * {@link PreferenceManager#getDefaultSharedPreferences(android.content.Context)} with a context
- * in the same package as this fragment.
- *
- * <p>You can define a preference hierarchy as an XML resource, or you can build a hierarchy in
- * code. In both cases you need to use a {@link PreferenceScreen} as the root component in your
- * hierarchy.
- *
- * <p>To inflate from XML, use the {@link #setPreferencesFromResource(int, String)}. An example
- * example XML resource is shown further down.
- *
- * <p>To build a hierarchy from code, use
- * {@link PreferenceManager#createPreferenceScreen(Context)} to create the root
- * {@link PreferenceScreen}. Once you have added other {@link Preference}s to this root screen
- * with {@link PreferenceScreen#addPreference(Preference)}, you then need to set the screen as
- * the root screen in your hierarchy with {@link #setPreferenceScreen(PreferenceScreen)}.
- *
- * <p>As a convenience, this fragment implements a click listener for any preference in the
- * current hierarchy, see {@link #onPreferenceTreeClick(Preference)}.
- *
- * <div class="special reference"> <h3>Developer Guides</h3> <p>For more information about
- * building a settings screen using the AndroidX Preference library, see
- * <a href="{@docRoot}guide/topics/ui/settings.html">Settings</a>.</p> </div>
- *
- * <a name="SampleCode"></a>
- * <h3>Sample Code</h3>
- *
- * <p>The following sample code shows a simple settings screen using an XML resource. The XML
- * resource is as follows:</p>
- *
- * {@sample frameworks/support/samples/SupportPreferenceDemos/src/main/res/xml/preferences.xml preferences}
- *
- * <p>The fragment that loads the XML resource is as follows:</p>
- *
- * {@sample frameworks/support/samples/SupportPreferenceDemos/src/main/java/com/example/androidx/preference/Preferences.java preferences}
- *
- * @see Preference
- * @see PreferenceScreen
+ * Samsung PreferenceFragmentCompat class.
  */
 public abstract class PreferenceFragmentCompat extends Fragment implements
         PreferenceManager.OnPreferenceTreeClickListener,
         PreferenceManager.OnDisplayPreferenceDialogListener,
         PreferenceManager.OnNavigateToScreenListener,
         DialogPreference.TargetFragment {
+    // Sesl
+    private static final float FONT_SCALE_MEDIUM = 1.1f;
+    private static final float FONT_SCALE_LARGE = 1.3f;
 
-    private static final String TAG = "PreferenceFragment";
+    static final int SWITCH_PREFERENCE_LAYOUT = 2;
+    static final int SWITCH_PREFERENCE_LAYOUT_LARGE = 1;
+
+    private SeslRoundedCorner mListRoundedCorner;
+    private SeslRoundedCorner mRoundedCorner;
+    private SeslSubheaderRoundedCorner mSubheaderRoundedCorner;
+
+    private boolean mIsReducedMargin;
+    private boolean mIsRoundedCorner = true;
+
+    private int mIsLargeLayout;
+    private int mSubheaderColor;
+    // Sesl
+
+    private static final String TAG = "SeslPreferenceFragmentC";
 
     /**
      * Fragment argument used to specify the tag of the desired root {@link PreferenceScreen}
@@ -118,7 +102,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     private int mLayoutResId = R.layout.preference_list_fragment;
     private Runnable mSelectPreferenceRunnable;
 
-    @SuppressWarnings("deprecation")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -141,13 +124,20 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final TypedValue tv = new TypedValue();
-        getContext().getTheme().resolveAttribute(R.attr.preferenceTheme, tv, true);
+        getActivity().getTheme().resolveAttribute(R.attr.preferenceTheme, tv, true);
+
+        final Configuration configuration = getResources().getConfiguration();
+        mIsLargeLayout = ((configuration.screenWidthDp > 320 || configuration.fontScale < FONT_SCALE_MEDIUM)
+                && (configuration.screenWidthDp >= 411 || configuration.fontScale < FONT_SCALE_LARGE))
+                ? SWITCH_PREFERENCE_LAYOUT : SWITCH_PREFERENCE_LAYOUT_LARGE;
+        mIsReducedMargin = configuration.screenWidthDp <= 250;
+
         int theme = tv.resourceId;
         if (theme == 0) {
             // Fallback to default theme.
             theme = R.style.PreferenceThemeOverlay;
         }
-        getContext().getTheme().applyStyle(theme, false);
+        getActivity().getTheme().applyStyle(theme, false);
 
         mPreferenceManager = new PreferenceManager(getContext());
         mPreferenceManager.setOnNavigateToScreenListener(this);
@@ -194,7 +184,18 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
 
         a.recycle();
 
-        final LayoutInflater themedInflater = inflater.cloneInContext(getContext());
+        final Context context = getContext();
+        TypedArray a2 = context.obtainStyledAttributes(null,
+                R.styleable.View,
+                android.R.attr.listSeparatorTextViewStyle,
+                0);
+        Drawable background = a2.getDrawable(R.styleable.View_android_background);
+        if (background instanceof ColorDrawable) {
+            mSubheaderColor = ((ColorDrawable) background).getColor();
+        }
+        a2.recycle();
+
+        final LayoutInflater themedInflater = inflater.cloneInContext(context);
 
         final View view = themedInflater.inflate(mLayoutResId, container, false);
 
@@ -220,6 +221,18 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             setDividerHeight(dividerHeight);
         }
         mDividerDecoration.setAllowDividerAfterLastItem(allowDividerAfterLastItem);
+
+        mList.setItemAnimator(null);
+
+        mRoundedCorner = new SeslRoundedCorner(context);
+        mSubheaderRoundedCorner = new SeslSubheaderRoundedCorner(context);
+        if (mIsRoundedCorner) {
+            listView.seslSetFillBottomEnabled(true);
+            listView.seslSetFillBottomColor(mSubheaderColor);
+            mListRoundedCorner = new SeslRoundedCorner(context, true);
+            mListRoundedCorner.setRoundedCorners(SeslRoundedCorner.ROUNDED_CORNER_TOP_LEFT
+                    | SeslRoundedCorner.ROUNDED_CORNER_TOP_RIGHT);
+        }
 
         // If mList isn't present in the view hierarchy, add it. mList is automatically inflated
         // on an Auto device so don't need to add it.
@@ -395,7 +408,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference.getFragment() != null) {
@@ -404,23 +416,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
                 handled = ((OnPreferenceStartFragmentCallback) getCallbackFragment())
                         .onPreferenceStartFragment(this, preference);
             }
-            //  If the callback fragment doesn't handle OnPreferenceStartFragmentCallback, looks up
-            //  its parent fragment in the hierarchy that implements the callback until the first
-            //  one that returns true
-            Fragment callbackFragment = this;
-            while (!handled && callbackFragment != null) {
-                if (callbackFragment instanceof OnPreferenceStartFragmentCallback) {
-                    handled = ((OnPreferenceStartFragmentCallback) callbackFragment)
-                            .onPreferenceStartFragment(this, preference);
-                }
-                callbackFragment = callbackFragment.getParentFragment();
-            }
-            if (!handled && getContext() instanceof OnPreferenceStartFragmentCallback) {
-                handled = ((OnPreferenceStartFragmentCallback) getContext())
-                        .onPreferenceStartFragment(this, preference);
-            }
-            // Check the Activity as well in case getContext was overridden to return something
-            // other than the Activity.
             if (!handled && getActivity() instanceof OnPreferenceStartFragmentCallback) {
                 handled = ((OnPreferenceStartFragmentCallback) getActivity())
                         .onPreferenceStartFragment(this, preference);
@@ -432,7 +427,8 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
                                 + "implement this method so that you can configure the new "
                                 + "fragment that will be displayed, and set a transition between "
                                 + "the fragments.");
-                final FragmentManager fragmentManager = getParentFragmentManager();
+                final FragmentManager fragmentManager = requireActivity()
+                        .getSupportFragmentManager();
                 final Bundle args = preference.getExtras();
                 final Fragment fragment = fragmentManager.getFragmentFactory().instantiate(
                         requireActivity().getClassLoader(), preference.getFragment());
@@ -467,12 +463,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             handled = ((OnPreferenceStartScreenCallback) getCallbackFragment())
                     .onPreferenceStartScreen(this, preferenceScreen);
         }
-        if (!handled && getContext() instanceof OnPreferenceStartScreenCallback) {
-            handled = ((OnPreferenceStartScreenCallback) getContext())
-                    .onPreferenceStartScreen(this, preferenceScreen);
-        }
-        // Check the Activity as well in case getContext was overridden to return something other
-        // than the Activity.
         if (!handled && getActivity() instanceof OnPreferenceStartScreenCallback) {
             ((OnPreferenceStartScreenCallback) getActivity())
                     .onPreferenceStartScreen(this, preferenceScreen);
@@ -563,7 +553,7 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             }
         }
         RecyclerView recyclerView = (RecyclerView) inflater
-                .inflate(R.layout.preference_recyclerview, parent, false);
+                .inflate(R.layout.sesl_preference_recyclerview, parent, false);
 
         recyclerView.setLayoutManager(onCreateLayoutManager());
         recyclerView.setAccessibilityDelegateCompat(
@@ -599,7 +589,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
      *
      * @param preference The {@link Preference} object requesting the dialog
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
 
@@ -608,12 +597,6 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
             handled = ((OnPreferenceDisplayDialogCallback) getCallbackFragment())
                     .onPreferenceDisplayDialog(this, preference);
         }
-        if (!handled && getContext() instanceof OnPreferenceDisplayDialogCallback) {
-            handled = ((OnPreferenceDisplayDialogCallback) getContext())
-                    .onPreferenceDisplayDialog(this, preference);
-        }
-        // Check the Activity as well in case getContext was overridden to return something other
-        // than the Activity.
         if (!handled && getActivity() instanceof OnPreferenceDisplayDialogCallback) {
             handled = ((OnPreferenceDisplayDialogCallback) getActivity())
                     .onPreferenceDisplayDialog(this, preference);
@@ -702,6 +685,64 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         } else {
             r.run();
         }
+    }
+
+    public void seslSetRoundedCorner(boolean enabled) {
+        mIsRoundedCorner = enabled;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (getListView() != null) {
+            final RecyclerView.Adapter adapter = getListView().getAdapter();
+
+            final int isLargeLayout = ((newConfig.screenWidthDp > 320 || newConfig.fontScale < FONT_SCALE_MEDIUM)
+                    && (newConfig.screenWidthDp >= 411 || newConfig.fontScale < FONT_SCALE_LARGE))
+                    ? SWITCH_PREFERENCE_LAYOUT : SWITCH_PREFERENCE_LAYOUT_LARGE;
+
+            if (adapter instanceof PreferenceGroupAdapter
+                    && isLargeLayout != mIsLargeLayout) {
+                mIsLargeLayout = isLargeLayout;
+
+                boolean hasSwitchPreference = false;
+                for (int i = 0; i < ((PreferenceGroupAdapter) adapter).getItemCount(); i++) {
+                    final Preference preference = ((PreferenceGroupAdapter) adapter).getItem(i);
+                    final int currentLayoutId = preference.getLayoutResource();
+                    if (preference instanceof SwitchPreferenceCompat) {
+                        if (currentLayoutId == R.layout.sesl_switch_preference_screen_large) {
+                            preference.setLayoutResource(R.layout.sesl_switch_preference_screen);
+                        } else if (currentLayoutId == R.layout.sesl_switch_preference_screen) {
+                            preference.setLayoutResource(R.layout.sesl_switch_preference_screen_large);
+                        } else if (currentLayoutId == R.layout.sesl_preference_switch_large) {
+                            preference.setLayoutResource(R.layout.sesl_preference);
+                        } else if (currentLayoutId == R.layout.sesl_preference) {
+                            preference.setLayoutResource(R.layout.sesl_preference_switch_large);
+                        }
+                        hasSwitchPreference = true;
+                    }
+                }
+
+                if (hasSwitchPreference) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            final boolean isReducedMargin = newConfig.screenWidthDp <= 250;
+            if (isReducedMargin != mIsReducedMargin
+                    && adapter instanceof PreferenceGroupAdapter) {
+                mIsReducedMargin = isReducedMargin;
+                setDivider(getContext().obtainStyledAttributes(null,
+                        R.styleable.PreferenceFragmentCompat,
+                        R.attr.preferenceFragmentCompatStyle,
+                        0).getDrawable(R.styleable.PreferenceFragment_android_divider));
+
+                final Parcelable state = getListView().getLayoutManager().onSaveInstanceState();
+                getListView().setAdapter(getListView().getAdapter());
+                getListView().getLayoutManager().onRestoreInstanceState(state);
+            }
+        }
+
+        super.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -820,27 +861,38 @@ public abstract class PreferenceFragmentCompat extends Fragment implements
         DividerDecoration() {}
 
         @Override
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            if (mDivider == null) {
-                return;
-            }
+        public void seslOnDispatchDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            super.seslOnDispatchDraw(c, parent, state);
+
             final int childCount = parent.getChildCount();
             final int width = parent.getWidth();
-            for (int childViewIndex = 0; childViewIndex < childCount; childViewIndex++) {
-                final View view = parent.getChildAt(childViewIndex);
-                if (shouldDrawDividerBelow(view, parent)) {
-                    int top = (int) view.getY() + view.getHeight();
-                    mDivider.setBounds(0, top, width, top + mDividerHeight);
+            for (int i = 0; i < childCount; i++) {
+                final View view = parent.getChildAt(i);
+                final RecyclerView.ViewHolder holder = parent.getChildViewHolder(view);
+                final PreferenceViewHolder preferenceHolder = holder instanceof PreferenceViewHolder ?
+                        (PreferenceViewHolder) holder : null;
+
+                int top = (int) view.getY() + view.getHeight();
+                if (mDivider != null && shouldDrawDividerBelow(view, parent)) {
+                    mDivider.setBounds(0, top, width, mDividerHeight + top);
                     mDivider.draw(c);
                 }
-            }
-        }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                RecyclerView.State state) {
-            if (shouldDrawDividerBelow(view, parent)) {
-                outRect.bottom = mDividerHeight;
+                if (mIsRoundedCorner) {
+                    if (preferenceHolder != null && preferenceHolder.isBackgroundDrawn()) {
+                        if (preferenceHolder.isDrawSubheaderRound()) {
+                            mSubheaderRoundedCorner.setRoundedCorners(preferenceHolder.getDrawCorners());
+                            mSubheaderRoundedCorner.drawRoundedCorner(view, c);
+                        } else {
+                            mRoundedCorner.setRoundedCorners(preferenceHolder.getDrawCorners());
+                            mRoundedCorner.drawRoundedCorner(view, c);
+                        }
+                    }
+                }
+            }
+
+            if (mIsRoundedCorner) {
+                mListRoundedCorner.drawRoundedCorner(c);
             }
         }
 

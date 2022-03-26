@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@ import android.widget.CompoundButton;
 
 import androidx.annotation.RestrictTo;
 import androidx.core.content.res.TypedArrayUtils;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link Preference} that provides checkbox widget functionality.
@@ -101,8 +105,10 @@ public class CheckBoxPreference extends TwoStatePreference {
         View checkboxView = view.findViewById(android.R.id.checkbox);
         syncCheckboxView(checkboxView);
 
-        View summaryView = view.findViewById(android.R.id.summary);
-        syncSummaryView(summaryView);
+        if (!isTalkBackIsRunning()) {
+            View summaryView = view.findViewById(android.R.id.summary);
+            syncSummaryView(summaryView);
+        }
     }
 
     private void syncCheckboxView(View view) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.util.SeslRoundedCorner;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * An adapter that connects a {@link RecyclerView} to the {@link Preference}s contained in
@@ -48,6 +53,12 @@ import java.util.List;
 public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewHolder>
         implements Preference.OnPreferenceChangeInternalListener,
         PreferenceGroup.PreferencePositionCallback {
+    // Sesl
+    private int mCategoryLayoutId = R.layout.sesl_preference_category;
+    private boolean mIsCategoryAfter = false;
+    private Preference mNextPreference = null;
+    private Preference mNextGroupPreference = null;
+    // Sesl
 
     /**
      * The {@link PreferenceGroup} that we build a list of preferences from. This should
@@ -187,7 +198,30 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         for (int i = 0; i < groupSize; i++) {
             final Preference preference = group.getPreference(i);
 
+            if (i == groupSize - 1) {
+                mNextPreference = null;
+                if (mIsCategoryAfter && preference == mNextGroupPreference) {
+                    mNextGroupPreference = null;
+                }
+            } else {
+                mNextPreference = group.getPreference(i + 1);
+                if (preference == mNextGroupPreference) {
+                    mNextGroupPreference = null;
+                }
+            }
+
+            final boolean isPreferenceCategory = preference instanceof PreferenceCategory;
+
+            if (isPreferenceCategory && !preference.mIsRoundChanged) {
+                preference.seslSetSubheaderRoundedBackground(SeslRoundedCorner.ROUNDED_CORNER_ALL);
+            }
+
             preferences.add(preference);
+
+            if (isPreferenceCategory && TextUtils.isEmpty(preference.getTitle())
+                    && mCategoryLayoutId == preference.getLayoutResource()) {
+                preference.setLayoutResource(R.layout.sesl_preference_category_empty);
+            }
 
             final PreferenceResourceDescriptor descriptor = new PreferenceResourceDescriptor(
                     preference);
@@ -198,6 +232,7 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
             if (preference instanceof PreferenceGroup) {
                 final PreferenceGroup nestedGroup = (PreferenceGroup) preference;
                 if (nestedGroup.isOnSameScreenAsChildren()) {
+                    mNextGroupPreference = mNextPreference;
                     flattenPreferenceGroup(preferences, nestedGroup);
                 }
             }
@@ -386,20 +421,8 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
         final PreferenceResourceDescriptor descriptor = mPreferenceResourceDescriptors.get(
                 viewType);
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        TypedArray a
-                = parent.getContext().obtainStyledAttributes(null, R.styleable.BackgroundStyle);
-        Drawable background
-                = a.getDrawable(R.styleable.BackgroundStyle_android_selectableItemBackground);
-        if (background == null) {
-            background = AppCompatResources.getDrawable(parent.getContext(),
-                    android.R.drawable.list_selector_background);
-        }
-        a.recycle();
 
         final View view = inflater.inflate(descriptor.mLayoutResId, parent, false);
-        if (view.getBackground() == null) {
-            ViewCompat.setBackground(view, background);
-        }
 
         final ViewGroup widgetFrame = view.findViewById(android.R.id.widget_frame);
         if (widgetFrame != null) {
@@ -416,7 +439,6 @@ public class PreferenceGroupAdapter extends RecyclerView.Adapter<PreferenceViewH
     @Override
     public void onBindViewHolder(@NonNull PreferenceViewHolder holder, int position) {
         final Preference preference = getItem(position);
-        holder.resetState();
         preference.onBindViewHolder(holder);
     }
 

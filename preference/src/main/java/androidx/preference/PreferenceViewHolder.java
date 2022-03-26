@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,47 +16,41 @@
 
 package androidx.preference;
 
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link RecyclerView.ViewHolder} class which caches views associated with the default
  * {@link Preference} layouts. Cached views can be retrieved by calling {@link #findViewById(int)}.
  */
 public class PreferenceViewHolder extends RecyclerView.ViewHolder {
-    @Nullable
-    private Drawable mBackground;
-    private ColorStateList mTitleTextColors;
     private final SparseArray<View> mCachedViews = new SparseArray<>(4);
     private boolean mDividerAllowedAbove;
     private boolean mDividerAllowedBelow;
+    private int mDrawCorners;
+    private boolean mDrawBackground = false;
+    private boolean mSubheaderRound = false;
 
     PreferenceViewHolder(View itemView) {
         super(itemView);
 
-        final TextView titleView = itemView.findViewById(android.R.id.title);
-
         // Pre-cache the views that we know in advance we'll want to find
-        mCachedViews.put(android.R.id.title, titleView);
+        mCachedViews.put(android.R.id.title, itemView.findViewById(android.R.id.title));
         mCachedViews.put(android.R.id.summary, itemView.findViewById(android.R.id.summary));
         mCachedViews.put(android.R.id.icon, itemView.findViewById(android.R.id.icon));
         mCachedViews.put(R.id.icon_frame, itemView.findViewById(R.id.icon_frame));
         mCachedViews.put(AndroidResources.ANDROID_R_ICON_FRAME,
                 itemView.findViewById(AndroidResources.ANDROID_R_ICON_FRAME));
-
-        mBackground = itemView.getBackground();
-        if (titleView != null) {
-            mTitleTextColors = titleView.getTextColors();
-        }
     }
 
     /** @hide */
@@ -133,21 +127,26 @@ public class PreferenceViewHolder extends RecyclerView.ViewHolder {
         mDividerAllowedBelow = allowed;
     }
 
-    /**
-     * Resets the state of properties modified by
-     * {@link Preference#onBindViewHolder(PreferenceViewHolder)} to ensure that we don't keep
-     * stale state for a different {@link Preference} around.
-     */
-    void resetState() {
-        if (itemView.getBackground() != mBackground) {
-            ViewCompat.setBackground(itemView, mBackground);
-        }
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    void setPreferenceBackgroundType(boolean drawBackground,
+                                     int drawCorners, boolean subheaderRound) {
+        mDrawBackground = drawBackground;
+        mDrawCorners = drawCorners;
+        mSubheaderRound = subheaderRound;
+    }
 
-        final TextView titleView = (TextView) findViewById(android.R.id.title);
-        if (titleView != null && mTitleTextColors != null) {
-            if (!titleView.getTextColors().equals(mTitleTextColors)) {
-                titleView.setTextColor(mTitleTextColors);
-            }
-        }
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    int getDrawCorners() {
+        return mDrawCorners;
+    }
+
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    boolean isBackgroundDrawn() {
+        return mDrawBackground;
+    }
+
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    boolean isDrawSubheaderRound() {
+        return mSubheaderRound;
     }
 }

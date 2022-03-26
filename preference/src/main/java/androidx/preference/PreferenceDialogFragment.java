@@ -26,20 +26,16 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import androidx.annotation.DoNotInline;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 
 /**
@@ -227,19 +223,10 @@ public abstract class PreferenceDialogFragment extends android.app.DialogFragmen
 
     /**
      * Sets the required flags on the dialog window to enable input method window to show up.
-     * <p>
-     * Note that starting from Android R, the new WindowInsets API supports showing soft-input
-     * on-demand, so there is no longer a need to rely on the
-     * {@link WindowManager.LayoutParams#SOFT_INPUT_STATE_ALWAYS_VISIBLE} flag to show the
-     * soft-input when there is no focused editor.</p>
      */
     private void requestInputMethod(Dialog dialog) {
         Window window = dialog.getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Api30Impl.showIme(window);
-        } else {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     /**
@@ -313,21 +300,4 @@ public abstract class PreferenceDialogFragment extends android.app.DialogFragmen
      */
     @Deprecated
     public abstract void onDialogClosed(boolean positiveResult);
-
-    /**
-     * Nested class to avoid verification errors for methods introduced in R.
-     */
-    @RequiresApi(Build.VERSION_CODES.R)
-    private static class Api30Impl {
-        // Prevent instantiation.
-        private Api30Impl() {}
-
-        /**
-         * Shows the IME on demand for the given {@link Window}.
-         */
-        @DoNotInline
-        static void showIme(@NonNull Window dialogWindow) {
-            dialogWindow.getDecorView().getWindowInsetsController().show(WindowInsets.Type.ime());
-        }
-    }
 }

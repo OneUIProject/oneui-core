@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ import android.util.Log;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.TypedArrayUtils;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link Preference} that displays a list of entries as a dialog.
@@ -148,9 +152,9 @@ public class ListPreference extends DialogPreference {
     @Override
     public void setSummary(CharSequence summary) {
         super.setSummary(summary);
-        if (summary == null) {
+        if (summary == null && mSummary != null) {
             mSummary = null;
-        } else {
+        } else if (summary != null && !summary.equals(mSummary)) {
             mSummary = summary.toString();
         }
     }
@@ -222,7 +226,7 @@ public class ListPreference extends DialogPreference {
     public int findIndexOfValue(String value) {
         if (value != null && mEntryValues != null) {
             for (int i = mEntryValues.length - 1; i >= 0; i--) {
-                if (TextUtils.equals(mEntryValues[i].toString(), value)) {
+                if (mEntryValues[i].equals(value)) {
                     return i;
                 }
             }

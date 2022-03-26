@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,24 @@
 package androidx.preference;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.TypedArrayUtils;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A base class for {@link Preference}s that are dialog-based. When clicked, these
@@ -252,9 +261,58 @@ public abstract class DialogPreference extends Preference {
         return mDialogLayoutResId;
     }
 
+    /**
+     * Prepares the dialog builder to be shown when the preference is clicked.
+     * Use this to set custom properties on the dialog.
+     * <p>
+     * Do not {@link AlertDialog.Builder#create()} or
+     * {@link AlertDialog.Builder#show()}.
+     */
+    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+    }
+
     @Override
     protected void onClick() {
         getPreferenceManager().showDialog(this);
+    }
+
+    /**
+     * Binds views in the content View of the dialog to data.
+     * <p>
+     * Make sure to call through to the superclass implementation.
+     *
+     * @param view The content View of the dialog, if it is custom.
+     */
+    @CallSuper
+    protected void onBindDialogView(View view) {
+        View dialogMessageView = view.findViewById(android.R.id.message);
+
+        if (dialogMessageView != null) {
+            final CharSequence message = getDialogMessage();
+            int newVisibility = View.GONE;
+
+            if (!TextUtils.isEmpty(message)) {
+                if (dialogMessageView instanceof TextView) {
+                    ((TextView) dialogMessageView).setText(message);
+                }
+
+                newVisibility = View.VISIBLE;
+            }
+
+            if (dialogMessageView.getVisibility() != newVisibility) {
+                dialogMessageView.setVisibility(newVisibility);
+            }
+        }
+    }
+
+    /**
+     * Called when the dialog is dismissed and should be used to save data to
+     * the {@link SharedPreferences}.
+     *
+     * @param positiveResult Whether the positive button was clicked (true), or
+     *            the negative button was clicked or the dialog was canceled (false).
+     */
+    protected void onDialogClosed(boolean positiveResult) {
     }
 
     /**

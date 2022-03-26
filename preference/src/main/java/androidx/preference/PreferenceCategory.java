@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,17 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.TypedArrayUtils;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A container that is used to group similar {@link Preference}s. A PreferenceCategory displays a
@@ -37,6 +43,8 @@ import androidx.core.content.res.TypedArrayUtils;
  * </div>
  */
 public class PreferenceCategory extends PreferenceGroup {
+    private static final String TAG = "SeslPreferenceCategory";
+    private String mHeader = "Header";
 
     public PreferenceCategory(
             Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -50,6 +58,13 @@ public class PreferenceCategory extends PreferenceGroup {
     public PreferenceCategory(Context context, AttributeSet attrs) {
         this(context, attrs, TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle,
                 android.R.attr.preferenceCategoryStyle));
+        if (Build.VERSION.SDK_INT < 30) {
+            try {
+                mHeader = context.getString(R.string.sesl_preferencecategory_added_title);
+            } catch (Exception | NoSuchFieldError e) {
+                Log.d(TAG, "Can not find the string. Please updates latest sesl-appcompat library, ", e);
+            }
+        }
     }
 
     public PreferenceCategory(Context context) {
@@ -96,6 +111,33 @@ public class PreferenceCategory extends PreferenceGroup {
                 return;
             }
             titleView.setTextColor(value.data);
+        }
+    }
+
+    @Override
+    @Deprecated
+    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat info) {
+        super.onInitializeAccessibilityNodeInfo(info);
+
+        if (Build.VERSION.SDK_INT < 28) {
+            AccessibilityNodeInfoCompat.CollectionItemInfoCompat collectionItemInfo
+                    = info.getCollectionItemInfo();
+
+            if (collectionItemInfo == null) {
+                return;
+            }
+
+            info.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.
+                    obtain(collectionItemInfo.getRowIndex(),
+                            collectionItemInfo.getRowSpan(),
+                            collectionItemInfo.getColumnIndex(),
+                            collectionItemInfo.getColumnSpan(),
+                            true,
+                            collectionItemInfo.isSelected()));
+        }
+
+        if (Build.VERSION.SDK_INT < 30) {
+            info.setRoleDescription(mHeader);
         }
     }
 }

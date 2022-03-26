@@ -370,4 +370,10 @@
         <!-- Whether a divider is allowed to draw after the last item -->
         <attr name="allowDividerAfterLastItem" />
     </declare-styleable>
+
+    <declare-styleable name="RingtonePreference">
+        <attr name="android:ringtoneType" />
+        <attr name="android:showDefault" />
+        <attr name="android:showSilent" />
+    </declare-styleable>
 </resources>

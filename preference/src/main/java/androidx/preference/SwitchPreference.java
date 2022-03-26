@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,22 @@ package androidx.preference;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import androidx.annotation.RestrictTo;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.res.TypedArrayUtils;
+import androidx.core.view.ViewCompat;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * A {@link Preference} that provides a two-state toggleable option.
@@ -42,6 +48,7 @@ import androidx.core.content.res.TypedArrayUtils;
  * @attr name android:disableDependentsState
  */
 public class SwitchPreference extends TwoStatePreference {
+    private final DummyClickListener mClickListener = new DummyClickListener();
     private final Listener mListener = new Listener();
 
     // Switch text for on and off states
@@ -63,6 +70,12 @@ public class SwitchPreference extends TwoStatePreference {
     public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr,
             int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+
+        final Configuration configuration = context.getResources().getConfiguration();
+        if ((configuration.screenWidthDp > 320 || configuration.fontScale < FONT_SCALE_MEDIUM)
+                || (configuration.screenWidthDp >= 411 || configuration.fontScale < FONT_SCALE_LARGE)) {
+            setLayoutResource(R.layout.sesl_preference_switch_large);
+        }
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.SwitchPreference, defStyleAttr, defStyleRes);
@@ -199,30 +212,39 @@ public class SwitchPreference extends TwoStatePreference {
     private void syncViewIfAccessibilityEnabled(View view) {
         AccessibilityManager accessibilityManager = (AccessibilityManager)
                 getContext().getSystemService(Context.ACCESSIBILITY_SERVICE);
-        if (!accessibilityManager.isEnabled()) {
+        if (accessibilityManager != null && !accessibilityManager.isEnabled()) {
             return;
         }
 
         View switchView = view.findViewById(AndroidResources.ANDROID_R_SWITCH_WIDGET);
         syncSwitchView(switchView);
 
-        View summaryView = view.findViewById(android.R.id.summary);
-        syncSummaryView(summaryView);
+        if (!isTalkBackIsRunning()) {
+            View summaryView = view.findViewById(android.R.id.summary);
+            syncSummaryView(summaryView);
+        }
     }
 
     private void syncSwitchView(View view) {
-        if (view instanceof Switch) {
-            final Switch switchView = (Switch) view;
+        if (view instanceof SwitchCompat) {
+            final SwitchCompat switchView = (SwitchCompat) view;
             switchView.setOnCheckedChangeListener(null);
         }
         if (view instanceof Checkable) {
             ((Checkable) view).setChecked(mChecked);
         }
-        if (view instanceof Switch) {
-            final Switch switchView = (Switch) view;
+        if (view instanceof SwitchCompat) {
+            final SwitchCompat switchView = (SwitchCompat) view;
             switchView.setTextOn(mSwitchOn);
             switchView.setTextOff(mSwitchOff);
             switchView.setOnCheckedChangeListener(mListener);
+            if (switchView.isClickable()) {
+                switchView.setOnClickListener(mClickListener);
+            }
+            if (isTalkBackIsRunning()) {
+                ViewCompat.setBackground(switchView, null);
+                switchView.setClickable(false);
+            }
         }
     }
 
@@ -239,6 +261,15 @@ public class SwitchPreference extends TwoStatePreference {
             }
 
             SwitchPreference.this.setChecked(isChecked);
+        }
+    }
+
+    private class DummyClickListener implements View.OnClickListener {
+        private DummyClickListener() {}
+
+        @Override
+        public void onClick(View v) {
+            callClickListener();
         }
     }
 }

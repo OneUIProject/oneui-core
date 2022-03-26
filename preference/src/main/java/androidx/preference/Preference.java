@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,28 +23,37 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.AbsSavedState;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.util.SeslRoundedCorner;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
@@ -53,42 +62,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * The basic building block that represents an individual setting displayed to a user in the
- * preference hierarchy. This class provides the data that will be displayed to the user and has
- * a reference to the {@link SharedPreferences} or {@link PreferenceDataStore} instance that
- * persists the preference's values.
- *
- * <p>When specifying a preference hierarchy in XML, each element can point to a subclass of
- * {@link Preference}, similar to the view hierarchy and layouts.
- *
- * <p>This class contains a {@code key} that that represents the key that is used to persist the
- * value to the device. It is up to the subclass to decide how to store the value.
- *
- * <div class="special reference">
- * <h3>Developer Guides</h3>
- * <p>For information about building a settings screen using the AndroidX Preference library, see
- * <a href="{@docRoot}guide/topics/ui/settings.html">Settings</a>.</p>
- * </div>
- *
- * @attr name android:icon
- * @attr name android:key
- * @attr name android:title
- * @attr name android:summary
- * @attr name android:order
- * @attr name android:fragment
- * @attr name android:layout
- * @attr name android:widgetLayout
- * @attr name android:enabled
- * @attr name android:selectable
- * @attr name android:dependency
- * @attr name android:persistent
- * @attr name android:defaultValue
- * @attr name android:shouldDisableView
- * @attr name android:singleLineTitle
- * @attr name android:iconSpaceReserved
+ * Samsung Preference class.
  */
 public class Preference implements Comparable<Preference> {
+    // Sesl
+    private static final String TAG = "SeslPreference";
+
+    protected static final float FONT_SCALE_LARGE = 1.3f;
+    protected static final float FONT_SCALE_MEDIUM = 1.1f;
+
+    private View mItemView;
+    private ColorStateList mSummaryColorStateList;
+    private ColorStateList mTextColorSecondary;
+
+    private boolean mChangedSummaryColor = false;
+    private boolean mChangedSummaryColorStateList = false;
+    private boolean mIsPreferenceRoundedBg = false;
+    boolean mIsRoundChanged = false;
+    private boolean mSubheaderRound = false;
+
+    int mSubheaderColor;
+    private int mSummaryColor;
+    private int mWhere = SeslRoundedCorner.ROUNDED_CORNER_NONE;
+    // Sesl
+
     /**
      * Specify for {@link #setOrder(int)} if a specific order is not required.
      */
@@ -160,7 +162,7 @@ public class Preference implements Comparable<Preference> {
      */
     private boolean mShouldDisableView = true;
 
-    private int mLayoutResId = R.layout.preference;
+    private int mLayoutResId = R.layout.sesl_preference;
     private int mWidgetLayoutResId;
 
     private OnPreferenceChangeInternalListener mListener;
@@ -275,6 +277,12 @@ public class Preference implements Comparable<Preference> {
                 R.styleable.Preference_enableCopying, false);
 
         a.recycle();
+
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.textColorSecondary, outValue, true);
+        if (outValue.resourceId > 0) {
+            mTextColorSecondary = context.getResources().getColorStateList(outValue.resourceId);
+        }
     }
 
     /**
@@ -510,12 +518,25 @@ public class Preference implements Comparable<Preference> {
             final CharSequence summary = getSummary();
             if (!TextUtils.isEmpty(summary)) {
                 summaryView.setText(summary);
+                if (mChangedSummaryColor) {
+                    summaryView.setTextColor(mSummaryColor);
+                    Log.d(TAG, "set Summary Color : " + mSummaryColor);
+                } else if (mChangedSummaryColorStateList) {
+                    summaryView.setTextColor(this.mSummaryColorStateList);
+                    Log.d(TAG, "set Summary ColorStateList : " + mSummaryColorStateList);
+                } else {
+                    if (mTextColorSecondary != null) {
+                        summaryView.setTextColor(mTextColorSecondary);
+                    }
+                }
                 summaryView.setVisibility(View.VISIBLE);
                 summaryTextColor = summaryView.getCurrentTextColor();
             } else {
                 summaryView.setVisibility(View.GONE);
             }
         }
+
+        holder.setPreferenceBackgroundType(mIsPreferenceRoundedBg, mWhere, mSubheaderRound);
 
         final TextView titleView = (TextView) holder.findViewById(android.R.id.title);
         if (titleView != null) {
@@ -531,8 +552,13 @@ public class Preference implements Comparable<Preference> {
                 if (!isSelectable() && isEnabled() && summaryTextColor != null) {
                     titleView.setTextColor(summaryTextColor);
                 }
-            } else {
+            } else if (!TextUtils.isEmpty(title) || !(this instanceof PreferenceCategory)) {
                 titleView.setVisibility(View.GONE);
+            } else {
+                titleView.setVisibility(View.VISIBLE);
+                if (mHasSingleLineTitleAttr) {
+                    titleView.setSingleLine(mSingleLineTitle);
+                }
             }
         }
 
@@ -591,6 +617,14 @@ public class Preference implements Comparable<Preference> {
         // long clicks, and not normal clicks.
         if (copyingEnabled && !selectable) {
             ViewCompat.setBackground(itemView, null);
+        }
+
+        mItemView = itemView;
+    }
+
+    public void seslGetPreferenceBounds(Rect bounds) {
+        if (mItemView != null) {
+            mItemView.getGlobalVisibleRect(bounds);
         }
     }
 
@@ -656,7 +690,8 @@ public class Preference implements Comparable<Preference> {
      * @param title The title for this preference
      */
     public void setTitle(CharSequence title) {
-        if (!TextUtils.equals(title, mTitle)) {
+        if (title == null && mTitle != null
+                || title != null && !title.equals(mTitle)) {
             mTitle = title;
             notifyChanged();
         }
@@ -1200,6 +1235,17 @@ public class Preference implements Comparable<Preference> {
             Context context = getContext();
             context.startActivity(mIntent);
         }
+    }
+
+    /**
+     * Allows a Preference to intercept key events without having focus.
+     * For example, SeekBarPreference uses this to intercept +/- to adjust
+     * the progress.
+     * @return True if the Preference handled the key. Returns false by default.
+     * @hide
+     */
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        return false;
     }
 
     /**
@@ -2101,6 +2147,56 @@ public class Preference implements Comparable<Preference> {
     @CallSuper
     @Deprecated
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat info) {}
+
+    void callClickListener() {
+        if (mOnClickListener != null) {
+            mOnClickListener.onPreferenceClick(this);
+        }
+    }
+
+    boolean isTalkBackIsRunning() {
+        AccessibilityManager accessibilityManager
+                = (AccessibilityManager) getContext().getSystemService(Context.ACCESSIBILITY_SERVICE);
+        String enabledServices = Settings.Secure.getString(getContext().getContentResolver(), "enabled_accessibility_services");
+
+        if (accessibilityManager != null && accessibilityManager.isEnabled() && enabledServices != null) {
+            return enabledServices.matches("(?i).*com.samsung.accessibility/com.samsung.android.app.talkback.TalkBackService.*")
+                    || enabledServices.matches("(?i).*com.samsung.android.accessibility.talkback/com.samsung.android.marvin.talkback.TalkBackService.*")
+                    || enabledServices.matches("(?i).*com.google.android.marvin.talkback.TalkBackService.*")
+                    || enabledServices.matches("(?i).*com.samsung.accessibility/com.samsung.accessibility.universalswitch.UniversalSwitchService.*");
+        }
+        return false;
+    }
+
+    public void seslSetSummaryColor(@ColorInt int color) {
+        mSummaryColor = color;
+        mChangedSummaryColor = true;
+        mChangedSummaryColorStateList = false;
+    }
+
+    public void seslSetSummaryColor(ColorStateList color) {
+        mSummaryColorStateList = color;
+        mChangedSummaryColorStateList = true;
+        mChangedSummaryColor = false;
+    }
+
+    public void seslSetRoundedBg(int where) {
+        mIsPreferenceRoundedBg = true;
+        mWhere = where;
+        mSubheaderRound = false;
+        mIsRoundChanged = true;
+    }
+
+    public void seslSetSubheaderRoundedBackground(int where) {
+        mIsPreferenceRoundedBg = true;
+        mWhere = where;
+        mSubheaderRound = true;
+        mIsRoundChanged = true;
+    }
+
+    public void seslSetSubheaderColor(@ColorInt int color) {
+        mSubheaderColor = color;
+    }
 
     /**
      * Interface definition for a callback to be invoked when the value of this

@@ -9,6 +9,7 @@
 - CustomView
 - DrawerLayout
 - Fragment
+- Preference
 - RecyclerView
 - SwipeRefreshLayout
 - ViewPager
@@ -22,5 +23,4 @@
 - IndexScroll
 - PickerBasic
 - PickerColor
-- Preference
 - ViewPager2 (?)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (C) 2015 The Android Open Source Project
+    Copyright (C) 2022 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License
     -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <resources>
     <declare-styleable name="PreferenceTheme">
@@ -22,6 +23,7 @@
         <!-- Preference styles   -->
         <!-- =================== -->
         <eat-comment />
+
         <!-- Theme for inflating Preference objects -->
         <attr name="preferenceTheme" format="reference" />
 
@@ -29,13 +31,11 @@
         This is needed as there are no relevant android: attributes we can use for this as we
         do with other text appearance styles. -->
         <attr name="preferenceCategoryTitleTextAppearance" format="reference" />
-        <!-- The preferred color for the title displayed in a PreferenceCategory.
-        If this is not specified by a developer, we use ?android:attr/colorAccent above
-        Lollipop, and ?attr/colorAccent below Lollipop (when using an AppCompat theme). -->
-        <attr name="preferenceCategoryTitleTextColor" format="color|reference" />
 
         <!-- Default style for PreferenceScreen. -->
         <attr name="preferenceScreenStyle" format="reference" />
+        <!-- Default style for the PreferenceActivity. -->
+        <attr name="preferenceActivityStyle" format="reference" />
         <!-- Default style for Headers pane in PreferenceActivity. -->
         <attr name="preferenceFragmentStyle" format="reference" />
         <!-- Default style for Headers pane in PreferenceActivity. -->
@@ -48,20 +48,36 @@
         <attr name="preferenceInformationStyle" format="reference" />
         <!-- Default style for CheckBoxPreference. -->
         <attr name="checkBoxPreferenceStyle" format="reference" />
+        <!-- Default style for YesNoPreference. -->
+        <attr name="yesNoPreferenceStyle" format="reference" />
         <!-- Default style for DialogPreference. -->
         <attr name="dialogPreferenceStyle" format="reference" />
         <!-- Default style for EditTextPreference. -->
         <attr name="editTextPreferenceStyle" format="reference" />
+        <!-- Default style for RingtonePreference. -->
+        <attr name="ringtonePreferenceStyle" format="reference" />
         <!-- Default style for DropDownPreference. -->
         <attr name="dropdownPreferenceStyle" format="reference" />
+        <!-- The preference layout that has the child/tabbed effect. -->
+        <attr name="preferenceLayoutChild" format="reference" />
+        <!-- Preference panel style -->
+        <attr name="preferencePanelStyle" format="reference" />
+        <!-- Preference headers panel style -->
+        <attr name="preferenceHeaderPanelStyle" format="reference" />
+        <!-- Preference list style -->
+        <attr name="preferenceListStyle" format="reference" />
         <!-- Preference fragment list style -->
         <attr name="preferenceFragmentListStyle" format="reference" />
+        <!-- Preference fragment padding side -->
+        <attr name="preferenceFragmentPaddingSide" format="dimension" />
         <!-- Default style for switch preferences. -->
         <attr name="switchPreferenceStyle" format="reference" />
         <!-- Default style for switch compat preferences. -->
         <attr name="switchPreferenceCompatStyle" format="reference" />
         <!-- Default style for seekbar preferences. -->
         <attr name="seekBarPreferenceStyle" format="reference" />
+
+        <attr name="seekBarDialogPreferenceStyle" format="reference" />
     </declare-styleable>
 
     <!-- Base attributes available to PreferenceFragment. -->

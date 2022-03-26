@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2017 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Definitions of attributes to be exposed as public -->
 <resources>
@@ -47,16 +48,23 @@
     <public type="attr" name="orderingFromXml" />
     <public type="attr" name="persistent" />
     <public type="attr" name="positiveButtonText" />
+    <public type="attr" name="preferenceActivityStyle" />
     <public type="attr" name="preferenceCategoryStyle" />
     <public type="attr" name="preferenceCategoryTitleTextAppearance" />
-    <public type="attr" name="preferenceCategoryTitleTextColor" />
     <public type="attr" name="preferenceFragmentCompatStyle" />
     <public type="attr" name="preferenceFragmentListStyle" />
+    <public type="attr" name="preferenceFragmentPaddingSide" />
     <public type="attr" name="preferenceFragmentStyle" />
+    <public type="attr" name="preferenceHeaderPanelStyle" />
     <public type="attr" name="preferenceInformationStyle" />
+    <public type="attr" name="preferenceLayoutChild" />
+    <public type="attr" name="preferenceListStyle" />
+    <public type="attr" name="preferencePanelStyle" />
     <public type="attr" name="preferenceScreenStyle" />
     <public type="attr" name="preferenceStyle" />
     <public type="attr" name="preferenceTheme" />
+    <public type="attr" name="ringtonePreferenceStyle" />
+    <public type="attr" name="seekBarDialogPreferenceStyle" />
     <public type="attr" name="seekBarIncrement" />
     <public type="attr" name="seekBarPreferenceStyle" />
     <public type="attr" name="selectable" />
@@ -73,4 +81,5 @@
     <public type="attr" name="switchTextOn" />
     <public type="attr" name="title" />
     <public type="attr" name="widgetLayout" />
+    <public type="attr" name="yesNoPreferenceStyle" />
 </resources>

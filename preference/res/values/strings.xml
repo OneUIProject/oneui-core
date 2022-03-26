@@ -14,4 +14,9 @@
     </string>
     <!-- Summary for a preference that is displayed to the user when they have not set a value for this preference. -->
     <string name="not_set">Not set</string>
+
+    <string name="sesl_preference_on">ON</string>
+    <string name="sesl_preference_off">OFF</string>
+
+    <string name="sesl_preferencecategory_added_title">Header</string>
 </resources>

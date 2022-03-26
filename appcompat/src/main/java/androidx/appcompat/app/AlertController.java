@@ -214,6 +214,9 @@ class AlertController {
 
         a.recycle();
 
+        // for devices without SamsungBasicInteraction flag
+        window.setGravity(Gravity.BOTTOM);
+
         /* We use a custom title so never request a window title */
         di.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
     }

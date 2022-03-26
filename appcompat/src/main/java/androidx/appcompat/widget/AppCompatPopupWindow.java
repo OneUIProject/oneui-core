@@ -27,6 +27,7 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionSet;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.PopupWindow;
 
@@ -39,6 +40,8 @@ import androidx.appcompat.R;
 import androidx.appcompat.view.ActionBarPolicy;
 import androidx.core.widget.PopupWindowCompat;
 import androidx.reflect.view.SeslViewReflector;
+
+import java.lang.reflect.Field;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.
@@ -145,6 +148,7 @@ class AppCompatPopupWindow extends PopupWindow {
             yoff -= anchor.getHeight();
         }
         super.showAsDropDown(anchor, xoff, yoff);
+        fixRoundedCorners();
     }
 
     @Override
@@ -154,6 +158,7 @@ class AppCompatPopupWindow extends PopupWindow {
             yoff -= anchor.getHeight();
         }
         super.showAsDropDown(anchor, xoff, yoff, gravity);
+        fixRoundedCorners();
     }
 
     @Override
@@ -215,5 +220,26 @@ class AppCompatPopupWindow extends PopupWindow {
 
     boolean seslIsAvailableBlurBackground() {
         return !mIsReplacedPoupBackground;
+    }
+
+    /**
+     * Adjust popup selector corners in non-Samsung Basic Interaction devices.
+     */
+    private void fixRoundedCorners() {
+        // Check if we're using the correct bg
+        if (!mIsReplacedPoupBackground) {
+            try {
+                // get PopupWindow mBackgroundView field
+                Field field = getClass().getSuperclass().getDeclaredField("mBackgroundView");
+                field.setAccessible(true);
+                Object bg = field.get(this);
+                // if we got it, fix those corners
+                if (bg instanceof View) {
+                    ((View) bg).setClipToOutline(true);
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                Log.e("ACPW", "fixRoundedCorners: " + e);
+            }
+        }
     }
 }

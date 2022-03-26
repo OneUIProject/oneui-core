@@ -35,5 +35,4 @@ dependencies {
     implementation("androidx.collection:collection:1.2.0")
     api("androidx.fragment:fragment-ktx:1.3.6")
     api(project(":recyclerview"))
-    api(project(":slidingpanelayout"))
 }

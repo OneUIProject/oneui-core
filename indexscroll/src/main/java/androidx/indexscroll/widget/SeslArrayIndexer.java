@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.indexscroll;
+package androidx.indexscroll.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 

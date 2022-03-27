@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.indexscroll;
+package androidx.indexscroll.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
@@ -34,6 +34,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -54,6 +55,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
+import androidx.indexscroll.R;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -485,26 +487,28 @@ public class SeslIndexScrollView extends FrameLayout {
                 mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, true);
                 mStartTouchDown = System.currentTimeMillis();
 
-                if (mCurrentIndex != null) {
-                    if (mIndexScroll.isAlphabetInit()
-                            && mCurrentIndex != null && mCurrentIndex.length() != 0) {
-                        mIndexScroll.setEffectText(mCurrentIndex);
-                        mIndexScroll.drawEffect(y);
-                        mIndexScrollPreview.setLayout(0, 0, getWidth(), getHeight());
-                        mIndexScrollPreview.invalidate();
-                        mTouchY = y;
-                        mIndexScroll.changeThumbAlpha(255);
-                    }
+                if (mCurrentIndex == null) {
+                    return false;
+                }
 
-                    final int position;
-                    if (!mIsSimpleIndexScroll) {
-                        position = getListViewPosition(mCurrentIndex);
-                    } else {
-                        position = mIndexScroll.getSelectedIndex();
-                    }
-                    if (position != RecyclerView.NO_POSITION) {
-                        notifyIndexChange(position);
-                    }
+                if (mIndexScroll.isAlphabetInit()
+                        && mCurrentIndex != null && mCurrentIndex.length() != 0) {
+                    mIndexScroll.setEffectText(mCurrentIndex);
+                    mIndexScroll.drawEffect(y);
+                    mIndexScrollPreview.setLayout(0, 0, getWidth(), getHeight());
+                    mIndexScrollPreview.invalidate();
+                    mTouchY = y;
+                    mIndexScroll.changeThumbAlpha(255);
+                }
+
+                final int position;
+                if (!mIsSimpleIndexScroll) {
+                    position = getListViewPosition(mCurrentIndex);
+                } else {
+                    position = mIndexScroll.getSelectedIndex();
+                }
+                if (position != RecyclerView.NO_POSITION) {
+                    notifyIndexChange(position);
                 }
             }
             break;
@@ -528,47 +532,49 @@ public class SeslIndexScrollView extends FrameLayout {
             break;
 
             case MotionEvent.ACTION_MOVE: {
-                if (mCurrentIndex != null && mIndexScrollPreview.mIsOpen) {
-                    final int position;
-                    final String calculatedIndexStr = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
+                if (mCurrentIndex == null || !mIndexScrollPreview.mIsOpen) {
+                    return false;
+                }
 
-                    if (mCurrentIndex != null && calculatedIndexStr == null
-                            && !mIsSimpleIndexScroll) {
-                        mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
+                final int position;
+                final String calculatedIndexStr = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
 
+                if (mCurrentIndex != null && calculatedIndexStr == null
+                        && !mIsSimpleIndexScroll) {
+                    mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
+
+                    position = getListViewPosition(mCurrentIndex);
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyIndexChange(position);
+                    }
+                } else if (mCurrentIndex == null || calculatedIndexStr == null
+                        || calculatedIndexStr.length() >= mCurrentIndex.length()) {
+                    mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
+                    if (mIndexScroll.isAlphabetInit()
+                            && mCurrentIndex != null && mCurrentIndex.length() != 0) {
+                        mIndexScroll.setEffectText(mCurrentIndex);
+                        mIndexScroll.drawEffect(y);
+                        mTouchY = y;
+                    }
+
+                    if (!mIsSimpleIndexScroll) {
                         position = getListViewPosition(mCurrentIndex);
-                        if (position != RecyclerView.NO_POSITION) {
-                            notifyIndexChange(position);
-                        }
-                    } else if (mCurrentIndex == null || calculatedIndexStr == null
-                            || calculatedIndexStr.length() >= mCurrentIndex.length()) {
-                        mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
-                        if (mIndexScroll.isAlphabetInit()
-                                && mCurrentIndex != null && mCurrentIndex.length() != 0) {
-                            mIndexScroll.setEffectText(mCurrentIndex);
-                            mIndexScroll.drawEffect(y);
-                            mTouchY = y;
-                        }
-
-                        if (!mIsSimpleIndexScroll) {
-                            position = getListViewPosition(mCurrentIndex);
-                        } else {
-                            position = mIndexScroll.getSelectedIndex();
-                        }
-                        if (position != RecyclerView.NO_POSITION) {
-                            notifyIndexChange(position);
-                        }
                     } else {
-                        mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
+                        position = mIndexScroll.getSelectedIndex();
+                    }
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyIndexChange(position);
+                    }
+                } else {
+                    mCurrentIndex = mIndexScroll.getIndexByPosition((int) x, (int) y, false);
 
-                        if (!mIsSimpleIndexScroll) {
-                            position = getListViewPosition(mCurrentIndex);
-                        } else {
-                            position = mIndexScroll.getSelectedIndex();
-                        }
-                        if (position != RecyclerView.NO_POSITION) {
-                            notifyIndexChange(position);
-                        }
+                    if (!mIsSimpleIndexScroll) {
+                        position = getListViewPosition(mCurrentIndex);
+                    } else {
+                        position = mIndexScroll.getSelectedIndex();
+                    }
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyIndexChange(position);
                     }
                 }
             }
@@ -944,30 +950,37 @@ public class SeslIndexScrollView extends FrameLayout {
 
         // TODO rework this method
         // kang
-        private void setIndexBarTextOptimized(IndexBarAttributeValues indexBarAttributeValues) {
-            adjustSeparatorHeight();
-            int i = indexBarAttributeValues.count;
-            int i2 = i;
-            int i3 = 0;
-            while (this.mHeight < indexBarAttributeValues.separatorHeight * i2) {
-                i2--;
-                i3++;
+        private void setIndexBarTextOptimized(IndexBarAttributeValues var1) {
+            this.adjustSeparatorHeight();
+            int var2 = var1.count;
+            byte var3 = 0;
+            int var4 = var2;
+
+            int var5;
+            for(var5 = 0; (float)this.mHeight < var1.separatorHeight * (float)var4; ++var5) {
+                --var4;
             }
+
             if (this.mEnableTextMode) {
-                float f = i / (i3 + 1.0f);
-                int i4 = 0;
-                for (int i5 = 0; i5 < i2; i5++) {
-                    while (i5 != 0) {
-                        int i6 = i4 + 1;
-                        if (i5 + i4 == Math.round(i6 * f)) {
-                            i4 = i6;
+                float var6 = (float)var2 / ((float)var5 + 1.0F);
+                var2 = 0;
+
+                for(var5 = var3; var5 < var4; ++var5) {
+                    while(var5 != 0) {
+                        int var7 = var2 + 1;
+                        if (var5 + var2 != Math.round((float)var7 * var6)) {
+                            break;
                         }
+
+                        var2 = var7;
                     }
-                    indexBarAttributeValues.alphabetArray[i5] = this.mAlphabetArray[i5 + i4];
+
+                    var1.alphabetArray[var5] = this.mAlphabetArray[var5 + var2];
                 }
             }
-            indexBarAttributeValues.count = i2;
-            adjustSeparatorHeight();
+
+            var1.count = var4;
+            this.adjustSeparatorHeight();
         }
         // kang
 

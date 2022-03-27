@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.indexscroll;
+package androidx.indexscroll.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 
@@ -25,6 +25,7 @@ import android.util.Log;
 import android.util.SparseIntArray;
 
 import androidx.annotation.RestrictTo;
+import androidx.indexscroll.widget.SeslIndexScrollView.IndexScroll;
 
 import java.text.Collator;
 import java.util.HashMap;
@@ -106,11 +107,11 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
     }
 
     int getIndexByPosition(int position) {
-        if (mCachingValue != null) {
-            return -1;
+        if (mCachingValue == null) {
+            return IndexScroll.NO_SELECTED_INDEX;
         }
 
-        int lastIndex = -1;
+        int lastIndex = IndexScroll.NO_SELECTED_INDEX;
         for (int i = 0; i < mAlphabetLength; i++) {
             lastIndex = i;
 

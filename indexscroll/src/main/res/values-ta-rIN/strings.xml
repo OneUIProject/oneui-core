@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">ஸ்க்ரால் செய்ய, இரு விரல்களால் மேல்நோக்கி அல்லது கீழ்நோக்கி ஸ்வைப் செய்யவும்.</string>
+    <string name="sesl_index_section">பிரிவு உள்ளடக்கம்</string>
+    <string name="sesl_index_selected">தேர்வுசெய்யப்பட்டது</string>
+    <string name="sesl_index_scrollbar">ஸ்க்ரால் பட்டை</string>
+</resources>

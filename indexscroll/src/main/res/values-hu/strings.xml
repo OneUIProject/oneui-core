@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">A görgetéshez húzza felfelé vagy lefelé két ujját.</string>
+    <string name="sesl_index_section">Szakasz indexe</string>
+    <string name="sesl_index_selected">Kijelölve</string>
+    <string name="sesl_index_scrollbar">Görgetősáv</string>
+</resources>

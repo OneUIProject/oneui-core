@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Korritzeko, irristatu pantaila gora edo behera bi hatzekin.</string>
+    <string name="sesl_index_section">Sailaren aurkibidea</string>
+    <string name="sesl_index_selected">Hautatuta</string>
+    <string name="sesl_index_scrollbar">Korritze barra</string>
+</resources>

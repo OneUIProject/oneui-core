@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Deslize para cima ou para baixo com dois dedos, para deslocar.</string>
+    <string name="sesl_index_section">Índice de secção</string>
+    <string name="sesl_index_selected">Seleccionado</string>
+    <string name="sesl_index_scrollbar">Barra de deslocamento</string>
+</resources>

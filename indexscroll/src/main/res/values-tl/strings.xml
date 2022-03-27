@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Mag-swipe pataas o pababa gamit ang dalawang daliri para mag-scroll.</string>
+    <string name="sesl_index_section">Index ng seksiyon</string>
+    <string name="sesl_index_selected">Pinili</string>
+    <string name="sesl_index_scrollbar">Scroll bar</string>
+</resources>

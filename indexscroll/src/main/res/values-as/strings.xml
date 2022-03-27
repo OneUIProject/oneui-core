@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">"স্ক্ৰ'ল কৰিবলৈ দুটা আঙুলিৰে ওপৰলৈ বা তললৈ ছোৱাইপ কৰক।"</string>
+    <string name="sesl_index_section">শাখাৰ ইনডেক্স</string>
+    <string name="sesl_index_selected">চয়নিত</string>
+    <string name="sesl_index_scrollbar">"স্ক্ৰ'ল বাৰ"</string>
+</resources>

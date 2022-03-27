@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Kaydırmak için iki parmağınızla yukarı veya aşağı kaydırın.</string>
+    <string name="sesl_index_section">Bölüm indeksi</string>
+    <string name="sesl_index_selected">Seçildi</string>
+    <string name="sesl_index_scrollbar">Kaydırma çubuğu</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Za pomikanje podrsajte z dvema prstoma navzgor ali navzdol.</string>
+    <string name="sesl_index_section">Indeks odsekov</string>
+    <string name="sesl_index_selected">Izbrano</string>
+    <string name="sesl_index_scrollbar">Drsna vrstica</string>
+</resources>

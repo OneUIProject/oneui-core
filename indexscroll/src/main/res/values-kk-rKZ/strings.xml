@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Айналдыру үшін екі саусағыңызбен жоғарыға немесе төменге жүргізіп өтіңіз.</string>
+    <string name="sesl_index_section">Бөлім индексі</string>
+    <string name="sesl_index_selected">Таңдалған</string>
+    <string name="sesl_index_scrollbar">Жылжыту тақтасы</string>
+</resources>

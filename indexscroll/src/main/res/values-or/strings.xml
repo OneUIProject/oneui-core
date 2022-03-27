@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">ସ୍କ୍ରଲ୍ କରିବାକୁ ଦୁଇ ଆଙ୍ଗୁଠିରେ ଉପର କିମ୍ବା ତଳକୁ ସ୍ୱାଇପ୍ କରନ୍ତୁ।</string>
+    <string name="sesl_index_section">ବିଭାଗ ଇଣ୍ତେକ୍ସ</string>
+    <string name="sesl_index_selected">ଚୟନିତ</string>
+    <string name="sesl_index_scrollbar">ସ୍କ୍ରଲ୍ ବାର୍</string>
+</resources>

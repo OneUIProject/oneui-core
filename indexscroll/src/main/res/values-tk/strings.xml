@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Süýşürmek üçin, iki barmak bilen ýokaryk ýa-da aşak syryň.</string>
+    <string name="sesl_index_section">Bölüm indeksi</string>
+    <string name="sesl_index_selected">Saýlanyldy</string>
+    <string name="sesl_index_scrollbar">Süýşüriş paneli</string>
+</resources>

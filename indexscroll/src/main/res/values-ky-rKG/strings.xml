@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Жылдыруу үчүн эки бармагыңыз менен өйдө же ылдый жылдырыңыз.</string>
+    <string name="sesl_index_section">Бөлүм индекси</string>
+    <string name="sesl_index_selected">Тандалды</string>
+    <string name="sesl_index_scrollbar">Айландыруу тилкеси</string>
+</resources>

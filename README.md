@@ -9,6 +9,7 @@
 - CustomView
 - DrawerLayout
 - Fragment
+- IndexScroll (needs to be tested)
 - Preference
 - RecyclerView
 - SwipeRefreshLayout
@@ -27,7 +28,6 @@
 
 ### Modules to be added:
 - AppPickerView
-- IndexScroll
 - PickerBasic
 - PickerColor
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Glisați în sus sau în jos folosind două degetele pentru a derula.</string>
+    <string name="sesl_index_section">Index secțiune</string>
+    <string name="sesl_index_selected">Selectat</string>
+    <string name="sesl_index_scrollbar">Bară de defilare</string>
+</resources>

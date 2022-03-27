@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">လှိမ့်ဆွဲရန် လက်နှစ်ချောင်းဖြင့် အပေါ် (သို့) အောက်သို့ ပွတ်ဆွဲပါ။</string>
+    <string name="sesl_index_section">အပိုင်း အညွှန်း</string>
+    <string name="sesl_index_selected">ရွေးထားသည်</string>
+    <string name="sesl_index_scrollbar">လှိမ့်ဘား</string>
+</resources>

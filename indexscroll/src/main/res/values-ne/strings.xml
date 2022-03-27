@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">स्क्रोल गर्न दुई औँलाले माथि वा तलतिर स्वाइप गर्नुहोस्।</string>
+    <string name="sesl_index_section">खण्डको सूची</string>
+    <string name="sesl_index_selected">चयन गरिएको</string>
+    <string name="sesl_index_scrollbar">स्क्रोल बार</string>
+</resources>

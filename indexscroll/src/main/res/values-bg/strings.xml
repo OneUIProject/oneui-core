@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Плъзнете нагоре или надолу с два пръста, за да превъртите.</string>
+    <string name="sesl_index_section">Указател на разделите</string>
+    <string name="sesl_index_selected">Избрано</string>
+    <string name="sesl_index_scrollbar">Лента за превъртане</string>
+</resources>

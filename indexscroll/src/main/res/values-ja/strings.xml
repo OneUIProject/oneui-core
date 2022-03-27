@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">スクロールするには、2本の指で上下にスワイプしてください。</string>
+    <string name="sesl_index_section">セクションインデックス</string>
+    <string name="sesl_index_selected">選択中</string>
+    <string name="sesl_index_scrollbar">スクロールバー</string>
+</resources>

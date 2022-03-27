@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">സ്ക്രോൾ ചെയ്യുന്നതിന് രണ്ട് വിരലുകളുപയോഗിച്ച് മേലേയ്ക്കോ താഴേയ്ക്കോ സ്വൈപ് ചെയ്യുക.</string>
+    <string name="sesl_index_section">വിഭാഗ സൂചിക</string>
+    <string name="sesl_index_selected">തിരഞ്ഞെടുത്തു</string>
+    <string name="sesl_index_scrollbar">സ്ക്രോൾ ബാർ</string>
+</resources>

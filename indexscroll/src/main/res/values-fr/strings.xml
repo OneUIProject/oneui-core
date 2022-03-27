@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Faites glisser deux doigts vers le haut ou le bas pour faire défiler.</string>
+    <string name="sesl_index_section">Index de section</string>
+    <string name="sesl_index_selected">Sélectionné</string>
+    <string name="sesl_index_scrollbar">Barre de défilement</string>
+</resources>

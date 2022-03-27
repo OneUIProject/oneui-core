@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">以兩指向上或向下滑動以捲動。</string>
+    <string name="sesl_index_section">區段索引</string>
+    <string name="sesl_index_selected">已選擇</string>
+    <string name="sesl_index_scrollbar">捲動列</string>
+</resources>

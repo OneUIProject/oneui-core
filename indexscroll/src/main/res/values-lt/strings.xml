@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Slinkite braukdami dviem pirštais aukštyn ar žemyn.</string>
+    <string name="sesl_index_section">Skyrių rodyklė</string>
+    <string name="sesl_index_selected">Pasirinkta</string>
+    <string name="sesl_index_scrollbar">Slinkimo juosta</string>
+</resources>

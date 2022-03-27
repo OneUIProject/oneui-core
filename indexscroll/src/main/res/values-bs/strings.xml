@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Prevucite gore ili dolje sa dva prsta za klizanje.</string>
+    <string name="sesl_index_section">Indeks sekcije</string>
+    <string name="sesl_index_selected">Izabrano</string>
+    <string name="sesl_index_scrollbar">Traka za pomjeranje</string>
+</resources>

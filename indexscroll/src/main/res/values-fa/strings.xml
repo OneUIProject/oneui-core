@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">برای پیمایش کردن، با دو انگشت به بالا یا پایین بکشید.</string>
+    <string name="sesl_index_section">نمایه قسمت</string>
+    <string name="sesl_index_selected">انتخاب شد</string>
+    <string name="sesl_index_scrollbar">نوار پیمایش</string>
+</resources>

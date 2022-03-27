@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Барои варақ задан, бо ду ангушт ба боло ё поён бимолед.</string>
+    <string name="sesl_index_section">Мундариҷаи қисмат</string>
+    <string name="sesl_index_selected">Интихоб шуд</string>
+    <string name="sesl_index_scrollbar">Навори ҳаракат</string>
+</resources>

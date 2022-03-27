@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Κάντε σάρωση προς τα επάνω ή προς τα κάτω με δύο δάχτυλα για κύλιση.</string>
+    <string name="sesl_index_section">Δείκτης ενότητας</string>
+    <string name="sesl_index_selected">Επιλέχθηκε</string>
+    <string name="sesl_index_scrollbar">Γραμμή κύλισης</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="sesl_index_assistant_text">Каб прагартаць, правядзіце ўверх або ўніз двума пальцамі.</string>
+    <string name="sesl_index_section">Індэкс раздзелу</string>
+    <string name="sesl_index_selected">Выбрана</string>
+    <string name="sesl_index_scrollbar">Паласа прагорткі</string>
+</resources>

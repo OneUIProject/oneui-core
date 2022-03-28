@@ -151,10 +151,11 @@ class SeslColorSwatchView extends View {
         for (int i = 0; i < SWATCH_ITEM_COLUMN; i++) {
             for (int j = 0; j < SWATCH_ITEM_ROW; j++) {
                 paint.setColor(mColorSwatch[i][j]);
-                canvas.drawRect((int) ((i * mSwatchItemWidth) + 0.5f),
-                        (int) ((j * mSwatchItemHeight) + 0.5f),
-                        (int) ((mSwatchItemWidth * (i + 1)) + 0.5f),
-                        (int) ((mSwatchItemHeight * i) + 0.5f), paint);
+                canvas.drawRect(i * mSwatchItemWidth + SWATCH_ITEM_SIZE_ROUNDING_VALUE,
+                        j * mSwatchItemHeight + SWATCH_ITEM_SIZE_ROUNDING_VALUE,
+                        mSwatchItemWidth * (i + 1) + SWATCH_ITEM_SIZE_ROUNDING_VALUE,
+                        mSwatchItemHeight * (j + 1) + SWATCH_ITEM_SIZE_ROUNDING_VALUE,
+                        paint);
             }
         }
 

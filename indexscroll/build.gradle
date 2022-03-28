@@ -15,8 +15,8 @@ android {
 
 dependencies {
     api("androidx.annotation:annotation:1.3.0")
-    api project(path: ':appcompat')
+    implementation project(path: ':appcompat')
     api project(path: ':core')
     api project(path: ':customview')
-    api project(path: ':recyclerview')
+    implementation project(path: ':recyclerview')
 }

@@ -14,4 +14,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":appcompat"))
+    api(project(":fragment"))
+    api(project(":picker:picker-basic"))
 }

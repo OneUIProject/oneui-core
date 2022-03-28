@@ -51,6 +51,7 @@ class SeslOpacitySeekBar extends SeekBar {
 
         setThumb(getContext().getResources().getDrawable(R.drawable.sesl_color_picker_seekbar_cursor));
         setThumbOffset(0);
+        setSplitTrack(false);
     }
 
     private void initColor(int color) {

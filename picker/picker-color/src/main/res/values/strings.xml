@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<resources>
+
+    <string name="sesl_color_blue_text">Blue</string>
+    <string name="sesl_color_green_text">Green</string>
+    <string name="sesl_color_hex_text">Hex</string>
+    <string name="sesl_color_opacity_text">Opacity</string>
+    <string name="sesl_color_picker_azure">Azure</string>
+    <string name="sesl_color_picker_black">Black</string>
+    <string name="sesl_color_picker_blue">Blue</string>
+    <string name="sesl_color_picker_brightness">Brightness</string>
+    <string name="sesl_color_picker_color_five">Color Five</string>
+    <string name="sesl_color_picker_color_four">Color Four</string>
+    <string name="sesl_color_picker_color_one">Color One</string>
+    <string name="sesl_color_picker_color_seven">Color Seven</string>
+    <string name="sesl_color_picker_color_six">Color Six</string>
+    <string name="sesl_color_picker_color_three">Color Three</string>
+    <string name="sesl_color_picker_color_two">Color Two</string>
+    <string name="sesl_color_picker_color_wheel">Color wheel</string>
+    <string name="sesl_color_picker_current">Current</string>
+    <string name="sesl_color_picker_cyan">Cyan</string>
+    <string name="sesl_color_picker_dark_azure">Dark Azure</string>
+    <string name="sesl_color_picker_dark_blue">Dark Blue</string>
+    <string name="sesl_color_picker_dark_cyan">Dark Cyan</string>
+    <string name="sesl_color_picker_dark_gray">Dark Gray</string>
+    <string name="sesl_color_picker_dark_green">Dark Green</string>
+    <string name="sesl_color_picker_dark_magenta">Dark Magenta</string>
+    <string name="sesl_color_picker_dark_orange">Dark Orange</string>
+    <string name="sesl_color_picker_dark_red">Dark Red</string>
+    <string name="sesl_color_picker_dark_spring_green">Dark Spring green</string>
+    <string name="sesl_color_picker_dark_violet">Dark Violet</string>
+    <string name="sesl_color_picker_dark_yellow">Dark Yellow</string>
+    <string name="sesl_color_picker_double_tap_to_select">Double tap to select.</string>
+    <string name="sesl_color_picker_gray">Gray</string>
+    <string name="sesl_color_picker_green">Green</string>
+    <string name="sesl_color_picker_hue_and_saturation">Hue and saturation</string>
+    <string name="sesl_color_picker_light_azure">Light Azure</string>
+    <string name="sesl_color_picker_light_blue">Light Blue</string>
+    <string name="sesl_color_picker_light_cyan">Light Cyan</string>
+    <string name="sesl_color_picker_light_gray">Light Gray</string>
+    <string name="sesl_color_picker_light_green">Light Green</string>
+    <string name="sesl_color_picker_light_magenta">Light Magenta</string>
+    <string name="sesl_color_picker_light_orange">Light Orange</string>
+    <string name="sesl_color_picker_light_red">Light Red</string>
+    <string name="sesl_color_picker_light_spring_green">Light Spring green</string>
+    <string name="sesl_color_picker_light_violet">Light Violet</string>
+    <string name="sesl_color_picker_light_yellow">Light Yellow</string>
+    <string name="sesl_color_picker_magenta">Magenta</string>
+    <string name="sesl_color_picker_new">New</string>
+    <string name="sesl_color_picker_opacity">Opacity</string>
+    <string name="sesl_color_picker_option">Option</string>
+    <string name="sesl_color_picker_orange">Orange</string>
+    <string name="sesl_color_picker_recently_used_colors">Recently used colors</string>
+    <string name="sesl_color_picker_red">Red</string>
+    <string name="sesl_color_picker_slider">Slider</string>
+    <string name="sesl_color_picker_spectrum_text">Spectrum</string>
+    <string name="sesl_color_picker_spring_green">Spring green</string>
+    <string name="sesl_color_picker_swatches_text">Swatches</string>
+    <string name="sesl_color_picker_violet">Violet</string>
+    <string name="sesl_color_picker_white">White</string>
+    <string name="sesl_color_picker_yellow">Yellow</string>
+    <string name="sesl_color_red_text">Red</string>
+    <string name="sesl_color_saturation_text">Saturation</string>
+
+</resources>

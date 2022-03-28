@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/sesl_color_picker_main_content_container"
+            android:layout_width="@dimen/sesl_color_picker_main_content_width"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/sesl_color_picker_dialog_padding_right"
+            android:paddingTop="@dimen/sesl_color_picker_dialog_padding_top"
+            android:paddingRight="@dimen/sesl_color_picker_dialog_padding_left"
+            android:paddingBottom="@dimen/sesl_color_picker_dialog_padding_bottom"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/sesl_color_picker_selected_color_group" />
+
+            <FrameLayout
+                android:id="@+id/sesl_color_picker_color_swatch_view_container"
+                android:layout_width="@dimen/sesl_color_picker_color_swatch_view_width"
+                android:layout_height="@dimen/sesl_color_picker_color_swatch_view_height"
+                android:layout_marginTop="@dimen/sesl_color_picker_color_swatch_view_container_margin_top"
+                android:layout_marginBottom="@dimen/sesl_color_picker_color_swatch_view_container_margin_bottom"
+                android:layout_gravity="center">
+
+                <androidx.picker.widget.SeslColorSwatchView
+                    android:id="@+id/sesl_color_picker_color_swatch_view"
+                    android:layout_width="@dimen/sesl_color_picker_color_swatch_view_width"
+                    android:layout_height="@dimen/sesl_color_picker_color_swatch_view_height" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/sesl_color_picker_opacity_seekbar_container"
+                android:layout_width="@dimen/sesl_color_picker_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sesl_color_picker_opacity_seekbar_margin_bottom"
+                android:layout_gravity="center">
+
+                <View
+                    android:layout_width="@dimen/sesl_color_picker_opacity_seekbar_background_width"
+                    android:layout_height="@dimen/sesl_color_picker_opacity_seekbar_background_height"
+                    android:layout_gravity="center"
+                    android:background="@drawable/sesl_color_picker_opacity_seekbar_background"
+                    android:importantForAccessibility="no" />
+
+                <androidx.picker.widget.SeslOpacitySeekBar
+                    android:id="@+id/sesl_color_picker_opacity_seekbar"
+                    android:layout_width="@dimen/sesl_color_picker_seekbar_width"
+                    android:layout_height="@dimen/sesl_color_picker_seekbar_height_old"
+                    android:paddingStart="@dimen/sesl_color_picker_seekbar_padding"
+                    android:paddingTop="@dimen/sesl_color_picker_seekbar_padding"
+                    android:paddingEnd="@dimen/sesl_color_picker_seekbar_padding"
+                    android:paddingBottom="@dimen/sesl_color_picker_seekbar_padding"
+                    android:importantForAccessibility="no" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/sesl_color_picker_color_swatch_view_width"
+                android:layout_height="@dimen/sesl_color_picker_used_color_divider_container_height"
+                android:layout_marginBottom="@dimen/sesl_color_picker_used_color_divider_container_margin_bottom"
+                android:layout_gravity="center"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/sesl_color_picker_used_color_divider_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sesl_color_picker_recently_used_colors"
+                    android:textSize="@dimen/sesl_color_picker_selected_color_text_size" />
+
+                <View
+                    android:id="@+id/sesl_color_picker_recently_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/sesl_color_picker_divider" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/sesl_color_picker_used_color_group" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</ScrollView>

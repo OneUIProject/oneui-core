@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<resources>
+
+    <color name="sesl_color_picker_cursor_stroke_color">#ffffffff</color>
+    <color name="sesl_color_picker_divider">#ff979797</color>
+    <color name="sesl_color_picker_percent_text_color">@color/sesl_color_picker_tab_selected_light</color>
+    <color name="sesl_color_picker_seekbar_cursor_background_color">#fffafafa</color>
+    <color name="sesl_color_picker_seekbar_cursor_stroke_color">#33000000</color>
+    <color name="sesl_color_picker_selected_color_item_text_color_dark">#ffb0b0b0</color>
+    <color name="sesl_color_picker_selected_color_item_text_color_light">#ff5d5d5d</color>
+    <color name="sesl_color_picker_shadow">#66000000</color>
+    <color name="sesl_color_picker_stroke_color_dark">#ff000000</color>
+    <color name="sesl_color_picker_stroke_color_light">#ffd4d4d4</color>
+    <color name="sesl_color_picker_stroke_color_spectrumview">#ffd6d6d6</color>
+    <color name="sesl_color_picker_stroke_color_swatchview">#ffd1d0d0</color>
+    <color name="sesl_color_picker_swatch_cursor_color">#4dffffff</color>
+    <color name="sesl_color_picker_swatch_cursor_color_for_white">#48000000</color>
+    <color name="sesl_color_picker_tab_selected_background_dark">#1affffff</color>
+    <color name="sesl_color_picker_tab_selected_background_light">#0d000000</color>
+    <color name="sesl_color_picker_tab_selected_dark">#ffe5e5e5</color>
+    <color name="sesl_color_picker_tab_selected_light">#ff252525</color>
+    <color name="sesl_color_picker_tab_unselected">#ff909090</color>
+    <color name="sesl_color_picker_transparent">#00000000</color>
+    <color name="sesl_color_picker_used_color_item_empty_slot_color_dark">#ff3b3b3b</color>
+    <color name="sesl_color_picker_used_color_item_empty_slot_color_light">#ffe6e6e6</color>
+    <color name="sesl_color_picker_used_color_text_color_dark">#42fafafa</color>
+    <color name="sesl_color_picker_used_color_text_color_light">#ff979797</color>
+
+</resources>

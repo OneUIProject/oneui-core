@@ -89,7 +89,7 @@ public class SeslColorPicker extends LinearLayout {
                 if (mRecentColorListLayout.getChildAt(i).equals(view)) {
                     mIsInputFromUser = true;
 
-                    final int color = (Integer) mRecentColorValues.get(i);
+                    final int color = mRecentColorValues.get(i);
                     mPickedColor.setColor(color);
                     mapColorOnColorWheel(color);
                     if (mOnColorChangedListener != null) {
@@ -410,8 +410,8 @@ public class SeslColorPicker extends LinearLayout {
         StringBuilder description = new StringBuilder();
         StringBuilder colorDescription = mColorSwatchView.getColorSwatchDescriptionAt(color);
         if (colorDescription != null) {
-            description.append(", ");
-            description.append((CharSequence) colorDescription);
+            description.append(", ")
+                    .append((CharSequence) colorDescription);
         }
 
         switch (flag) {
@@ -452,9 +452,15 @@ public class SeslColorPicker extends LinearLayout {
     }
 
     private static class PickedColor {
-        private Integer mColor = null;
-        private int mAlpha = 255;
-        private float[] mHsv = new float[3];
+        private Integer mColor;
+        private int mAlpha ;
+        private float[] mHsv;
+
+        private PickedColor() {
+            mColor = null;
+            mAlpha = 255;
+            mHsv = new float[3];
+        }
 
         public void setColor(int color) {
             mColor = color;

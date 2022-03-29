@@ -452,15 +452,9 @@ public class SeslColorPicker extends LinearLayout {
     }
 
     private static class PickedColor {
-        private Integer mColor;
-        private int mAlpha ;
-        private float[] mHsv;
-
-        private PickedColor() {
-            mColor = null;
-            mAlpha = 255;
-            mHsv = new float[3];
-        }
+        private Integer mColor = null;
+        private int mAlpha = 255;
+        private float[] mHsv = new float[3];
 
         public void setColor(int color) {
             mColor = color;

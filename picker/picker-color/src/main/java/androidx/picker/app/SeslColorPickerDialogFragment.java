@@ -156,11 +156,12 @@ public class SeslColorPickerDialogFragment extends AppCompatDialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final Context context = getContext();
         mAlertDialog = new ColorPickerDialog(getActivity());
         mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-                getContext().getString(R.string.sesl_picker_done), this);
+                context.getString(R.string.sesl_picker_done), this);
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-                getContext().getString(R.string.sesl_picker_cancel), this);
+                context.getString(R.string.sesl_picker_cancel), this);
         return mAlertDialog;
     }
 
@@ -168,18 +169,19 @@ public class SeslColorPickerDialogFragment extends AppCompatDialogFragment
     public void onClick(DialogInterface dialog, int whichButton) {
         switch (whichButton) {
             case DialogInterface.BUTTON_NEGATIVE:
-            default:
-                return;
+                dialog.dismiss();
+                break;
             case DialogInterface.BUTTON_POSITIVE:
                 mColorPicker.saveSelectedColor();
                 if (mOnColorSetListener != null) {
-                    if (mColorPicker.isUserInputValid() || mCurrentColor == null) {
+                    if (mCurrentColor == null || mColorPicker.isUserInputValid()) {
                         mOnColorSetListener.onColorSet(mColorPicker.getRecentColorInfo()
                                 .getSelectedColor());
                     } else {
                         mOnColorSetListener.onColorSet(mCurrentColor);
                     }
                 }
+                break;
         }
     }
 

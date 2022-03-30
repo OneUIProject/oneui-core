@@ -9,12 +9,13 @@
 - CustomView
 - DrawerLayout
 - Fragment
-- IndexScroll (needs to be tested)
+- IndexScroll
+- PickerColor
 - Preference
 - RecyclerView
 - SwipeRefreshLayout
 - ViewPager
-- ViewPager2 (unused, still evaluating it)
+- ViewPager2
 
 ### Uncomplete modules:
 - Material Components:
@@ -24,12 +25,11 @@
   - [ ] navigationrail
   - [ ] snackbar
   - [ ] tabs
+- PickerBasic (still needs complete merging)
 - SlidingPaneLayout (broken, needs fixes)
 
 ### Modules to be added:
 - AppPickerView
-- PickerBasic
-- PickerColor
 
 ## TO-DO list:
 - Add Maven stuff

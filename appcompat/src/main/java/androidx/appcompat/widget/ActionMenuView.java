@@ -125,7 +125,7 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
             mActionButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
             mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
             mOverflowButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_side_padding);
-            mOverflowButtonPaddingEnd = mLastItemEndPadding;
+            mOverflowButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_padding_end);
         }
     }
 
@@ -196,7 +196,7 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
             mActionButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
             mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
             mOverflowButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_side_padding);
-            mOverflowButtonPaddingEnd = mLastItemEndPadding;
+            mOverflowButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_padding_end);
         }
     }
 

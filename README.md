@@ -4,6 +4,7 @@
 ```
 ### Completed modules:
 - AppCompat
+- AppPickerView (needs some adjustments but works)
 - CoordinatorLayout
 - Core
 - CustomView
@@ -27,9 +28,6 @@
   - [ ] tabs
 - PickerBasic (still needs complete merging)
 - SlidingPaneLayout (broken, needs fixes)
-
-### Modules to be added:
-- AppPickerView
 
 ## TO-DO list:
 - Add Maven stuff

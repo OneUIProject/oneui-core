@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">နောက်တစ်လ</string>
     <string name="sesl_date_picker_switch_to_calendar_description">ပြက္ခဒိန် ကြည်ရှုမှုသို့ ကူးပြောင်းရန် နှစ်ချက်နှိပ်ပါ။</string>
+    <string name="sesl_time_picker_minute">မိနစ်</string>
     <string name="sesl_picker_cancel">ပယ်ဖျက်ပါ</string>
     <string name="sesl_number_picker_invalid_value_entered">အကျုံးမဝင်သော နံပါတ် ထည့်ခြင်း။</string>
     <string name="sesl_date_picker_decrement_month">ပြီးခဲ့သောကာလ</string>
     <string name="sesl_date_picker_day">နေ့</string>
     <string name="sesl_date_picker_switch_to_wheel_description">ဘီး ကြည့်ရှုမှုသို့ ကူးပြောင်းရန် နှစ်ချက်နှိပ်ပါ။</string>
     <string name="sesl_picker_done">ပြီးပါပြီ</string>
+    <string name="sesl_time_picker_hour">နာရီ</string>
+    <string name="sesl_time_picker_set_title">အချိန် သတ်မှတ်ပါ</string>
     <string name="sesl_date_picker_year">နှစ်</string>
     <string name="sesl_date_picker_month">လ</string>
 </resources>

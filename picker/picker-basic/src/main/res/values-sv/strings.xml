@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Nästa månad</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Dubbeltryck om du vill växla till kalendervy.</string>
+    <string name="sesl_time_picker_minute">Minut</string>
     <string name="sesl_picker_cancel">Avbryt</string>
     <string name="sesl_number_picker_invalid_value_entered">Ogiltigt värde har angivits.</string>
     <string name="sesl_date_picker_decrement_month">Föregående månad</string>
     <string name="sesl_date_picker_day">Dag</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Dubbeltryck om du vill växla till hjulvy.</string>
     <string name="sesl_picker_done">Klar</string>
+    <string name="sesl_time_picker_hour">Timme</string>
+    <string name="sesl_time_picker_set_title">Ställa in tid</string>
     <string name="sesl_date_picker_year">År</string>
     <string name="sesl_date_picker_month">Månad</string>
 </resources>

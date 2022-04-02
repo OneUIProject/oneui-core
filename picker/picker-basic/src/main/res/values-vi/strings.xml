@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Tháng sau</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Chạm hai lần để chuyển sang dạng xem lịch.</string>
+    <string name="sesl_time_picker_minute">Phút</string>
     <string name="sesl_picker_cancel">Thoát</string>
     <string name="sesl_number_picker_invalid_value_entered">Đã nhập giá trị không hợp lệ.</string>
     <string name="sesl_date_picker_decrement_month">Tháng trước</string>
     <string name="sesl_date_picker_day">Ngày</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Chạm hai lần để chuyển sang dạng xem vòng xoay.</string>
     <string name="sesl_picker_done">H.tất</string>
+    <string name="sesl_time_picker_hour">Giờ</string>
+    <string name="sesl_time_picker_set_title">Đặt thời gian</string>
     <string name="sesl_date_picker_year">Năm</string>
     <string name="sesl_date_picker_month">Tháng</string>
 </resources>

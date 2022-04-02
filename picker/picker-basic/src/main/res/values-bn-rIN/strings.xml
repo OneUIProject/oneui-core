@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">পরের মাস</string>
     <string name="sesl_date_picker_switch_to_calendar_description">ক্যালেন্ডার দৃশ্যে স্যুইচ করতে দুবার ট্যাপ করুন।</string>
+    <string name="sesl_time_picker_minute">মিনিট</string>
     <string name="sesl_picker_cancel">বাতিল</string>
     <string name="sesl_number_picker_invalid_value_entered">অবৈধ মান লেখা হয়েছে</string>
     <string name="sesl_date_picker_decrement_month">আগের মাস</string>
     <string name="sesl_date_picker_day">দিন</string>
     <string name="sesl_date_picker_switch_to_wheel_description">চাকা দৃশ্যে স্যুইচ করতে দুবার ট্যাপ করুন।</string>
     <string name="sesl_picker_done">সম্পন্ন</string>
+    <string name="sesl_time_picker_hour">ঘন্টা</string>
+    <string name="sesl_time_picker_set_title">সময় সেট করুন</string>
     <string name="sesl_date_picker_year">বছর</string>
     <string name="sesl_date_picker_month">মাস</string>
 </resources>

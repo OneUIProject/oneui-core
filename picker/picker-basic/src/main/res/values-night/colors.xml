@@ -19,4 +19,6 @@
     <color name="sesl_number_picker_text_color">#fffafafa</color>
     <color name="sesl_number_picker_text_highlight_color">#1affffff</color>
 
+    <color name="sesl_date_picker_sunday_number_text_color_light">#fff76f68</color>
+
 </resources>

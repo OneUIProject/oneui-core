@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">ਅਗਲਾ ਮਹੀਨਾ</string>
     <string name="sesl_date_picker_switch_to_calendar_description">ਕੈਲੇਂਡਰ ਦ੍ਰਿਸ਼ ਤੇ ਸਵਿੱਚ ਲਈ ਦੋ ਵਾਰ ਟੈਪ ਕਰੋ।</string>
+    <string name="sesl_time_picker_minute">ਮਿੰਟ</string>
     <string name="sesl_picker_cancel">ਰੱਦ ਕਰੋ</string>
     <string name="sesl_number_picker_invalid_value_entered">ਅਵੈਧ ਮਾਨ ਦਾਖ਼ਲ ਕੀਤਾ ਗਿਆ</string>
     <string name="sesl_date_picker_decrement_month">ਪਿਛਲਾ ਮਹੀਨਾ</string>
     <string name="sesl_date_picker_day">ਦਿਨ</string>
     <string name="sesl_date_picker_switch_to_wheel_description">ਵਹੀਲ ਦ੍ਰਿਸ਼ ਤੇ ਸਵਿੱਚ ਲਈ ਦੋ ਵਾਰ ਟੈਪ ਕਰੋ।</string>
     <string name="sesl_picker_done">ਪੂਰਨ</string>
+    <string name="sesl_time_picker_hour">ਘੰਟਾ</string>
+    <string name="sesl_time_picker_set_title">ਸਮਾਂ ਸੈੱਟ ਕਰੋ</string>
     <string name="sesl_date_picker_year">ਸਾਲ</string>
     <string name="sesl_date_picker_month">ਮਹੀਨਾ</string>
 </resources>

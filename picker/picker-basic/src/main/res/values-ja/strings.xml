@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">次月</string>
     <string name="sesl_date_picker_switch_to_calendar_description">カレンダー表示に切り替えるにはダブルタップしてください。</string>
+    <string name="sesl_time_picker_minute">分</string>
     <string name="sesl_picker_cancel">キャンセル</string>
     <string name="sesl_number_picker_invalid_value_entered">入力された値が正しくありません。</string>
     <string name="sesl_date_picker_decrement_month">前月</string>
     <string name="sesl_date_picker_day">日</string>
     <string name="sesl_date_picker_switch_to_wheel_description">ホイール表示に切り替えるにはダブルタップしてください。</string>
     <string name="sesl_picker_done">完了</string>
+    <string name="sesl_time_picker_hour">時間</string>
+    <string name="sesl_time_picker_set_title">時刻設定</string>
     <string name="sesl_date_picker_year">年</string>
     <string name="sesl_date_picker_month">月</string>
 </resources>

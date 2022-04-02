@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2022 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sesl_timepicker_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="188" />
+
+    <View
+        android:id="@+id/sesl_datetimepicker_padding_left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0" />
+
+    <View
+        android:id="@+id/sesl_timepicker_padding_left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="@integer/sesl_spinning_datepicker_time_padding_left"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="450"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal">
+
+        <androidx.picker.widget.SeslNumberPicker
+            android:id="@+id/sesl_timepicker_hour"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="200"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/sesl_timepicker_divider"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/sesl_time_picker_spinner_divider_text_size"
+            android:textColor="@color/sesl_number_picker_text_color"
+            android:includeFontPadding="false"
+            android:importantForAccessibility="no" />
+
+        <androidx.picker.widget.SeslNumberPicker
+            android:id="@+id/sesl_timepicker_minute"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="200"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/sesl_timepicker_ampm_picker_margin"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="34" />
+
+    <androidx.picker.widget.SeslNumberPicker
+        android:id="@+id/sesl_timepicker_ampm"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="140"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:focusable="true" />
+
+    <View
+        android:id="@+id/sesl_timepicker_padding_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="@integer/sesl_spinning_datepicker_time_padding_right"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/sesl_datetimepicker_padding_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="188" />
+
+</LinearLayout>

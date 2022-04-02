@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Nākamais mēnesis</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Veiciet dubultskārienu, lai pārslēgtos uz kalendāra skatu.</string>
+    <string name="sesl_time_picker_minute">Minūte</string>
     <string name="sesl_picker_cancel">Atcelt</string>
     <string name="sesl_number_picker_invalid_value_entered">Ievadīta nederīga vērtība</string>
     <string name="sesl_date_picker_decrement_month">Iepriekšējais mēnesis</string>
     <string name="sesl_date_picker_day">Diena</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Veiciet dubultskārienu, lai pārslēgtos uz ripas skatu.</string>
     <string name="sesl_picker_done">Gatavs</string>
+    <string name="sesl_time_picker_hour">Stunda</string>
+    <string name="sesl_time_picker_set_title">Iestatīt laiku</string>
     <string name="sesl_date_picker_year">Gads</string>
     <string name="sesl_date_picker_month">Mēnesis</string>
 </resources>

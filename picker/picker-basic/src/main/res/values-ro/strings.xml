@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Luna următoare</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Atingeți de două ori pentru a comuta la vizualizarea Calendar.</string>
+    <string name="sesl_time_picker_minute">Minut</string>
     <string name="sesl_picker_cancel">Anulare</string>
     <string name="sesl_number_picker_invalid_value_entered">S-a introdus o valoare nevalidă.</string>
     <string name="sesl_date_picker_decrement_month">Luna anterioară</string>
     <string name="sesl_date_picker_day">Zi</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Atingeți de două ori pentru a comuta la vizualizarea radială.</string>
     <string name="sesl_picker_done">Efectuat</string>
+    <string name="sesl_time_picker_hour">Oră</string>
+    <string name="sesl_time_picker_set_title">Setare oră</string>
     <string name="sesl_date_picker_year">An</string>
     <string name="sesl_date_picker_month">Lună</string>
 </resources>

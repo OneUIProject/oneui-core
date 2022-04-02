@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">ඊළඟ මාසය</string>
     <string name="sesl_date_picker_switch_to_calendar_description">දින දසුනට මාරු වීමට දෙවරක් තට්ටු කරන්න.</string>
+    <string name="sesl_time_picker_minute">විනාඩිය</string>
     <string name="sesl_picker_cancel">අව. කර.</string>
     <string name="sesl_number_picker_invalid_value_entered">වලංගු නොවූ අගය ඇතුළු කරන ලදී</string>
     <string name="sesl_date_picker_decrement_month">පෙර මාසය</string>
     <string name="sesl_date_picker_day">දිනය</string>
     <string name="sesl_date_picker_switch_to_wheel_description">චක්‍ර දසුනට මාරු වීමට දෙවරක් තට්ටු කරන්න.</string>
     <string name="sesl_picker_done">නිමයි</string>
+    <string name="sesl_time_picker_hour">පැය</string>
+    <string name="sesl_time_picker_set_title">වේලාව සකසන්න</string>
     <string name="sesl_date_picker_year">වර්ෂය</string>
     <string name="sesl_date_picker_month">මාසය</string>
 </resources>

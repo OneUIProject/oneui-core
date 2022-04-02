@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Следнито месец</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Допрете двапати за да се префрлите на календарски преглед.</string>
+    <string name="sesl_time_picker_minute">Минута</string>
     <string name="sesl_picker_cancel">Откажи</string>
     <string name="sesl_number_picker_invalid_value_entered">Внесена е неважечка вредност.</string>
     <string name="sesl_date_picker_decrement_month">Претходниот месец</string>
     <string name="sesl_date_picker_day">Ден</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Допрете двапати за да се префрлите на преглед на тркалце.</string>
     <string name="sesl_picker_done">Готово</string>
+    <string name="sesl_time_picker_hour">Час</string>
+    <string name="sesl_time_picker_set_title">Одреди време</string>
     <string name="sesl_date_picker_year">Година</string>
     <string name="sesl_date_picker_month">Месец</string>
 </resources>

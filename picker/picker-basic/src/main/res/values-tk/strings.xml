@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Indiki aý</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Senenama görnüşine geçmek üçin, iki gezek basyň.</string>
+    <string name="sesl_time_picker_minute">Minut</string>
     <string name="sesl_picker_cancel">Ýatyr</string>
     <string name="sesl_number_picker_invalid_value_entered">Nädogry görkeziji girizildi.</string>
     <string name="sesl_date_picker_decrement_month">Öňki aý</string>
     <string name="sesl_date_picker_day">Gün</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Çarh görnüşine geçmek üçin, iki gezek basyň.</string>
     <string name="sesl_picker_done">Tamam</string>
+    <string name="sesl_time_picker_hour">Sagat</string>
+    <string name="sesl_time_picker_set_title">Wagty belle</string>
     <string name="sesl_date_picker_year">Ýyl</string>
     <string name="sesl_date_picker_month">Aý</string>
 </resources>

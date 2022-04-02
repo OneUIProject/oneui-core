@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">അടുത്ത മാസം</string>
     <string name="sesl_date_picker_switch_to_calendar_description">കലണ്ടർ കാഴ്ചയിലേക്ക് സ്വിച്ചുചെയ്യുന്നതിന് രണ്ടുതവണ സ്പർശിക്കുക.</string>
+    <string name="sesl_time_picker_minute">മിനിറ്റ്</string>
     <string name="sesl_picker_cancel">റദ്ദാക്കുക</string>
     <string name="sesl_number_picker_invalid_value_entered">അസാധുവായ മൂല്യം നല്‍കി</string>
     <string name="sesl_date_picker_decrement_month">മുമ്പത്തെ മാസം</string>
     <string name="sesl_date_picker_day">ദിവസം</string>
     <string name="sesl_date_picker_switch_to_wheel_description">ചക്ര കാഴ്ചയിലേക്ക് സ്വിച്ചുചെയ്യുന്നതിന് രണ്ടുതവണ സ്പർശിക്കുക.</string>
     <string name="sesl_picker_done">ചെയ്തു</string>
+    <string name="sesl_time_picker_hour">മണിക്കൂര്‍</string>
+    <string name="sesl_time_picker_set_title">സമയം ക്രമീകരിക്കുക</string>
     <string name="sesl_date_picker_year">വർഷം</string>
     <string name="sesl_date_picker_month">മാസം</string>
 </resources>

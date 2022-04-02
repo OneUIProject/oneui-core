@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">الشهر التالي</string>
     <string name="sesl_date_picker_switch_to_calendar_description">انقر نقراً مزدوجاً للانتقال إلى عرض التقويم.</string>
+    <string name="sesl_time_picker_minute">دقيقة</string>
     <string name="sesl_picker_cancel">إلغاء</string>
     <string name="sesl_number_picker_invalid_value_entered">تم إدخال قيمة غير صالحة.</string>
     <string name="sesl_date_picker_decrement_month">الشهر السابق</string>
     <string name="sesl_date_picker_day">اليوم</string>
     <string name="sesl_date_picker_switch_to_wheel_description">انقر نقراً مزدوجاً للانتقال إلى عرض العجلة.</string>
     <string name="sesl_picker_done">تم</string>
+    <string name="sesl_time_picker_hour">ساعة</string>
+    <string name="sesl_time_picker_set_title">ضبط الوقت</string>
     <string name="sesl_date_picker_year">العام</string>
     <string name="sesl_date_picker_month">الشهر</string>
 </resources>

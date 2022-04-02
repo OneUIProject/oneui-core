@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Næste måned</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Dobbelttryk for at skifte til kalendervisning.</string>
+    <string name="sesl_time_picker_minute">Minut</string>
     <string name="sesl_picker_cancel">Annuller</string>
     <string name="sesl_number_picker_invalid_value_entered">Ugyldig værdi er indtastet.</string>
     <string name="sesl_date_picker_decrement_month">Forrige måned</string>
     <string name="sesl_date_picker_day">Dag</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Dobbelttryk for at skifte til hjulvisning.</string>
     <string name="sesl_picker_done">Udført</string>
+    <string name="sesl_time_picker_hour">Time</string>
+    <string name="sesl_time_picker_set_title">Angiv tid</string>
     <string name="sesl_date_picker_year">År</string>
     <string name="sesl_date_picker_month">Måned</string>
 </resources>

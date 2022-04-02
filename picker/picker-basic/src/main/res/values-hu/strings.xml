@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Jövő hónap</string>
     <string name="sesl_date_picker_switch_to_calendar_description">A naptárnézetre váltáshoz érintse meg kétszer.</string>
+    <string name="sesl_time_picker_minute">Perc</string>
     <string name="sesl_picker_cancel">Mégse</string>
     <string name="sesl_number_picker_invalid_value_entered">Az érték érvénytelen.</string>
     <string name="sesl_date_picker_decrement_month">Múlt hónap</string>
     <string name="sesl_date_picker_day">Nap</string>
     <string name="sesl_date_picker_switch_to_wheel_description">A választótárcsás nézetre váltáshoz érintse meg kétszer.</string>
     <string name="sesl_picker_done">Kész</string>
+    <string name="sesl_time_picker_hour">óra</string>
+    <string name="sesl_time_picker_set_title">Idő beállítása</string>
     <string name="sesl_date_picker_year">Év</string>
     <string name="sesl_date_picker_month">Hónap</string>
 </resources>

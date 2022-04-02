@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Моҳи оянда</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Барои гузариш ба намуди тақвим, ду бор зарба занед.</string>
+    <string name="sesl_time_picker_minute">Дақиқа</string>
     <string name="sesl_picker_cancel">Бекор кардан</string>
     <string name="sesl_number_picker_invalid_value_entered">Бузургии беэътибор дохил карда шуд.</string>
     <string name="sesl_date_picker_decrement_month">Моҳи қаблӣ</string>
     <string name="sesl_date_picker_day">Рӯз</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Барои гузариш ба намуди чарх, ду бор зарба занед.</string>
     <string name="sesl_picker_done">Иҷро шуд</string>
+    <string name="sesl_time_picker_hour">Соат</string>
+    <string name="sesl_time_picker_set_title">Танзими вақт</string>
     <string name="sesl_date_picker_year">Сол</string>
     <string name="sesl_date_picker_month">Моҳ</string>
 </resources>

@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">เดือนถัดไป</string>
     <string name="sesl_date_picker_switch_to_calendar_description">แตะสองครั้งเพื่อสลับไปที่มุมมองปฏิทิน</string>
+    <string name="sesl_time_picker_minute">นาที</string>
     <string name="sesl_picker_cancel">ยกเลิก</string>
     <string name="sesl_number_picker_invalid_value_entered">ค่าที่ป้อนไม่ถูกต้อง</string>
     <string name="sesl_date_picker_decrement_month">เดือนที่แล้ว</string>
     <string name="sesl_date_picker_day">วัน</string>
     <string name="sesl_date_picker_switch_to_wheel_description">แตะสองครั้งเพื่อสลับไปที่มุมมองแบบวงล้อ</string>
     <string name="sesl_picker_done">เรียบร้อย</string>
+    <string name="sesl_time_picker_hour">ชั่วโมง</string>
+    <string name="sesl_time_picker_set_title">ตั้งเวลา</string>
     <string name="sesl_date_picker_year">ปี</string>
     <string name="sesl_date_picker_month">เดือน</string>
 </resources>

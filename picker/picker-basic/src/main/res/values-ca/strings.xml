@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Mes següent</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Toqui dos cops per canviar a la vista de calendari.</string>
+    <string name="sesl_time_picker_minute">Minut</string>
     <string name="sesl_picker_cancel">Cancel·lar</string>
     <string name="sesl_number_picker_invalid_value_entered">El valor introduït no és vàlid.</string>
     <string name="sesl_date_picker_decrement_month">Mes anterior</string>
     <string name="sesl_date_picker_day">Dia</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Toqui dos cops per canviar a la vista de roda.</string>
     <string name="sesl_picker_done">Fet</string>
+    <string name="sesl_time_picker_hour">Hora</string>
+    <string name="sesl_time_picker_set_title">Definir hora</string>
     <string name="sesl_date_picker_year">Any</string>
     <string name="sesl_date_picker_month">Mes</string>
 </resources>

@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">下個月</string>
     <string name="sesl_date_picker_switch_to_calendar_description">輕觸兩下以切換為日曆檢視。</string>
+    <string name="sesl_time_picker_minute">分鐘</string>
     <string name="sesl_picker_cancel">取消</string>
     <string name="sesl_number_picker_invalid_value_entered">輸入的值無效</string>
     <string name="sesl_date_picker_decrement_month">上個月</string>
     <string name="sesl_date_picker_day">日</string>
     <string name="sesl_date_picker_switch_to_wheel_description">輕觸兩下以切換為轉盤檢視。</string>
     <string name="sesl_picker_done">完成</string>
+    <string name="sesl_time_picker_hour">小時</string>
+    <string name="sesl_time_picker_set_title">設定時間</string>
     <string name="sesl_date_picker_year">年</string>
     <string name="sesl_date_picker_month">月</string>
 </resources>

@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Следующий месяц</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Дважды коснитесь, чтобы переключиться на вид календаря.</string>
+    <string name="sesl_time_picker_minute">Минута</string>
     <string name="sesl_picker_cancel">Отмена</string>
     <string name="sesl_number_picker_invalid_value_entered">Значение недопустимо</string>
     <string name="sesl_date_picker_decrement_month">Предыдущий месяц</string>
     <string name="sesl_date_picker_day">День</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Дважды коснитесь, чтобы переключиться на вид прокрутки колеса.</string>
     <string name="sesl_picker_done">Готово</string>
+    <string name="sesl_time_picker_hour">Час</string>
+    <string name="sesl_time_picker_set_title">Установить время</string>
     <string name="sesl_date_picker_year">Год</string>
     <string name="sesl_date_picker_month">Месяц</string>
 </resources>

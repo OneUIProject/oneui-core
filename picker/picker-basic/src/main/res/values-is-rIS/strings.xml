@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Næsti mánuður</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Pikkaðu tvisvar til að skipta yfir í dagatalsyfirlit.</string>
+    <string name="sesl_time_picker_minute">Mínúta</string>
     <string name="sesl_picker_cancel">Hætta við</string>
     <string name="sesl_number_picker_invalid_value_entered">Ógilt gildi var fært inn.</string>
     <string name="sesl_date_picker_decrement_month">Fyrri mánuður</string>
     <string name="sesl_date_picker_day">Dagur</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Pikkaðu tvisvar til að skipta yfir í flettiyfirlit.</string>
     <string name="sesl_picker_done">Lokið</string>
+    <string name="sesl_time_picker_hour">Klst.</string>
+    <string name="sesl_time_picker_set_title">Velja tíma</string>
     <string name="sesl_date_picker_year">Ár</string>
     <string name="sesl_date_picker_month">Mánuður</string>
 </resources>

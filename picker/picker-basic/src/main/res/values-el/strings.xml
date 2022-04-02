@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Επόμενος μήνας</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Πατήστε δύο φορές για να μεταβείτε στην προβολή ημερολογίου.</string>
+    <string name="sesl_time_picker_minute">Λεπτό</string>
     <string name="sesl_picker_cancel">Άκυρο</string>
     <string name="sesl_number_picker_invalid_value_entered">Καταχωρίστηκε μη έγκυρη τιμή.</string>
     <string name="sesl_date_picker_decrement_month">Προηγούμενος μήνας</string>
     <string name="sesl_date_picker_day">Ημέρα</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Πατήστε δύο φορές για να μεταβείτε στην προβολή τροχού.</string>
     <string name="sesl_picker_done">Τέλος</string>
+    <string name="sesl_time_picker_hour">Ώρα</string>
+    <string name="sesl_time_picker_set_title">Ρύθμιση ώρας</string>
     <string name="sesl_date_picker_year">Έτος</string>
     <string name="sesl_date_picker_month">Μήνας</string>
 </resources>

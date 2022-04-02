@@ -28,7 +28,14 @@
     <item type="dimen" name="sesl_number_picker_spinner_height">@dimen/sesl_picker_spinner_height</item>
     <dimen name="sesl_number_picker_spinner_width">90.0dip</dimen>
 
+    <dimen name="sesl_time_picker_dialog_min_width">400.0dip</dimen>
+    <dimen name="sesl_time_picker_spinner_dialog_padding_top">24.0dip</dimen>
+    <dimen name="sesl_time_picker_spinner_dialog_padding_bottom">24.0dip</dimen>
+    <item type="dimen" name="sesl_time_picker_spinner_height">@dimen/sesl_picker_spinner_height</item>
     <dimen name="sesl_time_picker_spinner_text_size">28.0dip</dimen>
+    <dimen name="sesl_time_picker_spinner_divider_text_size">32.0dip</dimen>
     <dimen name="sesl_time_picker_spinner_am_pm_text_size">22.0dip</dimen>
+
+    <dimen name="sesl_spinning_date_picker_date_spinner_text_size">21.0dip</dimen>
 
 </resources>

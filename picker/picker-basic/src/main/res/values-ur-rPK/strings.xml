@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">اگلے مہینے</string>
     <string name="sesl_date_picker_switch_to_calendar_description">کیلنڈر منظر میں سوئچ کرنے کے لیے دوہری تھپکی دیں۔</string>
+    <string name="sesl_time_picker_minute">منٹ</string>
     <string name="sesl_picker_cancel">منسوخ</string>
     <string name="sesl_number_picker_invalid_value_entered">غیرمجاز قیمت داخل کی گئی</string>
     <string name="sesl_date_picker_decrement_month">پچھلے مہینے</string>
     <string name="sesl_date_picker_day">دن</string>
     <string name="sesl_date_picker_switch_to_wheel_description">وہیل منظر میں سوئچ کرنے کے لیے دوہری تھپکی دیں۔</string>
     <string name="sesl_picker_done">مکمل</string>
+    <string name="sesl_time_picker_hour">گھنٹا</string>
+    <string name="sesl_time_picker_set_title">وقت متعین کریں</string>
     <string name="sesl_date_picker_year">سال</string>
     <string name="sesl_date_picker_month">مہینہ</string>
 </resources>

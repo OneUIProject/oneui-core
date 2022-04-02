@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">ເດືອນໜ້າ</string>
     <string name="sesl_date_picker_switch_to_calendar_description">ແຕະສອງຄັ້ງເພື່ອສັບປ່ຽນເປັນມຸມມອງປະຕິທິນ.</string>
+    <string name="sesl_time_picker_minute">ນາທີ</string>
     <string name="sesl_picker_cancel">ຍົກເລີກ</string>
     <string name="sesl_number_picker_invalid_value_entered">ຄ່າທີ່ໃສ່ເຂົ້າໄປບໍ່ຖືກຕ້ອງ</string>
     <string name="sesl_date_picker_decrement_month">ເດືອນກ່ອນ</string>
     <string name="sesl_date_picker_day">ວັນ</string>
     <string name="sesl_date_picker_switch_to_wheel_description">ແຕະສອງຄັ້ງເພື່ອສັບປ່ຽນເປັນມຸມມອງກົງລໍ້.</string>
     <string name="sesl_picker_done">ສໍາເລັດແລ້ວ</string>
+    <string name="sesl_time_picker_hour">ຊົ່ວ​ໂມງ</string>
+    <string name="sesl_time_picker_set_title">ຕັ້ງ​ເວລາ</string>
     <string name="sesl_date_picker_year">ປີ</string>
     <string name="sesl_date_picker_month">ເດືອນ</string>
 </resources>

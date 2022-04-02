@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Келесі ай</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Күнтізбелік көрініске ауыстыру үшін, екі рет түртіңіз.</string>
+    <string name="sesl_time_picker_minute">Минут</string>
     <string name="sesl_picker_cancel">Тоқтату</string>
     <string name="sesl_number_picker_invalid_value_entered">Қате мән енгізілді</string>
     <string name="sesl_date_picker_decrement_month">Алдыңғы ай</string>
     <string name="sesl_date_picker_day">Күн</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Дөңгелекті айналдыру көрінісіне ауыстыру үшін, екі рет түртіңіз.</string>
     <string name="sesl_picker_done">Дайын</string>
+    <string name="sesl_time_picker_hour">Сағат</string>
+    <string name="sesl_time_picker_set_title">Уақытты орнату</string>
     <string name="sesl_date_picker_year">Жыл</string>
     <string name="sesl_date_picker_month">Ай</string>
 </resources>

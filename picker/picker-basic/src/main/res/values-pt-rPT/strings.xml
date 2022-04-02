@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Mês seguinte</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Toque duas vezes para mudar para a vista de agenda.</string>
+    <string name="sesl_time_picker_minute">Minuto</string>
     <string name="sesl_picker_cancel">Cancelar</string>
     <string name="sesl_number_picker_invalid_value_entered">Valor inválido introduzido.</string>
     <string name="sesl_date_picker_decrement_month">Mês anterior</string>
     <string name="sesl_date_picker_day">Dia</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Toque duas vezes para mudar para a vista de roda.</string>
     <string name="sesl_picker_done">Concluir</string>
+    <string name="sesl_time_picker_hour">Hora</string>
+    <string name="sesl_time_picker_set_title">Definir hora</string>
     <string name="sesl_date_picker_year">Ano</string>
     <string name="sesl_date_picker_month">Mês</string>
 </resources>

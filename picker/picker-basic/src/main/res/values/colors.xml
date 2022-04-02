@@ -19,4 +19,21 @@
     <color name="sesl_number_picker_text_color">#ff252525</color>
     <color name="sesl_number_picker_text_highlight_color">#0d000000</color>
 
+    <color name="sesl_date_picker_button_tint_color_dark">#ff737373</color>
+    <color name="sesl_date_picker_button_tint_color_light">#ff8e8e8e</color>
+    <color name="sesl_date_picker_header_text_color_dark">@color/sesl_date_picker_normal_day_number_text_color_dark</color>
+    <color name="sesl_date_picker_header_text_color_light">@color/sesl_date_picker_normal_day_number_text_color_light</color>
+    <color name="sesl_date_picker_normal_day_number_text_color_dark">#ffcccccc</color>
+    <color name="sesl_date_picker_normal_day_number_text_color_light">#ff4d4d4d</color>
+    <color name="sesl_date_picker_normal_text_color_dark">#ff999999</color>
+    <color name="sesl_date_picker_normal_text_color_light">#ff909090</color>
+    <color name="sesl_date_picker_saturday_text_color_light">#ff0082be</color>
+    <color name="sesl_date_picker_saturday_week_text_color_light">#ff0082be</color>
+    <color name="sesl_date_picker_selected_day_number_text_color_dark">@color/sesl_dialog_window_background_color_material_dark</color>
+    <color name="sesl_date_picker_selected_day_number_text_color_light">@color/sesl_dialog_window_background_color_material_light</color>
+    <color name="sesl_date_picker_sunday_number_text_color_light">#ffdb332a</color>
+    <color name="sesl_date_picker_sunday_text_color_dark">#fff76f68</color>
+    <color name="sesl_date_picker_sunday_text_color_light">#ffdb332a</color>
+    <color name="sesl_date_picker_weekday_number_text_color">#ff454545</color>
+
 </resources>

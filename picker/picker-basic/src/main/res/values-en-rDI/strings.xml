@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">IDS_CLD_BODY_NEXT_MONTH</string>
     <string name="sesl_date_picker_switch_to_calendar_description">IDS_IDLE_TBBODY_DOUBLE_TAP_TO_SWITCH_TO_CALENDAR_VIEW</string>
+    <string name="sesl_time_picker_minute">IDS_COM_BODY_MINUTE</string>
     <string name="sesl_picker_cancel">IDS_COM_SK_CANCEL</string>
     <string name="sesl_number_picker_invalid_value_entered">IDS_CLD_TPOP_INVALID_VALUE_ENTERED</string>
     <string name="sesl_date_picker_decrement_month">IDS_CLD_BODY_PREVIOUS_MONTH</string>
     <string name="sesl_date_picker_day">IDS_IDLE_TBOPT_DAY</string>
     <string name="sesl_date_picker_switch_to_wheel_description">IDS_IDLE_TBBODY_DOUBLE_TAP_TO_SWITCH_TO_WHEEL_VIEW</string>
     <string name="sesl_picker_done">IDS_GALLERY_BUTTON_DONE</string>
+    <string name="sesl_time_picker_hour">IDS_COM_BODY_HOUR</string>
+    <string name="sesl_time_picker_set_title">IDS_HEALTH_OPT_SET_TIME_ABB</string>
     <string name="sesl_date_picker_year">IDS_IDLE_TBOPT_YEAR</string>
     <string name="sesl_date_picker_month">IDS_IDLE_TBOPT_MONTH</string>
 </resources>

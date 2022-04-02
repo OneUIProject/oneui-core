@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Bulan depan</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Dwiketik untuk bertukar kepada pandangan kalendar.</string>
+    <string name="sesl_time_picker_minute">Minit</string>
     <string name="sesl_picker_cancel">Batal</string>
     <string name="sesl_number_picker_invalid_value_entered">Nilai tidak sah dimasukkan</string>
     <string name="sesl_date_picker_decrement_month">Bulan lepas</string>
     <string name="sesl_date_picker_day">Hari</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Dwiketik untuk bertukar kepada pandangan roda.</string>
     <string name="sesl_picker_done">Selesai</string>
+    <string name="sesl_time_picker_hour">Jam</string>
+    <string name="sesl_time_picker_set_title">Tetapkan masa</string>
     <string name="sesl_date_picker_year">Tahun</string>
     <string name="sesl_date_picker_month">Bulan</string>
 </resources>

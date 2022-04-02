@@ -2,12 +2,15 @@
 <resources>
     <string name="sesl_date_picker_increment_month">Volgende maand</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Tik twee keer om naar de agendaweergave over te schakelen.</string>
+    <string name="sesl_time_picker_minute">Minuut</string>
     <string name="sesl_picker_cancel">Annuleren</string>
     <string name="sesl_number_picker_invalid_value_entered">Ongeldige waarde ingevoerd.</string>
     <string name="sesl_date_picker_decrement_month">Vorige maand</string>
     <string name="sesl_date_picker_day">Dag</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Tik twee keer om naar de schijfweergave over te schakelen.</string>
     <string name="sesl_picker_done">Gereed</string>
+    <string name="sesl_time_picker_hour">Uur</string>
+    <string name="sesl_time_picker_set_title">Tijd instellen</string>
     <string name="sesl_date_picker_year">Jaar</string>
     <string name="sesl_date_picker_month">Maand</string>
 </resources>

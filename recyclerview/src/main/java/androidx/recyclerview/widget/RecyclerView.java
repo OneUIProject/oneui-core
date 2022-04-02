@@ -15278,12 +15278,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     boolean isInScrollingContainer() {
-        for (ViewParent parent = getParent(); parent != null
-                && (parent instanceof ViewGroup); parent = parent.getParent()) {
-            ViewGroup vg = (ViewGroup) parent;
-            if (vg.shouldDelayChildPressedState()) {
+        ViewParent p = getParent();
+        while (p != null && p instanceof ViewGroup) {
+            if (((ViewGroup) p).shouldDelayChildPressedState()) {
                 return true;
             }
+            p = p.getParent();
         }
         return false;
     }

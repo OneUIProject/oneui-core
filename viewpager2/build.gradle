@@ -11,6 +11,12 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -19,4 +25,12 @@ dependencies {
     api(project(":fragment"))
     api(project(":recyclerview"))
     implementation("androidx.collection:collection:1.2.0")
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.viewpager2_viewpager2.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.1-sesl4" + "\n"
 }

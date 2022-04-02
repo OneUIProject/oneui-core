@@ -17,6 +17,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
     aaptOptions {
         noCompress "ttf"
     }
@@ -28,6 +30,10 @@ android {
     buildTypes.all {
         consumerProguardFiles("proguard-rules.pro")
     }
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -37,4 +43,12 @@ dependencies {
     api("androidx.versionedparcelable:versionedparcelable:1.1.1")
     implementation("androidx.collection:collection:1.2.0")
     implementation("androidx.concurrent:concurrent-futures:1.0.0")
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.core_core.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.19-sesl4" + "\n"
 }

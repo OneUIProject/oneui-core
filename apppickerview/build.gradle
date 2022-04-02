@@ -11,6 +11,14 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
+    sourceSets {
+        main.resources.srcDir "$buildDir/javaResources"
+    }
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -18,4 +26,12 @@ dependencies {
     api(project(":appcompat"))
     api(project(":core"))
     api(project(":recyclerview"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.apppickerview_apppickerview.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.17-sesl4" + "\n"
 }

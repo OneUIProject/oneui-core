@@ -11,6 +11,12 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -18,4 +24,13 @@ dependencies {
     implementation(project(":appcompat"))
     api(project(":core"))
     api("androidx.dynamicanimation:dynamicanimation:1.0.0")
+    api(project(":viewpager"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.picker_picker-basic.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.33-sesl4" + "\n"
 }

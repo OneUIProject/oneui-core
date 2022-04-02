@@ -11,6 +11,12 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -19,4 +25,12 @@ dependencies {
     api project(path: ':core')
     api project(path: ':customview')
     implementation project(path: ':recyclerview')
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.indexscroll_indexscroll.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.14-sesl4" + "\n"
 }

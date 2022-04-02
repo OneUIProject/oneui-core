@@ -11,6 +11,12 @@ android {
         versionCode 1
         versionName '1.0.0'
     }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -18,4 +24,12 @@ dependencies {
     api(project(":core"))
     api(project(":fragment"))
     api(project(":picker:picker-basic"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.picker_picker-color.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.18-sesl4" + "\n"
 }

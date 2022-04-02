@@ -14,6 +14,111 @@ buildscript {
     }
 }
 
+//### Maven ###
+// build and upload (not publish): cmd> gradlew assembleRelease publishToSonatype
+plugins {
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+}
+group = "io.github.oneuiproject.sesl"
+
+def sonatype_user, sonatype_pwd
+File propertiesFile = project.rootProject.file('local.properties')
+if (propertiesFile.exists()) {
+    Properties properties = new Properties()
+    properties.load(propertiesFile.newDataInputStream())
+
+    ext["signing.keyId"] = properties.getProperty('signing.keyId')
+    ext["signing.password"] = properties.getProperty('signing.password')
+    ext["signing.secretKeyRingFile"] = properties.getProperty('signing.secretKeyRingFile')
+
+    sonatype_user = properties.getProperty('sonatype.user')
+    sonatype_pwd = properties.getProperty('sonatype.pwd')
+} else {
+    ext["signing.keyId"] = "$System.env.SIGNING_KEYID"
+    ext["signing.password"] = "$System.env.SIGNING_PASSWORD"
+    ext["signing.secretKeyRingFile"] = "$System.env.SIGNING_KEYFILE"
+
+    sonatype_user = "$System.env.SONATYPE_USER"
+    sonatype_pwd = "$System.env.SONATYPE_PWD"
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            username = sonatype_user
+            password = sonatype_pwd
+        }
+    }
+}
+
+//exclude modules/projects (must contain "picker")
+def excludeProjects = ["picker","material","slidingpanelayout"] // (yanndroid) ["picker","apppickerview","indexscroll","material","preference","recyclerview","slidingpanelayout","viewpager2"]
+
+subprojects {
+    if (!excludeProjects.contains(project.name)) {
+        apply plugin: 'maven-publish'
+        apply plugin: 'signing'
+
+        signing {
+            sign publishing.publications
+        }
+
+        afterEvaluate {
+            println(projectDir)
+            println("$group:$project.name:$android.defaultConfig.versionName")
+
+            publishing {
+                publications {
+                    release(MavenPublication) {
+                        groupId = group
+                        artifactId = project.name
+                        version = android.defaultConfig.versionName
+                        artifact("${projectDir}/build/outputs/aar/$project.name-release.aar")
+
+                        pom {
+                            name = project.name
+                            description = "sesl $project.name"
+                            url = "https://github.com/OneUIProject/sesl"
+                            licenses {
+                                license {
+                                    name = "MIT License"
+                                    url = "https://github.com/OneUIProject/sesl/blob/main/LICENSE"
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id = "Yanndroid"
+                                    name = "Yanndroid"
+                                    url = "https://github.com/Yanndroid"
+                                }
+                                developer {
+                                    id = "BlackMesa123"
+                                    name = "BlackMesa123"
+                                    url = "https://github.com/BlackMesa123"
+                                }
+                            }
+                            scm {
+                                connection = "scm:git@github.com/OneUIProject/sesl.git"
+                                developerConnection = "scm:git@github.com/OneUIProject/sesl.git"
+                                url = "https://github.com/OneUIProject/sesl"
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+task aarUpload(type: GradleBuild) {
+    tasks = ['clean', 'assembleRelease', 'publishToSonatype']
+}
+
+//### end of Maven ###
+
 allprojects {
     repositories {
         google()

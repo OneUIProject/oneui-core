@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Déanta</string>
+    <string name="sesl_date_picker_increment_month">An chéad mhí eile</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Déthapáil le haistriú chuig an amharc féilire.</string>
     <string name="sesl_picker_cancel">Cuir ar ceal</string>
+    <string name="sesl_number_picker_invalid_value_entered">Iontráladh luach neamhbhailí.</string>
+    <string name="sesl_date_picker_decrement_month">An mhí roimhe</string>
+    <string name="sesl_date_picker_day">Lá</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Déthapáil le haistriú chuig an rothamharc.</string>
+    <string name="sesl_picker_done">Déanta</string>
+    <string name="sesl_date_picker_year">Bliain</string>
+    <string name="sesl_date_picker_month">Mí</string>
 </resources>

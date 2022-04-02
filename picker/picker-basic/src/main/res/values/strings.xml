@@ -18,5 +18,15 @@
 
     <string name="sesl_picker_cancel">Cancel</string>
     <string name="sesl_picker_done">Done</string>
+
+    <string name="sesl_number_picker_invalid_value_entered">Invalid value entered.</string>
+
+    <string name="sesl_date_picker_day">Day</string>
+    <string name="sesl_date_picker_decrement_month">Decrease month</string>
+    <string name="sesl_date_picker_increment_month">Increase month</string>
+    <string name="sesl_date_picker_month">Month</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Double tap to switch to calendar view.</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Double tap to switch to wheel view.</string>
+    <string name="sesl_date_picker_year">Year</string>
     
 </resources>

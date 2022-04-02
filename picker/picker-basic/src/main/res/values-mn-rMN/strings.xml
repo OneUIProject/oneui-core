@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Болсон</string>
+    <string name="sesl_date_picker_increment_month">Дараах сар</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Давхар товшоод цаглабар харах руу шилж.</string>
     <string name="sesl_picker_cancel">Цуцлах</string>
+    <string name="sesl_number_picker_invalid_value_entered">Хүчингүй утга оруулсан</string>
+    <string name="sesl_date_picker_decrement_month">Өмнөх сар</string>
+    <string name="sesl_date_picker_day">Өдөр</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Давхар товшоод гараг, өдөр харах руу шилж.</string>
+    <string name="sesl_picker_done">Болсон</string>
+    <string name="sesl_date_picker_year">Жил</string>
+    <string name="sesl_date_picker_month">Сар</string>
 </resources>

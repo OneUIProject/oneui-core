@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">រួចរាល់</string>
+    <string name="sesl_date_picker_increment_month">ខែបន្ទាប់</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">ប៉ះ​ពីរដង ដើម្បី​ប្ដូរ​ទៅ​ទិដ្ឋភាព​ប្រតិទិន។</string>
     <string name="sesl_picker_cancel">បោះបង់</string>
+    <string name="sesl_number_picker_invalid_value_entered">បាន​វាយបញ្ចូល​តម្លៃ​អសុពលភាព</string>
+    <string name="sesl_date_picker_decrement_month">ខែមុន</string>
+    <string name="sesl_date_picker_day">ថ្ងៃ</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">ប៉ះ​ពីរដង ដើម្បី​ប្ដូរ​ទៅ​ទិដ្ឋភាព​កង់។</string>
+    <string name="sesl_picker_done">រួចរាល់</string>
+    <string name="sesl_date_picker_year">ឆ្នាំ</string>
+    <string name="sesl_date_picker_month">ខែ</string>
 </resources>

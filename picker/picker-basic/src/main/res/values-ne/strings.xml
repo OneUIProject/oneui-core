@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">भयो</string>
+    <string name="sesl_date_picker_increment_month">अर्को महिना</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">पात्रो दृश्यमा स्विच गर्न दुई पटक ट्याप गर्नुहोस्।</string>
     <string name="sesl_picker_cancel">रद्द</string>
+    <string name="sesl_number_picker_invalid_value_entered">अवैध मान प्रविष्ट गरियो</string>
+    <string name="sesl_date_picker_decrement_month">पछिल्लो महिना</string>
+    <string name="sesl_date_picker_day">दिन</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">चक्राकार दृश्यमा स्विच गर्न दुई पटक ट्याप गर्नुहोस्।</string>
+    <string name="sesl_picker_done">भयो</string>
+    <string name="sesl_date_picker_year">वर्ष</string>
+    <string name="sesl_date_picker_month">महिना</string>
 </resources>

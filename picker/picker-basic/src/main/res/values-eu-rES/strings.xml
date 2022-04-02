@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Eginda</string>
+    <string name="sesl_date_picker_increment_month">Hurrengo hila</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Egutegi ikuspegira aldatzeko, ukitu bi aldiz.</string>
     <string name="sesl_picker_cancel">Utzi</string>
+    <string name="sesl_number_picker_invalid_value_entered">Balio baliogabea adierazi duzu.</string>
+    <string name="sesl_date_picker_decrement_month">Aurreko hila</string>
+    <string name="sesl_date_picker_day">Eguna</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Gurpil ikuspegira aldatzeko, ukitu bi aldiz.</string>
+    <string name="sesl_picker_done">Eginda</string>
+    <string name="sesl_date_picker_year">Urtea</string>
+    <string name="sesl_date_picker_month">Hilabetea</string>
 </resources>

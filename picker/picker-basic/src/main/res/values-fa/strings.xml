@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">انجام شد</string>
+    <string name="sesl_date_picker_increment_month">ماه بعد</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">برای رفتن به نمای تقویم، دو بار ضربه بزنید.</string>
     <string name="sesl_picker_cancel">لغو</string>
+    <string name="sesl_number_picker_invalid_value_entered">مقدار نامعتبری وارد شده است</string>
+    <string name="sesl_date_picker_decrement_month">ماه قبل</string>
+    <string name="sesl_date_picker_day">روز</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">برای رفتن به نمای چرخ، دو بار ضربه بزنید.</string>
+    <string name="sesl_picker_done">انجام شد</string>
+    <string name="sesl_date_picker_year">سال</string>
+    <string name="sesl_date_picker_month">ماه</string>
 </resources>

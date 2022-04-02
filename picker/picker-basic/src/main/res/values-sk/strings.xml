@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Hotovo</string>
+    <string name="sesl_date_picker_increment_month">Nasledujúci mesiac</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Dvojitým ťuknutím prepnete na zobrazenie kalendára.</string>
     <string name="sesl_picker_cancel">Zrušiť</string>
+    <string name="sesl_number_picker_invalid_value_entered">Bola zadaná neplatná hodnota.</string>
+    <string name="sesl_date_picker_decrement_month">Predchádzajúci mesiac</string>
+    <string name="sesl_date_picker_day">Deň</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Dvojitým ťuknutím prepnete na kolieskové zobrazenie.</string>
+    <string name="sesl_picker_done">Hotovo</string>
+    <string name="sesl_date_picker_year">Rok</string>
+    <string name="sesl_date_picker_month">Mesiac</string>
 </resources>

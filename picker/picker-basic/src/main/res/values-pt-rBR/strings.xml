@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_increment_month">Próximo mês</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Toque duas vezes para alternar para a visualização de calendário.</string>
     <string name="sesl_picker_cancel">Cancelar</string>
+    <string name="sesl_number_picker_invalid_value_entered">O valor inserido é inválido.</string>
+    <string name="sesl_date_picker_decrement_month">Mês anterior</string>
+    <string name="sesl_date_picker_day">Dia</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Toque duas vezes para alternar para a visualização de roda.</string>
+    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_year">Ano</string>
+    <string name="sesl_date_picker_month">Mês</string>
 </resources>

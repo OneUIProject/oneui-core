@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">झाले</string>
+    <string name="sesl_date_picker_increment_month">पुढच्या महिन्यात</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">दिनदर्शिका दृश्यावर स्विच करण्‍यासाठी दोनदा टॅप करा.</string>
     <string name="sesl_picker_cancel">रद्द</string>
+    <string name="sesl_number_picker_invalid_value_entered">अग्राह्य मूल्य प्रविष्‍ट केले</string>
+    <string name="sesl_date_picker_decrement_month">मागच्या महिन्यात</string>
+    <string name="sesl_date_picker_day">दिवस</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">व्‍हील दृश्यावर स्विच करण्‍यासाठी दोनदा टॅप करा.</string>
+    <string name="sesl_picker_done">झाले</string>
+    <string name="sesl_date_picker_year">वर्ष</string>
+    <string name="sesl_date_picker_month">महिना</string>
 </resources>

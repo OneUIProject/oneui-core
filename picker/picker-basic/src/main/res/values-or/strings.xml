@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">ସମାପ୍ତ</string>
+    <string name="sesl_date_picker_increment_month">ଆଗାମୀ ମାସ</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">କ୍ୟାଲେଣ୍ଡର୍ ଦର୍ଶନ କରି ସ୍ଵିଚ୍ କରିବାକୁ ଦୁଇଥର ଟ୍ୟାପ୍ କରନ୍ତୁ।</string>
     <string name="sesl_picker_cancel">ବାତିଲ୍</string>
+    <string name="sesl_number_picker_invalid_value_entered">ଅବୈଧ ମୂଲ୍ୟ ପ୍ରବେଶ ହୋଇଛି</string>
+    <string name="sesl_date_picker_decrement_month">ପୂର୍ବ ମାସ</string>
+    <string name="sesl_date_picker_day">ଦିନ</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">ହ୍ଵିଲ୍ ଦର୍ଶନ କରି ସ୍ଵିଚ୍ କରିବାକୁ ଦୁଇଥର ଟ୍ୟାପ୍ କରନ୍ତୁ।</string>
+    <string name="sesl_picker_done">ସମାପ୍ତ</string>
+    <string name="sesl_date_picker_year">ବର୍ଷ</string>
+    <string name="sesl_date_picker_month">ମାସ</string>
 </resources>

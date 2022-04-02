@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_increment_month">Keyingi oy</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Kalendar ko‘rinishiga o‘tish uchun ikki marta teging.</string>
     <string name="sesl_picker_cancel">Bekor qilish</string>
+    <string name="sesl_number_picker_invalid_value_entered">Noto‘g‘ri qiymat kiritildi</string>
+    <string name="sesl_date_picker_decrement_month">Avvalgi oy</string>
+    <string name="sesl_date_picker_day">Kun</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">G‘ildirak ko‘rinishiga o‘tish uchun ikki marta teging.</string>
+    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_year">Yil</string>
+    <string name="sesl_date_picker_month">Oy</string>
 </resources>

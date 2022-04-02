@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">完成</string>
+    <string name="sesl_date_picker_increment_month">下个月</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">双击可切换至日历视图。</string>
     <string name="sesl_picker_cancel">取消</string>
+    <string name="sesl_number_picker_invalid_value_entered">输入的数值无效</string>
+    <string name="sesl_date_picker_decrement_month">上个月</string>
+    <string name="sesl_date_picker_day">日</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">双击可切换至滚轮视图。</string>
+    <string name="sesl_picker_done">完成</string>
+    <string name="sesl_date_picker_year">年</string>
+    <string name="sesl_date_picker_month">月</string>
 </resources>

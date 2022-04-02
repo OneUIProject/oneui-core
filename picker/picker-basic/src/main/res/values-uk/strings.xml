@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Готово</string>
+    <string name="sesl_date_picker_increment_month">Наступний місяць</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Двічі торкніться, щоб переключитися до перегляду календаря.</string>
     <string name="sesl_picker_cancel">Скасувати</string>
+    <string name="sesl_number_picker_invalid_value_entered">Введено хибне значення</string>
+    <string name="sesl_date_picker_decrement_month">Попередній місяць</string>
+    <string name="sesl_date_picker_day">День</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Двічі торкніться, щоб переключитися до перегляду прокручування колеса.</string>
+    <string name="sesl_picker_done">Готово</string>
+    <string name="sesl_date_picker_year">Рік</string>
+    <string name="sesl_date_picker_month">Місяць</string>
 </resources>

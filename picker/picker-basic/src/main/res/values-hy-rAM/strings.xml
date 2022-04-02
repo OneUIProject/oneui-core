@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Արված է</string>
+    <string name="sesl_date_picker_increment_month">Հաջորդ ամիս</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Կրկնակի թակեք՝ օրացույցի դիտմանն անցնելու համար:</string>
     <string name="sesl_picker_cancel">Չեղարկել</string>
+    <string name="sesl_number_picker_invalid_value_entered">Անվավեր արժեք է մուտքագրվել</string>
+    <string name="sesl_date_picker_decrement_month">Նախորդ ամիս</string>
+    <string name="sesl_date_picker_day">Օր</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Կրկնակի թակեք՝ անվակի դիտմանն անցնելու համար:</string>
+    <string name="sesl_picker_done">Արված է</string>
+    <string name="sesl_date_picker_year">Տարի</string>
+    <string name="sesl_date_picker_month">Ամիս</string>
 </resources>

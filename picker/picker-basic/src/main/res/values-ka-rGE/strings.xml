@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">შესრულდა</string>
+    <string name="sesl_date_picker_increment_month">შემდეგი თვე</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">ორჯერ შეეხეთ, რომ გადართოთ კალენდრის ხედზე.</string>
     <string name="sesl_picker_cancel">გაუქმება</string>
+    <string name="sesl_number_picker_invalid_value_entered">შეყვანილი მნიშვნელობა არასწორია</string>
+    <string name="sesl_date_picker_decrement_month">წინა თვე</string>
+    <string name="sesl_date_picker_day">დღე</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">ორჯერ შეეხეთ, რომ გადართოთ ბორბლის ხედზე.</string>
+    <string name="sesl_picker_done">შესრულდა</string>
+    <string name="sesl_date_picker_year">წელი</string>
+    <string name="sesl_date_picker_month">თვე</string>
 </resources>

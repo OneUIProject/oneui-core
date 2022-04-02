@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">تامام</string>
+    <string name="sesl_date_picker_increment_month">كېيىنكى ئاي</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">قوش چېكىپ كالېنداردا كۆرۈشكە ئالماشتۇرۇڭ.</string>
     <string name="sesl_picker_cancel">ياق</string>
+    <string name="sesl_number_picker_invalid_value_entered">ئىناۋەتسىز قىممەت كىرگۈزۈلدى.</string>
+    <string name="sesl_date_picker_decrement_month">ئالدىنقى ئاي</string>
+    <string name="sesl_date_picker_day">كۈن</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">قوش چېكىپ چاقلىق كۆرۈشكە ئالماشتۇرۇڭ.</string>
+    <string name="sesl_picker_done">تامام</string>
+    <string name="sesl_date_picker_year">يىل</string>
+    <string name="sesl_date_picker_month">ئاي</string>
 </resources>

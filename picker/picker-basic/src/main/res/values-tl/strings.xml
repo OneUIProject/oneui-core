@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Tapos na</string>
+    <string name="sesl_date_picker_increment_month">Susunod na buwan</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">I-double tap para lumipat sa calendar view.</string>
     <string name="sesl_picker_cancel">Kanselahin</string>
+    <string name="sesl_number_picker_invalid_value_entered">Nagpasok ng di wastong value</string>
+    <string name="sesl_date_picker_decrement_month">Nakaraang buwan</string>
+    <string name="sesl_date_picker_day">Araw</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">I-double tap para lumipat sa wheel view.</string>
+    <string name="sesl_picker_done">Tapos na</string>
+    <string name="sesl_date_picker_year">Taon</string>
+    <string name="sesl_date_picker_month">Buwan</string>
 </resources>

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">પૂર્ણ</string>
+    <string name="sesl_date_picker_increment_month">પછીના મહિને</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">કૅલેન્ડર વ્યૂ પર સ્વિચ કરવા માટે બે વાર ટૅપ કરો.</string>
     <string name="sesl_picker_cancel">રદ કરો</string>
+    <string name="sesl_number_picker_invalid_value_entered">અમાન્ય મૂલ્ય દાખલ થયું છે</string>
+    <string name="sesl_date_picker_decrement_month">પાછલા મહિને</string>
+    <string name="sesl_date_picker_day">દિવસ</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">વ્હીલ વ્યૂ પર સ્વિચ કરવા માટે બે વાર ટૅપ કરો.</string>
+    <string name="sesl_picker_done">પૂર્ણ</string>
+    <string name="sesl_date_picker_year">વર્ષ</string>
+    <string name="sesl_date_picker_month">માસિક</string>
 </resources>

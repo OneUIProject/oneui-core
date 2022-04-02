@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">పూర్తి</string>
+    <string name="sesl_date_picker_increment_month">తదుపరి నెల</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">క్యాలెండర్ వీక్షణకి మారడానికి రెండుసార్లు ట్యాప్ చేయండి.</string>
     <string name="sesl_picker_cancel">రద్దు</string>
+    <string name="sesl_number_picker_invalid_value_entered">చెల్లని విలువ నమోదు చేయబడింది</string>
+    <string name="sesl_date_picker_decrement_month">మునుపటి నెల</string>
+    <string name="sesl_date_picker_day">రోజు</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">వీల్ వీక్షణకి మారడానికి రెండు సార్లు ట్యాప్ చేయండి.</string>
+    <string name="sesl_picker_done">పూర్తి</string>
+    <string name="sesl_date_picker_year">సంవత్సరం</string>
+    <string name="sesl_date_picker_month">నెల</string>
 </resources>

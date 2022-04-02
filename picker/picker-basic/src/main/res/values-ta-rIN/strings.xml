@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">முடிந்தது</string>
+    <string name="sesl_date_picker_increment_month">அடுத்த மாதம்</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">நாட்காட்டி காட்சிக்கு மாற்ற இருமுறை டேப் செய்க.</string>
     <string name="sesl_picker_cancel">ரத்து</string>
+    <string name="sesl_number_picker_invalid_value_entered">தவறான மதிப்பு உள்ளிடப்பட்டது</string>
+    <string name="sesl_date_picker_decrement_month">முந்தைய மாதம்</string>
+    <string name="sesl_date_picker_day">நாள்</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">வட்ட காட்சிக்கு மாற்ற இருமுறை டேப் செய்க.</string>
+    <string name="sesl_picker_done">முடிந்தது</string>
+    <string name="sesl_date_picker_year">ஆண்டு</string>
+    <string name="sesl_date_picker_month">மாதம்</string>
 </resources>

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">ಮಾಡಿದೆ</string>
+    <string name="sesl_date_picker_increment_month">ಮುಂದಿನ ತಿಂಗಳು</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">ಕ್ಯಾಲೆಂಡರ್ ವೀಕ್ಷಣೆಗೆ ಬದಲಿಸಲು ಎರಡು ಬಾರಿ ತಟ್ಟಿ.</string>
     <string name="sesl_picker_cancel">ರದ್ದು</string>
+    <string name="sesl_number_picker_invalid_value_entered">ಅಮಾನ್ಯ ಮೌಲ್ಯ ನಮೂದಿಸಿದೆ</string>
+    <string name="sesl_date_picker_decrement_month">ಹಿಂದಿನ ತಿಂಗಳು</string>
+    <string name="sesl_date_picker_day">ದಿನ</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">ವೀಲ್ ವೀಕ್ಷಣೆಗೆ ಬದಲಿಸಲು ಎರಡು ಬಾರಿ ತಟ್ಟಿ.</string>
+    <string name="sesl_picker_done">ಮಾಡಿದೆ</string>
+    <string name="sesl_date_picker_year">ವರ್ಷ</string>
+    <string name="sesl_date_picker_month">ತಿಂಗಳು</string>
 </resources>

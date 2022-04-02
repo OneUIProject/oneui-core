@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_increment_month">Neste måned</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Trykk raskt to ganger for å bytte til kalendervisning.</string>
     <string name="sesl_picker_cancel">Avbryt</string>
+    <string name="sesl_number_picker_invalid_value_entered">Ugyldig verdi er angitt.</string>
+    <string name="sesl_date_picker_decrement_month">Forrige måned</string>
+    <string name="sesl_date_picker_day">Dag</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Trykk raskt to ganger for å bytte til hjulvisning.</string>
+    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_year">År</string>
+    <string name="sesl_date_picker_month">Måned</string>
 </resources>

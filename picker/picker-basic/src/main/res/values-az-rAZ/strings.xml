@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Tamam</string>
+    <string name="sesl_date_picker_increment_month">Növbəti ay</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Təqvim görünüşünə keçmək üçün iki dəfə vur.</string>
     <string name="sesl_picker_cancel">Ləğv et</string>
+    <string name="sesl_number_picker_invalid_value_entered">Yalnış dəyər daxil edilmişdir</string>
+    <string name="sesl_date_picker_decrement_month">Əvvəlki ay</string>
+    <string name="sesl_date_picker_day">Gün</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Çarx görünüşünə keçmək üçün iki dəfə vur.</string>
+    <string name="sesl_picker_done">Tamam</string>
+    <string name="sesl_date_picker_year">İl</string>
+    <string name="sesl_date_picker_month">Ay</string>
 </resources>

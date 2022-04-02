@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">সম্পন্ন</string>
+    <string name="sesl_date_picker_increment_month">পৰৱৰ্তী মাহ</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">কেলেণ্ডাৰ দৰ্শনলৈ সলনি কৰিবলৈ দুবাৰ টিপক।</string>
     <string name="sesl_picker_cancel">বাতিল কৰক</string>
+    <string name="sesl_number_picker_invalid_value_entered">অমান্য মান প্ৰৱিষ্ট কৰা হৈছে</string>
+    <string name="sesl_date_picker_decrement_month">আগৰ মাহ</string>
+    <string name="sesl_date_picker_day">দিন</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">হুৱিল দৰ্শনলৈ সলনি কৰিবলৈ দুবাৰ টিপক।</string>
+    <string name="sesl_picker_done">সম্পন্ন</string>
+    <string name="sesl_date_picker_year">বছৰ</string>
+    <string name="sesl_date_picker_month">মাহ</string>
 </resources>

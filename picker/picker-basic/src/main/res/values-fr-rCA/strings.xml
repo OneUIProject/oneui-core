@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_increment_month">Mois prochain</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">"Touchez deux fois pour basculer vers l'affichage du calendrier."</string>
     <string name="sesl_picker_cancel">Annuler</string>
+    <string name="sesl_number_picker_invalid_value_entered">Une valeur non valide a été saisie.</string>
+    <string name="sesl_date_picker_decrement_month">Mois dernier</string>
+    <string name="sesl_date_picker_day">Jour</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">"Touchez deux fois pour basculer vers l'affichage avec molette de sélection."</string>
+    <string name="sesl_picker_done">OK</string>
+    <string name="sesl_date_picker_year">Année</string>
+    <string name="sesl_date_picker_month">Mois</string>
 </resources>

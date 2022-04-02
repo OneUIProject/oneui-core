@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Gotovo</string>
+    <string name="sesl_date_picker_increment_month">Sljedeći mjesec</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Dvaput dodirnite za prebacivanje na prikaz kalendara.</string>
     <string name="sesl_picker_cancel">Prekid</string>
+    <string name="sesl_number_picker_invalid_value_entered">Vrijednost je neispravna.</string>
+    <string name="sesl_date_picker_decrement_month">Prethodni mjesec</string>
+    <string name="sesl_date_picker_day">Dan</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Dvaput dodirnite za prebacivanje na prikaz kotača.</string>
+    <string name="sesl_picker_done">Gotovo</string>
+    <string name="sesl_date_picker_year">Godina</string>
+    <string name="sesl_date_picker_month">Mjesec</string>
 </resources>

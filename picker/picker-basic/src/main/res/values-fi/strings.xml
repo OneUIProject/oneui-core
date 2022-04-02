@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Valmis</string>
+    <string name="sesl_date_picker_increment_month">Seuraava kuukausi</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Vaihda kalenterinäkymään kaksoisnapauttamalla.</string>
     <string name="sesl_picker_cancel">Peruuta</string>
+    <string name="sesl_number_picker_invalid_value_entered">Annettu virheellinen arvo.</string>
+    <string name="sesl_date_picker_decrement_month">Edellinen kuukausi</string>
+    <string name="sesl_date_picker_day">Päivä</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Vaihda pyöränäkymään kaksoisnapauttamalla.</string>
+    <string name="sesl_picker_done">Valmis</string>
+    <string name="sesl_date_picker_year">Vuosi</string>
+    <string name="sesl_date_picker_month">Kuukausi</string>
 </resources>

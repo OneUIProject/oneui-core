@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="sesl_picker_done">Бүттү</string>
+    <string name="sesl_date_picker_increment_month">Кийинки ай</string>
+    <string name="sesl_date_picker_switch_to_calendar_description">Календарь көрүнүшүнө которуу үчүн, эки жолу басыңыз.</string>
     <string name="sesl_picker_cancel">Артка</string>
+    <string name="sesl_number_picker_invalid_value_entered">Орунсуз маани киргизилди</string>
+    <string name="sesl_date_picker_decrement_month">Мурунку ай</string>
+    <string name="sesl_date_picker_day">Күн</string>
+    <string name="sesl_date_picker_switch_to_wheel_description">Тиштүү тегерекке которуу үчүн, эки жолу басыңыз.</string>
+    <string name="sesl_picker_done">Бүттү</string>
+    <string name="sesl_date_picker_year">Жыл</string>
+    <string name="sesl_date_picker_month">Ай</string>
 </resources>

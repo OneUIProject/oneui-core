@@ -27,7 +27,7 @@ jobs:
           echo "SIGNING_KEYFILE=$(echo ~/key.gpg)" >> $GITHUB_ENV
 
       - name: assemble release
-        run: ./gradlew assembleRelease
+        run: ./gradlew aars
 
       - name: publish to maven central
         run: ./gradlew publishToSonatype #closeSonatypeStagingRepository

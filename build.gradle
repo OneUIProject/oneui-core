@@ -113,8 +113,8 @@ subprojects {
     }
 }
 
-task aarUpload(type: GradleBuild) {
-    tasks = ['clean', 'assembleRelease', 'publishToSonatype']
+task aars(type: GradleBuild) {
+    tasks = ['clean', 'appcompat:assembleRelease', 'apppickerview:assembleRelease', 'coordinatorlayout:assembleRelease', 'core:assembleRelease', 'customview:assembleRelease', 'drawerlayout:assembleRelease', 'fragment:assembleRelease', 'indexscroll:assembleRelease', /*'material:assembleRelease',*/ 'picker:picker-basic:assembleRelease', 'picker:picker-color:assembleRelease', 'preference:assembleRelease', 'recyclerview:assembleRelease', /*'slidingpanelayout:assembleRelease',*/ 'swiperefreshlayout:assembleRelease', 'viewpager:assembleRelease', 'viewpager2:assembleRelease']
 }
 
 //### end of Maven ###

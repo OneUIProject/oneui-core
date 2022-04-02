@@ -1,4 +1,9 @@
-# Samsung Experience Support Library
+<p align="center"><img loading="lazy" src="readme-res/sesl-readme-header.png"/></p>
+
+For Wear OS, please look at [seslw](https://github.com/OneUIProject/seslw).
+
+---
+
 ```
 // temporary readme
 ```
@@ -32,4 +37,3 @@
 ## TO-DO list:
 - Add Maven stuff
 - Merge back current library stuff in a separate module
-- A better README?

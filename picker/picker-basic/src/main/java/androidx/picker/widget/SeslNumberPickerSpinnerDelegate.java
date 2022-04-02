@@ -69,6 +69,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.appcompat.util.SeslMisc;
 import androidx.core.content.res.ResourcesCompat;
@@ -3016,7 +3017,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             return info;
         }
 
-        private void scaleRect(Rect rect, float scale) {
+        private void scaleRect(@NonNull Rect rect, float scale) {
             if (scale != 1.0f) {
                 rect.left = (int) ((((float) rect.left) * scale) + 0.5f);
                 rect.top = (int) ((((float) rect.top) * scale) + 0.5f);

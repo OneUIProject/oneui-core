@@ -214,6 +214,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
     private final int[] mSelectorIndices = new int[SELECTOR_WHEEL_ITEM_COUNT];
     private int mInitialScrollOffset = Integer.MIN_VALUE;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private int mShortFlickThreshold = 1700;
 
     private float mActivatedAlpha = 0.4f;
     private float mAlpha = 0.1f;
@@ -666,8 +667,9 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
     @Override
     public boolean setCustomInterval(int interval) {
+        final boolean wrapSelectorWheel = mWrapSelectorWheel;
         if (mMinValue % interval == 0
-                && (mMaxValue + (mWrapSelectorWheel ? 1 : 0)) % interval == 0) {
+                && (mMaxValue + (wrapSelectorWheel ? 1 : 0)) % interval == 0) {
             setCustomIntervalValue(interval);
             applyWheelCustomInterval(true);
             return true;
@@ -688,18 +690,16 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         }
     }
 
-    // kang
     private void ensureValueAdjusted(int interval) {
-        int i = mValue % interval;
-        if (i != 0) {
-            int i2 = mValue - i;
-            if (i > interval / 2) {
-                i2 += interval;
+        final int diff = mValue % interval;
+        if (diff != 0) {
+            int newValue = mValue - diff;
+            if (diff > interval / 2) {
+                newValue += interval;
             }
-            setValueInternal(i2, true);
+            setValueInternal(newValue, true);
         }
     }
-    // kang
 
     @Override
     public boolean isChangedDefaultInterval() {
@@ -713,14 +713,18 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
     @Override
     public void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        mModifiedTxtHeight = Math.max(mInputText.getMeasuredHeight(),
-                (int) Math.floor((double) (((float) mDelegator.getMeasuredHeight()) * mHeightRatio)));
+        final int msrdWdth = mDelegator.getMeasuredWidth();
+        final int msrdHght = mDelegator.getMeasuredHeight();
+        final int inptTxtMsrdWdth = mInputText.getMeasuredWidth();
+        final int inptTxtMsrdHght = Math.max(mInputText.getMeasuredHeight(),
+                (int) Math.floor(msrdHght * mHeightRatio));
+        mModifiedTxtHeight = inptTxtMsrdHght;
 
-        final int l = (mDelegator.getMeasuredWidth() - mInputText.getMeasuredWidth()) / 2;
-        final int t = (mDelegator.getMeasuredHeight() - mModifiedTxtHeight) / 2;
-        final int r = mInputText.getMeasuredWidth() + l;
-        final int b = mModifiedTxtHeight + t;
-        mInputText.layout(l, t, r, b);
+        final int inptTxtLeft = (msrdWdth - inptTxtMsrdWdth) / 2;
+        final int inptTxtTop = (msrdHght - inptTxtMsrdHght) / 2;
+        final int inptTxtRight = inptTxtLeft + inptTxtMsrdWdth;
+        final int inptTxtBottom = inptTxtTop + inptTxtMsrdHght;
+        mInputText.layout(inptTxtLeft, inptTxtTop, inptTxtRight, inptTxtBottom);
 
         if (changed) {
             initializeSelectorWheel();
@@ -728,8 +732,8 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                 mTopSelectionDividerTop = mValueChangeOffset;
                 mBottomSelectionDividerBottom = mValueChangeOffset * 2;
             } else {
-                mTopSelectionDividerTop = t;
-                mBottomSelectionDividerBottom = b;
+                mTopSelectionDividerTop = inptTxtTop;
+                mBottomSelectionDividerBottom = inptTxtBottom;
             }
         }
     }
@@ -766,9 +770,13 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
     private boolean moveToFinalScrollerPosition(Scroller scroller) {
         scroller.forceFinished(true);
         int amountToScroll = scroller.getFinalY() - scroller.getCurrY();
-        int futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementHeight;
+        if (mSelectorElementHeight == 0) {
+            return false;
+        }
+        int futureScrollOffset = mCurrentScrollOffset + amountToScroll;
         int overshootAdjustment = mInitialScrollOffset - futureScrollOffset;
         if (overshootAdjustment != 0) {
+            overshootAdjustment %= mSelectorElementHeight;
             if (Math.abs(overshootAdjustment) > mSelectorElementHeight / 2) {
                 if (overshootAdjustment > 0) {
                     overshootAdjustment -= mSelectorElementHeight;
@@ -829,7 +837,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             case MotionEvent.ACTION_DOWN: {
                 removeAllCallbacks();
                 mInputText.setVisibility(View.INVISIBLE);
-                mLastDownEventY = mLastDownOrMoveEventY = event.getY();
+                mLastDownOrMoveEventY = mLastDownEventY = event.getY();
                 mLastDownEventTime = event.getEventTime();
                 mIgnoreMoveEvents = false;
                 mIgnoreUpEvent = false;
@@ -915,7 +923,8 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                         ensureScrollWheelAdjusted();
                         startFadeAnimation(true);
                         onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                    } else if (Math.abs(initialVelocity) > mMinimumFlingVelocity) {
+                    } else if (Math.abs(initialVelocity) > mMinimumFlingVelocity
+                            && Math.abs(initialVelocity) > mShortFlickThreshold) {
                         if (deltaMoveY > mTouchSlop || !mPerformClickOnTap) {
                             fling(initialVelocity);
                             onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
@@ -925,6 +934,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
                         }
                     } else {
+                        final long eventTime = event.getEventTime();
                         if (deltaMoveY <= mTouchSlop) {
                             if (mPerformClickOnTap) {
                                 mPerformClickOnTap = false;
@@ -937,7 +947,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                                     changeValueByOne(false);
                                     mPressedStateHelper.buttonTapped(PressedStateHelper.BUTTON_DECREMENT);
                                 } else {
-                                    ensureScrollWheelAdjusted(eventY);
+                                    ensureScrollWheelAdjusted(deltaMoveY);
                                 }
                                 startFadeAnimation(true);
                             }
@@ -1233,13 +1243,14 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         return false;
     }
 
-    private void updateHoveredVirtualView(int id) {
-        if (mLastHoveredChildVirtualViewId != id) {
-            mLastHoveredChildVirtualViewId = id;
+    private void updateHoveredVirtualView(int virtualViewId) {
+        if (mLastHoveredChildVirtualViewId != virtualViewId) {
+            final int previousVirtualViewId = mLastHoveredChildVirtualViewId;
+            mLastHoveredChildVirtualViewId = virtualViewId;
             AccessibilityNodeProviderImpl provider
                     = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            provider.sendAccessibilityEventForVirtualView(id, 128);
-            provider.sendAccessibilityEventForVirtualView(mLastHoveredChildVirtualViewId, 256);
+            provider.sendAccessibilityEventForVirtualView(virtualViewId, 128);
+            provider.sendAccessibilityEventForVirtualView(previousVirtualViewId, 256);
         }
     }
 
@@ -1300,26 +1311,28 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         }
     }
 
+    // TODO rework this method
     // kang
     @Override
-    public void scrollBy(int x, int y) {
+    public void scrollBy(int var1, int var2) {
+        /* var1 = x; var2 = y; */
         int[] var3 = this.mSelectorIndices;
-        if (y != 0 && this.mSelectorElementHeight > 0) {
-            x = y;
+        if (var2 != 0 && this.mSelectorElementHeight > 0) {
+            var1 = var2;
             int var4;
             int var5;
             if (!this.mWrapSelectorWheel) {
                 var4 = this.mCurrentScrollOffset;
                 var5 = this.mInitialScrollOffset;
-                x = y;
-                if (var4 + y > var5) {
-                    x = y;
+                var1 = var2;
+                if (var4 + var2 > var5) {
+                    var1 = var2;
                     if (var3[2] <= this.mMinValue) {
-                        y = var5 - var4;
+                        var2 = var5 - var4;
                         this.stopFlingAnimation();
-                        x = y;
+                        var1 = var2;
                         if (this.mIsAmPm) {
-                            x = y;
+                            var1 = var2;
                             if (this.mLastDownOrMoveEventY > (float)this.mDelegator.getBottom()) {
                                 this.mIgnoreMoveEvents = true;
                                 return;
@@ -1329,19 +1342,19 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                 }
             }
 
-            y = x;
+            var2 = var1;
             if (!this.mWrapSelectorWheel) {
-                var4 = this.mCurrentScrollOffset;
-                var5 = this.mInitialScrollOffset;
-                y = x;
-                if (var4 + x < var5) {
-                    y = x;
+                var5 = this.mCurrentScrollOffset;
+                var4 = this.mInitialScrollOffset;
+                var2 = var1;
+                if (var5 + var1 < var4) {
+                    var2 = var1;
                     if (var3[2] >= this.mMaxValue) {
-                        x = var5 - var4;
+                        var1 = var4 - var5;
                         this.stopFlingAnimation();
-                        y = x;
+                        var2 = var1;
                         if (this.mIsAmPm) {
-                            y = x;
+                            var2 = var1;
                             if (this.mLastDownOrMoveEventY < (float)this.mDelegator.getTop()) {
                                 this.mIgnoreMoveEvents = true;
                                 return;
@@ -1351,18 +1364,18 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                 }
             }
 
-            this.mCurrentScrollOffset += y;
+            this.mCurrentScrollOffset += var2;
 
             while(true) {
-                x = this.mCurrentScrollOffset;
-                if (x - this.mInitialScrollOffset < this.mValueChangeOffset) {
+                var1 = this.mCurrentScrollOffset;
+                if (var1 - this.mInitialScrollOffset < this.mValueChangeOffset) {
                     while(true) {
-                        x = this.mCurrentScrollOffset;
-                        if (x - this.mInitialScrollOffset > -this.mValueChangeOffset) {
+                        var1 = this.mCurrentScrollOffset;
+                        if (var1 - this.mInitialScrollOffset > -this.mValueChangeOffset) {
                             return;
                         }
 
-                        this.mCurrentScrollOffset = x + this.mSelectorElementHeight;
+                        this.mCurrentScrollOffset = var1 + this.mSelectorElementHeight;
                         this.incrementSelectorIndices(var3);
                         this.playSoundAndHapticFeedback();
                         if (!this.mIsStartingAnimation) {
@@ -1378,7 +1391,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                     }
                 }
 
-                this.mCurrentScrollOffset = x - this.mSelectorElementHeight;
+                this.mCurrentScrollOffset = var1 - this.mSelectorElementHeight;
                 this.decrementSelectorIndices(var3);
                 this.playSoundAndHapticFeedback();
                 if (!this.mIsStartingAnimation) {
@@ -1576,10 +1589,13 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
     }
 
     private void updateWrapSelectorWheel() {
-        final boolean wrappingAllowed = ((mMaxValue - mMinValue) >= mSelectorIndices.length)
-                && mWrapSelectorWheelPreferred;
-        if (mWrapSelectorWheel != wrappingAllowed) {
-            mWrapSelectorWheel = wrappingAllowed;
+        boolean wrapSelectorWheel = true;
+        final boolean wrappingAllowed = mMaxValue - mMinValue >= mSelectorIndices.length;
+        if (!wrappingAllowed || !mWrapSelectorWheelPreferred) {
+            wrapSelectorWheel = false;
+        }
+        if (mWrapSelectorWheel != wrapSelectorWheel) {
+            mWrapSelectorWheel = wrapSelectorWheel;
             initializeSelectorWheelIndices();
             mDelegator.invalidate();
         }
@@ -1629,8 +1645,9 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         if (maxValue < 0) {
             throw new IllegalArgumentException("maxValue must be >= 0");
         }
+        final boolean wrapSelectorWheel = mWrapSelectorWheel;
         if (mWheelInterval == DEFAULT_WHEEL_INTERVAL
-                || ((mWrapSelectorWheel ? 1 : 0) + maxValue) % mWheelInterval == 0) {
+                || ((wrapSelectorWheel ? 1 : 0) + maxValue) % mWheelInterval == 0) {
             mMaxValue = maxValue;
             if (mMaxValue < mValue) {
                 mValue = mMaxValue;
@@ -1761,6 +1778,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         }
     }
 
+    // TODO rework this method
     @Override
     public void startAnimation(int delayMillis, SeslAnimationListener listener) {
         mAnimationListener = listener;
@@ -1857,7 +1875,8 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         mGravityScroller.abortAnimation();
         mSpringAnimation.cancel();
         mSpringFlingRunning = false;
-        if (!mIsStartingAnimation && !moveToFinalScrollerPosition(mFlingScroller)) {
+        mIsStartingAnimation = false;
+        if (!moveToFinalScrollerPosition(mFlingScroller)) {
             moveToFinalScrollerPosition(mAdjustScroller);
         }
         ensureScrollWheelAdjusted();
@@ -1903,6 +1922,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         mDelegator.getViewTreeObserver().addOnPreDrawListener(mHapticPreDrawListener);
     }
 
+    // TODO rework this method
     // kang
     @Override
     public void onDraw(Canvas var1) {
@@ -2125,12 +2145,10 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         }
         int totalTextHeight = mTextSize * 3;
         float totalTextGapHeight = (mDelegator.getBottom() - mDelegator.getTop()) - totalTextHeight;
-        mSelectorTextGapHeight = (int) (totalTextGapHeight / 3 + 0.5f);
+        mSelectorTextGapHeight = (int) ((totalTextGapHeight / 3) + 0.5f);
         mSelectorElementHeight = mTextSize + mSelectorTextGapHeight;
-        if (mModifiedTxtHeight > mSelectorElementHeight || mIsAmPm) {
-            mModifiedTxtHeight = mDelegator.getHeight() / 3;
-        }
-        mValueChangeOffset = mModifiedTxtHeight;
+        mValueChangeOffset = (mModifiedTxtHeight > mSelectorElementHeight || mIsAmPm) ?
+                mDelegator.getHeight() / 3 : mModifiedTxtHeight;
         mInitialScrollOffset = (mInputText.getTop() + (mModifiedTxtHeight / 2)) - mSelectorElementHeight;
         mCurrentScrollOffset = mInitialScrollOffset;
         ((SeslNumberPicker.CustomEditText) mInputText).setEditTextPosition(
@@ -2165,6 +2183,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         }
     }
 
+    // TODO rework this method
     // kang
     private void fling(int velocityY) {
         if (!this.mWrapSelectorWheel && velocityY > 0 && getValue() == getMinValue()) {
@@ -2206,29 +2225,27 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         return selectorIndex;
     }
 
-    // kang
     private void incrementSelectorIndices(int[] selectorIndices) {
         System.arraycopy(selectorIndices, 1, selectorIndices,
                 0, selectorIndices.length - 1);
-        int i = selectorIndices[selectorIndices.length - 2] + 1;
-        if (this.mWrapSelectorWheel && i > this.mMaxValue) {
-            i = this.mMinValue;
+        int nextScrollSelectorIndex = selectorIndices[selectorIndices.length - 2] + 1;
+        if (mWrapSelectorWheel && nextScrollSelectorIndex > mMaxValue) {
+            nextScrollSelectorIndex = mMinValue;
         }
-        selectorIndices[selectorIndices.length - 1] = i;
-        ensureCachedScrollSelectorValue(i);
+        selectorIndices[selectorIndices.length - 1] = nextScrollSelectorIndex;
+        ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
     }
 
     private void decrementSelectorIndices(int[] selectorIndices) {
         System.arraycopy(selectorIndices, 0, selectorIndices,
                 1, selectorIndices.length - 1);
-        int i = selectorIndices[1] - 1;
-        if (this.mWrapSelectorWheel && i < this.mMinValue) {
-            i = this.mMaxValue;
+        int nextScrollSelectorIndex = selectorIndices[1] - 1;
+        if (mWrapSelectorWheel && nextScrollSelectorIndex < mMinValue) {
+            nextScrollSelectorIndex = mMaxValue;
         }
-        selectorIndices[0] = i;
-        ensureCachedScrollSelectorValue(i);
+        selectorIndices[0] = nextScrollSelectorIndex;
+        ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
     }
-    // kang
 
     private void ensureCachedScrollSelectorValue(int selectorIndex) {
         SparseArray<String> cache = mSelectorIndexToStringCache;
@@ -2256,7 +2273,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
     private void validateInputTextView(View v) {
         String str = String.valueOf(((TextView) v).getText());
-        int current = getSelectedPos(str.toString());
+        int current = getSelectedPos(str);
         if (TextUtils.isEmpty(str) || mValue == current) {
             if (mWheelInterval != DEFAULT_WHEEL_INTERVAL
                     && mCustomWheelIntervalMode && mIsPressedBackKey) {
@@ -2289,11 +2306,11 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
     private void notifyChange(int previous, int current) {
         if (mAccessibilityManager.isEnabled() && !mIsStartingAnimation) {
-            final int selectorIndex = getWrappedSelectorIndex(mValue);
-            if (selectorIndex <= mMaxValue) {
-                if (mDisplayedValues == null) {
-                    formatNumber(selectorIndex);
-                }
+            final int value = getWrappedSelectorIndex(mValue);
+            String text = null;
+            if (value <= mMaxValue) {
+                text = mDisplayedValues == null ?
+                        formatNumber(value) : mDisplayedValues[value - mMinValue];
             }
             mDelegator.sendAccessibilityEvent(4);
             AccessibilityNodeProviderImpl provider
@@ -2396,9 +2413,8 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                 if ("".equals(result)) {
                     return result;
                 }
-                int val = getSelectedPos(result);
 
-                if (val > mMaxValue || result.length() > String.valueOf(mMaxValue).length()) {
+                if (getSelectedPos(result) > mMaxValue) {
                     if (mIsEditTextMode) {
                         if (mToast == null) {
                             initToastObject();
@@ -2407,7 +2423,9 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                     }
                     return "";
                 } else {
-                    return filtered;
+                    if (result.length() <= formatNumber(mMaxValue).length()) {
+                        return filtered;
+                    }
                 }
             } else {
                 CharSequence filtered = String.valueOf(source.subSequence(start, end));
@@ -2427,8 +2445,8 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                     }
                     mToast.show();
                 }
-                return "";
             }
+            return "";
         }
     }
 
@@ -2444,60 +2462,38 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         return ensureScrollWheelAdjusted(0);
     }
 
-    // kang
-    private boolean ensureScrollWheelAdjusted(int var1) {
-        int var2 = this.mInitialScrollOffset;
-        if (var2 == -2147483648) {
+    private boolean ensureScrollWheelAdjusted(int distance) {
+        if (mInitialScrollOffset == Integer.MIN_VALUE) {
             return false;
-        } else {
-            int var3 = var2 - this.mCurrentScrollOffset;
-            if (var3 == 0) {
-                this.mIsValueChanged = false;
-                return false;
-            } else {
-                label31: {
-                    label30: {
-                        label37: {
-                            this.mPreviousScrollerY = 0;
-                            if (!this.mIsValueChanged && var1 != 0) {
-                                var1 = Math.abs(var1);
-                                var2 = this.mSelectorElementHeight;
-                                if (var1 < var2) {
-                                    var1 = var2;
-                                    if (var3 <= 0) {
-                                        break label30;
-                                    }
-                                    break label37;
-                                }
-                            }
-
-                            int var4 = Math.abs(var3);
-                            var2 = this.mSelectorElementHeight;
-                            var1 = var3;
-                            if (var4 <= var2 / 2) {
-                                break label31;
-                            }
-
-                            var1 = var2;
-                            if (var3 <= 0) {
-                                break label30;
-                            }
-                        }
-
-                        var1 = -var2;
-                    }
-
-                    var1 += var3;
-                }
-
-                this.mAdjustScroller.startScroll(0, 0, 0, var1, SELECTOR_ADJUSTMENT_DURATION_MILLIS);
-                this.mDelegator.invalidate();
-                this.mIsValueChanged = false;
-                return true;
-            }
         }
+
+        int deltaY = mInitialScrollOffset - mCurrentScrollOffset;
+        if (deltaY != 0) {
+            mPreviousScrollerY = 0;
+
+            if (!mIsValueChanged && distance != 0) {
+                if (Math.abs(distance) < mSelectorElementHeight) {
+                    deltaY += (deltaY > 0) ? -mSelectorElementHeight : mSelectorElementHeight;
+
+                    mAdjustScroller.startScroll(0, 0, 0, deltaY, SELECTOR_ADJUSTMENT_DURATION_MILLIS);
+                    mDelegator.invalidate();
+                    mIsValueChanged = false;
+                    return true;
+                }
+            }
+
+            if (Math.abs(deltaY) > mSelectorElementHeight / 2) {
+                deltaY += (deltaY > 0) ? -mSelectorElementHeight : mSelectorElementHeight;
+            }
+
+            mAdjustScroller.startScroll(0, 0, 0, deltaY, SELECTOR_ADJUSTMENT_DURATION_MILLIS);
+            mDelegator.invalidate();
+            mIsValueChanged = false;
+            return true;
+        }
+        mIsValueChanged = false;
+        return false;
     }
-    // kang
 
     class PressedStateHelper implements Runnable {
         public static final int BUTTON_DECREMENT = 2;
@@ -2508,18 +2504,20 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         private int mMode;
 
         public void cancel() {
+            final int mRight = mDelegator.getRight();
+            final int mBottom = mDelegator.getBottom();
             mMode = 0;
             mManagedButton = 0;
             mDelegator.removeCallbacks(this);
             if (mIncrementVirtualButtonPressed) {
                 mIncrementVirtualButtonPressed = false;
                 mDelegator.invalidate(0, mBottomSelectionDividerBottom,
-                        mDelegator.getRight(), mDelegator.getBottom());
+                        mRight, mBottom);
             }
             if (mDecrementVirtualButtonPressed) {
                 mDecrementVirtualButtonPressed = false;
                 mDelegator.invalidate(0, 0,
-                        mDelegator.getRight(), mTopSelectionDividerTop);
+                        mRight, mTopSelectionDividerTop);
             }
         }
 
@@ -2539,18 +2537,20 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
         @Override
         public void run() {
+            final int mRight = mDelegator.getRight();
+            final int mBottom = mDelegator.getBottom();
             switch (mMode) {
                 case MODE_PRESS: {
                     switch (mManagedButton) {
                         case BUTTON_INCREMENT: {
                             mIncrementVirtualButtonPressed = true;
                             mDelegator.invalidate(0, mBottomSelectionDividerBottom,
-                                    mDelegator.getRight(), mDelegator.getBottom());
+                                    mRight, mBottom);
                         } break;
                         case BUTTON_DECREMENT: {
                             mDecrementVirtualButtonPressed = true;
                             mDelegator.invalidate(0, 0,
-                                    mDelegator.getRight(), mTopSelectionDividerTop);
+                                    mRight, mTopSelectionDividerTop);
                         }
                     }
                 } break;
@@ -2562,7 +2562,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             }
                             mIncrementVirtualButtonPressed ^= true;
                             mDelegator.invalidate(0, mBottomSelectionDividerBottom,
-                                    mDelegator.getRight(), mDelegator.getBottom());
+                                    mRight, mBottom);
                         } break;
                         case BUTTON_DECREMENT: {
                             if (!mDecrementVirtualButtonPressed) {
@@ -2571,7 +2571,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             }
                             mDecrementVirtualButtonPressed ^= true;
                             mDelegator.invalidate(0, 0,
-                                    mDelegator.getRight(), mTopSelectionDividerTop);
+                                    mRight, mTopSelectionDividerTop);
                         }
                     }
                 } break;
@@ -2606,37 +2606,52 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
         @Override
         public AccessibilityNodeInfo createAccessibilityNodeInfo(int virtualViewId) {
-            switch (virtualViewId) {
-                case View.NO_ID:
-                    return createAccessibilityNodeInfoForNumberPicker(
-                            mDelegator.getScrollX(),
-                            mDelegator.getScrollY(),
-                            mDelegator.getScrollX() + (mDelegator.getRight() - mDelegator.getLeft()),
-                            mDelegator.getScrollY() + (mDelegator.getBottom() - mDelegator.getTop()));
-                case VIRTUAL_VIEW_ID_DECREMENT:
-                    return createAccessibilityNodeInfoForVirtualButton(
-                            VIRTUAL_VIEW_ID_DECREMENT,
-                            getVirtualDecrementButtonText(),
-                            mDelegator.getScrollX(),
-                            mDelegator.getScrollY(),
-                            mDelegator.getScrollX() + (mDelegator.getRight() - mDelegator.getLeft()),
-                            mTopSelectionDividerTop + mSelectionDividerHeight);
-                case VIRTUAL_VIEW_ID_INPUT:
-                    return createAccessibiltyNodeInfoForInputText(
-                            mDelegator.getScrollX(),
-                            mTopSelectionDividerTop + mSelectionDividerHeight,
-                            mDelegator.getScrollX() + (mDelegator.getRight() - mDelegator.getLeft()),
-                            mBottomSelectionDividerBottom - mSelectionDividerHeight);
-                case VIRTUAL_VIEW_ID_INCREMENT:
-                    return createAccessibilityNodeInfoForVirtualButton(
-                            VIRTUAL_VIEW_ID_INCREMENT,
-                            getVirtualIncrementButtonText(),
-                            mDelegator.getScrollX(),
-                            mBottomSelectionDividerBottom - mSelectionDividerHeight,
-                            mDelegator.getScrollX() + (mDelegator.getRight() - mDelegator.getLeft()),
-                            mDelegator.getScrollY() + (mDelegator.getBottom() - mDelegator.getTop()));
+            final int mLeft = mDelegator.getLeft();
+            final int mRight = mDelegator.getRight();
+            final int mTop = mDelegator.getTop();
+            final int mBottom = mDelegator.getBottom();
+            final int mScrollX = mDelegator.getScrollX();
+            final int mScrollY = mDelegator.getScrollY();
+
+            if (mLastFocusedChildVirtualViewId != View.NO_ID
+                    && mLastHoveredChildVirtualViewId != Integer.MIN_VALUE) {
+                switch (virtualViewId) {
+                    case View.NO_ID:
+                        return createAccessibilityNodeInfoForNumberPicker(
+                                mScrollX,
+                                mScrollY,
+                                mScrollX + (mRight - mLeft),
+                                mScrollY + (mBottom - mTop));
+                    case VIRTUAL_VIEW_ID_DECREMENT:
+                        return createAccessibilityNodeInfoForVirtualButton(
+                                VIRTUAL_VIEW_ID_DECREMENT,
+                                getVirtualDecrementButtonText(),
+                                mScrollX,
+                                mScrollY,
+                                mScrollX + (mRight - mLeft),
+                                mTopSelectionDividerTop + mSelectionDividerHeight);
+                    case VIRTUAL_VIEW_ID_INPUT:
+                        return createAccessibiltyNodeInfoForInputText(
+                                mScrollX,
+                                mTopSelectionDividerTop + mSelectionDividerHeight,
+                                mScrollX + (mRight - mLeft),
+                                mBottomSelectionDividerBottom - mSelectionDividerHeight);
+                    case VIRTUAL_VIEW_ID_INCREMENT:
+                        return createAccessibilityNodeInfoForVirtualButton(
+                                VIRTUAL_VIEW_ID_INCREMENT,
+                                getVirtualIncrementButtonText(),
+                                mScrollX,
+                                mBottomSelectionDividerBottom - mSelectionDividerHeight,
+                                mScrollX + (mRight - mLeft),
+                                mScrollY + (mBottom - mTop));
+                }
             }
-            return super.createAccessibilityNodeInfo(virtualViewId);
+
+            AccessibilityNodeInfo info = super.createAccessibilityNodeInfo(virtualViewId);
+            if (info == null) {
+                return AccessibilityNodeInfo.obtain();
+            }
+            return info;
         }
 
         @Override
@@ -2665,6 +2680,13 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
         @Override
         public boolean performAction(int virtualViewId, int action, Bundle arguments) {
+            if (mIsStartingAnimation) {
+                return false;
+            }
+
+            final int mRight = mDelegator.getRight();
+            final int mBottom = mDelegator.getBottom();
+
             switch (virtualViewId) {
                 case View.NO_ID: {
                     switch (action) {
@@ -2735,7 +2757,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView != virtualViewId) {
                                 mAccessibilityFocusedView = virtualViewId;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
-                                mDelegator.invalidate(0, mTopSelectionDividerTop, mDelegator.getRight(), mBottomSelectionDividerBottom);
+                                mDelegator.invalidate(0, mTopSelectionDividerTop, mRight, mBottomSelectionDividerBottom);
                                 return true;
                             }
                         } return false;
@@ -2743,7 +2765,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView == virtualViewId) {
                                 mAccessibilityFocusedView = UNDEFINED;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-                                mDelegator.invalidate(0, mTopSelectionDividerTop, mDelegator.getRight(), mBottomSelectionDividerBottom);
+                                mDelegator.invalidate(0, mTopSelectionDividerTop, mRight, mBottomSelectionDividerBottom);
                                 return true;
                             }
                         } return false;
@@ -2767,7 +2789,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView != virtualViewId) {
                                 mAccessibilityFocusedView = virtualViewId;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
-                                mDelegator.invalidate(0, mBottomSelectionDividerBottom, mDelegator.getRight(), mDelegator.getBottom());
+                                mDelegator.invalidate(0, mBottomSelectionDividerBottom, mRight, mBottom);
                                 return true;
                             }
                         } return false;
@@ -2775,7 +2797,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView == virtualViewId) {
                                 mAccessibilityFocusedView = UNDEFINED;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-                                mDelegator.invalidate(0, mBottomSelectionDividerBottom, mDelegator.getRight(), mDelegator.getBottom());
+                                mDelegator.invalidate(0, mBottomSelectionDividerBottom, mRight, mBottom);
                                 return true;
                             }
                         } return false;
@@ -2796,7 +2818,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView != virtualViewId) {
                                 mAccessibilityFocusedView = virtualViewId;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
-                                mDelegator.invalidate(0, 0, mDelegator.getRight(), mTopSelectionDividerTop);
+                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
                                 return true;
                             }
                         } return false;
@@ -2804,7 +2826,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
                             if (mAccessibilityFocusedView == virtualViewId) {
                                 mAccessibilityFocusedView = UNDEFINED;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-                                mDelegator.invalidate(0, 0, mDelegator.getRight(), mTopSelectionDividerTop);
+                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
                                 return true;
                             }
                         } return false;
@@ -2885,8 +2907,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             if (mAccessibilityFocusedView != VIRTUAL_VIEW_ID_INPUT) {
                 info.setAccessibilityFocused(false);
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            }
-            if (mAccessibilityFocusedView == VIRTUAL_VIEW_ID_INPUT) {
+            } else if (mAccessibilityFocusedView == VIRTUAL_VIEW_ID_INPUT) {
                 info.setAccessibilityFocused(true);
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
@@ -2909,7 +2930,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             return info;
         }
 
-        private AccessibilityNodeInfo createAccessibilityNodeInfoForVirtualButton(int virtualViewId, String text, int left, int top, int right, int bottom) {
+        private AccessibilityNodeInfo createAccessibilityNodeInfoForVirtualButton(int virtualViewId,String text, int left, int top, int right, int bottom) {
             AccessibilityNodeInfo info = AccessibilityNodeInfo.obtain();
             info.setClassName(Button.class.getName());
             info.setPackageName(mContext.getPackageName());
@@ -2932,8 +2953,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
             if (mAccessibilityFocusedView != virtualViewId) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            }
-            if (mAccessibilityFocusedView == virtualViewId) {
+            } else if (mAccessibilityFocusedView == virtualViewId) {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {
@@ -2961,7 +2981,6 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             info.setParent((View) mDelegator.getParentForAccessibility());
             info.setEnabled(mDelegator.isEnabled());
             info.setScrollable(true);
-            info.setAccessibilityFocused(mAccessibilityFocusedView == View.NO_ID);
 
             final float applicationScale
                     = SeslCompatibilityInfoReflector.getField_applicationScale(mContext.getResources());
@@ -2982,22 +3001,15 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
             if (mAccessibilityFocusedView != View.NO_ID) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            }
-            if (mAccessibilityFocusedView == View.NO_ID) {
+            } else if (mAccessibilityFocusedView == View.NO_ID) {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {
                 if (getWrapSelectorWheel() || getValue() < getMaxValue()) {
-                    info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_DOWN);
-                    }
+                    info.addAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
                 }
                 if (getWrapSelectorWheel() || getValue() > getMinValue()) {
-                    info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_BACKWARD);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_UP);
-                    }
+                    info.addAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
                 }
             }
 
@@ -3085,14 +3097,14 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
 
     @Override
     public void setMonthInputMode() {
-        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_ACCESSORY_ACTION);
+        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
         mInputText.setPrivateImeOptions(INPUT_TYPE_MONTH);
         mInputText.setText("");
     }
 
     @Override
     public void setYearDateTimeInputMode() {
-        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_ACCESSORY_ACTION);
+        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
         mInputText.setPrivateImeOptions(INPUT_TYPE_YEAR_DATE_TIME);
         mInputText.setText("");
     }

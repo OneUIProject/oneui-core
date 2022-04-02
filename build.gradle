@@ -15,11 +15,13 @@ buildscript {
 }
 
 //### Maven ###
-// build and upload (not publish): cmd> gradlew assembleRelease publishToSonatype
+// build> gradlew aars
+// publish> gradlew publishToSonatype
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
-group = "io.github.oneuiproject.sesl"
+def libVersion = "sesl" //for groupID, description, github
+group = "io.github.oneuiproject.$libVersion"
 
 def sonatype_user, sonatype_pwd
 File propertiesFile = project.rootProject.file('local.properties')
@@ -66,25 +68,24 @@ subprojects {
         }
 
         afterEvaluate {
-            println(projectDir)
-            println("$group:$project.name:$android.defaultConfig.versionName")
+            println("io.github.oneuiproject.$libVersion:$project.name:$android.defaultConfig.versionName")
 
             publishing {
                 publications {
                     release(MavenPublication) {
-                        groupId = group
+                        groupId = "io.github.oneuiproject.$libVersion"
                         artifactId = project.name
                         version = android.defaultConfig.versionName
-                        artifact("${projectDir}/build/outputs/aar/$project.name-release.aar")
+                        artifact("$projectDir/build/outputs/aar/$project.name-release.aar")
 
                         pom {
                             name = project.name
-                            description = "sesl $project.name"
-                            url = "https://github.com/OneUIProject/sesl"
+                            description = "$libVersion $project.name"
+                            url = "https://github.com/OneUIProject/$libVersion"
                             licenses {
                                 license {
                                     name = "MIT License"
-                                    url = "https://github.com/OneUIProject/sesl/blob/main/LICENSE"
+                                    url = "https://github.com/OneUIProject/$libVersion/blob/main/LICENSE"
                                 }
                             }
                             developers {
@@ -100,9 +101,9 @@ subprojects {
                                 }
                             }
                             scm {
-                                connection = "scm:git@github.com/OneUIProject/sesl.git"
-                                developerConnection = "scm:git@github.com/OneUIProject/sesl.git"
-                                url = "https://github.com/OneUIProject/sesl"
+                                connection = "scm:git@github.com/OneUIProject/${libVersion}.git"
+                                developerConnection = "scm:git@github.com/OneUIProject/${libVersion}.git"
+                                url = "https://github.com/OneUIProject/$libVersion"
                             }
                         }
 

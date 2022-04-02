@@ -209,7 +209,7 @@ public class SeslColorPickerDialogFragment extends AppCompatDialogFragment
                 if (mOnColorSetListener != null) {
                     if (mCurrentColor == null || mColorPicker.isUserInputValid()) {
                         mOnColorSetListener.onColorSet(mColorPicker.getRecentColorInfo()
-                                .getSelectedColor().intValue());
+                                .getSelectedColor());
                     } else {
                         mOnColorSetListener.onColorSet(mCurrentColor);
                     }

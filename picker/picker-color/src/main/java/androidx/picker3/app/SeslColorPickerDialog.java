@@ -99,7 +99,7 @@ public class SeslColorPickerDialog extends AlertDialog
                 if (mOnColorSetListener != null) {
                     if (mColorPicker.isUserInputValid() || mCurrentColor == null) {
                         mOnColorSetListener.onColorSet(mColorPicker.getRecentColorInfo()
-                                .getSelectedColor().intValue());
+                                .getSelectedColor());
                     } else {
                         mOnColorSetListener.onColorSet(mCurrentColor);
                     }

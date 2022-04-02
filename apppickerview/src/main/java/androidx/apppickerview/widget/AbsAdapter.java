@@ -89,10 +89,10 @@ public abstract class AbsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mContext.getResources().getColor(outValue.resourceId) : outValue.data;
     }
 
-    static AbsAdapter getAppPickerAdapter(Context context, List<String> list, int type, int order,
-                                          List<AppPickerView.AppLabelInfo> list2,
+    static AbsAdapter getAppPickerAdapter(Context context, List<String> packageNamesList, int type,
+                                          int order, List<AppPickerView.AppLabelInfo> labelInfoList,
                                           AppPickerIconLoader iconLoader,
-                                          List<ComponentName> list3) {
+                                          List<ComponentName> activityNamesList) {
         final AbsAdapter adapter;
         if (type >= AppPickerView.TYPE_GRID) {
             adapter = new GridAdapter(context, type, order, iconLoader);
@@ -100,7 +100,7 @@ public abstract class AbsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             adapter = new ListAdapter(context, type, order, iconLoader);
         }
         adapter.setHasStableIds(true);
-        adapter.resetPackages(list, false, list2, list3);
+        adapter.resetPackages(packageNamesList, false, labelInfoList, activityNamesList);
         return adapter;
     }
 
@@ -108,12 +108,13 @@ public abstract class AbsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mDataSet;
     }
 
-    void resetPackages(List<String> list, boolean dataSetchanged,
-                       List<AppPickerView.AppLabelInfo> list2, List<ComponentName> list3) {
+    void resetPackages(List<String> packageNamesList, boolean dataSetchanged,
+                       List<AppPickerView.AppLabelInfo> labelInfoList,
+                       List<ComponentName> activityNamesList) {
         Log.i(TAG, "Start resetpackage dataSetchanged : " + dataSetchanged);
 
         mDataSet.clear();
-        mDataSet.addAll(DataManager.resetPackages(mContext, list, list2, list3));
+        mDataSet.addAll(DataManager.resetPackages(mContext, packageNamesList, labelInfoList, activityNamesList));
 
         if (Build.VERSION.SDK_INT >= 24) {
             if (getAppLabelComparator(mOrder) != null) {
@@ -181,6 +182,8 @@ public abstract class AbsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case AppPickerView.ORDER_ASCENDING_IGNORE_CASE:
                 return APP_LABEL_ASCENDING_IGNORE_CASE;
             case AppPickerView.ORDER_DESCENDING:
+                return APP_LABEL_DESCENDING;
+            case AppPickerView.ORDER_DESCENDING_IGNORE_CASE:
                 return APP_LABEL_DESCENDING_IGNORE_CASE;
         }
         return null;
@@ -203,7 +206,7 @@ public abstract class AbsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // TODO rework this method
                 // kang
                 SpannableString spannableString = new SpannableString(label);
-                StringTokenizer stringTokenizer = new StringTokenizer(this.mSearchText);
+                StringTokenizer stringTokenizer = new StringTokenizer(mSearchText);
 
                 while (stringTokenizer.hasMoreTokens()) {
                     String nextToken = stringTokenizer.nextToken();

@@ -134,48 +134,60 @@ class ListAdapter extends AbsAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int i2 = R.layout.app_picker_list;
-        if (viewType == 256 && hasAllAppsInList()) {
-            i2 = R.layout.app_picker_list_header;
+        int layoutResId = R.layout.app_picker_list;
+        if (viewType == TYPE_HEADER && hasAllAppsInList()) {
+            layoutResId = R.layout.app_picker_list_header;
         } else if (viewType == TYPE_FOOTER) {
-            i2 = R.layout.app_picker_list_footer;
+            layoutResId = R.layout.app_picker_list_footer;
         } else if (viewType == TYPE_SEPARATOR) {
-            i2 = R.layout.app_picker_list_separator;
+            layoutResId = R.layout.app_picker_list_separator;
         }
-        View inflate = LayoutInflater.from(this.mContext).inflate(i2, parent, false);
-        ViewGroup viewGroup2 = (ViewGroup) inflate.findViewById(R.id.widget_frame);
-        if (viewGroup2 != null) {
-            switch (this.mType) {
-                case 0:
-                case 5:
-                case 6:
-                    LayoutInflater.from(this.mContext).inflate(R.layout.app_picker_frame_switch, viewGroup2, true);
+
+        View itemView = LayoutInflater.from(mContext)
+                .inflate(layoutResId, parent, false);
+
+        ViewGroup widgetFrame = itemView.findViewById(R.id.widget_frame);
+        if (widgetFrame != null) {
+            switch (mType) {
+                case AppPickerView.TYPE_LIST:
+                case AppPickerView.TYPE_LIST_SWITCH:
+                case AppPickerView.TYPE_LIST_SWITCH_WITH_ALL_APPS:
+                    LayoutInflater.from(mContext)
+                            .inflate(R.layout.app_picker_frame_switch, widgetFrame, true);
                     break;
-                case 1:
-                    LayoutInflater.from(this.mContext).inflate(R.layout.app_picker_frame_actionbutton, viewGroup2, true);
+                case AppPickerView.TYPE_LIST_ACTION_BUTTON:
+                    LayoutInflater.from(mContext)
+                            .inflate(R.layout.app_picker_frame_actionbutton, widgetFrame, true);
                     break;
-                case 2:
-                case 3:
-                    LayoutInflater.from(this.mContext).inflate(R.layout.app_picker_frame_checkbox, (ViewGroup) inflate.findViewById(R.id.left_frame), true);
+                case AppPickerView.TYPE_LIST_CHECKBOX:
+                case AppPickerView.TYPE_LIST_CHECKBOX_WITH_ALL_APPS:
+                    LayoutInflater.from(mContext)
+                            .inflate(R.layout.app_picker_frame_checkbox, itemView.findViewById(R.id.left_frame), true);
                     break;
-                case 4:
-                    inflate.setPadding(this.mContext.getResources().getDimensionPixelSize(R.dimen.app_picker_list_radio_padding_start), 0, this.mContext.getResources().getDimensionPixelSize(R.dimen.app_picker_list_padding_end), 0);
-                    LayoutInflater.from(this.mContext).inflate(R.layout.app_picker_frame_radiobutton, (ViewGroup) inflate.findViewById(R.id.left_frame), true);
+                case AppPickerView.TYPE_LIST_RADIOBUTTON:
+                    itemView.setPadding(mContext.getResources().getDimensionPixelSize(R.dimen.app_picker_list_radio_padding_start),
+                            0,
+                            mContext.getResources().getDimensionPixelSize(R.dimen.app_picker_list_padding_end),
+                            0);
+                    LayoutInflater.from(mContext)
+                            .inflate(R.layout.app_picker_frame_radiobutton, itemView.findViewById(R.id.left_frame), true);
                     break;
             }
         }
-        limitFontLarge((TextView) inflate.findViewById(R.id.title));
-        limitFontLarge((TextView) inflate.findViewById(R.id.summary));
-        if (viewType == 256 && hasAllAppsInList()) {
-            return new AppPickerView.HeaderViewHolder(inflate);
+
+        limitFontLarge(itemView.findViewById(R.id.title));
+        limitFontLarge(itemView.findViewById(R.id.summary));
+
+        if (viewType == TYPE_HEADER && hasAllAppsInList()) {
+            return new AppPickerView.HeaderViewHolder(itemView);
         }
         if (viewType == TYPE_FOOTER) {
-            return new AppPickerView.FooterViewHolder(inflate);
+            return new AppPickerView.FooterViewHolder(itemView);
         }
         if (viewType == TYPE_SEPARATOR) {
-            return new AppPickerView.SeparatorViewHolder(inflate);
+            return new AppPickerView.SeparatorViewHolder(itemView);
         }
-        return new AppPickerView.ViewHolder(inflate);
+        return new AppPickerView.ViewHolder(itemView);
     }
 
     @Override

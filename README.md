@@ -4,7 +4,7 @@
 ```
 ### Completed modules:
 - AppCompat
-- AppPickerView (needs some adjustments but works)
+- AppPickerView
 - CoordinatorLayout
 - Core
 - CustomView
@@ -32,5 +32,4 @@
 ## TO-DO list:
 - Add Maven stuff
 - Merge back current library stuff in a separate module
-- Add Wear OS libraries (seslw)
 - A better README?

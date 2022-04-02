@@ -121,11 +121,11 @@ public class AppPickerView extends RecyclerView
     private int mType;
 
     public interface OnBindListener {
-        void onBindViewHolder(ViewHolder viewHolder, int i, String str);
+        void onBindViewHolder(ViewHolder holder, int position, String packageName);
     }
 
     public interface OnSearchFilterListener {
-        void onSearchFilterCompleted(int i);
+        void onSearchFilterCompleted(int itemCount);
     }
 
     public AppPickerView(@NonNull Context context) {
@@ -152,42 +152,43 @@ public class AppPickerView extends RecyclerView
         setAppPickerView(type, null, order, null);
     }
 
-    public void setAppPickerView(@AppPickerType int type, List<String> list) {
-        setAppPickerView(type, list, ORDER_ASCENDING_IGNORE_CASE, null);
+    public void setAppPickerView(@AppPickerType int type, List<String> packageNamesList) {
+        setAppPickerView(type, packageNamesList, ORDER_ASCENDING_IGNORE_CASE, null);
     }
 
-    public void setAppPickerView(@AppPickerType int type, List<String> list,
-                                 List<AppLabelInfo> list2) {
-        setAppPickerView(type, list, ORDER_ASCENDING_IGNORE_CASE, list2);
+    public void setAppPickerView(@AppPickerType int type, List<String> packageNamesList,
+                                 List<AppLabelInfo> labelInfoList) {
+        setAppPickerView(type, packageNamesList, ORDER_ASCENDING_IGNORE_CASE, labelInfoList);
     }
 
-    public void setAppPickerView(@AppPickerType int type, List<String> list,
+    public void setAppPickerView(@AppPickerType int type, List<String> packageNamesList,
                                  @AppPickerOrder int order) {
-        setAppPickerView(type, list, order, null);
+        setAppPickerView(type, packageNamesList, order, null);
     }
 
-    public void setAppPickerView(@AppPickerType int type, List<String> list,
-                                 @AppPickerOrder int order, List<AppLabelInfo> list2) {
-        setAppPickerView(type, list, order, list2, null);
+    public void setAppPickerView(@AppPickerType int type, List<String> packageNamesList,
+                                 @AppPickerOrder int order, List<AppLabelInfo> labelInfoList) {
+        setAppPickerView(type, packageNamesList, order, labelInfoList, null);
     }
 
-    public void setAppPickerView(List<ComponentName> list, @AppPickerType int type) {
-        setAppPickerView(type, null, ORDER_ASCENDING_IGNORE_CASE, null, list);
-    }
-
-    public void setAppPickerView(@AppPickerType int type, @AppPickerOrder int order,
-                                 List<ComponentName> list) {
-        setAppPickerView(type, null, order, null, list);
+    public void setAppPickerView(List<ComponentName> activityNamesList, @AppPickerType int type) {
+        setAppPickerView(type, null, ORDER_ASCENDING_IGNORE_CASE, null, activityNamesList);
     }
 
     public void setAppPickerView(@AppPickerType int type, @AppPickerOrder int order,
-                                 List<AppLabelInfo> list, List<ComponentName> list2) {
-        setAppPickerView(type, null, order, list, list2);
+                                 List<ComponentName> activityNamesList) {
+        setAppPickerView(type, null, order, null, activityNamesList);
     }
 
-    private void setAppPickerView(@AppPickerType int type, List<String> list,
-                                  @AppPickerOrder int order, List<AppLabelInfo> list2,
-                                  List<ComponentName> list3) {
+    public void setAppPickerView(@AppPickerType int type, @AppPickerOrder int order,
+                                 List<AppLabelInfo> labelInfoList,
+                                 List<ComponentName> activityNamesList) {
+        setAppPickerView(type, null, order, labelInfoList, activityNamesList);
+    }
+
+    private void setAppPickerView(@AppPickerType int type, List<String> packageNamesList,
+                                  @AppPickerOrder int order, List<AppLabelInfo> labelInfoList,
+                                  List<ComponentName> activityNamesList) {
         TypedValue outValue = new TypedValue();
         mContext.getTheme().resolveAttribute(R.attr.roundedCornerColor, outValue, true);
 
@@ -198,14 +199,14 @@ public class AppPickerView extends RecyclerView
                     getResources().getColor(outValue.resourceId, null));
         }
 
-        if (list == null && list3 == null) {
-            list = getInstalledPackages(mContext);
+        if (packageNamesList == null && activityNamesList == null) {
+            packageNamesList = getInstalledPackages(mContext);
         }
 
         mType = type;
         mOrder = order;
         mAdapter = AbsAdapter.getAppPickerAdapter(
-                mContext, list, type, order, list2, mAppPickerIconLoader, list3);
+                mContext, packageNamesList, type, order, labelInfoList, mAppPickerIconLoader, activityNamesList);
 
         switch (mType) {
             case TYPE_LIST:
@@ -256,23 +257,23 @@ public class AppPickerView extends RecyclerView
     }
 
     public static List<AppLabelInfo> getAppLabelinfoList(Context context,
-                                                         List<String> list) {
-        return DataManager.resetPackages(context, list);
+                                                         List<String> packageNamesList) {
+        return DataManager.resetPackages(context, packageNamesList);
     }
 
-    public static List<AppLabelInfo> getAppLabelinfoList(List<ComponentName> list,
+    public static List<AppLabelInfo> getAppLabelinfoList(List<ComponentName> activityNamesList,
                                                          Context context) {
-        return DataManager.resetPackages(list, context);
+        return DataManager.resetPackages(activityNamesList, context);
     }
 
     public static List<String> getInstalledPackages(Context context) {
         List<ApplicationInfo> installedApplications
                 = context.getPackageManager().getInstalledApplications(0);
-        ArrayList<String> arrayList = new ArrayList<>();
-        for (ApplicationInfo applicationInfo : installedApplications) {
-            arrayList.add(applicationInfo.packageName);
+        ArrayList<String> packagesList = new ArrayList<>();
+        for (ApplicationInfo appInfo : installedApplications) {
+            packagesList.add(appInfo.packageName);
         }
-        return arrayList;
+        return packagesList;
     }
 
     public int getAppLabelOrder() {
@@ -307,20 +308,21 @@ public class AppPickerView extends RecyclerView
         }
     }
 
-    public void resetPackages(List<String> list) {
-        mAdapter.resetPackages(list, true, null, null);
+    public void resetPackages(List<String> packageNamesList) {
+        mAdapter.resetPackages(packageNamesList, true, null, null);
     }
 
-    public void resetPackages(List<String> list, List<AppLabelInfo> list2) {
-        mAdapter.resetPackages(list, true, list2, null);
+    public void resetPackages(List<String> packageNamesList, List<AppLabelInfo> labelInfoList) {
+        mAdapter.resetPackages(packageNamesList, true, labelInfoList, null);
     }
 
-    public void resetComponentName(List<ComponentName> list) {
-        mAdapter.resetPackages(null, true, null, list);
+    public void resetComponentName(List<ComponentName> activityNamesList) {
+        mAdapter.resetPackages(null, true, null, activityNamesList);
     }
 
-    public void resetComponentName(List<ComponentName> list, List<AppLabelInfo> list2) {
-        mAdapter.resetPackages(null, true, list2, list);
+    public void resetComponentName(List<ComponentName> activityNamesList,
+                                   List<AppLabelInfo> labelInfoList) {
+        mAdapter.resetPackages(null, true, labelInfoList, activityNamesList);
     }
 
     public void setSearchFilter(String constraint) {

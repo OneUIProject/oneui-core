@@ -64,50 +64,69 @@ import java.util.Locale;
  * Original code by Samsung, all rights reserved to the original author.
  */
 
-public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate {
+class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate {
+    private static final String TAG = "SeslTimePickerSpinner";
+    private static final boolean DEBUG = false;
+
     private static final boolean DEFAULT_ENABLED_STATE = true;
     private static final int DEFAULT_MINUTE_INTERVAL = 1;
-    private static final char[] DIGIT_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 1632, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640, 1641, 1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415, 2534, 2535, 2536, 2537, 2538, 2539, 2540, 2541, 2542, 2543, 3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311, 4160, 4161, 4162, 4163, 4164, 4165, 4166, 4167, 4168, 4169};
+
+    private static final char[] DIGIT_CHARACTERS = {
+            48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+            1632, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640, 1641,
+            1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785,
+            2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415,
+            2534, 2535, 2536, 2537, 2538, 2539, 2540, 2541, 2542, 2543,
+            3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311,
+            4160, 4161, 4162, 4163, 4164, 4165, 4166, 4167, 4168, 4169
+    };
+
+    private static final char QUOTE = '\'';
+
     private static final int HOURS_IN_HALF_DAY = 12;
     private static final int LAST_HOUR_IN_DAY = 23;
+
     private static final int LAYOUT_MODE_DEFAULT = 0;
     private static final int LAYOUT_MODE_MULTIPANE = 2;
     private static final int LAYOUT_MODE_PHONE = 1;
-    private static final char QUOTE = '\'';
-    private static final String TAG = "SeslTimePickerSpinner";
+
     private final View mAmPmMarginInside;
     private final SeslNumberPicker mAmPmSpinner;
     private final EditText mAmPmSpinnerInput;
     private final String[] mAmPmStrings;
     private final View mDTPaddingLeft;
     private final View mDTPaddingRight;
-    private final int mDefaultHeight;
-    private final int mDefaultWidth;
     private final TextView mDivider;
-    private char mHourFormat;
     private final SeslNumberPicker mHourSpinner;
     private final EditText mHourSpinnerInput;
-    private boolean mHourWithTwoDigit;
-    private boolean mIs24HourView;
-    private boolean mIsAm;
-    private boolean mIsDateTimeMode;
-    private boolean mIsEditTextMode;
-    private boolean mIsMarginLeftShown;
-    private int mLayoutMode;
     private final SeslNumberPicker mMinuteSpinner;
     private final EditText mMinuteSpinnerInput;
     private final View mPaddingLeft;
     private final View mPaddingRight;
     private Calendar mTempCalendar;
     private final LinearLayout mTimeLayout;
+    private EditText[] mPickerTexts = new EditText[3];
+
+    private char mHourFormat;
+
+    private final int mDefaultHeight;
+    private final int mDefaultWidth;
+    private int mLayoutMode;
+    private int mMinuteInterval = DEFAULT_MINUTE_INTERVAL;
+
+    private boolean mHourWithTwoDigit;
+    private boolean mIs24HourView;
+    private boolean mIsAm;
+    private boolean mIsDateTimeMode;
+    private boolean mIsEditTextMode;
+    private boolean mIsMarginLeftShown;
     private boolean mIsInvalidMinute = false;
     private boolean mSkipToChangeInterval = false;
     private boolean mIsEnabled = DEFAULT_ENABLED_STATE;
     private boolean mIsAmPmAutoFlipped = false;
-    private int mMinuteInterval = DEFAULT_MINUTE_INTERVAL;
-    private EditText[] mPickerTexts = new EditText[3];
 
-    private SeslNumberPicker.OnEditTextModeChangedListener mModeChangeListener = new SeslNumberPicker.OnEditTextModeChangedListener() {
+    private SeslNumberPicker.OnEditTextModeChangedListener mModeChangeListener
+            = new SeslNumberPicker.OnEditTextModeChangedListener() {
         @Override
         public void onEditTextModeChanged(SeslNumberPicker numberPicker, boolean isEditTextMode) {
             setEditTextMode(isEditTextMode);
@@ -115,11 +134,13 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         }
     };
 
-    private TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+    private TextView.OnEditorActionListener mEditorActionListener
+            = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (!mSkipToChangeInterval && !mMinuteSpinner.isChangedDefaultInterval() && mMinuteSpinner.getValue() % 5 != 0) {
+                if (!mSkipToChangeInterval && !mMinuteSpinner.isChangedDefaultInterval()
+                        && mMinuteSpinner.getValue() % 5 != 0) {
                     mMinuteSpinner.applyWheelCustomInterval(false);
                 }
                 updateInputState();
@@ -129,10 +150,9 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         }
     };
 
-    public SeslTimePickerSpinnerDelegate(SeslTimePicker delegator, Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    SeslTimePickerSpinnerDelegate(SeslTimePicker delegator, Context context,
+                           AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(delegator, context);
-
-        final Resources resources = mDelegator.getResources();
 
         TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.TimePicker, defStyleAttr, defStyleRes);
         mIsDateTimeMode = a.getBoolean(R.styleable.TimePicker_dateTimeMode, false);
@@ -157,10 +177,11 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         mHourSpinner.setOnEditTextModeChangedListener(mModeChangeListener);
         mHourSpinner.setOnValueChangedListener(new SeslNumberPicker.OnValueChangeListener() {
             @Override
-            public void onValueChange(SeslNumberPicker picker, int oldVal, int newVal) {
+            public void onValueChange(SeslNumberPicker spinner, int oldVal, int newVal) {
                 if (!is24Hour() && !mIsEditTextMode) {
-                    final int hoursInHalfDay = mHourFormat == 'K' ? 0 : 12;
-                    if ((oldVal == HOURS_IN_HALF_DAY - 1 && newVal == hoursInHalfDay) || (oldVal == hoursInHalfDay && newVal == HOURS_IN_HALF_DAY - 1)) {
+                    final int newValueNeedAmPmChange = mHourFormat == 'K' ? 0 : 12;
+                    if ((oldVal == HOURS_IN_HALF_DAY - 1 && newVal == newValueNeedAmPmChange)
+                            || (oldVal == newValueNeedAmPmChange && newVal == HOURS_IN_HALF_DAY - 1)) {
                         mIsAm = mAmPmSpinner.getValue() != 0;
                         mAmPmSpinner.performClick(false);
                         mIsAmPmAutoFlipped = true;
@@ -183,7 +204,8 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         });
         mHourSpinnerInput = mHourSpinner.findViewById(R.id.numberpicker_input);
         mHourSpinner.setYearDateTimeInputMode();
-        mHourSpinnerInput.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_NEXT);
+        mHourSpinnerInput.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN
+                | EditorInfo.IME_ACTION_NEXT);
         mHourSpinner.setMaxInputLength(2);
         mHourSpinnerInput.setOnEditorActionListener(mEditorActionListener);
 
@@ -192,14 +214,16 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             setDividerText();
         }
 
-        final int smallestScreenWidthDp = resources.getConfiguration().smallestScreenWidthDp;
+        final Resources res = mDelegator.getResources();
+
+        final int smallestScreenWidthDp = res.getConfiguration().smallestScreenWidthDp;
         if (smallestScreenWidthDp >= 600) {
-            mDefaultWidth = resources.getDimensionPixelSize(R.dimen.sesl_time_picker_dialog_min_width);
+            mDefaultWidth = res.getDimensionPixelSize(R.dimen.sesl_time_picker_dialog_min_width);
         } else {
             mDefaultWidth = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    (float) smallestScreenWidthDp, resources.getDisplayMetrics()) + 0.5f);
+                    smallestScreenWidthDp, res.getDisplayMetrics()) + 0.5f);
         }
-        mDefaultHeight = resources.getDimensionPixelSize(R.dimen.sesl_time_picker_spinner_height);
+        mDefaultHeight = res.getDimensionPixelSize(R.dimen.sesl_time_picker_spinner_height);
 
         mMinuteSpinner = mDelegator.findViewById(R.id.sesl_timepicker_minute);
         mMinuteSpinner.setYearDateTimeInputMode();
@@ -208,16 +232,18 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         mMinuteSpinner.setOnLongPressUpdateInterval(100);
         mMinuteSpinner.setSkipValuesOnLongPressEnabled(true);
         mMinuteSpinner.setFormatter(SeslNumberPicker.getTwoDigitFormatter());
-        mMinuteSpinner.setPickerContentDescription(context.getResources().getString(R.string.sesl_time_picker_minute));
+        mMinuteSpinner.setPickerContentDescription(context.getResources()
+                .getString(R.string.sesl_time_picker_minute));
         mMinuteSpinner.setOnEditTextModeChangedListener(mModeChangeListener);
         mMinuteSpinner.setOnValueChangedListener(new SeslNumberPicker.OnValueChangeListener() {
             @Override
-            public void onValueChange(SeslNumberPicker picker, int oldVal, int newVal) {
+            public void onValueChange(SeslNumberPicker spinner, int oldVal, int newVal) {
                 onTimeChanged();
             }
         });
         mMinuteSpinnerInput = mMinuteSpinner.findViewById(R.id.numberpicker_input);
-        mMinuteSpinnerInput.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_DONE);
+        mMinuteSpinnerInput.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN
+                | EditorInfo.IME_ACTION_DONE);
         mMinuteSpinner.setMaxInputLength(2);
         mMinuteSpinnerInput.setOnEditorActionListener(mEditorActionListener);
         
@@ -237,7 +263,7 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         mAmPmSpinner.setDisplayedValues(mAmPmStrings);
         mAmPmSpinner.setOnValueChangedListener(new SeslNumberPicker.OnValueChangeListener() {
             @Override
-            public void onValueChange(SeslNumberPicker picker, int oldVal, int newVal) {
+            public void onValueChange(SeslNumberPicker spinner, int oldVal, int newVal) {
                 if (!mAmPmSpinner.isEnabled()) {
                     mAmPmSpinner.setEnabled(true);
                 }
@@ -261,16 +287,23 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         mAmPmSpinnerInput.setFocusable(false);
         mAmPmSpinnerInput.setFocusableInTouchMode(false);
 
-        // kang
-        byte directionality = Character.getDirectionality(mAmPmStrings[0].charAt(0));
-        boolean z = directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT || directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-        byte directionality2 = Character.getDirectionality(mCurrentLocale.getDisplayName(mCurrentLocale).charAt(0));
-        boolean z2 = directionality2 == Character.DIRECTIONALITY_RIGHT_TO_LEFT || directionality2 == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-        boolean isAmPmAtStart = isAmPmAtStart();
-        if ((isAmPmAtStart && z2 == z) || (!isAmPmAtStart && z2 != z)) {
+        final byte defAmPmStringDirectionality
+                = Character.getDirectionality(mAmPmStrings[0].charAt(0));
+        final boolean isAmPmStringRTL
+                = defAmPmStringDirectionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT
+                || defAmPmStringDirectionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+
+        final byte defLocaleDirectionality
+                = Character.getDirectionality(mCurrentLocale.getDisplayName(mCurrentLocale).charAt(0));
+        final boolean isLocaleRTL
+                = defLocaleDirectionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT
+                || defLocaleDirectionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+
+        final boolean isAmPmAtStart = isAmPmAtStart();
+        if ((isAmPmAtStart && isLocaleRTL == isAmPmStringRTL)
+                || (!isAmPmAtStart && isLocaleRTL != isAmPmStringRTL)) {
             changeAmPmView();
         }
-        // kang
 
         getHourFormatData();
         updateHourControl();
@@ -283,16 +316,18 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             setEnabled(false);
         }
 
-        if (mDelegator.getImportantForAccessibility() == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
+        if (mDelegator.getImportantForAccessibility()
+                == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
             mDelegator.setImportantForAccessibility(ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         }
 
         setTextWatcher();
 
         if (isDateTimeMode()) {
-            final float size = (
-                    ((float) resources.getDimensionPixelSize(R.dimen.sesl_spinning_date_picker_date_spinner_text_size)) * 160.0f)
-                    / ((float) resources.getDisplayMetrics().densityDpi);
+            final float size = (((float) res
+                    .getDimensionPixelSize(R.dimen.sesl_spinning_date_picker_date_spinner_text_size))
+                    * 160.0f)
+                        / ((float) res.getDisplayMetrics().densityDpi);
             setNumberPickerTextSize(SeslTimePicker.PICKER_HOUR, size);
             setNumberPickerTextSize(SeslTimePicker.PICKER_MINUTE, size);
             setNumberPickerTextSize(SeslTimePicker.PICKER_DIVIDER, size);
@@ -314,18 +349,19 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     private void changeAmPmView() {
-        ViewGroup container = mDelegator.findViewById(R.id.sesl_timepicker_layout);
+        ViewGroup amPmParent = mDelegator.findViewById(R.id.sesl_timepicker_layout);
 
-        container.removeView(mAmPmSpinner);
-        container.removeView(mAmPmMarginInside);
+        amPmParent.removeView(mAmPmSpinner);
+        amPmParent.removeView(mAmPmMarginInside);
 
-        final int index = isDateTimeMode() ? 1 + container.indexOfChild(mDTPaddingLeft) : 1;
-        container.addView(mAmPmMarginInside, index);
-        container.addView(mAmPmSpinner, index);
+        final int index = isDateTimeMode() ?
+                1 + amPmParent.indexOfChild(mDTPaddingLeft) : 1;
+        amPmParent.addView(mAmPmMarginInside, index);
+        amPmParent.addView(mAmPmSpinner, index);
     }
 
-    private void updateModeState(boolean edit) {
-        if (mIsEditTextMode != edit && !edit) {
+    private void updateModeState(boolean mode) {
+        if (mIsEditTextMode != mode && !mode) {
             if (mHourSpinner.isEditTextMode()) {
                 mHourSpinner.setEditTextMode(false);
             }
@@ -336,7 +372,8 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     private void getHourFormatData() {
-        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(mCurrentLocale, (mIs24HourView) ? "Hm" : "hm");
+        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(mCurrentLocale,
+                (mIs24HourView) ? "Hm" : "hm");
         final int lengthPattern = bestDateTimePattern.length();
         mHourWithTwoDigit = false;
         for (int i = 0; i < lengthPattern; i++) {
@@ -352,12 +389,16 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     private boolean isAmPmAtStart() {
-        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(mCurrentLocale, "hm");
+        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(mCurrentLocale,
+                "hm");
         return bestDateTimePattern.startsWith("a");
     }
 
     private void setDividerText() {
-        mDivider.setText(getHourMinSeparatorFromPattern(DateFormat.getBestDateTimePattern(mCurrentLocale, mIs24HourView ? "Hm" : "hm")));
+        final String skeleton = mIs24HourView ? "Hm" : "hm";
+        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(mCurrentLocale, skeleton);
+        final String separatorText = getHourMinSeparatorFromPattern(bestDateTimePattern);
+        mDivider.setText(separatorText);
 
         Typeface defaultTypeface = Typeface.defaultFromStyle(Typeface.NORMAL);
         Typeface legacyTypeface = Typeface.create("sec-roboto-condensed-light", Typeface.NORMAL);
@@ -368,45 +409,58 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             legacyTypeface = Typeface.create("sans-serif-thin", Typeface.NORMAL);
         }
 
-        final String clockThemeFont = Settings.System.getString(mContext.getContentResolver(), "theme_font_clock");
-        if (clockThemeFont != null && !clockThemeFont.equals("")) {
-            mDivider.setTypeface(getFontTypeface(clockThemeFont));
+        final String themeTypeFace = Settings.System.getString(mContext.getContentResolver(), "theme_font_clock");
+        if (themeTypeFace != null && !themeTypeFace.equals("")) {
+            mDivider.setTypeface(getFontTypeface(themeTypeFace));
         } else {
             mDivider.setTypeface(legacyTypeface);
         }
     }
 
-    private static String getHourMinSeparatorFromPattern(String pattern) {
-        boolean set = false;
+    private static String getHourMinSeparatorFromPattern(String dateTimePattern) {
+        boolean foundHourPattern = false;
 
-        for (int i = 0; i < pattern.length(); i++) {
-            char charAt = pattern.charAt(i);
-            if (charAt != ' ') {
-                if (charAt != QUOTE) {
-                    if (charAt == 'H' || charAt == 'K' || charAt == 'h' || charAt == 'k') {
-                        set = true;
-                    } else if (set) {
-                        return Character.toString(pattern.charAt(i));
+        for (int i = 0; i < dateTimePattern.length(); i++) {
+            switch (dateTimePattern.charAt(i)) {
+                case ' ':
+                    break;
+                case QUOTE:
+                    if (!foundHourPattern) {
+                        break;
+                    } else {
+                        SpannableStringBuilder quotedSubstring
+                                = new SpannableStringBuilder(dateTimePattern.substring(i));
+                        int quotedTextLength = appendQuotedText(quotedSubstring, 0);
+                        return quotedSubstring.subSequence(0, quotedTextLength).toString();
                     }
-                } else if (set) {
-                    SpannableStringBuilder builder = new SpannableStringBuilder(pattern.substring(i));
-                    return builder.subSequence(0, appendQuotedText(builder, 0)).toString();
-                }
+                case 'H':
+                case 'K':
+                case 'h':
+                case 'k':
+                    foundHourPattern = true;
+                    break;
+                default:
+                    if (!foundHourPattern) {
+                        break;
+                    } else {
+                        return Character.toString(dateTimePattern.charAt(i));
+                    }
             }
         }
-
         return ":";
     }
 
+    // TODO rework this method
     // kang
     private static int appendQuotedText(SpannableStringBuilder builder, int index) {
-        if (index + 1 < builder.length() && builder.charAt(index + 1) == QUOTE) {
+        int length = builder.length();
+        if (index + 1 < length && builder.charAt(index + 1) == QUOTE) {
             builder.delete(index, index + 1);
             return 1;
         } else {
             int i = 0;
             builder.delete(index, index + 1);
-            int i2 = builder.length() - 1;
+            int i2 = length - 1;
             while (index < i2) {
                 if (builder.charAt(index) == '\'') {
                     int i3 = index + 1;
@@ -428,12 +482,14 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
     // kang
 
-    private static Typeface getFontTypeface(String fontFile) {
-        if (!new File(fontFile).exists()) {
+    private static Typeface getFontTypeface(String ft) {
+        File fontFile = new File(ft);
+        if (!fontFile.exists()) {
             return null;
         }
         try {
-            return Typeface.createFromFile(fontFile);
+            Typeface fontType = Typeface.createFromFile(ft);
+            return fontType;
         } catch (Exception e) {
             return null;
         }
@@ -482,13 +538,13 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
 
     @Override
     public void setMinute(int minute) {
-        final int minuteInterval = getMinuteInterval();
+        final int interval = getMinuteInterval();
 
-        if (minuteInterval != DEFAULT_MINUTE_INTERVAL) {
+        if (interval != DEFAULT_MINUTE_INTERVAL) {
             if (mIsEditTextMode) {
                 mMinuteSpinner.setValue(minute);
             } else {
-                if (minute % minuteInterval == 0) {
+                if (minute % interval == 0) {
                     mMinuteSpinner.applyWheelCustomInterval(true);
                 } else {
                     mMinuteSpinner.applyWheelCustomInterval(false);
@@ -496,7 +552,7 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
                 mMinuteSpinner.setValue(minute);
             }
         } else {
-            if (getMinute() == minute) {
+            if (minute == getMinute()) {
                 if (isCharacterNumberLanguage()) {
                     mMinuteSpinner.setValue(minute);
                 }
@@ -515,12 +571,12 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     @Override
-    public void setIs24Hour(boolean is24Hour) {
-        if (mIs24HourView == is24Hour) {
+    public void setIs24Hour(boolean is24HourView) {
+        if (mIs24HourView == is24HourView) {
             return;
         }
         int currentHour = getHour();
-        mIs24HourView = is24Hour;
+        mIs24HourView = is24HourView;
         getHourFormatData();
         updateHourControl();
         setCurrentHour(currentHour, false);
@@ -614,7 +670,8 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         }
         mTempCalendar.set(Calendar.HOUR_OF_DAY, getHour());
         mTempCalendar.set(Calendar.MINUTE, getMinute());
-        String selectedDateUtterance = DateUtils.formatDateTime(mContext, mTempCalendar.getTimeInMillis(), flags);
+        String selectedDateUtterance = DateUtils.formatDateTime(mContext,
+                mTempCalendar.getTimeInMillis(), flags);
         event.getText().add(selectedDateUtterance);
     }
 
@@ -637,7 +694,8 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     private void updateInputState() {
-        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager
+                = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
             if (inputMethodManager.isActive(mHourSpinnerInput)) {
                 inputMethodManager.hideSoftInputFromWindow(mDelegator.getWindowToken(), 0);
@@ -659,11 +717,13 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             mAmPmSpinner.setVisibility(View.GONE);
 
             if (!isDateTimeMode()) {
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 560.0f);
+                LinearLayout.LayoutParams lp
+                        = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 560.0f);
                 mPaddingLeft.setLayoutParams(lp);
                 mPaddingRight.setLayoutParams(lp);
                 mDivider.setLayoutParams(lp);
-                mTimeLayout.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 3080.0f));
+                mTimeLayout.setLayoutParams(
+                        new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 3080.0f));
             } else {
                 mPaddingRight.setVisibility(View.VISIBLE);
                 if (mIsMarginLeftShown) {
@@ -678,14 +738,17 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             mAmPmMarginInside.setVisibility(View.VISIBLE);
 
             if (!isDateTimeMode()) {
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 270.0f);
+                LinearLayout.LayoutParams lp
+                        = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 270.0f);
                 mPaddingLeft.setLayoutParams(lp);
 
-                LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 180.0f);
+                LinearLayout.LayoutParams lp2
+                        = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 180.0f);
                 mPaddingRight.setLayoutParams(lp2);
                 mDivider.setLayoutParams(lp2);
 
-                LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 2700.0f);
+                LinearLayout.LayoutParams lp3
+                        = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 2700.0f);
                 mTimeLayout.setLayoutParams(lp3);
             } else {
                 mPaddingLeft.setVisibility(View.GONE);
@@ -752,20 +815,21 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             mHourSpinner.setMinValue(1);
             mHourSpinner.setMaxValue(12);
         }
-        mHourSpinner.setFormatter(mHourWithTwoDigit ? SeslNumberPicker.getTwoDigitFormatter() : null);
+        mHourSpinner.setFormatter(mHourWithTwoDigit ?
+                SeslNumberPicker.getTwoDigitFormatter() : null);
     }
 
     private static class SavedState extends View.BaseSavedState {
         private final int mHour;
         private final int mMinute;
 
-        public SavedState(Parcelable superState, int hour, int minute) {
+        private SavedState(Parcelable superState, int hour, int minute) {
             super(superState);
             mHour = hour;
             mMinute = minute;
         }
 
-        public SavedState(Parcel source) {
+        private SavedState(Parcel source) {
             super(source);
             mHour = source.readInt();
             mMinute = source.readInt();
@@ -786,7 +850,8 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             dest.writeInt(mMinute);
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
@@ -800,46 +865,51 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     }
 
     public static String[] getAmPmStrings(Context context) {
-        String[] strArr = new String[2];
+        String[] result = new String[2];
 
         if (Build.VERSION.SDK_INT >= 31) {
-            DateFormatSymbols symbols = new DateFormatSymbols(GregorianCalendar.class, context.getResources().getConfiguration().locale);
+            Locale locale = context.getResources().getConfiguration().locale;
+            DateFormatSymbols dfs = new DateFormatSymbols(GregorianCalendar.class, locale);
 
-            String[] amPmStrings = symbols.getAmPmStrings();
-            String[] ampmNarrowStrings = SeslLocaleDataReflector.getAmpmNarrowStrings(symbols);
+            String[] amPm = dfs.getAmPmStrings();
+            String[] narrowAmPm = SeslLocaleDataReflector.getAmpmNarrowStrings(dfs);
             if (isMeaLanguage()) {
-                strArr[0] = amPmStrings[0];
-                strArr[1] = amPmStrings[1];
+                result[0] = amPm[0];
+                result[1] = amPm[1];
             } else {
-                strArr[0] = amPmStrings[0].length() > 4 ? ampmNarrowStrings[0] : amPmStrings[0];
-                strArr[1] = amPmStrings[1].length() > 4 ? ampmNarrowStrings[1] : amPmStrings[1];
+                result[0] = amPm[0].length() > 4 ? narrowAmPm[0] : amPm[0];
+                result[1] = amPm[1].length() > 4 ? narrowAmPm[1] : amPm[1];
             }
 
-            return strArr;
+            return result;
         } else {
-            Object localeData = SeslLocaleDataReflector.get(context.getResources().getConfiguration().locale);
+            Locale locale = context.getResources().getConfiguration().locale;
+            Object localeData = SeslLocaleDataReflector.get(locale);
             if (localeData != null) {
-                // kang
-                String[] field_amPm = SeslLocaleDataReflector.getField_amPm(localeData);
-                String field_narrowAm = SeslLocaleDataReflector.getField_narrowAm(localeData);
-                String field_narrowPm = SeslLocaleDataReflector.getField_narrowPm(localeData);
-                String str = field_amPm[0];
-                String str2 = field_amPm[1];
+                String[] amPm = SeslLocaleDataReflector.getField_amPm(localeData);
+                String narrowAm = SeslLocaleDataReflector.getField_narrowAm(localeData);
+                String narrowPm = SeslLocaleDataReflector.getField_narrowPm(localeData);
+
+                String am = amPm[0];
+                String pm = amPm[1];
+
                 if (isMeaLanguage()) {
-                    strArr[0] = str;
-                    strArr[1] = str2;
-                    return strArr;
+                    result[0] = am;
+                    result[1] = pm;
+                    return result;
                 }
-                if (str.length() <= 4) {
-                    field_narrowAm = str;
+
+                if (am.length() <= 4) {
+                    narrowAm = am;
                 }
-                strArr[0] = field_narrowAm;
-                if (str2.length() <= 4) {
-                    field_narrowPm = str2;
+                result[0] = narrowAm;
+
+                if (pm.length() <= 4) {
+                    narrowPm = pm;
                 }
-                strArr[1] = field_narrowPm;
-                return strArr;
-                // kang
+                result[1] = narrowPm;
+
+                return result;
             } else {
                 Log.e(TAG, "LocaleData failed. Use DateFormatSymbols for ampm");
                 return new java.text.DateFormatSymbols().getAmPmStrings();
@@ -853,16 +923,19 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
 
     private static boolean isMeaLanguage() {
         final String language = Locale.getDefault().getLanguage();
-        return language.equals("lo") || language.equals("ar") || language.equals("fa") || language.equals("ur");
+        return "lo".equals(language) || "ar".equals(language)
+                || "fa".equals(language) || "ur".equals(language);
     }
 
     private static boolean isCharacterNumberLanguage() {
         final String language = Locale.getDefault().getLanguage();
-        return language.equals("lo") || language.equals("ar") || language.equals("fa") || language.equals("ur") || language.equals("my");
+        return "lo".equals(language) || "ar".equals(language) || "fa".equals(language)
+                || "ur".equals(language) || "my".equals(language);
     }
 
     @Override
-    public void setOnEditTextModeChangedListener(SeslTimePicker.OnEditTextModeChangedListener onEditTextModeChangedListener) {
+    public void setOnEditTextModeChangedListener(
+            SeslTimePicker.OnEditTextModeChangedListener onEditTextModeChangedListener) {
         mOnEditTextModeChangedListener = onEditTextModeChangedListener;
     }
 
@@ -871,20 +944,24 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         if (mIsEditTextMode != editTextMode) {
             mIsEditTextMode = editTextMode;
 
-            final InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager
+                    = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             mHourSpinner.setEditTextMode(editTextMode);
             mMinuteSpinner.setEditTextMode(editTextMode);
             if (inputMethodManager != null) {
                 if (!mIsEditTextMode) {
                     inputMethodManager.hideSoftInputFromWindow(mDelegator.getWindowToken(), 0);
                 } else {
-                    if (!inputMethodManager.showSoftInput(mMinuteSpinnerInput.hasFocus() ? mMinuteSpinnerInput : mHourSpinnerInput, 0)) {
-                        this.mDelegator.postDelayed(new Runnable() {
+                    if (!inputMethodManager.showSoftInput(mMinuteSpinnerInput.hasFocus() ?
+                            mMinuteSpinnerInput : mHourSpinnerInput, 0)) {
+                        mDelegator.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                final InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                InputMethodManager inputMethodManager
+                                        = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                                 if (mIsEditTextMode && inputMethodManager != null) {
-                                    inputMethodManager.showSoftInput(mMinuteSpinnerInput.hasFocus() ? mMinuteSpinnerInput : mHourSpinnerInput, 0);
+                                    inputMethodManager.showSoftInput(mMinuteSpinnerInput.hasFocus() ?
+                                            mMinuteSpinnerInput : mHourSpinnerInput, 0);
                                 }
                             }
                         }, 20);
@@ -922,9 +999,9 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             case SeslTimePicker.PICKER_HOUR:
                 return mHourSpinner.getEditText();
             case SeslTimePicker.PICKER_MINUTE:
+            default:
                 return mMinuteSpinner.getEditText();
             case SeslTimePicker.PICKER_AMPM:
-            default:
                 return mAmPmSpinner.getEditText();
         }
     }
@@ -935,9 +1012,9 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
             case SeslTimePicker.PICKER_HOUR:
                 return mHourSpinner;
             case SeslTimePicker.PICKER_MINUTE:
+            default:
                 return mMinuteSpinner;
             case SeslTimePicker.PICKER_AMPM:
-            default:
                 return mAmPmSpinner;
         }
     }
@@ -987,8 +1064,10 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     private void setTextWatcher() {
         mPickerTexts[SeslTimePicker.PICKER_HOUR] = mHourSpinner.getEditText();
         mPickerTexts[SeslTimePicker.PICKER_MINUTE] = mMinuteSpinner.getEditText();
-        mPickerTexts[SeslTimePicker.PICKER_HOUR].addTextChangedListener(new SeslTextWatcher(2, SeslTimePicker.PICKER_HOUR));
-        mPickerTexts[SeslTimePicker.PICKER_MINUTE].addTextChangedListener(new SeslTextWatcher(2, SeslTimePicker.PICKER_MINUTE));
+        mPickerTexts[SeslTimePicker.PICKER_HOUR]
+                .addTextChangedListener(new SeslTextWatcher(2, SeslTimePicker.PICKER_HOUR));
+        mPickerTexts[SeslTimePicker.PICKER_MINUTE]
+                .addTextChangedListener(new SeslTextWatcher(2, SeslTimePicker.PICKER_MINUTE));
         mPickerTexts[SeslTimePicker.PICKER_HOUR].setOnKeyListener(new SeslKeyListener());
         mPickerTexts[SeslTimePicker.PICKER_MINUTE].setOnKeyListener(new SeslKeyListener());
     }
@@ -996,36 +1075,40 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
     private class SeslKeyListener implements View.OnKeyListener {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (DEBUG) {
+                Log.d(TAG, event.toString());
+            }
+
             if (event.getAction() != KeyEvent.ACTION_UP) {
                 return false;
             }
 
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                return mDelegator.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_12KEY;
-            }
-
-            if (keyCode == KeyEvent.KEYCODE_TAB) {
-                return true;
-            }
-
-            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                if (isEditTextMode()) {
-                    EditText editText = (EditText) v;
-                    if ((editText.getImeOptions() & EditorInfo.IME_ACTION_NEXT) == EditorInfo.IME_ACTION_NEXT) {
-                        View nextFocus = FocusFinder.getInstance().findNextFocus(mDelegator, v, View.FOCUS_FORWARD);
-                        if (nextFocus == null) {
-                            return true;
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                    Configuration config = mDelegator.getResources().getConfiguration();
+                    return config.keyboard != Configuration.KEYBOARD_12KEY;
+                case KeyEvent.KEYCODE_TAB:
+                    return true;
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                    if (isEditTextMode()) {
+                        if ((((EditText) v).getImeOptions() & EditorInfo.IME_ACTION_NEXT)
+                                == EditorInfo.IME_ACTION_NEXT) {
+                            View next = FocusFinder.getInstance()
+                                    .findNextFocus(mDelegator, v, View.FOCUS_FORWARD);
+                            if (next == null) {
+                                return true;
+                            }
+                            next.requestFocus();
+                        } else if ((((EditText) v).getImeOptions() & EditorInfo.IME_ACTION_DONE)
+                                == EditorInfo.IME_ACTION_DONE) {
+                            updateInputState();
+                            setEditTextMode(false);
                         }
-                        nextFocus.requestFocus();
-                    } else if ((editText.getImeOptions() & EditorInfo.IME_ACTION_DONE) == EditorInfo.IME_ACTION_DONE) {
-                        updateInputState();
-                        setEditTextMode(false);
                     }
-                }
-
-                return true;
-            } else {
-                return false;
+                    return true;
+                default:
+                    return false;
             }
         }
     }
@@ -1037,66 +1120,83 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         private int mNext;
         private String prevText;
 
-        public SeslTextWatcher(int maxLength, int index) {
-            mMaxLen = maxLength;
-            mId = index;
-            mNext = index + 1 >= 2 ? -1 : index + 1;
+        public SeslTextWatcher(int maxLen, int id) {
+            mMaxLen = maxLen;
+            mId = id;
+            mNext = id + 1 >= 2 ? -1 : id + 1;
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
+        public void afterTextChanged(Editable view) {
+            if (DEBUG) {
+                Log.d(TAG, "aftertextchanged: " + view.toString());
+            }
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (DEBUG) {
+                Log.d(TAG, "beforeTextChanged: " + ((Object) s)
+                        + ", " + start + ", " + count + ", " + after);
+            }
             prevText = s.toString();
             changedLen = after;
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (DEBUG) {
+                Log.d(TAG, "onTextChanged: " + prevText);
+                Log.d(TAG, "onTextChanged: " + ((Object) s)
+                        + ", " + start + ", " + before + ", " + count);
+            }
+
             String tag = (String) mPickerTexts[mId].getTag();
             if (tag == null || !tag.equals("onClick") && !tag.equals("onLongClick")) {
                 switch (mId) {
                     case SeslTimePicker.PICKER_HOUR:
-                        if (changedLen == 1) {
-                            if (s.length() == mMaxLen) {
-                                if (mPickerTexts[mId].isFocused()) {
-                                    changeFocus();
-                                }
-                            } else if (s.length() > 0) {
-                                final int number = convertDigitCharacterToNumber(s.toString());
-                                if ((number > 2 || (number > 1 && !is24Hour())) && mPickerTexts[mId].isFocused()) {
-                                    changeFocus();
-                                }
+                        if (changedLen != 1) {
+                            break;
+                        }
+                        if (s.length() == mMaxLen) {
+                            if (mPickerTexts[mId].isFocused()) {
+                                changeFocus();
+                            }
+                        } else if (s.length() > 0) {
+                            final int number = convertDigitCharacterToNumber(s.toString());
+                            if ((number > 2 || (number > 1 && !is24Hour()))
+                                    && mPickerTexts[mId].isFocused()) {
+                                changeFocus();
                             }
                         }
                         break;
                     case SeslTimePicker.PICKER_MINUTE:
-                        if (changedLen == 1) {
-                            if (s.length() == mMaxLen) {
+                        if (changedLen != 1) {
+                            break;
+                        }
+                        if (s.length() == mMaxLen) {
+                            if (mPickerTexts[mId].isFocused()) {
+                                changeFocus();
+                            }
+                        } else if (s.length() > 0) {
+                            final int number = convertDigitCharacterToNumber(s.toString());
+                            if (number >= 6 && number <= 9) {
                                 if (mPickerTexts[mId].isFocused()) {
+                                    mIsInvalidMinute = true;
                                     changeFocus();
                                 }
-                            } else if (s.length() > 0) {
-                                final int number = convertDigitCharacterToNumber(s.toString());
-                                if (number >= 6 && number <= 9) {
-                                    if (mPickerTexts[mId].isFocused()) {
-                                        mIsInvalidMinute = true;
-                                        changeFocus();
-                                    }
-                                } else if (!mIsInvalidMinute || !(number == 5 || number == 0)) {
-                                    mIsInvalidMinute = false;
-                                    mSkipToChangeInterval = false;
-                                } else {
-                                    mIsInvalidMinute = false;
-                                    mSkipToChangeInterval = true;
-                                }
+                            } else if (!mIsInvalidMinute || !(number == 5 || number == 0)) {
+                                mIsInvalidMinute = false;
+                                mSkipToChangeInterval = false;
+                            } else {
+                                mIsInvalidMinute = false;
+                                mSkipToChangeInterval = true;
                             }
                         }
                         break;
                     default:
-                        if (prevText.length() < s.length() && s.length() == mMaxLen && mPickerTexts[mId].isFocused()) {
+                        if (prevText.length() < s.length()
+                                && s.length() == mMaxLen && mPickerTexts[mId].isFocused()) {
                             changeFocus();
                         }
                         break;
@@ -1107,8 +1207,9 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
         }
 
         private void changeFocus() {
-            AccessibilityManager accessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
-            if (accessibilityManager.isTouchExplorationEnabled()) {
+            AccessibilityManager manager
+                    = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
+            if (manager.isTouchExplorationEnabled()) {
                 if (mId == SeslTimePicker.PICKER_HOUR) {
                     setHour(Integer.parseInt(String.valueOf(mPickerTexts[mId].getText())));
                     mPickerTexts[mId].selectAll();
@@ -1116,28 +1217,28 @@ public class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerD
                     setMinute(Integer.parseInt(String.valueOf(mPickerTexts[mId].getText())));
                     mPickerTexts[mId].selectAll();
                 }
-            } else if (mNext >= 0) {
-                mPickerTexts[mNext].requestFocus();
-                if (mPickerTexts[mId].isFocused()) {
-                    mPickerTexts[mId].clearFocus();
+            } else {
+                if (mNext >= 0) {
+                    mPickerTexts[mNext].requestFocus();
+                    if (mPickerTexts[mId].isFocused()) {
+                        mPickerTexts[mId].clearFocus();
+                    }
+                } else if (mId == SeslTimePicker.PICKER_MINUTE) {
+                    setMinute(Integer.parseInt(String.valueOf(mPickerTexts[mId].getText())));
+                    mPickerTexts[mId].selectAll();
                 }
-            } else if (mId == SeslTimePicker.PICKER_MINUTE) {
-                setMinute(Integer.parseInt(String.valueOf(mPickerTexts[mId].getText())));
-                mPickerTexts[mId].selectAll();
             }
         }
 
-        // kang
-        private int convertDigitCharacterToNumber(String str) {
-            int i = 0;
-            for (char c : DIGIT_CHARACTERS) {
-                if (str.equals(Character.toString(c))) {
-                    return i % 10;
+        private int convertDigitCharacterToNumber(String digitCharacter) {
+            int idx = 0;
+            for (char val : DIGIT_CHARACTERS) {
+                if (digitCharacter.equals(Character.toString(val))) {
+                    return idx % 10;
                 }
-                i++;
+                idx++;
             }
             return -1;
         }
-        // kang
     }
 }

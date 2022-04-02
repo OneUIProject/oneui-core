@@ -120,7 +120,7 @@ public class SeslNumberPicker extends LinearLayout {
     }
 
     public interface OnValueChangeListener {
-        void onValueChange(SeslNumberPicker picker, int oldVal, int newVal);
+        void onValueChange(SeslNumberPicker spinner, int oldVal, int newVal);
     }
 
     public interface Formatter {

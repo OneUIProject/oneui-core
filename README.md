@@ -17,16 +17,16 @@ While the old library was a completely separated module, we now are implementing
 
 # Libraries
 ### Android Jetpack:
-- appcompat (1.0.39-sesl4)
-- coordinatorlayout (1.0.2-sesl4)
-- drawerlayout (1.0.2-sesl4)
-- preference (1.0.5-sesl4)
-- recyclerview (1.0.21-sesl4)
-- swiperefreshlayout (1.0.10-sesl4)
-- viewpager (1.0.3-sesl4)
-- viewpager2 (1.0.1-sesl4)
+- appcompat ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/appcompat?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.39-sesl4)
+- coordinatorlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/coordinatorlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.2-sesl4)
+- drawerlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/drawerlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.2-sesl4)
+- preference ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/preference?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.5-sesl4)
+- recyclerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/recyclerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.21-sesl4)
+- swiperefreshlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/swiperefreshlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.10-sesl4)
+- viewpager ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.3-sesl4)
+- viewpager2 ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager2?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.1-sesl4)
 ### Material Components:
-- material (1.0.34-sesl4)
+- material ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/material?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.34-sesl4)
 
   - [x] appbar
   - [ ] bottomnavigation
@@ -35,17 +35,14 @@ While the old library was a completely separated module, we now are implementing
   - [ ] snackbar
   - [ ] tabs
 ### Samsung:
-- apppickerview (1.0.17-sesl4)
-- indexscroll (1.0.14-sesl4)
-- picker-color (1.0.18-sesl4)
+- apppickerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/apppickerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.17-sesl4)
+- indexscroll ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/indexscroll?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.14-sesl4)
+- picker-color ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.18-sesl4)
 
 ## Uncomplete/to-be-added libs:
-- picker-basic (1.0.33-sesl4): still needs complete merging
-- slidingpanelayout (1.0.8-sesl4): broken, needs fixes
-
-# TO-DO list:
-- Add Maven stuff
-- Merge back current library stuff in a separate module
+- picker-basic ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.33-sesl4): still needs complete merging
+- slidingpanelayout (based on 1.0.8-sesl4): broken, needs fixes
+- Unnamed lib (will contain all the utilities and resources from the previous library)
 
 # More info
 - [Samsung's EULA](https://www.samsung.com/sg/Legal/SamsungLegal-EULA/)

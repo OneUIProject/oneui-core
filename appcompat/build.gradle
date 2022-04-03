@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk target_sdk
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk target_sdk
         versionCode 1
-        versionName '1.0.1'
+        versionName sesl_appcompat_version
     }
 
     compileOptions {
@@ -46,18 +46,18 @@ android {
 }
 
 dependencies {
-    api("androidx.annotation:annotation:1.3.0")
+    api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core"))
 
-    implementation("androidx.collection:collection:1.2.0")
-    api("androidx.cursoradapter:cursoradapter:1.0.0")
-    api("androidx.activity:activity:1.2.3")
+    implementation("androidx.collection:collection:$androidx_collection_version")
+    api("androidx.cursoradapter:cursoradapter:$androidx_cursoradapter_version")
+    api("androidx.activity:activity:$androidx_activity_version")
     api(project(":fragment"))
-    api("androidx.appcompat:appcompat-resources:1.3.1")
+    api("androidx.appcompat:appcompat-resources:$androidx_appcompat_resources_version")
     api(project(":drawerlayout"))
-    implementation("androidx.lifecycle:lifecycle-runtime:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
-    api("androidx.savedstate:savedstate:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-runtime:$androidx_lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:$androidx_lifecycle_version")
+    api("androidx.savedstate:savedstate:$androidx_savedstate_version")
 }
 
 task writeVersionFile() {

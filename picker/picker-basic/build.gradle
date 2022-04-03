@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk target_sdk
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk target_sdk
         versionCode 1
-        versionName '1.0.0'
+        versionName sesl_picker_basic_version
     }
 
     sourceSets.main.resources.srcDir "$buildDir/javaResources"
@@ -20,10 +20,10 @@ android {
 }
 
 dependencies {
-    api("androidx.annotation:annotation:1.3.0")
+    api("androidx.annotation:annotation:$androidx_annotation_version")
     implementation(project(":appcompat"))
     api(project(":core"))
-    api("androidx.dynamicanimation:dynamicanimation:1.0.0")
+    api("androidx.dynamicanimation:dynamicanimation:$androidx_dynamicanimation_version")
     api(project(":viewpager"))
 }
 

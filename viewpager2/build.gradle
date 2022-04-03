@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk target_sdk
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk target_sdk
         versionCode 1
-        versionName '1.0.0'
+        versionName sesl_viewpager2_version
     }
 
     sourceSets.main.resources.srcDir "$buildDir/javaResources"
@@ -20,11 +20,11 @@ android {
 }
 
 dependencies {
-    api("androidx.annotation:annotation:1.3.0")
+    api("androidx.annotation:annotation:$androidx_annotation_version")
     implementation(project(":core"))
     api(project(":fragment"))
     api(project(":recyclerview"))
-    implementation("androidx.collection:collection:1.2.0")
+    implementation("androidx.collection:collection:$androidx_collection_version")
 }
 
 task writeVersionFile() {

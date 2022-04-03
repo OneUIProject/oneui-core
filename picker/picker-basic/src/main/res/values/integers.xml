@@ -18,6 +18,12 @@
 
     <integer name="sesl_day_number_disabled_alpha_dark">51</integer>
     <integer name="sesl_day_number_disabled_alpha_light">26</integer>
+    <integer name="sesl_day_number_theme_disabled_alpha">102</integer>
+
+    <integer name="sesl_date_picker_abnormal_start_end_date_background_alpha">38</integer>
+    <integer name="sesl_date_picker_spinner_long_month_text_size">19</integer>
+    <integer name="sesl_date_picker_spinner_number_text_size">22</integer>
+    <integer name="sesl_date_picker_spinner_number_text_size_with_unit">19</integer>
 
     <integer name="sesl_spinning_datepicker_time_ampm_weight">13</integer>
     <integer name="sesl_spinning_datepicker_time_hr_min_container_weight">30</integer>

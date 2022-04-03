@@ -3,22 +3,35 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk target_sdk
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk target_sdk
         versionCode 1
-        versionName '1.0.0'
+        versionName sesl_swiperefreshlayout_version
     }
 
     sourceSets {
+        main.resources.srcDir "$buildDir/javaResources"
         main.res.srcDirs += "src/main/res-public"
+    }
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
     }
 }
 
 dependencies {
-    api("androidx.annotation:annotation:1.3.0")
+    api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core"))
-    api("androidx.interpolator:interpolator:1.0.0")
+    api("androidx.interpolator:interpolator:$androidx_interpolator_version")
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.swiperefreshlayout_swiperefreshlayout.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.10-sesl4" + "\n"
 }

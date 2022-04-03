@@ -5,124 +5,22 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.19.0'
     }
 }
-
-//### Maven ###
-// build> gradlew aars
-// publish> gradlew publishToSonatype
-plugins {
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-}
-def libVersion = "sesl" //for groupID, description, github
-group = "io.github.oneuiproject.$libVersion"
-
-def sonatype_user, sonatype_pwd
-File propertiesFile = project.rootProject.file('local.properties')
-if (propertiesFile.exists()) {
-    Properties properties = new Properties()
-    properties.load(propertiesFile.newDataInputStream())
-
-    ext["signing.keyId"] = properties.getProperty('signing.keyId')
-    ext["signing.password"] = properties.getProperty('signing.password')
-    ext["signing.secretKeyRingFile"] = properties.getProperty('signing.secretKeyRingFile')
-
-    sonatype_user = properties.getProperty('sonatype.user')
-    sonatype_pwd = properties.getProperty('sonatype.pwd')
-} else {
-    ext["signing.keyId"] = "$System.env.SIGNING_KEYID"
-    ext["signing.password"] = "$System.env.SIGNING_PASSWORD"
-    ext["signing.secretKeyRingFile"] = "$System.env.SIGNING_KEYFILE"
-
-    sonatype_user = "$System.env.SONATYPE_USER"
-    sonatype_pwd = "$System.env.SONATYPE_PWD"
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username = sonatype_user
-            password = sonatype_pwd
-        }
-    }
-}
-
-//exclude modules/projects (must contain "picker")
-def excludeProjects = ["picker","material","slidingpanelayout"] // (yanndroid) ["picker","apppickerview","indexscroll","material","preference","recyclerview","slidingpanelayout","viewpager2"]
-
-subprojects {
-    if (!excludeProjects.contains(project.name)) {
-        apply plugin: 'maven-publish'
-        apply plugin: 'signing'
-
-        signing {
-            sign publishing.publications
-        }
-
-        afterEvaluate {
-            println("io.github.oneuiproject.$libVersion:$project.name:$android.defaultConfig.versionName")
-
-            publishing {
-                publications {
-                    release(MavenPublication) {
-                        groupId = "io.github.oneuiproject.$libVersion"
-                        artifactId = project.name
-                        version = android.defaultConfig.versionName
-                        artifact("$projectDir/build/outputs/aar/$project.name-release.aar")
-
-                        pom {
-                            name = project.name
-                            description = "$libVersion $project.name"
-                            url = "https://github.com/OneUIProject/$libVersion"
-                            licenses {
-                                license {
-                                    name = "MIT License"
-                                    url = "https://github.com/OneUIProject/$libVersion/blob/main/LICENSE"
-                                }
-                            }
-                            developers {
-                                developer {
-                                    id = "Yanndroid"
-                                    name = "Yanndroid"
-                                    url = "https://github.com/Yanndroid"
-                                }
-                                developer {
-                                    id = "BlackMesa123"
-                                    name = "BlackMesa123"
-                                    url = "https://github.com/BlackMesa123"
-                                }
-                            }
-                            scm {
-                                connection = "scm:git@github.com/OneUIProject/${libVersion}.git"
-                                developerConnection = "scm:git@github.com/OneUIProject/${libVersion}.git"
-                                url = "https://github.com/OneUIProject/$libVersion"
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-}
-
-task aars(type: GradleBuild) {
-    tasks = ['clean', 'appcompat:assembleRelease', 'apppickerview:assembleRelease', 'coordinatorlayout:assembleRelease', 'core:assembleRelease', 'customview:assembleRelease', 'drawerlayout:assembleRelease', 'fragment:assembleRelease', 'indexscroll:assembleRelease', /*'material:assembleRelease',*/ 'picker:picker-basic:assembleRelease', 'picker:picker-color:assembleRelease', 'preference:assembleRelease', 'recyclerview:assembleRelease', /*'slidingpanelayout:assembleRelease',*/ 'swiperefreshlayout:assembleRelease', 'viewpager:assembleRelease', 'viewpager2:assembleRelease']
-}
-
-//### end of Maven ###
 
 allprojects {
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     
     tasks.withType(Javadoc) {
@@ -130,8 +28,43 @@ allprojects {
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
     }
+
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
+    }
+}
+
+subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('com.vanniktech.maven.publish')) {
+            group = "io.github.oneuiproject.$libVariant"
+            version = android.defaultConfig.versionName
+        }
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    libVariant = "sesl" // for groupID
+
+    POM_INCEPTION_YEAR = "2022"
+    POM_PACKAGING = "aar"
+
+    POM_URL = "https://github.com/OneUIProject/" + libVariant
+    POM_SCM_URL = "https://github.com/OneUIProject/" + libVariant
+    POM_SCM_CONNECTION = "scm:git@github.com:OneUIProject/" + libVariant + ".git"
+    POM_SCM_DEV_CONNECTION = "scm:git@github.com:OneUIProject/" + libVariant + ".git"
+
+    POM_LICENCE_NAME = "MIT License"
+    POM_LICENCE_URL = "https://github.com/OneUIProject/" + libVariant + "/blob/master/LICENSE"
+    POM_LICENCE_DIST = "repo"
+
+    POM_DEVELOPER_ID = "OUIProject"
+    POM_DEVELOPER_NAME = "OneUI Project"
+    POM_DEVELOPER_URL = "https://github.com/OneUIProject"
 }

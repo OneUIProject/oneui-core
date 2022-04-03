@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -48,4 +49,9 @@ task writeVersionFile() {
 
     new File(versionFileDir).mkdirs()
     new File(versionFileDir + '/' + versionFileName).text = "1.0.4-sesl4" + "\n"
+}
+
+ext {
+    POM_NAME = "Sesl Fragment"
+    POM_DESCRIPTION = "Sesl Fragment Library."
 }

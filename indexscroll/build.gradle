@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -33,4 +34,9 @@ task writeVersionFile() {
 
     new File(versionFileDir).mkdirs()
     new File(versionFileDir + '/' + versionFileName).text = "1.0.14-sesl4" + "\n"
+}
+
+ext {
+    POM_NAME = "Sesl IndexScroll"
+    POM_DESCRIPTION = "Sesl IndexScroll Library."
 }

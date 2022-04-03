@@ -20,19 +20,11 @@ jobs:
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: decode key
-        run: |
-          echo "${{secrets.SIGNING_KEYFILE_BASE64}}" > ~/key.gpg.b64
-          base64 -d ~/key.gpg.b64 > ~/key.gpg
-          echo "SIGNING_KEYFILE=$(echo ~/key.gpg)" >> $GITHUB_ENV
-
-      - name: assemble release
-        run: ./gradlew aars
-
-      - name: publish to maven central
-        run: ./gradlew publishToSonatype #closeSonatypeStagingRepository
+      - name: upload to sonatype
+        run: ./gradlew publish --no-daemon --no-parallel
         env:
-          SIGNING_KEYID: ${{ secrets.SIGNING_KEYID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
-          SONATYPE_PWD: ${{ secrets.SONATYPE_PWD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USER }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PWD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEYID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}

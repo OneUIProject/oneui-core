@@ -11,16 +11,23 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/appcompat" />
+            <option value="$PROJECT_DIR$/apppickerview" />
             <option value="$PROJECT_DIR$/coordinatorlayout" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/drawerlayout" />
             <option value="$PROJECT_DIR$/fragment" />
+            <option value="$PROJECT_DIR$/indexscroll" />
             <option value="$PROJECT_DIR$/material" />
+            <option value="$PROJECT_DIR$/picker" />
+            <option value="$PROJECT_DIR$/picker/picker-basic" />
+            <option value="$PROJECT_DIR$/picker/picker-color" />
+            <option value="$PROJECT_DIR$/preference" />
             <option value="$PROJECT_DIR$/recyclerview" />
             <option value="$PROJECT_DIR$/slidingpanelayout" />
             <option value="$PROJECT_DIR$/swiperefreshlayout" />
             <option value="$PROJECT_DIR$/viewpager" />
+            <option value="$PROJECT_DIR$/viewpager2" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

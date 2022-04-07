@@ -1149,7 +1149,7 @@ public class SeslDatePickerSpinnerLayout extends LinearLayout {
             case PICKER_DAY:
                 return mDaySpinner.getEditText();
             case PICKER_MONTH:
-                return this.mMonthSpinner.getEditText();
+                return mMonthSpinner.getEditText();
             case PICKER_YEAR:
                 return mYearSpinner.getEditText();
             default:
@@ -1162,7 +1162,7 @@ public class SeslDatePickerSpinnerLayout extends LinearLayout {
             case PICKER_DAY:
                 return mDaySpinner;
             case PICKER_MONTH:
-                return this.mMonthSpinner;
+                return mMonthSpinner;
             case PICKER_YEAR:
                 return mYearSpinner;
             default:

@@ -13,7 +13,10 @@ android {
         versionName sesl_picker_basic_version
     }
 
-    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+    sourceSets {
+        main.resources.srcDir "$buildDir/javaResources"
+        main.res.srcDirs += "src/main/res-public"
+    }
 
     libraryVariants.all {
         it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)

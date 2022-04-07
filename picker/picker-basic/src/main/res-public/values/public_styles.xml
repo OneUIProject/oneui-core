@@ -15,7 +15,16 @@
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
+    <public type="style" name="Widget.AppCompat.DatePicker"/>
+    <public type="style" name="Widget.AppCompat.Light.DatePicker"/>
 
-    <public/>
+    <public type="style" name="Theme.AppCompat.PickerDialog"/>
+    <public type="style" name="Theme.AppCompat.Light.PickerDialog"/>
+    <public type="style" name="Theme.AppCompat.PickerDialog.TimePicker"/>
+    <public type="style" name="Theme.AppCompat.Light.PickerDialog.TimePicker"/>
+    <public type="style" name="Theme.AppCompat.PickerDialog.DatePicker"/>
+    <public type="style" name="Theme.AppCompat.Light.PickerDialog.DatePicker"/>
 
+    <public type="style" name="Theme.AppCompat.DayNight.PickerDialog.TimePicker"/>
+    <public type="style" name="Theme.AppCompat.DayNight.PickerDialog.DatePicker"/>
 </resources>

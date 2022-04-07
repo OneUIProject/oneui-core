@@ -118,7 +118,7 @@ public class SeslSimpleMonthView extends View {
     private int mIsLeapStartMonth;
     private int mLastAccessibilityFocusedView = View.NO_ID;
     private int mMiniDayNumberTextSize;
-    private int mMode = SeslDatePicker.MODE_NONE;
+    private int mMode = SeslDatePicker.DATE_MODE_NONE;
     private int mMonth;
     private int mNormalTextColor;
     private int mNumCells = DEFAULT_NUM_DAYS;
@@ -435,12 +435,13 @@ public class SeslSimpleMonthView extends View {
     }
 
     private int getDaysInMonthLunar(int month, int year, boolean isLeapMonth) {
+        final int solarDay = getDaysInMonth(month, year);
         if (mSolarLunarConverter != null) {
             return SeslSolarLunarConverterReflector
                     .getDayLengthOf(mPathClassLoader, mSolarLunarConverter, year, month, isLeapMonth);
         } else  {
             Log.e(TAG, "getDaysInMonthLunar, mSolarLunarConverter is null");
-            return getDaysInMonth(month, year);
+            return solarDay;
         }
     }
 

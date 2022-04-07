@@ -21,6 +21,7 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -102,7 +103,7 @@ import java.util.Locale;
  */
 
 @RestrictTo(LIBRARY)
-public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDelegate {
+class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDelegate {
 
     private static final char[] DIGIT_CHARACTERS = {
             48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
@@ -216,6 +217,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
     private int mInitialScrollOffset = Integer.MIN_VALUE;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
     private int mShortFlickThreshold = 1700;
+    private int selectedPickerColor;
 
     private float mActivatedAlpha = 0.4f;
     private float mAlpha = 0.1f;
@@ -416,13 +418,26 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         mIsHcfEnabled = isHighContrastFontEnabled();
         mHcfFocusedTypefaceBold = Typeface.create(mPickerTypeface, Typeface.BOLD);
         setInputTextTypeface();
-        mTextColorIdle = mInputText.getTextColors().getColorForState(
-                mDelegator.getEnableStateSet(), Color.WHITE);
+
         mTextColorScrolling = ResourcesCompat.getColor(resources,
                 R.color.sesl_number_picker_text_color_scroll, context.getTheme());
+
+        final ColorStateList colors = mInputText.getTextColors();
+        final int[] enabledStateSet = mDelegator.getEnableStateSet();
+        final int colorForState = colors.getColorForState(enabledStateSet, Color.WHITE);
+
+
+        if (Build.VERSION.SDK_INT > 29) {
+            mTextColorIdle = colorForState;
+            selectedPickerColor = ResourcesCompat
+                    .getColor(resources, R.color.sesl_number_picker_text_highlight_color, context.getTheme());
+        } else {
+            mTextColorIdle = ResourcesCompat
+                    .getColor(resources, R.color.sesl_number_picker_text_color_scroll, context.getTheme());
+            selectedPickerColor = (mTextColorScrolling & 0xffffff) | 0x33000000;
+        }
         mTextColor = mTextColorIdle;
-        final int selectedPickerColor = ResourcesCompat.getColor(resources,
-                R.color.sesl_number_picker_text_highlight_color, context.getTheme());
+
         mVirtualButtonFocusedDrawable = new ColorDrawable(selectedPickerColor);
 
         mInputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -454,6 +469,9 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
         mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_DONE);
         mInputText.setCursorVisible(false);
         mInputText.setHighlightColor(selectedPickerColor);
+        if (Build.VERSION.SDK_INT <= 29) {
+            mInputText.setTextColor(mTextColorScrolling);
+        }
         SeslViewReflector.semSetHoverPopupType(mInputText,
                 SeslHoverPopupWindowReflector.getField_TYPE_NONE());
 
@@ -2615,7 +2633,7 @@ public class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberP
             final int mScrollY = mDelegator.getScrollY();
 
             if (mLastFocusedChildVirtualViewId != View.NO_ID
-                    && mLastHoveredChildVirtualViewId != Integer.MIN_VALUE) {
+                    || mLastHoveredChildVirtualViewId != Integer.MIN_VALUE) {
                 switch (virtualViewId) {
                     case View.NO_ID:
                         return createAccessibilityNodeInfoForNumberPicker(

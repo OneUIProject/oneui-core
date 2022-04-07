@@ -183,9 +183,9 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
                     if ((oldVal == HOURS_IN_HALF_DAY - 1 && newVal == newValueNeedAmPmChange)
                             || (oldVal == newValueNeedAmPmChange && newVal == HOURS_IN_HALF_DAY - 1)) {
                         mIsAm = mAmPmSpinner.getValue() != 0;
+                        mAmPmSpinner.setEnabled(false);
                         mAmPmSpinner.performClick(false);
                         mIsAmPmAutoFlipped = true;
-                        mAmPmSpinner.setEnabled(false);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -412,9 +412,8 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
         final String themeTypeFace = Settings.System.getString(mContext.getContentResolver(), "theme_font_clock");
         if (themeTypeFace != null && !themeTypeFace.equals("")) {
             mDivider.setTypeface(getFontTypeface(themeTypeFace));
-        } else {
-            mDivider.setTypeface(legacyTypeface);
         }
+        mDivider.setTypeface(legacyTypeface);
     }
 
     private static String getHourMinSeparatorFromPattern(String dateTimePattern) {

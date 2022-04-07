@@ -106,7 +106,7 @@ public class SeslNumberPicker extends LinearLayout {
     }
 
     @RestrictTo(LIBRARY)
-    public interface OnScrollListener {
+    interface OnScrollListener {
         public static final int SCROLL_STATE_IDLE = 0;
         public static final int SCROLL_STATE_TOUCH_SCROLL = 1;
         public static final int SCROLL_STATE_FLING = 2;
@@ -222,8 +222,10 @@ public class SeslNumberPicker extends LinearLayout {
 
     @Override
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
-        return mDelegate.dispatchKeyEventPreIme(event)
-                || super.dispatchKeyEventPreIme(event);
+        if (mDelegate.dispatchKeyEventPreIme(event)) {
+            return true;
+        }
+        return super.dispatchKeyEventPreIme(event);
     }
 
     @Override
@@ -250,8 +252,10 @@ public class SeslNumberPicker extends LinearLayout {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        return mDelegate.onGenericMotionEvent(event)
-                || super.onGenericMotionEvent(event);
+        if (mDelegate.onGenericMotionEvent(event)) {
+            return true;
+        }
+        return super.onGenericMotionEvent(event);
     }
 
     @Override
@@ -268,8 +272,10 @@ public class SeslNumberPicker extends LinearLayout {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return mDelegate.dispatchKeyEvent(event)
-                || super.dispatchKeyEvent(event);
+        if (mDelegate.dispatchKeyEvent(event)) {
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -280,8 +286,10 @@ public class SeslNumberPicker extends LinearLayout {
 
     @Override
     protected boolean dispatchHoverEvent(MotionEvent event) {
-        return mDelegate.isEditTextModeNotAmPm()
-                ? super.dispatchHoverEvent(event) : mDelegate.dispatchHoverEvent(event);
+        if (mDelegate.isEditTextModeNotAmPm()) {
+            return super.dispatchHoverEvent(event);
+        }
+        return mDelegate.dispatchHoverEvent(event);
     }
 
     public void setSkipValuesOnLongPressEnabled(boolean enabled) {
@@ -471,8 +479,10 @@ public class SeslNumberPicker extends LinearLayout {
 
     @Override
     public AccessibilityNodeProvider getAccessibilityNodeProvider() {
-        return mDelegate.isEditTextModeNotAmPm()
-                ? super.getAccessibilityNodeProvider() : mDelegate.getAccessibilityNodeProvider();
+        if (mDelegate.isEditTextModeNotAmPm()) {
+            return super.getAccessibilityNodeProvider();
+        }
+        return mDelegate.getAccessibilityNodeProvider();
     }
 
     @RestrictTo(LIBRARY)

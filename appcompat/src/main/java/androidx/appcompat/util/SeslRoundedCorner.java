@@ -161,17 +161,18 @@ public class SeslRoundedCorner {
         mRoundRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, RADIUS, mRes.getDisplayMetrics());
 
         final boolean isDarkTheme = !SeslMisc.isLightTheme(mContext);
+        final Resources.Theme theme = mContext.getTheme();
 
         if (mIsMutate) {
-            mTopLeftRound = mRes.getDrawable(R.drawable.sesl_top_left_round, mContext.getTheme()).mutate();
-            mTopRightRound = mRes.getDrawable(R.drawable.sesl_top_right_round, mContext.getTheme()).mutate();
-            mBottomLeftRound = mRes.getDrawable(R.drawable.sesl_bottom_left_round, mContext.getTheme()).mutate();
-            mBottomRightRound = mRes.getDrawable(R.drawable.sesl_bottom_right_round, mContext.getTheme()).mutate();
+            mTopLeftRound = mRes.getDrawable(R.drawable.sesl_top_left_round, theme).mutate();
+            mTopRightRound = mRes.getDrawable(R.drawable.sesl_top_right_round, theme).mutate();
+            mBottomLeftRound = mRes.getDrawable(R.drawable.sesl_bottom_left_round, theme).mutate();
+            mBottomRightRound = mRes.getDrawable(R.drawable.sesl_bottom_right_round, theme).mutate();
         } else {
-            mTopLeftRound = mRes.getDrawable(R.drawable.sesl_top_left_round, mContext.getTheme());
-            mTopRightRound = mRes.getDrawable(R.drawable.sesl_top_right_round, mContext.getTheme());
-            mBottomLeftRound = mRes.getDrawable(R.drawable.sesl_bottom_left_round, mContext.getTheme());
-            mBottomRightRound = mRes.getDrawable(R.drawable.sesl_bottom_right_round, mContext.getTheme());
+            mTopLeftRound = mRes.getDrawable(R.drawable.sesl_top_left_round, theme);
+            mTopRightRound = mRes.getDrawable(R.drawable.sesl_top_right_round, theme);
+            mBottomLeftRound = mRes.getDrawable(R.drawable.sesl_bottom_left_round, theme);
+            mBottomRightRound = mRes.getDrawable(R.drawable.sesl_bottom_right_round, theme);
         }
 
         if (isDarkTheme) {

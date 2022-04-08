@@ -1548,7 +1548,7 @@ public class SwitchCompat extends CompoundButton {
     }
 
     public void seslSetThumbStrokeColor(@ColorInt int color) {
-        DrawableContainer.DrawableContainerState containerState = (DrawableContainer.DrawableContainerState) mTrackDrawable.getConstantState();
+        DrawableContainer.DrawableContainerState containerState = (DrawableContainer.DrawableContainerState) mThumbDrawable.getConstantState();
         LayerDrawable switchDrawable = (LayerDrawable) containerState.getChildren()[2];
         GradientDrawable thumbDrawable = (GradientDrawable) switchDrawable.findDrawableByLayerId(R.id.sesl_switch_thumb_on);
         thumbDrawable.setStroke(4, color);

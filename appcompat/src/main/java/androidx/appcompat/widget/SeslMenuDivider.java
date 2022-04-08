@@ -62,7 +62,7 @@ public class SeslMenuDivider extends ImageView {
 
         mPaint = new Paint();
         mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(ResourcesCompat.getColor(getResources(), SeslMisc.isLightTheme(context) ?
+        mPaint.setColor(ResourcesCompat.getColor(context.getResources(), SeslMisc.isLightTheme(context) ?
                 R.color.sesl_popup_menu_divider_color_light : R.color.sesl_popup_menu_divider_color_dark, null));
     }
 

@@ -114,7 +114,7 @@ public class SeslCheckedTextView extends TextView implements Checkable {
             mHasCheckMarkTint = true;
         }
 
-        mCheckMarkGravity = a.getInt(R.styleable.CheckedTextView_checkMarkGravity, Gravity.END);
+        mCheckMarkGravity = a.getInt(R.styleable.CheckedTextView_checkMarkGravity, Gravity.START);
 
         final boolean checked = a.getBoolean(R.styleable.CheckedTextView_android_checked, false);
         setChecked(checked);
@@ -426,8 +426,9 @@ public class SeslCheckedTextView extends TextView implements Checkable {
                 right = width - mBasePadding;
                 left = right - mCheckMarkWidth;
             }
+            final int scrollX = getScrollX();
             if (ViewUtils.isLayoutRtl(this)) {
-                checkMarkDrawable.setBounds(getScrollX() + left, top, getScrollX() + right, bottom);
+                checkMarkDrawable.setBounds(scrollX + left, top, scrollX + right, bottom);
             } else {
                 checkMarkDrawable.setBounds(left, top, right, bottom);
             }
@@ -435,7 +436,7 @@ public class SeslCheckedTextView extends TextView implements Checkable {
 
             final Drawable background = getBackground();
             if (background != null) {
-                DrawableCompat.setHotspotBounds(background, getScrollX() + left, top, getScrollX() + right, bottom);
+                DrawableCompat.setHotspotBounds(background, scrollX + left, top, scrollX + right, bottom);
             }
         }
     }

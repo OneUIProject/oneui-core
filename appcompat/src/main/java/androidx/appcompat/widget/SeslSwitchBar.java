@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -106,13 +107,19 @@ public class SeslSwitchBar extends LinearLayout implements CompoundButton.OnChec
 
         LayoutInflater.from(context).inflate(R.layout.sesl_switchbar, this);
 
+        final Resources res = getResources();
+
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeslSwitchBar, defStyleAttr, defStyleRes);
-        final int switchBarMarginStart = (int) getResources().getDimension(R.dimen.sesl_switchbar_margin_start);
-        final int switchBarMarginEnd = (int) getResources().getDimension(R.dimen.sesl_switchbar_margin_end);
-        mBackgroundColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarBackgroundColor, getResources().getColor(R.color.sesl_switchbar_off_background_color_light));
-        mBackgroundActivatedColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarBackgroundActivatedColor, getResources().getColor(R.color.sesl_switchbar_on_background_color_light));
-        mOnTextColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarTextActivatedColor, getResources().getColor(R.color.sesl_switchbar_on_text_color_light));
-        mOffTextColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarTextColor, getResources().getColor(R.color.sesl_switchbar_on_text_color_light));
+        final int switchBarMarginStart = (int) res.getDimension(R.dimen.sesl_switchbar_margin_start);
+        final int switchBarMarginEnd = (int) res.getDimension(R.dimen.sesl_switchbar_margin_end);
+        mBackgroundColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarBackgroundColor,
+                res.getColor(R.color.sesl_switchbar_off_background_color_light));
+        mBackgroundActivatedColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarBackgroundActivatedColor,
+                res.getColor(R.color.sesl_switchbar_on_background_color_light));
+        mOnTextColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarTextActivatedColor,
+                res.getColor(R.color.sesl_switchbar_on_text_color_light));
+        mOffTextColor = a.getColor(R.styleable.SeslSwitchBar_seslSwitchBarTextColor,
+                res.getColor(R.color.sesl_switchbar_on_text_color_light));
         a.recycle();
 
         mProgressBar = findViewById(R.id.sesl_switchbar_progress);
@@ -409,14 +416,15 @@ public class SeslSwitchBar extends LinearLayout implements CompoundButton.OnChec
     }
 
     public void updateHorizontalMargins() {
+        final Resources res = getResources();
         if (mTextView != null) {
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mTextView.getLayoutParams();
-            lp.setMarginStart((int) getResources().getDimension(R.dimen.sesl_switchbar_margin_start));
+            lp.setMarginStart((int) res.getDimension(R.dimen.sesl_switchbar_margin_start));
             mTextView.setLayoutParams(lp);
         }
         if (mSwitch != null) {
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mSwitch.getLayoutParams();
-            lp.setMarginEnd((int) getResources().getDimension(R.dimen.sesl_switchbar_margin_end));
+            lp.setMarginEnd((int) res.getDimension(R.dimen.sesl_switchbar_margin_end));
             mSwitch.setLayoutParams(lp);
         }
     }

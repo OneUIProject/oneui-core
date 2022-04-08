@@ -625,7 +625,8 @@ class AlertController {
             final int checkedItem = mCheckedItem;
             if (checkedItem > -1) {
                 listView.setItemChecked(checkedItem, true);
-                listView.setSelection(checkedItem);
+                listView.setSelectionFromTop(checkedItem,
+                        mContext.getResources().getDimensionPixelSize(R.dimen.sesl_select_dialog_padding_top));
             }
         }
     }

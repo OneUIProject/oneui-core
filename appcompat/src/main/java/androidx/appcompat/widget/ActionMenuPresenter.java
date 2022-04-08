@@ -329,7 +329,8 @@ class ActionMenuPresenter extends BaseMenuPresenter
             mOverflowButton.setBadgeText(((ActionMenuView) mMenuView).getOverflowBadgeText(),
                     ((ActionMenuView) mMenuView).getSumOfDigitsInBadges());
         }
-        if ((mOverflowButton == null || mOverflowButton.getVisibility() != View.GONE) && isOverflowMenuShowing()) {
+        if ((mOverflowButton == null || mOverflowButton.getVisibility() != View.VISIBLE)
+                && isOverflowMenuShowing()) {
             hideOverflowMenu();
         }
         if (mMenuView != null) {

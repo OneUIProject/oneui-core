@@ -59,17 +59,19 @@ public class SeslDropDownItemTextView extends SeslCheckedTextView {
 
         setTypeface(Typeface.create("sec-roboto-light", checked ? Typeface.BOLD : Typeface.NORMAL));
 
-        Context context = getContext();
-        if (checked && context != null && getCurrentTextColor() == Color.MAGENTA) {
-            Log.w(TAG, "text color reload!");
+        if (checked) {
+            Context context = getContext();
+            if (context != null && getCurrentTextColor() == Color.MAGENTA) {
+                Log.w(TAG, "text color reload!");
 
-            ColorStateList textColor = ResourcesCompat.getColorStateList(context.getResources(),
-                    SeslMisc.isLightTheme(context) ? R.color.sesl_spinner_dropdown_text_color_light : R.color.sesl_spinner_dropdown_text_color_dark,
-                    context.getTheme());
-            if (textColor != null) {
-                setTextColor(textColor);
-            } else {
-                Log.w(TAG, "Didn't set SeslDropDownItemTextView text color!!");
+                ColorStateList textColor = ResourcesCompat.getColorStateList(context.getResources(),
+                        SeslMisc.isLightTheme(context) ? R.color.sesl_spinner_dropdown_text_color_light : R.color.sesl_spinner_dropdown_text_color_dark,
+                        context.getTheme());
+                if (textColor != null) {
+                    setTextColor(textColor);
+                } else {
+                    Log.w(TAG, "Didn't set SeslDropDownItemTextView text color!!");
+                }
             }
         }
     }

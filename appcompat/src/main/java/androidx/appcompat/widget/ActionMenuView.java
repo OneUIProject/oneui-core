@@ -123,10 +123,10 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
         if (mIsOneUI41) {
             mActionButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
             mActionButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
-            mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
             mOverflowButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_side_padding);
             mOverflowButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_padding_end);
         }
+        mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
     }
 
     /**
@@ -194,10 +194,10 @@ public class ActionMenuView extends LinearLayoutCompat implements MenuBuilder.It
         if (mIsOneUI41) {
             mActionButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
             mActionButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_button_side_padding);
-            mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
             mOverflowButtonPaddingStart = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_side_padding);
             mOverflowButtonPaddingEnd = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_overflow_padding_end);
         }
+        mLastItemEndPadding = getResources().getDimensionPixelSize(R.dimen.sesl_action_bar_last_padding);
     }
 
     public void setOnMenuItemClickListener(OnMenuItemClickListener listener) {

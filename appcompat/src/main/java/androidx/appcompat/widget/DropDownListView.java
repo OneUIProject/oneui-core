@@ -431,13 +431,6 @@ class DropDownListView extends ListView {
 
     @Override
     public boolean onHoverEvent(@NonNull MotionEvent ev) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            // For SDK_INT prior to O the code below fails to change the selection.
-            // This is because prior to O mouse events used to enable touch mode, and
-            //  View.setSelectionFromTop does not do the right thing in touch mode.
-            return super.onHoverEvent(ev);
-        }
-
         final int action = ev.getActionMasked();
         if (action == MotionEvent.ACTION_HOVER_EXIT && mResolveHoverRunnable == null) {
             // This may be transitioning to TOUCH_DOWN. Postpone drawable state

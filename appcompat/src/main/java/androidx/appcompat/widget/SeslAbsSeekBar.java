@@ -23,6 +23,7 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -190,6 +191,8 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
                     defStyleRes);
         }
 
+        final Resources res = context.getResources();
+
         final Drawable thumb = a.getDrawable(R.styleable.AppCompatSeekBar_android_thumb);
         setThumb(thumb);
 
@@ -221,11 +224,11 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         mSplitTrack = a.getBoolean(R.styleable.AppCompatSeekBar_android_splitTrack, false);
 
         mTrackMinWidth = a.getDimensionPixelSize(R.styleable.AppCompatSeekBar_seslTrackMinWidth,
-                Math.round(getResources().getDimension(R.dimen.sesl_seekbar_track_height)));
+                Math.round(res.getDimension(R.dimen.sesl_seekbar_track_height)));
         mTrackMaxWidth = a.getDimensionPixelSize(R.styleable.AppCompatSeekBar_seslTrackMaxWidth,
-                Math.round(getResources().getDimension(R.dimen.sesl_seekbar_track_height_expand)));
+                Math.round(res.getDimension(R.dimen.sesl_seekbar_track_height_expand)));
         mThumbRadius = a.getDimensionPixelSize(R.styleable.AppCompatSeekBar_seslThumbRadius,
-                Math.round(getResources().getDimension(R.dimen.sesl_seekbar_thumb_radius)));
+                Math.round(res.getDimension(R.dimen.sesl_seekbar_thumb_radius)));
 
         // Guess thumb offset if thumb != null, but allow layout to override.
         final int thumbOffset = a.getDimensionPixelOffset(
@@ -254,12 +257,12 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         mIsLightTheme = SeslMisc.isLightTheme(context);
 
-        mDefaultNormalProgressColor = colorToColorStateList(context.getResources().getColor(R.color.sesl_seekbar_control_color_default));
-        mDefaultSecondaryProgressColor = colorToColorStateList(context.getResources().getColor(R.color.sesl_seekbar_control_color_secondary));
-        mDefaultActivatedProgressColor = colorToColorStateList(context.getResources().getColor(R.color.sesl_seekbar_control_color_activated));
-        mOverlapNormalProgressColor = colorToColorStateList(getResources().getColor(mIsLightTheme ?
+        mDefaultNormalProgressColor = colorToColorStateList(res.getColor(R.color.sesl_seekbar_control_color_default));
+        mDefaultSecondaryProgressColor = colorToColorStateList(res.getColor(R.color.sesl_seekbar_control_color_secondary));
+        mDefaultActivatedProgressColor = colorToColorStateList(res.getColor(R.color.sesl_seekbar_control_color_activated));
+        mOverlapNormalProgressColor = colorToColorStateList(res.getColor(mIsLightTheme ?
                 R.color.sesl_seekbar_overlap_color_default_light : R.color.sesl_seekbar_overlap_color_default_dark));
-        mOverlapActivatedProgressColor = colorToColorStateList(getResources().getColor(mIsLightTheme ?
+        mOverlapActivatedProgressColor = colorToColorStateList(res.getColor(mIsLightTheme ?
                 R.color.sesl_seekbar_overlap_color_activated_light : R.color.sesl_seekbar_overlap_color_activated_dark));
 
         mDefaultActivatedThumbColor = getThumbTintList();
@@ -267,13 +270,13 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             final int[][] states = {new int[]{android.R.attr.state_enabled},
                     new int[]{-android.R.attr.state_enabled}};
             final int[] colors = new int[2];
-            colors[0] = context.getResources().getColor(R.color.sesl_thumb_control_color_activated);
-            colors[1] = context.getResources().getColor(mIsLightTheme ?
+            colors[0] = res.getColor(R.color.sesl_thumb_control_color_activated);
+            colors[1] = res.getColor(mIsLightTheme ?
                     R.color.sesl_seekbar_disable_color_activated_light : R.color.sesl_seekbar_disable_color_activated_dark);
             mDefaultActivatedThumbColor = new ColorStateList(states, colors);
         }
 
-        mAllowedSeekBarAnimation = context.getResources().getBoolean(R.bool.sesl_seekbar_sliding_animation);
+        mAllowedSeekBarAnimation = res.getBoolean(R.bool.sesl_seekbar_sliding_animation);
         if (mAllowedSeekBarAnimation) {
             initMuteAnimation();
         }
@@ -1005,7 +1008,8 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             }
 
             final Rect bounds = mOverlapBackground.getBounds();
-            mOverlapBackground.copyBounds(mTempRect);
+            final Rect tempRect = mTempRect;
+            mOverlapBackground.copyBounds(tempRect);
 
             final int maxProgress;
             final int curProgress;
@@ -1017,13 +1021,13 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
                 maxProgress = getMax();
             }
             if (mCurrentMode == MODE_VERTICAL || mCurrentMode == MODE_EXPAND_VERTICAL) {
-                mTempRect.bottom = (int) (((float) bounds.bottom) - (((float) bounds.height())
+                tempRect.bottom = (int) (((float) bounds.bottom) - (((float) bounds.height())
                         * (((float) curProgress) / ((float) maxProgress))));
             } else {
-                mTempRect.left = (int) (((float) bounds.left) + (((float) bounds.width())
+                tempRect.left = (int) (((float) bounds.left) + (((float) bounds.width())
                         * (((float) curProgress) / ((float) maxProgress))));
             }
-            canvas.clipRect(mTempRect);
+            canvas.clipRect(tempRect);
             if (mDefaultNormalProgressColor.getDefaultColor() != mOverlapNormalProgressColor.getDefaultColor()) {
                 mOverlapBackground.draw(canvas);
             }
@@ -1047,7 +1051,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
                 final float spacing = (getWidth() - getPaddingLeft() - getPaddingRight()) / (float) count;
                 final int saveCount = canvas.save();
-                canvas.translate(getPaddingLeft(), getHeight() / 2);
+                canvas.translate(getPaddingLeft(), getHeight() / 2f);
                 for (int i = 0; i <= count; i++) {
                     mTickMark.draw(canvas);
                     canvas.translate(spacing, 0);
@@ -1563,8 +1567,9 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
             super.onProgressRefresh(scale, fromUser, progress);
 
-            if (mThumb != null) {
-                setThumbPos(getWidth(), mThumb, scale, Integer.MIN_VALUE);
+            Drawable thumb = mThumb;
+            if (thumb != null) {
+                setThumbPos(getWidth(), thumb, scale, Integer.MIN_VALUE);
                 invalidate();
             }
         } else {
@@ -1624,28 +1629,31 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
     }
 
     private void trackHoverEvent(int posX) {
-        float scale;
+        final float scale;
+        final int width = getWidth();
+        final int available = width - getPaddingLeft() - getPaddingRight();
         float hoverLevel = 0.0f;
         if (posX < getPaddingLeft()) {
             scale = 0.0f;
-        } else if (posX > getWidth() - getPaddingRight()) {
+        } else if (posX > width - getPaddingRight()) {
             scale = 1.0f;
         } else {
-            final int available = getWidth() - getPaddingLeft() - getPaddingRight();
             scale = (posX - getPaddingLeft()) / available;
             hoverLevel = mTouchProgressOffset;
         }
-        mHoveringLevel = (int) (hoverLevel + (getMax() * scale));
+        final int max = getMax();
+        mHoveringLevel = (int) (hoverLevel + (max * scale));
     }
 
     @Override
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     public boolean onHoverEvent(MotionEvent event) {
         if (supportIsHoveringUIEnabled()) {
+            final int action = event.getAction();
             final int x = (int) event.getX();
             final int y = (int) event.getY();
 
-            switch (event.getAction()) {
+            switch (action) {
                 case MotionEvent.ACTION_HOVER_ENTER:
                     trackHoverEvent(x);
                     onStartTrackingHover(mHoveringLevel, x, y);
@@ -1726,11 +1734,11 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
     private void initializeExpandMode() {
         SliderDrawable background =
-                new SliderDrawable(this, mTrackMinWidth, mTrackMaxWidth, mDefaultNormalProgressColor);
+                new SliderDrawable(mTrackMinWidth, mTrackMaxWidth, mDefaultNormalProgressColor);
         SliderDrawable secondaryProgress =
-                new SliderDrawable(this, mTrackMinWidth, mTrackMaxWidth, mDefaultSecondaryProgressColor);
+                new SliderDrawable(mTrackMinWidth, mTrackMaxWidth, mDefaultSecondaryProgressColor);
         SliderDrawable primaryProgress =
-                new SliderDrawable(this, mTrackMinWidth, mTrackMaxWidth, mDefaultActivatedProgressColor);
+                new SliderDrawable(mTrackMinWidth, mTrackMaxWidth, mDefaultActivatedProgressColor);
         Drawable thumbDrawable =
                 new DrawableWrapper(new ThumbDrawable(mThumbRadius, mDefaultActivatedThumbColor, false));
 
@@ -1855,7 +1863,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
     private void initDualOverlapDrawable() {
         if (mCurrentMode == MODE_EXPAND) {
-            mOverlapBackground = new SliderDrawable(this, mTrackMinWidth, mTrackMaxWidth, mOverlapNormalProgressColor);
+            mOverlapBackground = new SliderDrawable(mTrackMinWidth, mTrackMaxWidth, mOverlapNormalProgressColor);
         } else if (mCurrentMode == MODE_EXPAND_VERTICAL) {
             mOverlapBackground = new SliderDrawable(mTrackMinWidth, mTrackMaxWidth, mOverlapNormalProgressColor, true);
         } else if (getProgressDrawable() != null && getProgressDrawable().getConstantState() != null) {
@@ -1899,7 +1907,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
             ValueAnimator progressZeroAnimation = isGoingDirection ?
                     ValueAnimator.ofInt(0, distance) : ValueAnimator.ofInt(distance, 0);
-            progressZeroAnimation.setDuration(MUTE_VIB_DURATION / MUTE_VIB_TOTAL);
+            progressZeroAnimation.setDuration(62);
             progressZeroAnimation.setInterpolator(new LinearInterpolator());
             progressZeroAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -1938,8 +1946,9 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         super.onSlidingRefresh(level);
 
         final float scale = level / 10000.0f;
-        if (mThumb != null) {
-            setThumbPos(getWidth(), mThumb, scale, Integer.MIN_VALUE);
+        Drawable thumb = mThumb;
+        if (thumb != null) {
+            setThumbPos(getWidth(), thumb, scale, Integer.MIN_VALUE);
             invalidate();
         }
     }
@@ -2095,7 +2104,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
         private final float mSliderMinWidth;
         private float mRadius;
 
-        public SliderDrawable(SeslAbsSeekBar absSeekBar, float minWidth, float maxWidth, ColorStateList color) {
+        public SliderDrawable(float minWidth, float maxWidth, ColorStateList color) {
             this(minWidth, maxWidth, color, false);
         }
 
@@ -2191,17 +2200,18 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         @Override
         public int getOpacity() {
-            if (mPaint.getXfermode() != null) {
+            Paint p = mPaint;
+            if (p.getXfermode() != null) {
                 return PixelFormat.TRANSLUCENT;
             }
-            if (mPaint.getAlpha() == 0) {
+            final int alpha = p.getAlpha();
+            if (alpha == 0) {
                 return PixelFormat.TRANSPARENT;
             }
-            if (mPaint.getAlpha() == 255) {
+            if (alpha == 255) {
                 return PixelFormat.OPAQUE;
-            } else {
-                return PixelFormat.TRANSLUCENT;
             }
+            return PixelFormat.TRANSLUCENT;
         }
 
         @Override
@@ -2209,7 +2219,7 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
             super.setTintList(tint);
             if (tint != null) {
                 mColorStateList = tint;
-                mColor = tint.getColorForState(SeslAbsSeekBar.this.getDrawableState(), mColor);
+                mColor = mColorStateList.getDefaultColor();
                 mPaint.setColor(mColor);
                 invalidateSelf();
             }
@@ -2486,17 +2496,18 @@ public abstract class SeslAbsSeekBar extends SeslProgressBar {
 
         @Override
         public int getOpacity() {
-            if (mPaint.getXfermode() != null) {
+            Paint p = mPaint;
+            if (p.getXfermode() != null) {
                 return PixelFormat.TRANSLUCENT;
             }
-            if (mPaint.getAlpha() == 0) {
+            final int alpha = p.getAlpha();
+            if (alpha == 0) {
                 return PixelFormat.TRANSPARENT;
             }
-            if (mPaint.getAlpha() == 255) {
+            if (alpha == 255) {
                 return PixelFormat.OPAQUE;
-            } else {
-                return PixelFormat.TRANSLUCENT;
             }
+            return PixelFormat.TRANSLUCENT;
         }
     }
 

@@ -144,7 +144,8 @@ class TwilightManager {
     }
 
     private boolean isStateValid() {
-        return mTwilightState.nextUpdate > System.currentTimeMillis();
+        return mTwilightState != null &&
+                mTwilightState.nextUpdate > System.currentTimeMillis();
     }
 
     private void updateState(@NonNull Location location) {

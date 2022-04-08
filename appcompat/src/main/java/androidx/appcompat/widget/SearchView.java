@@ -406,7 +406,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         mSearchSrcTextView.setTypeface(mBoldTypeface);
 
         if (mIsLightTheme) {
-            if (mSearchSrcTextView.getBackground() == null) {
+            if (mSearchPlate.getBackground() == null) {
                 mSearchSrcTextView.setTextColor(resources.getColor(R.color.sesl_search_view_text_color));
                 mSearchSrcTextView.setHintTextColor(resources.getColor(R.color.sesl_search_view_hint_text_color));
 
@@ -432,7 +432,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
                 mSearchButton.setColorFilter(resources.getColor(R.color.sesl_search_view_background_icon_color_light));
             }
         } else {
-            if (mSearchSrcTextView.getBackground() == null) {
+            if (mSearchPlate.getBackground() == null) {
                 mSearchSrcTextView.setTextColor(resources.getColor(R.color.sesl_search_view_text_color_dark));
                 mSearchSrcTextView.setHintTextColor(resources.getColor(R.color.sesl_search_view_hint_text_color_dark));
 
@@ -1107,11 +1107,12 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     View.OnKeyListener mTextKeyListener = new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (mContext.getPackageManager().hasSystemFeature("com.sec.feature.folder_type")
-                    && imm != null && keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-                imm.viewClicked(v);
-                imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+            if (mContext.getPackageManager().hasSystemFeature("com.sec.feature.folder_type")) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null && keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    imm.viewClicked(v);
+                    imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+                }
             }
 
             // guard against possible race conditions
@@ -1134,7 +1135,8 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             // If there is text in the query box, handle enter, and action keys
             // The search key is handled by the dialog's onKeyDown().
             if (!mSearchSrcTextView.isEmpty() && event.hasNoModifiers()) {
-                if (event.getAction() == KeyEvent.ACTION_UP) {
+                if (event.getAction() == KeyEvent.ACTION_UP
+                        || event.getAction() == KeyEvent.KEYCODE_NUMPAD_ENTER) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER) {
                         v.cancelLongPress();
 
@@ -1189,7 +1191,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             }
 
             // Next, check for an "up and out" move
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP && 0 == mSearchSrcTextView.getListSelection()) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP && mSearchSrcTextView.getListSelection() == 0) {
                 // TODO: restoreUserQuery();
                 // let ACTV complete the move
                 return false;

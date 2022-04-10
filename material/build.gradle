@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
 }
 
 def srcDirs = [
@@ -54,22 +55,26 @@ def srcDirs = [
 ]
 
 android {
-    compileSdk 31
+    compileSdk target_sdk
 
     defaultConfig {
         minSdk 23
-        targetSdk 31
+        targetSdk target_sdk
         versionCode 1
-        versionName '1.0.0'
+        versionName sesl_material_version
     }
 
     sourceSets {
         main.manifest.srcFile 'java/com/google/android/material/AndroidManifest.xml'
+
+        main.resources.srcDir "$buildDir/javaResources"
+
         main.java.srcDir 'java'
         main.java.includes = srcDirs.collect { it + '/**/*.java' }
         main.java.excludes = [
             '**/build/**',
         ]
+
         srcDirs.forEach {
             main.res.srcDirs += 'java/' + it + '/res'
             main.res.srcDirs += 'java/' + it + '/res-public'
@@ -79,21 +84,38 @@ android {
     buildTypes.all {
         consumerProguardFiles 'proguard-behaviors.pro', 'proguard-inflater.pro'
     }
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
-    api 'androidx.annotation:annotation:1.3.0'
+    api("androidx.annotation:annotation:$androidx_annotation_version")
     api project(path: ':appcompat')
-    api 'androidx.cardview:cardview:1.0.0'
+    api("androidx.cardview:cardview:$androidx_cardview_version")
     api project(path: ':coordinatorlayout')
-    api 'androidx.constraintlayout:constraintlayout:2.0.1'
+    api("androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version")
     api project(path: ':core')
-    api 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    api 'androidx.annotation:annotation-experimental:1.0.0'
+    api("androidx.dynamicanimation:dynamicanimation:$androidx_dynamicanimation_version")
+    api("androidx.annotation:annotation-experimental:$androidx_annotation_experimental_version")
     api project(path: ':fragment')
-    api 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+    api("androidx.lifecycle:lifecycle-runtime:$androidx_lifecycle_version")
     api project(path: ':recyclerview')
-    api 'androidx.transition:transition:1.2.0'
-    api 'androidx.vectordrawable:vectordrawable:1.1.0'
-    api 'androidx.viewpager2:viewpager2:1.0.0'
+    api("androidx.transition:transition:$androidx_transition_version")
+    api("androidx.vectordrawable:vectordrawable:$androidx_vectordrawable_version")
+    api project(path: ':viewpager2')
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "com.google.android.material_material.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.34-sesl4" + "\n"
+}
+
+ext {
+    POM_NAME = "Sesl Material Components"
+    POM_DESCRIPTION = "Sesl Material Components Library."
 }

@@ -25,7 +25,7 @@
   <dimen name="design_fab_size_mini">40dp</dimen>
   <dimen name="design_fab_border_width">0.5dp</dimen>
 
-  <dimen name="mtrl_fab_elevation">6dp</dimen>
+  <dimen name="mtrl_fab_elevation">12dp</dimen>
   <dimen name="mtrl_fab_translation_z_hovered_focused">2dp</dimen>
   <dimen name="mtrl_fab_translation_z_pressed">6dp</dimen>
   <dimen name="mtrl_fab_min_touch_target">48dp</dimen>

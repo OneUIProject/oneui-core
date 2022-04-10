@@ -41,9 +41,9 @@
     <item name="tabIndicatorGravity">bottom</item>
     <item name="tabIndicatorAnimationMode">linear</item>
     <item name="tabIndicator">@drawable/sesl_tabs_default_indicator</item>
-    <item name="tabPaddingStart">0dp</item>
+    <item name="tabPaddingStart">10dp</item>
     <item name="tabPaddingTop">0dp</item>
-    <item name="tabPaddingEnd">0dp</item>
+    <item name="tabPaddingEnd">10dp</item>
     <item name="tabPaddingBottom">0dp</item>
     <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
     <item name="seslTabSubTextAppearance">@style/TextAppearance.Design.Tab.SubText</item>

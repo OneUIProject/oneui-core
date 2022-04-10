@@ -48,7 +48,6 @@
       android:id="@+id/snackbar_action"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:minHeight="44dp"
       android:paddingLeft="@dimen/sesl_design_snackbar_action_padding_left"
       android:paddingRight="@dimen/sesl_design_snackbar_action_padding_right"
       android:layout_gravity="end|center"

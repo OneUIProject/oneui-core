@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2018 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
   <attr name="navigationViewStyle" format="reference"/>
 
@@ -64,6 +65,13 @@
     <attr name="itemTextColor"/>
     <!-- The elevation to use for the navigation bar view -->
     <attr name="elevation"/>
+
+    <attr name="seslLabelTextAppearance" format="reference" />
+    <attr name="seslViewType">
+      <enum name="IconLabel" value="1" />
+      <enum name="IconOnly" value="2" />
+      <enum name="labelOnly" value="3" />
+    </attr>
   </declare-styleable>
 
   <declare-styleable name="NavigationView">

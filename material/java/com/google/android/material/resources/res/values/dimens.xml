@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 The Android Open Source Project
+  ~ Copyright (C) 2022 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
   <dimen name="mtrl_min_touch_target_size">48dp</dimen>
 
@@ -28,5 +29,9 @@
   <item name="mtrl_high_ripple_focused_alpha" format="float" type="dimen">0.24</item>
   <item name="mtrl_high_ripple_hovered_alpha" format="float" type="dimen">0.08</item>
   <item name="mtrl_high_ripple_default_alpha" format="float" type="dimen">0.00</item>
+
+  <dimen name="action_bar_size">16.0dip</dimen>
+
+  <dimen name="mtrl_large_touch_target">100.0dip</dimen>
 
 </resources>

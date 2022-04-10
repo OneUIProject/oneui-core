@@ -17,9 +17,6 @@
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
-    <color name="sesl_badge_background_color">#ffef5e16</color>
-    <color name="sesl_badge_text_color">@color/sesl_white</color>
-
     <color name="sesl_tablayout_main_tab_indicator_color">#ff252525</color>
     <color name="sesl_tablayout_main_tab_indicator_color_dark">#fffafafa</color>
 

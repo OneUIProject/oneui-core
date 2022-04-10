@@ -19,7 +19,7 @@
 
     <item
         android:state_enabled="false"
-        android:alpha="@dimen/sesl_bottom_navigation_disabled_color_alpha"
+        android:alpha="@dimen/sesl_navigation_bar_disabled_color_alpha"
         android:color="@color/sesl_navigation_bar_text_light" />
 
     <item

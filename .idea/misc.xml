@@ -13,6 +13,12 @@
         <entry key="appcompat/src/main/res/drawable/sesl_menu_popup_background_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_noti_badge.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_large.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_large_transition.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_medium_transition.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_xsmall_transition.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_circle.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_progress_dialog_circle_background_shape_dark.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress_horizontal.xml" value="0.208" />
         <entry key="appcompat/src/main/res/drawable/sesl_scrubber_progress_expand.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_scrubber_progress_horizontal.xml" value="0.212" />
@@ -24,6 +30,7 @@
         <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_am_alpha_light.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_spinner_background_light.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_switch_track_on.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_toast_frame.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_top_left_round.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_vector_drawable_progress.xml" value="0.208" />
@@ -31,6 +38,21 @@
         <entry key="appcompat/src/main/res/layout/sesl_list_menu_item_badge.xml" value="0.1721014492753623" />
         <entry key="appcompat/src/main/res/layout/sesl_popup_menu_item_layout.xml" value="0.67" />
         <entry key="appcompat/src/main/res/layout/sesl_search_view.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/drawable/sesl_custom_toast_background.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_background.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_header_background.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_next.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_custom_toast_layout.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker_dialog.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker_spinner.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_number_picker_spinner.xml" value="0.31927083333333334" />
+        <entry key="recyclerview/res/drawable-anydpi/sesl_fastscroll_thumb_alpha.xml" value="0.193" />
+        <entry key="recyclerview/res/drawable/sesl_fastscroll_label_left.xml" value="0.193" />
+        <entry key="recyclerview/res/drawable/sesl_fastscroll_label_right.xml" value="0.193" />
+        <entry key="recyclerview/res/drawable/sesl_fastscroll_thumb.xml" value="0.193" />
+        <entry key="recyclerview/res/drawable/sesl_fastscroll_track.xml" value="0.193" />
+        <entry key="recyclerview/res/drawable/sesl_go_to_top_background_dark.xml" value="0.193" />
         <entry key="slidingpanelayout/src/main/res/layout/sesl_spl_action_mode_view_stub.xml" value="0.31927083333333334" />
         <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_animated.xml" value="0.212" />
         <entry key="swiperefreshlayout/src/main/res/drawable/sesl_swipe_refresh_dot.xml" value="0.212" />

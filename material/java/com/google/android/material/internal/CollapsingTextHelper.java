@@ -281,12 +281,6 @@ public final class CollapsingTextHelper {
     return -tmpPaint.ascent();
   }
 
-  public float getExpandedTextFullHeight() {
-    getTextPaintExpanded(tmpPaint);
-    // Return expanded height measured from the baseline.
-    return -tmpPaint.ascent() + tmpPaint.descent();
-  }
-
   public float getCollapsedTextHeight() {
     getTextPaintCollapsed(tmpPaint);
     // Return collapsed height measured from the baseline.
@@ -650,11 +644,11 @@ public final class CollapsingTextHelper {
     return colorStateList.getDefaultColor();
   }
 
-  private void calculateBaseOffsets(boolean forceRecalculate) {
+  private void calculateBaseOffsets() {
     final float currentTextSize = this.currentTextSize;
 
     // We then calculate the collapsed text size, using the same logic
-    calculateUsingTextSize(collapsedTextSize, forceRecalculate);
+    calculateUsingTextSize(collapsedTextSize);
     if (textToDraw != null && textLayout != null) {
       textToDrawCollapsed =
           TextUtils.ellipsize(textToDraw, textPaint, textLayout.getWidth(), TruncateAt.END);
@@ -695,7 +689,7 @@ public final class CollapsingTextHelper {
         break;
     }
 
-    calculateUsingTextSize(expandedTextSize, forceRecalculate);
+    calculateUsingTextSize(expandedTextSize);
     float expandedTextHeight = textLayout != null ? textLayout.getHeight() : 0;
 
     float measuredWidth = textToDraw != null
@@ -773,8 +767,8 @@ public final class CollapsingTextHelper {
     final int saveCount = canvas.save();
     // Compute where to draw textLayout for this frame
     if (textToDraw != null && drawTitle) {
-      float firstLineX = maxLines > 1 ? textLayout.getLineStart(0) : textLayout.getLineLeft(0);
-      final float currentExpandedX = currentDrawX + firstLineX - expandedFirstLineDrawX * 2;
+      final float currentExpandedX =
+          currentDrawX + textLayout.getLineLeft(0) - expandedFirstLineDrawX * 2;
 
       textPaint.setTextSize(currentTextSize);
       float x = currentDrawX;
@@ -886,12 +880,8 @@ public final class CollapsingTextHelper {
     ViewCompat.postInvalidateOnAnimation(view);
   }
 
-  private void calculateUsingTextSize(final float textSize) {
-    calculateUsingTextSize(textSize, /* forceRecalculate= */ false);
-  }
-
   @SuppressWarnings("ReferenceEquality") // Matches the Typeface comparison in TextView
-  private void calculateUsingTextSize(final float textSize, boolean forceRecalculate) {
+  private void calculateUsingTextSize(final float textSize) {
     if (text == null) {
       return;
     }
@@ -930,20 +920,14 @@ public final class CollapsingTextHelper {
       // collapsed text size
       float scaledDownWidth = expandedWidth * textSizeRatio;
 
-      if (forceRecalculate) {
-        // If we're forcing a recalculate during a measure pass, use the expanded width since the
-        // collapsed width might not be ready yet
-        availableWidth = expandedWidth;
-      } else {
-        // If the scaled down size is larger than the actual collapsed width, we need to
-        // cap the available width so that when the expanded text scales down, it matches
-        // the collapsed width
-        // Otherwise we'll just use the expanded width
+      // If the scaled down size is larger than the actual collapsed width, we need to
+      // cap the available width so that when the expanded text scales down, it matches
+      // the collapsed width
+      // Otherwise we'll just use the expanded width
 
-        availableWidth = scaledDownWidth > collapsedWidth
-            ? min(collapsedWidth / textSizeRatio, expandedWidth)
-            : expandedWidth;
-      }
+      availableWidth = scaledDownWidth > collapsedWidth
+          ? min(collapsedWidth / textSizeRatio, expandedWidth)
+          : expandedWidth;
     }
 
     if (availableWidth > 0) {
@@ -1008,14 +992,10 @@ public final class CollapsingTextHelper {
   }
 
   public void recalculate() {
-    recalculate(/* forceRecalculate= */ false);
-  }
-
-  public void recalculate(boolean forceRecalculate) {
-    if ((view.getHeight() > 0 && view.getWidth() > 0) || forceRecalculate) {
+    if (view.getHeight() > 0 && view.getWidth() > 0) {
       // If we've already been laid out, calculate everything now otherwise we'll wait
       // until a layout
-      calculateBaseOffsets(forceRecalculate);
+      calculateBaseOffsets();
       calculateCurrentOffsets();
     }
   }

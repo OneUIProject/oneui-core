@@ -1023,14 +1023,19 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
         switch (picker) {
             case SeslTimePicker.PICKER_HOUR:
                 mHourSpinner.setTextSize(size);
+                break;
             case SeslTimePicker.PICKER_MINUTE:
                 mMinuteSpinner.setTextSize(size);
+                break;
             case SeslTimePicker.PICKER_AMPM:
                 mAmPmSpinner.setTextSize(size);
+                break;
             case SeslTimePicker.PICKER_DIVIDER:
                 mDivider.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
+                break;
             default:
                 mMinuteSpinner.setTextSize(size);
+                break;
         }
     }
 
@@ -1039,14 +1044,19 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
         switch (picker) {
             case SeslTimePicker.PICKER_HOUR:
                 mHourSpinner.setTextTypeface(typeface);
+                break;
             case SeslTimePicker.PICKER_MINUTE:
                 mMinuteSpinner.setTextTypeface(typeface);
+                break;
             case SeslTimePicker.PICKER_AMPM:
                 mAmPmSpinner.setTextTypeface(typeface);
+                break;
             case SeslTimePicker.PICKER_DIVIDER:
                 mDivider.setTypeface(typeface);
+                break;
             default:
                 mMinuteSpinner.setTextTypeface(typeface);
+                break;
         }
     }
 

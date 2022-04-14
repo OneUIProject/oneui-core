@@ -15612,10 +15612,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     class IndexTip extends View {
-        private final PathInterpolator ALPHA_INTERPOLATOR = new PathInterpolator(
-                0.0f, 0.0f, 1.0f, 1.0f);
-        private final PathInterpolator SCALE_INTERPOLATOR = new PathInterpolator(
-                0.22f, 0.25f, 0.0f, 1.0f);
+        @SuppressLint("NewApi")
+        private final PathInterpolator ALPHA_INTERPOLATOR =
+                new PathInterpolator(0.0f, 0.0f, 1.0f, 1.0f);
+        @SuppressLint("NewApi")
+        private final PathInterpolator SCALE_INTERPOLATOR =
+                new PathInterpolator(0.22f, 0.25f, 0.0f, 1.0f);
 
         private static final int ALPHA_DURATION = 150;
         private static final int FADE_DURATION = 300;
@@ -15625,42 +15627,35 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
         private static final float SHAPE_COLOR_ALPHA_RATIO = 0.9f;
 
-        private float mAnimatingWidth;
-        private int mCenterX;
-        private int mCenterY;
-        private int mCurrentOrientation;
-        private boolean mForcedHide = false;
-        private int mHeight;
-        private boolean mIsNeedUpdate = false;
-        private boolean mIsShowing = false;
-        private int mMaxWidth;
-        private int mMinWidth;
-        private int mParentPosY;
         private String mPrevText;
-        private float mPrevWidth;
-        private float mRadius;
         private SectionIndexer mSectionIndexer;
         private Object[] mSections;
         private Paint mShapePaint;
         private String mShowingText;
-        private int mSidePadding;
-        private int mStatusBarHeight;
         private String mTargetText;
         private String mText;
         private Rect mTextBounds;
         private Paint mTextPaint;
-        private int mTopMargin;
         private ValueAnimator mValueAnimator;
 
-        private final Runnable mTextDelayRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mIndexTip != null) {
-                    mShowingText = mTargetText;
-                    invalidate();
-                }
-            }
-        };
+        private int mCenterX;
+        private int mCenterY;
+        private int mCurrentOrientation;
+        private int mHeight;
+        private int mMaxWidth;
+        private int mMinWidth;
+        private int mParentPosY;
+        private int mSidePadding;
+        private int mStatusBarHeight;
+        private int mTopMargin;
+
+        private float mAnimatingWidth;
+        private float mPrevWidth;
+        private float mRadius;
+
+        private boolean mForcedHide = false;
+        private boolean mIsNeedUpdate = false;
+        private boolean mIsShowing = false;
 
         private final Runnable mShapeDelayRunnable = new Runnable() {
             @Override
@@ -15672,65 +15667,77 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             }
         };
 
+        private final Runnable mTextDelayRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mIndexTip != null) {
+                    mShowingText = mTargetText;
+                    invalidate();
+                }
+            }
+        };
+
         private IndexTip(Context context) {
             super(context);
-            mContext = context;
             init();
         }
 
         private void init() {
-            mSectionIndexer = (SectionIndexer) RecyclerView.this.mAdapter;
+            mSectionIndexer = (SectionIndexer) mAdapter;
             updateSections();
-            new TypedValue();
 
-            final Resources resources = mContext.getResources();
-            
+            TypedValue outValue = new TypedValue();
+
+            final Resources res = mContext.getResources();
+
+            final int indexTipColor = res.getColor(R.color.sesl_scrollbar_index_tip_color);
+
             mShapePaint = new Paint();
             mShapePaint.setStyle(Paint.Style.FILL);
             mShapePaint.setAntiAlias(true);
-            mShapePaint.setColor(getColorWithAlpha(resources.getColor(
-                    R.color.sesl_scrollbar_index_tip_color), SHAPE_COLOR_ALPHA_RATIO));
-            
+            mShapePaint.setColor(getColorWithAlpha(indexTipColor, SHAPE_COLOR_ALPHA_RATIO));
+
             mTextPaint = new Paint();
             mTextPaint.setAntiAlias(true);
             mTextPaint.setTypeface(Typeface.create(mContext.getString(
                     R.string.sesl_font_family_regular), Typeface.NORMAL));
             mTextPaint.setTextAlign(Paint.Align.CENTER);
-            mTextPaint.setTextSize(resources.getDimensionPixelSize(R.dimen.sesl_index_tip_text_size));
-            mTextPaint.setColor(resources.getColor(R.color.sesl_white));
-            
+            mTextPaint.setTextSize(res.getDimensionPixelSize(R.dimen.sesl_index_tip_text_size));
+            mTextPaint.setColor(res.getColor(R.color.sesl_white));
+
             mTextBounds = new Rect();
 
             mText = "";
             mShowingText = "";
             mPrevText = "";
 
-            mPrevWidth = 0.0f;
-            mAnimatingWidth = 0.0f;
+            mPrevWidth = 0f;
+            mAnimatingWidth = 0f;
+            mHeight = res.getDimensionPixelSize(R.dimen.sesl_index_tip_height);
+            mSidePadding = res.getDimensionPixelSize(R.dimen.sesl_index_tip_padding);
+            mMinWidth = res.getDimensionPixelSize(R.dimen.sesl_index_tip_min_width);
+            mMaxWidth = res.getDimensionPixelSize(R.dimen.sesl_index_tip_max_width);
+            mTopMargin = res.getDimensionPixelSize(R.dimen.sesl_index_tip_margin_top);
+            mRadius = res.getDimension(R.dimen.sesl_index_tip_radius);
 
-            mHeight = resources.getDimensionPixelSize(R.dimen.sesl_index_tip_height);
-            mSidePadding = resources.getDimensionPixelSize(R.dimen.sesl_index_tip_padding);
-            mMinWidth = resources.getDimensionPixelSize(R.dimen.sesl_index_tip_min_width);
-            mMaxWidth = resources.getDimensionPixelSize(R.dimen.sesl_index_tip_max_width);
-            mTopMargin = resources.getDimensionPixelSize(R.dimen.sesl_index_tip_margin_top);
-            mRadius = resources.getDimension(R.dimen.sesl_index_tip_radius);
-            mCenterY = mTopMargin + Math.round(((float) mHeight) / 2.0f);
+            mCenterY = mTopMargin + Math.round(mHeight / 2f);
             mParentPosY = 0;
-            
-            int resId = resources.getIdentifier("status_bar_height", "dimen", "android");
+
+            final int resId = res.getIdentifier("status_bar_height",
+                    "dimen", "android");
             if (resId > 0) {
                 mStatusBarHeight = mContext.getResources().getDimensionPixelSize(resId);
             } else {
                 mStatusBarHeight = 0;
             }
-            
-            setAlpha(0.0f);
+
+            setAlpha(0f);
         }
 
         private void setLayout(int l, int t, int r, int b, int left, int right) {
             layout(l, t, r, b);
 
-            mCenterX = left + Math.round(((float) (((r - l) - left) - right)) / 2.0f);
+            mCenterX = left + Math.round((r - l - left - right) / 2.0f);
             mCurrentOrientation = mContext.getResources().getConfiguration().orientation;
             if (mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                 mIsNeedUpdate = false;
@@ -15753,116 +15760,148 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 mSections = mSectionIndexer.getSections();
                 if (mSections != null) {
                     hide();
-                    return;
+                } else {
+                    throw new IllegalStateException("Section is null. This array, or its " +
+                            "contents should be non-null");
                 }
-                throw new IllegalStateException("Section is null. This array, or its contents should be non-null");
             }
         }
 
         private void updateText() {
             mText = "";
 
-            final int firstVisibleItemPosition = RecyclerView.this.findFirstVisibleItemPosition();
-            if (firstVisibleItemPosition == -1) {
-                Log.e(RecyclerView.TAG, "First visible item was null.");
-                return;
-            }
-            int sectionPos = mSectionIndexer.getSectionForPosition(firstVisibleItemPosition);
-            if (sectionPos >= 0) {
-                if (sectionPos < mSections.length && mSections[sectionPos] != null) {
-                    mText = mSections[sectionPos].toString();
-                }
-            }
-        }
-
-        // TODO rework this method
-        // kang
-        private void subString(String str) {
-            int length = str.length();
-            do {
-                length--;
-                if (length > 0) {
-                    str = str.substring(0, length) + "...";
-                } else {
-                    return;
-                }
-            } while ((this.mTextPaint.measureText(str) / 2.0f) + ((float) mSidePadding) >= ((float) mMaxWidth));
-            mText = str;
-        }
-        // kang
-
-        // TODO rework this method
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-
-            updateText();
-
-            if (mShowingText.equals("")) {
-                mShowingText = mText;
-                mTargetText = mText;
-            }
-
-            if (mText.equals("")) {
-                if (mPrevText.equals("")) {
-                    return;
-                }
-
-                if (!mForcedHide && mIsShowing) {
-                    startAnimation();
-                    mIsShowing = false;
-                    mForcedHide = true;
-                }
-
-                mText = mPrevText;
+            final int itemPos = findFirstVisibleItemPosition();
+            if (itemPos == NO_POSITION) {
+                Log.e(TAG, "First visible item was null.");
             } else {
-                mForcedHide = false;
-            }
-
-            float textWidth = (mTextPaint.measureText(mText) / 2.0f) + ((float) mSidePadding);
-            if (textWidth < ((float) mMinWidth)) {
-                textWidth = (float) mMinWidth;
-            } else if (textWidth > ((float) mMaxWidth)) {
-                subString(mText);
-                textWidth = (float) mMaxWidth;
-            }
-            if (((float) mCenterX) < textWidth) {
-                textWidth = (float) mCenterX;
-            }
-
-            if (mPrevWidth != 0.0f && mPrevWidth != textWidth) {
-                animating(textWidth);
-            }
-            if (mAnimatingWidth == 0.0f) {
-                mAnimatingWidth = textWidth;
-            }
-
-            int y = mStatusBarHeight;
-            if (mIsNeedUpdate) {
-                mParentPosY = RecyclerView.this.getRecyclerViewScreenLocationY();
-                if (mParentPosY < mStatusBarHeight) {
-                    y -= mParentPosY;
+                final int section
+                        = mSectionIndexer.getSectionForPosition(itemPos);
+                if (section >= 0) {
+                    if (section < mSections.length
+                            && mSections[section] != null) {
+                        mText = mSections[section].toString();
+                    }
                 }
-            }
-
-            canvas.drawRoundRect(((float) mCenterX) - mAnimatingWidth, (float) (mTopMargin + y), ((float) mCenterX) + mAnimatingWidth, (float) (mTopMargin + mHeight + y), mRadius, mRadius, mShapePaint);
-            mTextPaint.getTextBounds(mShowingText, 0, mShowingText.length() - 1, mTextBounds);
-            canvas.drawText(mShowingText, (float) mCenterX, (((float) mCenterY) - ((mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)) + ((float) y), mTextPaint);
-
-            if (!mText.equals(mTargetText)) {
-                if (mText.length() > mTargetText.length()) {
-                    changeText();
-                } else {
-                    mTargetText = mText;
-                    mShowingText = mText;
-                }
-            }
-
-            if (mText.equals(mPrevText)) {
-                mPrevText = mText;
-                mPrevWidth = textWidth;
             }
         }
+
+        private void subString(String text) {
+            for (int i = text.length(); i > 0; i--) {
+                text = text.substring(0, i) + "...";
+                if ((mTextPaint.measureText(text) / 2f) + mSidePadding < mMaxWidth) {
+                    mText = text;
+                    break;
+                }
+            }
+        }
+
+        // TODO rework this method
+        // kang
+        @Override
+        protected void onDraw(Canvas var1) {
+            /* var1 = canvas */
+
+            super.onDraw(var1);
+            this.updateText();
+            String var2;
+            if (this.mShowingText.equals("")) {
+                var2 = this.mText;
+                this.mShowingText = var2;
+                this.mTargetText = var2;
+            }
+
+            if (this.mText.equals("")) {
+                if (this.mPrevText.equals("")) {
+                    return;
+                }
+
+                if (!this.mForcedHide && this.mIsShowing) {
+                    this.startAnimation();
+                    this.mIsShowing = false;
+                    this.mForcedHide = true;
+                }
+
+                this.mText = this.mPrevText;
+            } else {
+                this.mForcedHide = false;
+            }
+
+            float var3 = this.mTextPaint.measureText(this.mText) / 2.0F + (float)this.mSidePadding;
+            int var4 = this.mMinWidth;
+            float var5;
+            if (var3 < (float)var4) {
+                var5 = (float)var4;
+            } else {
+                var5 = var3;
+                if (var3 > (float)this.mMaxWidth) {
+                    this.subString(this.mText);
+                    var5 = (float)this.mMaxWidth;
+                }
+            }
+
+            var4 = this.mCenterX;
+            var3 = var5;
+            if ((float)var4 < var5) {
+                var3 = (float)var4;
+            }
+
+            var5 = this.mPrevWidth;
+            if (var5 != 0.0F && var5 != var3) {
+                this.animating(var3);
+            }
+
+            if (this.mAnimatingWidth == 0.0F) {
+                this.mAnimatingWidth = var3;
+            }
+
+            int var6;
+            label57: {
+                if (this.mIsNeedUpdate) {
+                    var6 = getRecyclerViewScreenLocationY();
+                    this.mParentPosY = var6;
+                    var4 = this.mStatusBarHeight;
+                    if (var6 < var4) {
+                        var4 -= var6;
+                        break label57;
+                    }
+                }
+
+                var4 = 0;
+            }
+
+            var6 = this.mCenterX;
+            float var7 = (float)var6;
+            float var8 = this.mAnimatingWidth;
+            int var9 = this.mTopMargin;
+            var5 = (float)(var9 + var4);
+            float var10 = (float)var6;
+            float var11 = (float)(var9 + this.mHeight + var4);
+            float var12 = this.mRadius;
+            var1.drawRoundRect(var7 - var8, var5, var10 + var8, var11, var12, var12, this.mShapePaint);
+            Paint var13 = this.mTextPaint;
+            var2 = this.mShowingText;
+            var13.getTextBounds(var2, 0, var2.length() - 1, this.mTextBounds);
+            var11 = (float)this.mCenterY;
+            var8 = (this.mTextPaint.descent() + this.mTextPaint.ascent()) / 2.0F;
+            var5 = (float)var4;
+            var1.drawText(this.mShowingText, (float)this.mCenterX, var11 - var8 + var5, this.mTextPaint);
+            if (!this.mText.equals(this.mTargetText)) {
+                if (this.mText.length() > this.mTargetText.length()) {
+                    this.changeText();
+                } else {
+                    String var14 = this.mText;
+                    this.mTargetText = var14;
+                    this.mShowingText = var14;
+                }
+            }
+
+            if (!this.mText.equals(this.mPrevText)) {
+                this.mPrevText = this.mText;
+                this.mPrevWidth = var3;
+            }
+
+        }
+        // kang
 
         private void changeText() {
             mTargetText = mText;
@@ -15870,11 +15909,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             postDelayed(mTextDelayRunnable, CHANGE_TEXT_DELAY);
         }
 
-        private void animating(float newWidth) {
+        private void animating(float toWidth) {
             if (mValueAnimator != null) {
                 mValueAnimator.cancel();
             }
-            mValueAnimator = ValueAnimator.ofFloat(mAnimatingWidth, newWidth);
+
+            mValueAnimator = ValueAnimator.ofFloat(mAnimatingWidth, toWidth);
             mValueAnimator.setDuration(SCALE_DURATION);
             mValueAnimator.setInterpolator(SCALE_INTERPOLATOR);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -15884,15 +15924,19 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                     invalidate();
                 }
             });
+
             mValueAnimator.start();
         }
 
         private void show(int state, int vresult) {
-            if (state == RecyclerView.SCROLL_STATE_DRAGGING && RecyclerView.this.mRemainNestedScrollRange != 0 && vresult >= 0) {
-                RecyclerView.this.adjustNestedScrollRange();
-            } else if (vresult != 0 && !mIsShowing && RecyclerView.this.canScrollUp() && !RecyclerView.this.mGoToToping && !mForcedHide) {
-                startAnimation();
-                mIsShowing = true;
+            if (state == SCROLL_STATE_DRAGGING
+                    && mRemainNestedScrollRange != 0 && vresult >= 0) {
+                adjustNestedScrollRange();
+            } else if (vresult != 0) {
+                if (!mIsShowing && canScrollUp() && !mGoToToping && !mForcedHide) {
+                    startAnimation();
+                    mIsShowing = true;
+                }
             }
         }
 
@@ -15900,24 +15944,26 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mIsShowing) {
                 removeCallbacks(mShapeDelayRunnable);
                 postDelayed(mShapeDelayRunnable, FADE_DURATION);
-                return;
+            } else {
+                forcedHide();
             }
-            forcedHide();
         }
 
         private void forcedHide() {
             mIsShowing = false;
             removeCallbacks(mShapeDelayRunnable);
-            setAlpha(0.0f);
+            setAlpha(0f);
             invalidate();
         }
 
         private void startAnimation() {
             ObjectAnimator animator;
             if (mIsShowing) {
-                animator = ObjectAnimator.ofFloat(RecyclerView.this.mIndexTip, "alpha", RecyclerView.this.mIndexTip.getAlpha(), 0.0f);
+                animator = ObjectAnimator.ofFloat(mIndexTip, "alpha",
+                        mIndexTip.getAlpha(), 0f);
             } else {
-                animator = ObjectAnimator.ofFloat(RecyclerView.this.mIndexTip, "alpha", RecyclerView.this.mIndexTip.getAlpha(), 1.0f);
+                animator = ObjectAnimator.ofFloat(mIndexTip, "alpha",
+                        mIndexTip.getAlpha(), 1f);
             }
             animator.setDuration(ALPHA_DURATION);
             animator.setInterpolator(ALPHA_INTERPOLATOR);

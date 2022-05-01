@@ -335,6 +335,12 @@ public class PopupMenu {
         mPopup.seslSetOverflowOnly(overflowOnly);
     }
 
+    public void seslSetAllowScrollingAnchorParent(boolean enabled) {
+        if (mPopup != null) {
+            mPopup.seslSetAllowScrollingAnchorParent(enabled);
+        }
+    }
+
     public void seslUpdate() {
         if (mPopup != null) {
             mPopup.seslUpdate();

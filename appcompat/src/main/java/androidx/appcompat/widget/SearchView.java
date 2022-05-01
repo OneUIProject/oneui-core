@@ -212,6 +212,10 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     private final WeakHashMap<String, Drawable.ConstantState> mOutsideDrawablesCache =
             new WeakHashMap<String, Drawable.ConstantState>();
 
+    public interface OnPrivateImeCommandListener {
+        boolean onPrivateIMECommand(String action, Bundle data);
+    }
+
     /**
      * Callbacks for changes to the query text.
      */
@@ -1971,6 +1975,9 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         private int mThreshold;
         private SearchView mSearchView;
 
+        @Nullable
+        private OnPrivateImeCommandListener mOnAppPrivateCommandListener;
+
         private boolean mForceNotCallShowSoftInput;
         private boolean mHasPendingShowSoftInputRequest;
         final Runnable mRunShowSoftInputIfNecessary = new Runnable() {
@@ -2109,6 +2116,14 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             return ic;
         }
 
+        @Override
+        public boolean onPrivateIMECommand(String action, Bundle data) {
+            if (mOnAppPrivateCommandListener != null) {
+                return mOnAppPrivateCommandListener.onPrivateIMECommand(action, data);
+            }
+            return super.onPrivateIMECommand(action, data);
+        }
+
         void showSoftInputIfNecessary() {
             if (!mForceNotCallShowSoftInput && mHasPendingShowSoftInputRequest) {
                 final InputMethodManager imm = (InputMethodManager)
@@ -2155,6 +2170,10 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
 
         void setNotCallShowSoftInput(boolean notCall) {
             mForceNotCallShowSoftInput = notCall;
+        }
+
+        public void seslSetOnPrivateImeCommandListener(@Nullable OnPrivateImeCommandListener listener) {
+            mOnAppPrivateCommandListener = listener;
         }
     }
 
@@ -2399,6 +2418,10 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
 
     public void seslSetNotCallShowSoftInput(boolean notCall) {
         mSearchSrcTextView.setNotCallShowSoftInput(notCall);
+    }
+
+    public void seslSetOnPrivateImeCommandListener(@Nullable OnPrivateImeCommandListener listener) {
+        mSearchSrcTextView.seslSetOnPrivateImeCommandListener(listener);
     }
 
     @Override

@@ -1626,4 +1626,10 @@ public class ListPopupWindow implements ShowableListMenu {
     public void seslForceShowUpper(boolean force) {
         mForceShowUpper = force;
     }
+
+    public void seslSetAllowScrollingAnchorParent(boolean enabled) {
+        if (mPopup != null) {
+            mPopup.seslSetAllowScrollingAnchorParent(enabled);
+        }
+    }
 }

@@ -40,6 +40,7 @@ import androidx.appcompat.R;
 import androidx.appcompat.view.ActionBarPolicy;
 import androidx.core.widget.PopupWindowCompat;
 import androidx.reflect.view.SeslViewReflector;
+import androidx.reflect.widget.SeslPopupWindowReflector;
 
 import java.lang.reflect.Field;
 
@@ -216,6 +217,10 @@ class AppCompatPopupWindow extends PopupWindow {
         }
 
         return returnedHeight;
+    }
+
+    public void seslSetAllowScrollingAnchorParent(boolean enabled) {
+        SeslPopupWindowReflector.setAllowScrollingAnchorParent(this, enabled);
     }
 
     boolean seslIsAvailableBlurBackground() {

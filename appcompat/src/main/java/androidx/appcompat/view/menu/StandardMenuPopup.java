@@ -125,6 +125,7 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
     private boolean mIsSubMenu = false;
     private boolean mOverlapAnchor;
     private boolean mOverlapAnchorSet;
+    private boolean mAllowScrollingAnchorParent = true;
 
     public StandardMenuPopup(Context context, MenuBuilder menu, View anchorView, int popupStyleAttr,
             int popupStyleRes, boolean overflowOnly) {
@@ -195,6 +196,10 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
         if (mOverlapAnchorSet) {
             mPopup.setOverlapAnchor(mOverlapAnchor);
             mPopup.seslForceShowUpper(mForceShowUpper);
+        }
+
+        if (!mAllowScrollingAnchorParent) {
+            mPopup.seslSetAllowScrollingAnchorParent(mAllowScrollingAnchorParent);
         }
 
         mPopup.setOnDismissListener(this);
@@ -409,5 +414,9 @@ final class StandardMenuPopup extends MenuPopup implements OnDismissListener, On
             mContentWidth = measureIndividualMenuWidth(mAdapter, null, mContext, mPopupMaxWidth);
             mPopup.setContentWidth(mContentWidth);
         }
+    }
+
+    public void seslSetAllowScrollingAnchorParent(boolean enabled) {
+        mAllowScrollingAnchorParent = enabled;
     }
 }

@@ -67,6 +67,7 @@ public class MenuPopupHelper implements MenuHelper {
     private boolean mOverlapAnchor;
     private boolean mOverlapAnchorSet;
     private boolean mForceShowUpper = false;
+    private boolean mAllowScrollingAnchorParent = true;
     private MenuPresenter.Callback mPresenterCallback;
 
     private MenuPopup mPopup;
@@ -259,6 +260,10 @@ public class MenuPopupHelper implements MenuHelper {
             popup.seslForceShowUpper(mForceShowUpper);
         }
 
+        if (!mAllowScrollingAnchorParent) {
+            popup.seslSetAllowScrollingAnchorParent(mAllowScrollingAnchorParent);
+        }
+
         // Assign immutable properties.
         popup.addMenu(mMenu);
         popup.setOnDismissListener(mInternalOnDismissListener);
@@ -370,5 +375,9 @@ public class MenuPopupHelper implements MenuHelper {
 
     public void seslForceShowUpper(boolean force) {
         mForceShowUpper = force;
+    }
+
+    public void seslSetAllowScrollingAnchorParent(boolean enabled) {
+        mAllowScrollingAnchorParent = enabled;
     }
 }

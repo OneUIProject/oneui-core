@@ -1925,7 +1925,14 @@ public class ViewPager extends ViewGroup {
         }
         if (mOnPageChangeListeners != null) {
             for (int i = 0, z = mOnPageChangeListeners.size(); i < z; i++) {
-                OnPageChangeListener listener = mOnPageChangeListeners.get(i);
+                OnPageChangeListener listener;
+                try {
+                    listener = mOnPageChangeListeners.get(i);
+                } catch (IndexOutOfBoundsException e) {
+                    listener = null;
+                    Log.e(TAG, "IndexOutOfBoundsException: " +
+                            "Index: " + i + ", Size: " + mOnPageChangeListeners.size());
+                }
                 if (listener != null) {
                     listener.onPageScrolled(position, offset, offsetPixels);
                 }
@@ -1942,7 +1949,14 @@ public class ViewPager extends ViewGroup {
         }
         if (mOnPageChangeListeners != null) {
             for (int i = 0, z = mOnPageChangeListeners.size(); i < z; i++) {
-                OnPageChangeListener listener = mOnPageChangeListeners.get(i);
+                OnPageChangeListener listener;
+                try {
+                    listener = mOnPageChangeListeners.get(i);
+                } catch (IndexOutOfBoundsException e) {
+                    listener = null;
+                    Log.e(TAG, "IndexOutOfBoundsException: " +
+                            "Index: " + i + ", Size: " + mOnPageChangeListeners.size());
+                }
                 if (listener != null) {
                     listener.onPageSelected(position);
                 }
@@ -1959,7 +1973,14 @@ public class ViewPager extends ViewGroup {
         }
         if (mOnPageChangeListeners != null) {
             for (int i = 0, z = mOnPageChangeListeners.size(); i < z; i++) {
-                OnPageChangeListener listener = mOnPageChangeListeners.get(i);
+                OnPageChangeListener listener;
+                try {
+                    listener = mOnPageChangeListeners.get(i);
+                } catch (IndexOutOfBoundsException e) {
+                    listener = null;
+                    Log.e(TAG, "IndexOutOfBoundsException: " +
+                            "Index: " + i + ", Size: " + mOnPageChangeListeners.size());
+                }
                 if (listener != null) {
                     listener.onPageScrollStateChanged(state);
                 }

@@ -43,13 +43,7 @@ public class SeslApplicationPackageManagerReflector {
      * Retrieve the icon associated with the given <arg>packageName</arg>.
      */
     public static Drawable semGetApplicationIconForIconTray(@NonNull Object instance, String packageName, int mode) {
-        Method method = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            method = SeslBaseReflector.getDeclaredMethod(mClassName, "hidden_semGetApplicationIconForIconTray", String.class, Integer.TYPE);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)  {
-            method = SeslBaseReflector.getMethod(mClassName, "semGetApplicationIconForIconTray", String.class, Integer.TYPE);
-        }
+        Method method = SeslBaseReflector.getMethod(mClassName, "semGetApplicationIconForIconTray", String.class, Integer.TYPE);
 
         if (method != null) {
             Object result = SeslBaseReflector.invoke(instance, method, packageName, mode);
@@ -65,13 +59,7 @@ public class SeslApplicationPackageManagerReflector {
      * Retrieve the icon associated with the given {@link ComponentName}.
      */
     public static Drawable semGetActivityIconForIconTray(@NonNull Object instance, ComponentName activityName, int mode) {
-        Method method = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            method = SeslBaseReflector.getDeclaredMethod(mClassName, "hidden_semGetActivityIconForIconTray", String.class, Integer.TYPE);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)  {
-            method = SeslBaseReflector.getMethod(mClassName, "semGetActivityIconForIconTray", String.class, Integer.TYPE);
-        }
+        Method method = SeslBaseReflector.getMethod(mClassName, "semGetActivityIconForIconTray", ComponentName.class, Integer.TYPE);
 
         if (method != null) {
             Object result = SeslBaseReflector.invoke(instance, method, activityName, mode);

@@ -51,7 +51,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.core_core.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.19-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.21-sesl4" + "\n"
 }
 
 ext {

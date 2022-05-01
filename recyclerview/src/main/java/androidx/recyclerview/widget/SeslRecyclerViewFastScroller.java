@@ -92,6 +92,7 @@ class SeslRecyclerViewFastScroller {
     private float mThreshold = 0f;
 
     private int mAdditionalBottomPadding;
+    private int mAdditionalTopPadding;
     private int mColorPrimary = Color.WHITE;
     private int mEffectState = EFFECT_STATE_CLOSE;
     private int mImmersiveBottomPadding;
@@ -99,7 +100,8 @@ class SeslRecyclerViewFastScroller {
     private int mPreviewMarginEnd;
     private int mThumbBackgroundColor = Color.WHITE;
     private int mThumbMarginEnd;
-    private int mTrackPadding;
+    private int mTrackBottomPadding;
+    private int mTrackTopPadding;
     private int mVibrateIndex;
 
     private boolean mIsDexMode;
@@ -352,8 +354,10 @@ class SeslRecyclerViewFastScroller {
         mPreviewMarginEnd = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroll_preview_margin_end);
         mThumbMarginEnd = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroll_thumb_margin_end);
         mAdditionalTouchArea = resources.getDimension(R.dimen.sesl_fast_scroll_additional_touch_area);
-        mTrackPadding = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroller_track_padding);
-        mAdditionalBottomPadding = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroller_additional_bottom_padding);
+        mTrackTopPadding = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroller_track_top_padding);
+        mTrackBottomPadding = resources.getDimensionPixelOffset(R.dimen.sesl_fast_scroller_track_bottom_padding);
+        mAdditionalBottomPadding = 0;
+        mAdditionalTopPadding = 0;
         mImmersiveBottomPadding = 0;
         mIsDexMode = SeslConfigurationReflector.isDexEnabled(resources.getConfiguration());
 
@@ -815,9 +819,15 @@ class SeslRecyclerViewFastScroller {
         }
     }
 
-    public void setImmersiveBottomPadding(int bottomPadding) {
-        mImmersiveBottomPadding = bottomPadding;
+    public void setImmersiveBottomPadding(int bottom) {
+        mImmersiveBottomPadding = bottom;
         updateOffsetAndRange();
+    }
+
+    public void setAdditionalPadding(int top, int bottom) {
+        mAdditionalTopPadding = top;
+        mAdditionalBottomPadding = bottom;
+        updateLayout();
     }
 
     /**
@@ -847,12 +857,12 @@ class SeslRecyclerViewFastScroller {
         final int top;
         int bottom;
         if (mThumbPosition == THUMB_POSITION_INSIDE) {
-            top = container.top + mTrackPadding;
-            bottom = container.bottom - mTrackPadding - mAdditionalBottomPadding;
+            top = container.top + mTrackTopPadding + mAdditionalTopPadding;
+            bottom = container.bottom - mTrackBottomPadding - mAdditionalBottomPadding;
         } else {
             final int thumbHalfHeight = thumb.getHeight() / 2;
-            top = container.top + thumbHalfHeight + mTrackPadding;
-            bottom = container.bottom - thumbHalfHeight - mTrackPadding - mAdditionalBottomPadding;;
+            top = container.top + thumbHalfHeight + mTrackTopPadding + mAdditionalTopPadding;
+            bottom = container.bottom - thumbHalfHeight - mTrackBottomPadding - mAdditionalBottomPadding;
         }
 
         if (bottom < top) {

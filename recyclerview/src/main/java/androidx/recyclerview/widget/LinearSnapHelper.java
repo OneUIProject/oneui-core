@@ -17,7 +17,9 @@
 package androidx.recyclerview.widget;
 
 import android.graphics.PointF;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.PathInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +33,13 @@ import androidx.annotation.Nullable;
  * {@link SnapHelper#calculateDistanceToFinalSnap}.
  */
 public class LinearSnapHelper extends SnapHelper {
+    // Sesl
+    private final PathInterpolator mPathInterpolator
+            = new PathInterpolator(0.2f, 0.7f, 0.3f, 1.0f);
+    private float mVelocityRatio = 1.0f;
+    private int mDeccelateTimeRatio = 1;
+    private float mMillisecondsPerInch = 100.0f;
+    // Sesl
 
     private static final float INVALID_DISTANCE = 1f;
 
@@ -39,6 +48,60 @@ public class LinearSnapHelper extends SnapHelper {
     private OrientationHelper mVerticalHelper;
     @Nullable
     private OrientationHelper mHorizontalHelper;
+
+    public LinearSnapHelper() {
+        setSnapValue(1.0f, 100.0f, 1);
+    }
+
+    public LinearSnapHelper(float velocityRatio) {
+        setSnapValue(velocityRatio, 100.0f, 1);
+    }
+
+    public LinearSnapHelper(float velocityRatio, float msPerInch) {
+        setSnapValue(velocityRatio, msPerInch, 1);
+    }
+
+    public LinearSnapHelper(float velocityRatio, float msPerInch, int decelerateTimeRatio) {
+        setSnapValue(velocityRatio, msPerInch, decelerateTimeRatio);
+    }
+
+    private void setSnapValue(float velocityRatio, float msPerInch, int decelerateTimeRatio) {
+        mMillisecondsPerInch = msPerInch;
+        mVelocityRatio = velocityRatio;
+        mDeccelateTimeRatio = decelerateTimeRatio;
+    }
+
+    @Override
+    @Nullable
+    protected RecyclerView.SmoothScroller createScroller(
+            @NonNull RecyclerView.LayoutManager layoutManager) {
+        if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
+            return null;
+        }
+        return new LinearSmoothScroller(mRecyclerView.getContext()) {
+            @Override
+            protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
+                if (mRecyclerView == null) {
+                    // The associated RecyclerView has been removed so there is no action to take.
+                    return;
+                }
+                int[] snapDistances = calculateDistanceToFinalSnap(mRecyclerView.getLayoutManager(),
+                        targetView);
+                final int dx = snapDistances[0];
+                final int dy = snapDistances[1];
+                final int time = calculateTimeForDeceleration(
+                        Math.max(Math.abs(mDeccelateTimeRatio * dx), Math.abs(mDeccelateTimeRatio * dy)));
+                if (time > 0) {
+                    action.update(dx, dy, time, mPathInterpolator);
+                }
+            }
+
+            @Override
+            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                return mMillisecondsPerInch / displayMetrics.densityDpi;
+            }
+        };
+    }
 
     @Override
     public int[] calculateDistanceToFinalSnap(
@@ -63,6 +126,9 @@ public class LinearSnapHelper extends SnapHelper {
     @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX,
             int velocityY) {
+        velocityX = (int) (velocityX * mVelocityRatio);
+        velocityY = (int) (velocityY * mVelocityRatio);
+
         if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
             return RecyclerView.NO_POSITION;
         }

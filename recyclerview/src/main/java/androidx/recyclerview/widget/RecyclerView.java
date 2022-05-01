@@ -15563,6 +15563,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         }
     }
 
+    public void seslSetFastScrollerAdditionalPadding(int top, int bottom) {
+        if (mFastScroller != null) {
+            mFastScroller.setAdditionalPadding(top, bottom);
+        }
+    }
+
     public void seslSetIndexTipEnabled(boolean enabled) {
         if (mAdapter instanceof SectionIndexer) {
             if (enabled) {

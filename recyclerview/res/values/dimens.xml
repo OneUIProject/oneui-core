@@ -30,7 +30,6 @@
     <dimen name="sesl_fast_scroll_additional_touch_area">11dp</dimen>
     <dimen name="sesl_fast_scroll_preview_margin_end">24dp</dimen>
     <dimen name="sesl_fast_scroll_thumb_margin_end">8dp</dimen>
-    <dimen name="sesl_fast_scroller_additional_bottom_padding">14dp</dimen>
     <dimen name="sesl_fast_scroller_touch_target_min_size">48dp</dimen>
     <dimen name="sesl_fast_scroller_track_top_padding">6.0dip</dimen>
     <dimen name="sesl_fast_scroller_track_bottom_padding">20.0dip</dimen>

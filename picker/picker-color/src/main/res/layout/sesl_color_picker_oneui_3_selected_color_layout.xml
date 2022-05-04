@@ -60,7 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/sesl_color_picker_selected_color_title_text_height"
             android:gravity="center"
-            android:text="@string/sesl_color_hex_text" />
+            android:text="@string/sesl_color_hex_text"
+            android:labelFor="@id/sesl_color_hex_edit_text" />
 
         <EditText
             android:id="@+id/sesl_color_hex_edit_text"
@@ -92,7 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/sesl_color_picker_selected_color_title_text_height"
             android:gravity="center"
-            android:text="@string/sesl_color_red_text" />
+            android:text="@string/sesl_color_red_text"
+            android:labelFor="@id/sesl_color_red_edit_text" />
 
         <EditText
             android:id="@+id/sesl_color_red_edit_text"
@@ -121,7 +123,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/sesl_color_picker_selected_color_title_text_height"
             android:gravity="center"
-            android:text="@string/sesl_color_green_text" />
+            android:text="@string/sesl_color_green_text"
+            android:labelFor="@id/sesl_color_green_edit_text" />
 
         <EditText
             android:id="@+id/sesl_color_green_edit_text"
@@ -150,7 +153,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/sesl_color_picker_selected_color_title_text_height"
             android:gravity="center"
-            android:text="@string/sesl_color_blue_text" />
+            android:text="@string/sesl_color_blue_text"
+            android:labelFor="@id/sesl_color_blue_edit_text" />
 
         <EditText
             android:id="@+id/sesl_color_blue_edit_text"

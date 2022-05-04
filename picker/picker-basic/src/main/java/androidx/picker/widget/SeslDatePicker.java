@@ -463,22 +463,37 @@ public class SeslDatePicker extends LinearLayout
 
                         switch (mMode) {
                             case DATE_MODE_START:
+                                if (mStartDate.compareTo(mEndDate) == 0
+                                        || mCurrentDate.compareTo(mEndDate) > 0) {
+                                    clearCalendar(mEndDate, year, month, day);
+                                }
                                 clearCalendar(mStartDate, year, month, day);
-                                clearCalendar(mEndDate, year, month, day);
                                 if (mIsLunar) {
+                                    if (mStartDate.compareTo(mEndDate) == 0
+                                            || mCurrentDate.compareTo(mEndDate) > 0) {
+                                        mLunarEndYear = year;
+                                        mLunarEndMonth = month;
+                                        mLunarEndDay = day;
+                                        mIsLeapEndMonth = NOT_LEAP_MONTH;
+                                    }
                                     mLunarStartYear = year;
                                     mLunarStartMonth = month;
                                     mLunarStartDay = day;
                                     mIsLeapStartMonth = NOT_LEAP_MONTH;
-                                    mLunarEndYear = year;
-                                    mLunarEndMonth = month;
-                                    mLunarEndDay = day;
-                                    mIsLeapEndMonth = NOT_LEAP_MONTH;
                                 }
                                 break;
                             case DATE_MODE_END:
+                                if (mCurrentDate.compareTo(mStartDate) < 0) {
+                                    clearCalendar(mStartDate, year, month, day);
+                                }
                                 clearCalendar(mEndDate, year, month, day);
                                 if (mIsLunar) {
+                                    if (mCurrentDate.compareTo(mStartDate) < 0) {
+                                        mLunarStartYear = year;
+                                        mLunarStartMonth = month;
+                                        mLunarStartDay = day;
+                                        mIsLeapStartMonth = NOT_LEAP_MONTH;
+                                    }
                                     mLunarEndYear = year;
                                     mLunarEndMonth = month;
                                     mLunarEndDay = day;
@@ -687,20 +702,34 @@ public class SeslDatePicker extends LinearLayout
 
         switch (mMode) {
             case DATE_MODE_START:
+                if (mStartDate.compareTo(mEndDate) == 0
+                        || mCurrentDate.compareTo(mEndDate) > 0) {
+                    clearCalendar(mEndDate, year, month, dayOfMonth);
+                }
                 clearCalendar(mStartDate, year, month, dayOfMonth);
-                clearCalendar(mEndDate, year, month, dayOfMonth);
                 if (mIsLunar) {
+                    if (mStartDate.compareTo(mEndDate) == 0
+                            || mCurrentDate.compareTo(mEndDate) > 0) {
+                        mLunarEndYear = year;
+                        mLunarEndMonth = month;
+                        mLunarEndDay = dayOfMonth;
+                    }
                     mLunarStartYear = year;
                     mLunarStartMonth = month;
                     mLunarStartDay = dayOfMonth;
-                    mLunarEndYear = year;
-                    mLunarEndMonth = month;
-                    mLunarEndDay = dayOfMonth;
                 }
                 break;
             case DATE_MODE_END:
+                if (mCurrentDate.compareTo(mStartDate) < 0) {
+                    clearCalendar(mStartDate, year, month, dayOfMonth);
+                }
                 clearCalendar(mEndDate, year, month, dayOfMonth);
                 if (mIsLunar) {
+                    if (mCurrentDate.compareTo(mStartDate) < 0) {
+                        mLunarStartYear = year;
+                        mLunarStartMonth = month;
+                        mLunarStartDay = dayOfMonth;
+                    }
                     mLunarEndYear = year;
                     mLunarEndMonth = month;
                     mLunarEndDay = dayOfMonth;
@@ -1015,22 +1044,37 @@ public class SeslDatePicker extends LinearLayout
 
         switch (mMode) {
             case DATE_MODE_START:
+                if (mStartDate.compareTo(mEndDate) == 0
+                        || mCurrentDate.compareTo(mEndDate) >= 0) {
+                    clearCalendar(mEndDate, year, month, day);
+                }
                 clearCalendar(mStartDate, year, month, day);
-                clearCalendar(mEndDate, year, month, day);
                 if (mIsLunar) {
+                    if (mStartDate.compareTo(mEndDate) == 0
+                            || mCurrentDate.compareTo(mEndDate) >= 0) {
+                        mLunarEndYear = year;
+                        mLunarEndMonth = month;
+                        mLunarEndDay = day;
+                        mIsLeapEndMonth = mIsLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
+                    }
                     mLunarStartYear = year;
                     mLunarStartMonth = month;
                     mLunarStartDay = day;
                     mIsLeapStartMonth = mIsLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
-                    mLunarEndYear = year;
-                    mLunarEndMonth = month;
-                    mLunarEndDay = day;
-                    mIsLeapStartMonth = mIsLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
                 }
                 break;
             case DATE_MODE_END:
+                if (mCurrentDate.compareTo(mStartDate) < 0) {
+                    clearCalendar(mStartDate, year, month, day);
+                }
                 clearCalendar(mEndDate, year, month, day);
                 if (mIsLunar) {
+                    if (mCurrentDate.compareTo(mStartDate) < 0) {
+                        mLunarStartYear = year;
+                        mLunarStartMonth = month;
+                        mLunarStartDay = day;
+                        mIsLeapStartMonth = mIsLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
+                    }
                     mLunarEndYear = year;
                     mLunarEndMonth = month;
                     mLunarEndDay = day;

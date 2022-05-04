@@ -34,7 +34,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.apppickerview_apppickerview.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.17-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.18-sesl4" + "\n"
 }
 
 ext {

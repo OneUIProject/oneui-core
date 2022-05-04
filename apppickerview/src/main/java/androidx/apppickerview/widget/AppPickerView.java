@@ -52,6 +52,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /*
@@ -115,6 +117,7 @@ public class AppPickerView extends RecyclerView
     private Context mContext;
     private RecyclerView.ItemDecoration mGridSpacingDecoration;
     private SeslSubheaderRoundedCorner mRoundedCorner;
+    public ArrayList<Integer> mSeparators;
 
     private int mOrder;
     private int mSpanCount = 4;
@@ -233,6 +236,8 @@ public class AppPickerView extends RecyclerView
         seslSetGoToTopEnabled(true);
         seslSetFastScrollerEnabled(true);
         seslSetFillBottomEnabled(true);
+
+        mSeparators = new ArrayList<>();
     }
 
     public int getType() {
@@ -290,6 +295,8 @@ public class AppPickerView extends RecyclerView
     }
 
     public void addSeparator(int position) {
+        mSeparators.add(Integer.valueOf(position));
+        Collections.sort(mSeparators);
         mAdapter.addSeparator(position);
 
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
@@ -451,24 +458,60 @@ public class AppPickerView extends RecyclerView
             this.includeEdge = includeEdge;
         }
 
+        // TODO rework this method
+        // kang
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            final int position = parent.getChildAdapterPosition(view);
-            final int i = position % spanCount;
+        public void getItemOffsets(Rect var1, View var2, RecyclerView var3, State var4) {
+            /* var1 = outRect; var2 = view; var3 = parent; var4 = state; */
 
-            if (includeEdge) {
-                outRect.left = spacing - ((i * spacing) / spanCount);
-                outRect.right = ((i + 1) * spacing) / spanCount;
-                if (position < spanCount) {
-                    outRect.top = spacingTop;
+            int var5 = var3.getChildAdapterPosition(var2);
+            int var6 = var5 % this.spanCount;
+            Iterator var10 = mSeparators.iterator();
+            int var7 = -1;
+
+            int var8;
+            int var9;
+            while(true) {
+                var8 = var7;
+                var7 = var7;
+                if (!var10.hasNext()) {
+                    break;
                 }
-                outRect.bottom = spacingTop;
+
+                var9 = (Integer)var10.next();
+                var7 = var9;
+                if (var9 >= var5) {
+                    var7 = var9;
+                    break;
+                }
+            }
+
+            if (this.includeEdge) {
+                if (var5 == var7) {
+                    return;
+                }
+
+                var9 = this.spacing;
+                var7 = this.spanCount;
+                var1.left = var9 - var6 * var9 / var7;
+                var1.right = (var6 + 1) * var9 / var7;
+                if (var8 != -1) {
+                    if (var5 - var8 - 1 < var7) {
+                        var1.top = this.spacingTop;
+                    }
+                } else if (var5 < var7) {
+                    var1.top = this.spacingTop;
+                }
+
+                var1.bottom = this.spacingTop;
             } else {
-                outRect.left = (spacing * i) / spanCount;
-                outRect.right = spacing - (((i + 1) * spacing) / spanCount);
+                var7 = this.spacing;
+                var8 = this.spanCount;
+                var1.left = var6 * var7 / var8;
+                var1.right = var7 - (var6 + 1) * var7 / var8;
             }
         }
+        // kang
 
         @Override
         public void seslOnDispatchDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {

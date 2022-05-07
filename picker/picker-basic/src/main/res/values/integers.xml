@@ -25,6 +25,9 @@
     <integer name="sesl_date_picker_spinner_number_text_size">22</integer>
     <integer name="sesl_date_picker_spinner_number_text_size_with_unit">19</integer>
 
+    <integer name="sesl_spinning_date_time_picker_margin_view_left_weight">4</integer>
+    <item type="integer" name="sesl_spinning_date_time_picker_empty_view_left_weight">7.5</item>
+    <integer name="sesl_spinning_date_picker_spinner_view_weight">47</integer>
     <integer name="sesl_spinning_datepicker_time_ampm_weight">13</integer>
     <integer name="sesl_spinning_datepicker_time_hr_min_container_weight">30</integer>
     <integer name="sesl_spinning_datepicker_time_hr_weight">14</integer>

@@ -15,17 +15,7 @@
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
-    
-    <dimen name="sesl_date_picker_calendar_day_height">28.0dip</dimen>
-    <dimen name="sesl_date_picker_calendar_header_button_height">32.0dip</dimen>
-    <dimen name="sesl_date_picker_calendar_header_button_width">32.0dip</dimen>
-    <dimen name="sesl_date_picker_calendar_header_height">32.0dip</dimen>
-    <dimen name="sesl_date_picker_calendar_view_height">168.0dip</dimen>
-    <dimen name="sesl_date_picker_calendar_week_height">28.0dip</dimen>
-    <dimen name="sesl_date_picker_gap_between_header_and_weekend">9.0dip</dimen>
-    <dimen name="sesl_date_picker_gap_between_weekend_and_calender">7.0dip</dimen>
-    <dimen name="sesl_date_picker_selected_day_circle_radius">12.0dip</dimen>
 
-    <dimen name="sesl_spinning_date_picker_height">244.0dip</dimen>
+    <dimen name="sesl_spinning_date_picker_height_dialog">204.0dip</dimen>
 
 </resources>

@@ -59,6 +59,9 @@
     <dimen name="sesl_date_picker_selected_day_circle_stroke">1.5dip</dimen>
     <item type="dimen" name="sesl_date_picker_spinner_height">@dimen/sesl_picker_spinner_height</item>
 
+    <dimen name="sesl_spinning_date_picker_height">277.0dip</dimen>
+    <dimen name="sesl_spinning_date_picker_height_dialog">277.0dip</dimen>
+    <dimen name="sesl_spinning_date_picker_margin_top">44.0dip</dimen>
     <dimen name="sesl_spinning_date_picker_date_spinner_text_size">21.0dip</dimen>
 
 </resources>

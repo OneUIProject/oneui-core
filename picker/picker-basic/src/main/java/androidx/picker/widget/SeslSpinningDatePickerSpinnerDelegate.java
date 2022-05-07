@@ -16,8 +16,6 @@
 
 package androidx.picker.widget;
 
-import static androidx.annotation.RestrictTo.Scope.LIBRARY;
-
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -37,14 +35,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Selection;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.NumberKeyListener;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -61,17 +53,14 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityNodeProvider;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.PathInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RestrictTo;
 import androidx.appcompat.util.SeslMisc;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
@@ -82,52 +71,45 @@ import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.picker.R;
 import androidx.picker.util.SeslAnimationListener;
-import androidx.picker.widget.SeslNumberPicker.OnScrollListener;
+import androidx.picker.widget.SeslSpinningDatePickerSpinner.OnScrollListener;
 import androidx.reflect.content.res.SeslCompatibilityInfoReflector;
 import androidx.reflect.content.res.SeslConfigurationReflector;
 import androidx.reflect.graphics.SeslPaintReflector;
+import androidx.reflect.lunarcalendar.SeslFeatureReflector;
+import androidx.reflect.lunarcalendar.SeslSolarLunarConverterReflector;
 import androidx.reflect.media.SeslAudioManagerReflector;
-import androidx.reflect.media.SeslSemSoundAssistantManagerReflector;
 import androidx.reflect.view.SeslHapticFeedbackConstantsReflector;
 import androidx.reflect.view.SeslViewReflector;
-import androidx.reflect.widget.SeslHoverPopupWindowReflector;
 
 import java.io.File;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import dalvik.system.PathClassLoader;
 
 /*
  * Original code by Samsung, all rights reserved to the original author.
  */
 
-@RestrictTo(LIBRARY)
-class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDelegate {
-
-    private static final char[] DIGIT_CHARACTERS = {
-            48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-            1632, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640, 1641,
-            1776, 1777, 1778, 1779, 1780, 1781, 1782, 1783, 1784, 1785,
-            2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415,
-            2534, 2535, 2536, 2537, 2538, 2539, 2540, 2541, 2542, 2543,
-            3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311,
-            4160, 4161, 4162, 4163, 4164, 4165, 4166, 4167, 4168, 4169
-    };
-
-    private static final int DEFAULT_WHEEL_INTERVAL = 1;
+class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinner.AbsDatePickerDelegate {
+    private static final int DEFAULT_CHANGE_VALUE_BY = 1;
 
     private static final int DECREASE_BUTTON = 1;
     private static final int INCREASE_BUTTON = 3;
 
     private static final int INPUT = 2;
-    private static final String INPUT_TYPE_MONTH = "inputType=month_edittext";
-    private static final String INPUT_TYPE_YEAR_DATE_TIME = "inputType=YearDateTime_edittext";
-
-    private static final int INTERNAL_INDEX_OFFSET = 50024;
 
     private static final int PICKER_VIBRATE_INDEX = 32;
-    private static final int SAMSUNG_VIBRATION_START = 50056;
+
+    private static final int DEFAULT_START_YEAR = 1902;
+    private static final int DEFAULT_END_YEAR = 2100;
 
     private static final int SELECTOR_ADJUSTMENT_DURATION_MILLIS = 300;
     private static final int SELECTOR_MAX_FLING_VELOCITY_ADJUSTMENT = 4;
@@ -135,93 +117,92 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     private static final int SELECTOR_WHEEL_ITEM_COUNT = 5;
 
     private static final int SIZE_UNSPECIFIED = -1;
+    private static final int TEXT_GAP_COUNT = 3;
+    private static final int HCF_UNFOCUSED_TEXT_SIZE_DIFF = 2;
 
     private static final int SNAP_SCROLL_DURATION = 500;
     private static final int START_ANIMATION_SCROLL_DURATION = 857;
     private static final int START_ANIMATION_SCROLL_DURATION_2016B = 557;
 
-    private static final int UNSCALED_DEFAULT_SELECTION_DIVIDER_HEIGHT = 2;
+    private static final long DEFAULT_LONG_PRESS_UPDATE_INTERVAL = 300;
+    private static final int LONG_PRESSED_SCROLL_COUNT = 10;
 
-    private final float FAST_SCROLL_VELOCITY_START = 1000.0f;
+    private static final int UNSCALED_DEFAULT_SELECTION_DIVIDER_HEIGHT = 2;
 
     private AccessibilityManager mAccessibilityManager;
     private AccessibilityNodeProviderImpl mAccessibilityNodeProvider;
     private final Scroller mAdjustScroller;
     private SeslAnimationListener mAnimationListener;
     private AudioManager mAudioManager;
-    private BeginSoftInputOnLongPressCommand mBeginSoftInputOnLongPressCommand;
+    private ChangeCurrentByOneFromLongPressCommand mChangeCurrentByOneFromLongPressCommand;
     private ValueAnimator mColorInAnimator;
     private ValueAnimator mColorOutAnimator;
     private final Scroller mCustomScroller;
     private final Typeface mDefaultTypeface;
-    private String[] mDisplayedValues;
     private ValueAnimator mFadeInAnimator;
     private ValueAnimator mFadeOutAnimator;
     private Scroller mFlingScroller;
-    private SeslNumberPicker.Formatter mFormatter;
+    private SeslSpinningDatePickerSpinner.Formatter mFormatter;
     private OverScroller mGravityScroller;
     private HapticPreDrawListener mHapticPreDrawListener;
     private Typeface mHcfFocusedTypefaceBold;
     private FloatValueHolder mHolder;
     private final EditText mInputText;
+    private SeslSpinningDatePickerSpinner.OnScrollListener mOnScrollListener;
+    private SeslSpinningDatePickerSpinner.OnSpinnerDateClickListener mOnSpinnerDateClickListener;
+    private SeslSpinningDatePickerSpinner.OnValueChangeListener mOnValueChangeListener;
     private final Typeface mLegacyTypeface;
     private final Scroller mLinearScroller;
-    private SeslNumberPicker.OnEditTextModeChangedListener mOnEditTextModeChangedListener;
-    private SeslNumberPicker.OnScrollListener mOnScrollListener;
-    private SeslNumberPicker.OnValueChangeListener mOnValueChangeListener;
+    private String[] mLongMonths;
+    private Calendar mMaxValue;
+    private Calendar mMinValue;
+    private PathClassLoader mPathClassLoader = null;
     private String mPickerContentDescription;
     private Typeface mPickerSubTypeface;
     private Typeface mPickerTypeface;
     private final PressedStateHelper mPressedStateHelper;
+    private final HashMap<Calendar, String> mSelectorIndexToStringCache = new HashMap<>();
+    private final Calendar[] mSelectorIndices = new Calendar[SELECTOR_WHEEL_ITEM_COUNT];
     private Paint mSelectorWheelPaint;
+    private String[] mShortMonths;
+    private Object mSolarLunarConverter = null;
     private SpringAnimation mSpringAnimation;
-    private SwitchIntervalOnLongPressCommand mSwitchIntervalOnLongPressCommand;
-    private Toast mToast;
-    private String mToastText;
-    private String mUnitValue;
+    private Calendar mValue;
     private VelocityTracker mVelocityTracker;
     private final Drawable mVirtualButtonFocusedDrawable;
-    private final SparseArray<String> mSelectorIndexToStringCache = new SparseArray<>();
 
     private int mBottomSelectionDividerBottom;
+    private int mChangeValueBy = DEFAULT_CHANGE_VALUE_BY;
     private int mCurrentScrollOffset;
+    private final int mHcfUnfocusedTextSizeDiff;
+    private int mInitialScrollOffset = Integer.MIN_VALUE;
     private int mLastFocusedChildVirtualViewId;
     private int mLastHoveredChildVirtualViewId;
+    private int mLongPressCount;
     private final int mMaxHeight;
-    private int mMaxValue;
     private int mMaxWidth;
     private int mMaximumFlingVelocity;
     private final int mMinHeight;
-    private int mMinValue;
     private final int mMinWidth;
     private int mMinimumFlingVelocity;
     private int mModifiedTxtHeight;
-    private int mPickerSoundFastIndex;
     private int mPickerSoundIndex;
-    private int mPickerSoundSlowIndex;
     private int mPickerVibrateIndex;
     private int mPreviousScrollerY;
     private final int mSelectionDividerHeight;
     private int mSelectorElementHeight;
     private int mSelectorTextGapHeight;
+    private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
     private int mTextColor;
     private final int mTextColorIdle;
     private final int mTextColorScrolling;
     private int mTextSize;
     private int mTopSelectionDividerTop;
     private int mTouchSlop;
-    private int mValue;
     private int mValueChangeOffset;
-    private int mWheelInterval = DEFAULT_WHEEL_INTERVAL;
-    private final int[] mSelectorIndices = new int[SELECTOR_WHEEL_ITEM_COUNT];
-    private int mInitialScrollOffset = Integer.MIN_VALUE;
-    private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
-    private int mShortFlickThreshold = 1700;
-    private int selectedPickerColor;
 
     private float mActivatedAlpha = 0.4f;
     private float mAlpha = 0.1f;
-    private float mCurVelocity;
     private final float mHeightRatio;
     private float mIdleAlpha = 0.1f;
     private float mInitialAlpha = 1.0f;
@@ -230,35 +211,43 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     private float mPreviousSpringY;
 
     private final boolean mComputeMaxWidth;
+    private boolean mCustomTypefaceSet = false;
     private boolean mDecrementVirtualButtonPressed;
     private boolean mIgnoreMoveEvents;
-    private boolean mIgnoreUpEvent;
     private boolean mIncrementVirtualButtonPressed;
-    private boolean mIsAmPm;
-    private boolean mIsBoldTextEnabled;
-    private boolean mIsEditTextMode;
     private boolean mIsHcfEnabled;
+    private boolean mIsLeapMonth;
+    private boolean mIsLongClicked = false;
+    private boolean mIsLongPressed = false;
+    private boolean mIsLunar;
+    private boolean mIsStartingAnimation = false;
+    private boolean mIsValueChanged = false;
+    private boolean mLongPressed_FIRST_SCROLL;
+    private boolean mLongPressed_SECOND_SCROLL;
+    private boolean mLongPressed_THIRD_SCROLL;
     private boolean mPerformClickOnTap;
+    private boolean mReservedStartAnimation = false;
+    private boolean mSkipNumbers;
     private boolean mSpringFlingRunning;
     private boolean mWrapSelectorWheel;
-    private boolean mCustomWheelIntervalMode = false;
-    private boolean mIsPressedBackKey = false;
     private boolean mWrapSelectorWheelPreferred = true;
-    private boolean mIsEditTextModeEnabled = true;
-    private boolean mIsLongClicked = false;
-    private boolean mIsStartingAnimation = false;
-    private boolean mReservedStartAnimation = false;
-    private boolean mIsLongPressed = false;
-    private boolean mCustomTypefaceSet = false;
-    private boolean mIsValueChanged = false;
 
     private long mLastDownEventTime;
+    private long mLongPressUpdateInterval = DEFAULT_LONG_PRESS_UPDATE_INTERVAL;
 
-    private final PathInterpolator ALPHA_PATH_INTERPOLATOR
-            = new PathInterpolator(0.17f, 0.17f, 0.83f, 0.83f);
+    private final PathInterpolator ALPHA_PATH_INTERPOLATOR = new PathInterpolator(
+            0.17f, 0.17f, 0.83f, 0.83f);
+    private final PathInterpolator SIZE_PATH_INTERPOLATOR = new PathInterpolator(
+            0.5f, 0.0f, 0.4f, 1.0f);
 
-    private final PathInterpolator SIZE_PATH_INTERPOLATOR
-            = new PathInterpolator(0.5f, 0.0f, 0.4f, 1.0f);
+    private ValueAnimator.AnimatorUpdateListener mColorUpdateListener
+            = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mTextColor = (int) animation.getAnimatedValue();
+            mDelegator.invalidate();
+        }
+    };
 
     private ValueAnimator.AnimatorUpdateListener mUpdateListener
             = new ValueAnimator.AnimatorUpdateListener() {
@@ -269,31 +258,14 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
     };
 
-    private ValueAnimator.AnimatorUpdateListener mColorUpdateListener
-            = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            mTextColor = (Integer) animation.getAnimatedValue();
-            mDelegator.invalidate();
-        }
-    };
-
     private DynamicAnimation.OnAnimationUpdateListener mSpringAnimationUpdateListener
             = new DynamicAnimation.OnAnimationUpdateListener() {
         @Override
         public void onAnimationUpdate(DynamicAnimation animation, float value, float velocity) {
-            if (!(velocity > 0.0f)) {
-                velocity = -velocity;
-            }
-
-            mCurVelocity = velocity;
-
             final float y = value - mPreviousSpringY;
             if (!mSpringFlingRunning && Math.round(y) == 0) {
                 animation.cancel();
-                if (!ensureScrollWheelAdjusted()) {
-                    updateInputTextView();
-                }
+                ensureScrollWheelAdjusted();
             } else {
                 if (Math.round(y) == 0) {
                     mSpringFlingRunning = false;
@@ -316,9 +288,9 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
     };
 
-    public SeslNumberPickerSpinnerDelegate(SeslNumberPicker numberPicker, Context context,
-                                  AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(numberPicker, context);
+    public SeslSpinningDatePickerSpinnerDelegate(SeslSpinningDatePickerSpinner spinningDatePickerSpinner,
+                                                 Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(spinningDatePickerSpinner, context);
 
         final Resources resources = mContext.getResources();
 
@@ -331,17 +303,28 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
         mHeightRatio = defaultEditTextHeight / defaultHeight;
 
-        TypedArray attributesArray = context
+        TypedArray a = context
                 .obtainStyledAttributes(attrs, R.styleable.NumberPicker, defStyleAttr, defStyleRes);
-        mMinHeight = attributesArray.getDimensionPixelSize(R.styleable.NumberPicker_internalMinHeight,
+        mMinHeight = a.getDimensionPixelSize(R.styleable.NumberPicker_internalMinHeight,
                 SIZE_UNSPECIFIED);
-        mMaxHeight = attributesArray.getDimensionPixelSize(R.styleable.NumberPicker_internalMaxHeight,
+        mMaxHeight = a.getDimensionPixelSize(R.styleable.NumberPicker_internalMaxHeight,
                 defaultHeight);
-        mMinWidth = attributesArray.getDimensionPixelSize(R.styleable.NumberPicker_internalMinWidth,
+        mMinWidth = a.getDimensionPixelSize(R.styleable.NumberPicker_internalMinWidth,
                 defaultWidth);
-        mMaxWidth = attributesArray.getDimensionPixelSize(R.styleable.NumberPicker_internalMaxWidth,
+        mMaxWidth = a.getDimensionPixelSize(R.styleable.NumberPicker_internalMaxWidth,
                 SIZE_UNSPECIFIED);
-        attributesArray.recycle();
+        a.recycle();
+
+        mValue = getCalendarForLocale(mValue, Locale.getDefault());
+        mMinValue = getCalendarForLocale(mMinValue, Locale.getDefault());
+        mMaxValue = getCalendarForLocale(mMaxValue, Locale.getDefault());
+
+        TypedArray a2 = context.obtainStyledAttributes(attrs, R.styleable.DatePicker, defStyleAttr, defStyleRes);
+        mMinValue.set(a2.getInt(R.styleable.DatePicker_android_startYear, DEFAULT_START_YEAR),
+                Calendar.JANUARY, 1);
+        mMaxValue.set(a2.getInt(R.styleable.DatePicker_android_endYear, DEFAULT_END_YEAR),
+                Calendar.DECEMBER, 31);
+        a2.recycle();
 
         if (mMinHeight != SIZE_UNSPECIFIED && mMaxHeight != SIZE_UNSPECIFIED
                 && mMinHeight > mMaxHeight) {
@@ -357,6 +340,16 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                         UNSCALED_DEFAULT_SELECTION_DIVIDER_HEIGHT, resources.getDisplayMetrics());
         mComputeMaxWidth = mMaxWidth == SIZE_UNSPECIFIED;
 
+        TypedValue typedValue = new TypedValue();
+        final int colorPrimaryDark;
+        context.getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        if (typedValue.resourceId != 0) {
+            colorPrimaryDark = ResourcesCompat.getColor(resources, typedValue.resourceId, null);
+        } else {
+            colorPrimaryDark = typedValue.data;
+        }
+        mVirtualButtonFocusedDrawable = new ColorDrawable((colorPrimaryDark & 0xffffff) | 0x33000000);
+
         if (!SeslMisc.isLightTheme(mContext)) {
             mIdleAlpha = 0.2f;
             mAlpha = 0.2f;
@@ -367,21 +360,10 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.sesl_number_picker_spinner, mDelegator, true);
+        inflater.inflate(R.layout.sesl_spinning_date_picker_spinner, mDelegator, true);
 
-        mInputText = mDelegator.findViewById(R.id.numberpicker_input);
-        mInputText.setLongClickable(false);
+        mInputText = mDelegator.findViewById(R.id.datepicker_input);
         mInputText.setIncludeFontPadding(false);
-        mInputText.setAccessibilityDelegate(new View.AccessibilityDelegate() {
-            @Override
-            public boolean performAccessibilityAction(View host, int action, Bundle args) {
-                if (action == AccessibilityNodeInfo.ACTION_CLICK) {
-                    mInputText.selectAll();
-                    showSoftInput();
-                }
-                return super.performAccessibilityAction(host, action, args);
-            }
-        });
 
         mDefaultTypeface = Typeface.defaultFromStyle(Typeface.BOLD);
         mLegacyTypeface = Typeface.create("sec-roboto-condensed-light", Typeface.BOLD);
@@ -410,69 +392,29 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
 
         if (isCharacterNumberLanguage()) {
-            mInputText.setIncludeFontPadding(true);
             mPickerTypeface = mDefaultTypeface;
             mPickerSubTypeface = Typeface.create(mDefaultTypeface, Typeface.NORMAL);
         }
 
         mIsHcfEnabled = isHighContrastFontEnabled();
         mHcfFocusedTypefaceBold = Typeface.create(mPickerTypeface, Typeface.BOLD);
+        mHcfUnfocusedTextSizeDiff = (int) TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        HCF_UNFOCUSED_TEXT_SIZE_DIFF, mContext.getResources().getDisplayMetrics());
         setInputTextTypeface();
-
-        mTextColorScrolling = ResourcesCompat.getColor(resources,
-                R.color.sesl_number_picker_text_color_scroll, context.getTheme());
 
         final ColorStateList colors = mInputText.getTextColors();
         final int[] enabledStateSet = mDelegator.getEnableStateSet();
-        final int colorForState = colors.getColorForState(enabledStateSet, Color.WHITE);
 
         if (Build.VERSION.SDK_INT > 29) {
-            mTextColorIdle = colorForState;
-            selectedPickerColor = ResourcesCompat
-                    .getColor(resources, R.color.sesl_number_picker_text_highlight_color, context.getTheme());
+            mTextColorIdle = colors.getColorForState(enabledStateSet, Color.WHITE);
         } else {
             mTextColorIdle = ResourcesCompat
                     .getColor(resources, R.color.sesl_number_picker_text_color_scroll, context.getTheme());
-            selectedPickerColor = (mTextColorScrolling & 0xffffff) | 0x33000000;
         }
+        mTextColorScrolling = ResourcesCompat
+                .getColor(resources, R.color.sesl_number_picker_text_color_scroll, context.getTheme());
         mTextColor = mTextColorIdle;
-
-        mVirtualButtonFocusedDrawable = new ColorDrawable(selectedPickerColor);
-
-        mInputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    setEditTextMode(true);
-                    mInputText.selectAll();
-                } else {
-                    mInputText.setSelection(0, 0);
-                    validateInputTextView(v);
-                }
-            }
-        });
-        mInputText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v instanceof EditText && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    ((EditText) v).selectAll();
-                    showSoftInput();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-        mInputText.setFilters(new InputFilter[]{new InputTextFilter()});
-        mInputText.setRawInputType(EditorInfo.TYPE_CLASS_NUMBER);
-        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_DONE);
-        mInputText.setCursorVisible(false);
-        mInputText.setHighlightColor(selectedPickerColor);
-        if (Build.VERSION.SDK_INT <= 29) {
-            mInputText.setTextColor(mTextColorScrolling);
-        }
-        SeslViewReflector.semSetHoverPopupType(mInputText,
-                SeslHoverPopupWindowReflector.getField_TYPE_NONE());
 
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mTouchSlop = configuration.getScaledTouchSlop();
@@ -483,13 +425,10 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         mSelectorWheelPaint = new Paint();
         mSelectorWheelPaint.setAntiAlias(true);
         mSelectorWheelPaint.setTextAlign(Paint.Align.CENTER);
-        mSelectorWheelPaint.setTextSize((float) mTextSize);
+        mSelectorWheelPaint.setTextSize(mTextSize);
         mSelectorWheelPaint.setTypeface(mPickerTypeface);
         mSelectorWheelPaint.setColor(mTextColor);
         mInitialAlpha = mSelectorWheelPaint.getAlpha() / 255.0f;
-        if (updateBoldTextEnabledInSettings()) {
-            mSelectorWheelPaint.setFakeBoldText(true);
-        }
 
         mCustomScroller = new Scroller(mContext, SIZE_PATH_INTERPOLATOR, true);
         mLinearScroller = new Scroller(mContext, null, true);
@@ -507,8 +446,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         mSpringAnimation.getSpring().setStiffness(7.0f);
         mSpringAnimation.getSpring().setDampingRatio(0.99f);
 
-        setFormatter(SeslNumberPicker.getTwoDigitFormatter());
-        updateInputTextView();
+        setFormatter(SeslSpinningDatePickerSpinner.getDateFormatter());
         mDelegator.setVerticalScrollBarEnabled(false);
         if (mDelegator.getImportantForAccessibility()
                 == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
@@ -519,9 +457,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         mHapticPreDrawListener = new HapticPreDrawListener();
         mPickerVibrateIndex = SeslHapticFeedbackConstantsReflector.semGetVibrationIndex(PICKER_VIBRATE_INDEX);
         mPickerSoundIndex = SeslAudioManagerReflector.getField_SOUND_TIME_PICKER_SCROLL();
-        mPickerSoundFastIndex = SeslAudioManagerReflector.getField_SOUND_TIME_PICKER_SCROLL_FAST();
-        mPickerSoundSlowIndex = SeslAudioManagerReflector.getField_SOUND_TIME_PICKER_SCROLL_SLOW();
-        SeslSemSoundAssistantManagerReflector.setFastAudioOpenMode(mContext, true);
 
         mDelegator.setFocusableInTouchMode(false);
         mDelegator.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
@@ -530,8 +465,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
 
         mPickerContentDescription = "";
-        mToastText = resources.getString(R.string.sesl_number_picker_invalid_value_entered);
-        mUnitValue = "";
 
         SeslViewReflector.semSetDirectPenInputEnabled(mInputText, false);
 
@@ -559,174 +492,14 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         mColorOutAnimator.setDuration(200);
         mColorOutAnimator.setStartDelay(100);
         mColorOutAnimator.addUpdateListener(mColorUpdateListener);
-    }
 
-    @Override
-    public void setDateUnit(int unit) {
-        if (unit != SeslNumberPicker.MODE_UNIT_NONE) {
-            switch (unit) {
-                case SeslNumberPicker.MODE_UNIT_DAY:
-                    mUnitValue = mContext.getResources().getString(R.string.sesl_date_picker_day);
-                    break;
-                case SeslNumberPicker.MODE_UNIT_MONTH:
-                    mUnitValue = mContext.getResources().getString(R.string.sesl_date_picker_month);
-                    break;
-                case SeslNumberPicker.MODE_UNIT_YEAR:
-                    mUnitValue = mContext.getResources().getString(R.string.sesl_date_picker_year);
-                    break;
-            }
-        } else {
-            mUnitValue = "";
-        }
+        mShortMonths = new DateFormatSymbols().getShortMonths();
+        mLongMonths = new DateFormatSymbols().getMonths();
     }
 
     @Override
     public void setPickerContentDescription(String name) {
         mPickerContentDescription = name;
-        ((SeslNumberPicker.CustomEditText) mInputText).setPickerContentDescription(name);
-    }
-
-    @Override
-    public void setImeOptions(int imeOptions) {
-        mInputText.setImeOptions(imeOptions);
-    }
-
-    @Override
-    public void setAmPm() {
-        mIsAmPm = true;
-        mTextSize = mContext.getResources()
-                .getDimensionPixelSize(R.dimen.sesl_time_picker_spinner_am_pm_text_size);
-        mSelectorWheelPaint.setTextSize((float) mTextSize);
-        mInputText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) mTextSize);
-        setEditTextModeEnabled(false);
-    }
-
-    @Override
-    public void setEditTextModeEnabled(boolean enabled) {
-        if (mIsEditTextModeEnabled != enabled && !enabled) {
-            if (mIsEditTextMode) {
-                setEditTextMode(false);
-            }
-            mInputText.setAccessibilityDelegate(null);
-            mIsEditTextModeEnabled = enabled;
-        }
-    }
-
-    @Override
-    public boolean isEditTextModeEnabled() {
-        return mIsEditTextModeEnabled;
-    }
-
-    @Override
-    public void setEditTextMode(boolean isEditTextMode) {
-        if (mIsEditTextModeEnabled && mIsEditTextMode != isEditTextMode) {
-            mIsEditTextMode = isEditTextMode;
-
-            if (isEditTextMode) {
-                tryComputeMaxWidth();
-                removeAllCallbacks();
-
-                if (!mIsStartingAnimation) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    mFlingScroller.abortAnimation();
-                    mGravityScroller.abortAnimation();
-                    mSpringFlingRunning = false;
-                    mSpringAnimation.cancel();
-                    onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                }
-
-                mDelegator.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-                updateInputTextView();
-                mInputText.setVisibility(View.VISIBLE);
-
-                final AccessibilityNodeProviderImpl provider
-                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-                if (mAccessibilityManager.isEnabled() && provider != null) {
-                    provider.performAction(INPUT, 128, null);
-                }
-            } else {
-                if (mWheelInterval != DEFAULT_WHEEL_INTERVAL && mCustomWheelIntervalMode
-                        && mValue % mWheelInterval != 0) {
-                    applyWheelCustomInterval(false);
-                }
-
-                if (mFadeOutAnimator.isRunning()) {
-                    mFadeOutAnimator.cancel();
-                }
-                if (mFadeInAnimator.isRunning()) {
-                    mFadeInAnimator.cancel();
-                }
-                if (mColorInAnimator.isRunning()) {
-                    mColorInAnimator.cancel();
-                }
-                if (mColorOutAnimator.isRunning()) {
-                    mColorOutAnimator.cancel();
-                }
-
-                mTextColor = mTextColorIdle;
-                mAlpha = mIdleAlpha;
-                mInputText.setVisibility(View.INVISIBLE);
-                mDelegator.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-            }
-
-            mLastFocusedChildVirtualViewId = View.NO_ID;
-            mDelegator.invalidate();
-
-            if (mOnEditTextModeChangedListener != null) {
-                mOnEditTextModeChangedListener.onEditTextModeChanged(mDelegator, mIsEditTextMode);
-            }
-        }
-    }
-
-    @Override
-    public void setCustomIntervalValue(int interval) {
-        mWheelInterval = interval;
-    }
-
-    @Override
-    public boolean setCustomInterval(int interval) {
-        final boolean wrapSelectorWheel = mWrapSelectorWheel;
-        if (mMinValue % interval == 0
-                && (mMaxValue + (wrapSelectorWheel ? 1 : 0)) % interval == 0) {
-            setCustomIntervalValue(interval);
-            applyWheelCustomInterval(true);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void applyWheelCustomInterval(boolean enabled) {
-        if (mWheelInterval != DEFAULT_WHEEL_INTERVAL) {
-            mCustomWheelIntervalMode = enabled;
-            if (enabled) {
-                ensureValueAdjusted(mWheelInterval);
-            }
-            initializeSelectorWheelIndices();
-            mDelegator.invalidate();
-        }
-    }
-
-    private void ensureValueAdjusted(int interval) {
-        final int diff = mValue % interval;
-        if (diff != 0) {
-            int newValue = mValue - diff;
-            if (diff > interval / 2) {
-                newValue += interval;
-            }
-            setValueInternal(newValue, true);
-        }
-    }
-
-    @Override
-    public boolean isChangedDefaultInterval() {
-        return mWheelInterval != DEFAULT_WHEEL_INTERVAL && !mCustomWheelIntervalMode;
-    }
-
-    @Override
-    public boolean isEditTextMode() {
-        return mIsEditTextMode;
     }
 
     @Override
@@ -770,19 +543,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
-        if (!mIsEditTextModeEnabled) {
-            return false;
-        } else if ((mInputText.hasFocus() || !mIsEditTextModeEnabled && mDelegator.hasFocus())
-                && event.getKeyCode() == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN) {
-            mIsPressedBackKey = true;
-            hideSoftInput();
-            setEditTextMode(false);
-            return true;
-        } else {
-            mIsPressedBackKey = false;
-            return false;
-        }
+        return false;
     }
 
     private boolean moveToFinalScrollerPosition(Scroller scroller) {
@@ -811,16 +572,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
-        if (hasWindowFocus && mIsEditTextMode && mInputText.isFocused()) {
-            showSoftInputForWindowFocused();
-        } else if (hasWindowFocus && mIsEditTextMode && !mInputText.isFocused()) {
-            InputMethodManager inputMethodManager
-                    = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null && inputMethodManager.isActive(mInputText)) {
-                inputMethodManager.hideSoftInputFromWindow(mDelegator.getWindowToken(), 0);
-            }
-        }
-
         if (!mIsStartingAnimation) {
             if (!mFlingScroller.isFinished()) {
                 mFlingScroller.forceFinished(true);
@@ -839,86 +590,71 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
 
         mIsHcfEnabled = isHighContrastFontEnabled();
-        mSelectorWheelPaint.setTextSize((float) mTextSize);
+        mSelectorWheelPaint.setTextSize(mTextSize);
         mSelectorWheelPaint.setTypeface(mPickerTypeface);
         setInputTextTypeface();
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!mDelegator.isEnabled() || mIsEditTextMode || mIsStartingAnimation) {
+        if (!mDelegator.isEnabled() || mIsStartingAnimation
+                || event.getActionMasked() != MotionEvent.ACTION_DOWN ) {
             return false;
         }
 
-        final int action = event.getActionMasked();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                removeAllCallbacks();
-                mInputText.setVisibility(View.INVISIBLE);
-                mLastDownOrMoveEventY = mLastDownEventY = event.getY();
-                mLastDownEventTime = event.getEventTime();
-                mIgnoreMoveEvents = false;
-                mIgnoreUpEvent = false;
-                mPerformClickOnTap = false;
-                mIsValueChanged = false;
-                if (mLastDownEventY < mTopSelectionDividerTop) {
-                    startFadeAnimation(false);
-                    if (mScrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-                        mPressedStateHelper.buttonPressDelayed(PressedStateHelper.BUTTON_DECREMENT);
-                    }
-                } else if (mLastDownEventY > mBottomSelectionDividerBottom) {
-                    startFadeAnimation(false);
-                    if (mScrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-                        mPressedStateHelper.buttonPressDelayed(PressedStateHelper.BUTTON_INCREMENT);
-                    }
-                }
-                mDelegator.getParent().requestDisallowInterceptTouchEvent(true);
-                if (!mFlingScroller.isFinished()) {
-                    mFlingScroller.forceFinished(true);
-                    mAdjustScroller.forceFinished(true);
-                    if (mScrollState == OnScrollListener.SCROLL_STATE_FLING) {
-                        mFlingScroller.abortAnimation();
-                        mAdjustScroller.abortAnimation();
-                    }
-                    onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                } else if (mSpringAnimation.isRunning()) {
-                    mGravityScroller.forceFinished(true);
-                    mAdjustScroller.forceFinished(true);
-                    mSpringAnimation.cancel();
-                    mSpringFlingRunning = false;
-                    if (mScrollState == OnScrollListener.SCROLL_STATE_FLING) {
-                        mGravityScroller.abortAnimation();
-                        mAdjustScroller.abortAnimation();
-                    }
-                    onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                } else if (!mAdjustScroller.isFinished()) {
-                    mFlingScroller.forceFinished(true);
-                    mAdjustScroller.forceFinished(true);
-                } else if (mLastDownEventY < mTopSelectionDividerTop) {
-                    if (mWheelInterval != DEFAULT_WHEEL_INTERVAL) {
-                        postSwitchIntervalOnLongPress();
-                    }
-                } else if (mLastDownEventY > mBottomSelectionDividerBottom) {
-                    if (mWheelInterval != DEFAULT_WHEEL_INTERVAL) {
-                        postSwitchIntervalOnLongPress();
-                    }
-                } else {
-                    mPerformClickOnTap = true;
-                    if (mWheelInterval != DEFAULT_WHEEL_INTERVAL) {
-                        postSwitchIntervalOnLongPress();
-                    } else {
-                        postBeginSoftInputOnLongPressCommand();
-                    }
-                }
-                return true;
+        removeAllCallbacks();
+        mLastDownOrMoveEventY = mLastDownEventY = event.getY();
+        mLastDownEventTime = event.getEventTime();
+        mIgnoreMoveEvents = false;
+        mPerformClickOnTap = false;
+        mIsValueChanged = false;
+        if (mLastDownEventY < mTopSelectionDividerTop) {
+            startFadeAnimation(false);
+            if (mScrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+                mPressedStateHelper.buttonPressDelayed(PressedStateHelper.BUTTON_DECREMENT);
+            }
+        } else if (mLastDownEventY > mBottomSelectionDividerBottom) {
+            startFadeAnimation(false);
+            if (mScrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+                mPressedStateHelper.buttonPressDelayed(PressedStateHelper.BUTTON_INCREMENT);
             }
         }
-        return false;
+        mDelegator.getParent().requestDisallowInterceptTouchEvent(true);
+        if (!mFlingScroller.isFinished()) {
+            mFlingScroller.forceFinished(true);
+            mAdjustScroller.forceFinished(true);
+            if (mScrollState == OnScrollListener.SCROLL_STATE_FLING) {
+                mFlingScroller.abortAnimation();
+                mAdjustScroller.abortAnimation();
+            }
+            onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+        } else if (mSpringAnimation.isRunning()) {
+            mGravityScroller.forceFinished(true);
+            mAdjustScroller.forceFinished(true);
+            mSpringAnimation.cancel();
+            mSpringFlingRunning = false;
+            if (mScrollState == OnScrollListener.SCROLL_STATE_FLING) {
+                mGravityScroller.abortAnimation();
+                mAdjustScroller.abortAnimation();
+            }
+            onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+        } else if (!mAdjustScroller.isFinished()) {
+            mFlingScroller.forceFinished(true);
+            mAdjustScroller.forceFinished(true);
+        } else if (mLastDownEventY < mTopSelectionDividerTop) {
+            postChangeCurrentByOneFromLongPress(false, ViewConfiguration.getLongPressTimeout());
+        } else if (mLastDownEventY > mBottomSelectionDividerBottom) {
+            postChangeCurrentByOneFromLongPress(true, ViewConfiguration.getLongPressTimeout());
+        } else {
+            mPerformClickOnTap = true;
+        }
+
+        return true;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!mDelegator.isEnabled() || mIsEditTextMode || mIsStartingAnimation) {
+        if (!mDelegator.isEnabled() || mIsStartingAnimation) {
             return false;
         }
         if (mVelocityTracker == null) {
@@ -928,61 +664,49 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_UP: {
-                removeBeginSoftInputCommand();
-                removeSwitchIntervalOnLongPress();
-                if (!mIgnoreUpEvent) {
-                    mPressedStateHelper.cancel();
-                    VelocityTracker velocityTracker = mVelocityTracker;
-                    velocityTracker.computeCurrentVelocity(1000, mMaximumFlingVelocity);
-                    int initialVelocity = (int) velocityTracker.getYVelocity();
-                    int eventY = (int) event.getY();
-                    int deltaMoveY = (int) Math.abs(eventY - mLastDownEventY);
-                    if (!mIsEditTextModeEnabled && mIgnoreMoveEvents) {
-                        ensureScrollWheelAdjusted();
+                removeChangeCurrentByOneFromLongPress();
+                mPressedStateHelper.cancel();
+                VelocityTracker velocityTracker = mVelocityTracker;
+                velocityTracker.computeCurrentVelocity(1000, mMaximumFlingVelocity);
+                int initialVelocity = (int) velocityTracker.getYVelocity();
+                int eventY = (int) event.getY();
+                int deltaMoveY = (int) Math.abs(eventY - mLastDownEventY);
+                if (Math.abs(initialVelocity) <= mMinimumFlingVelocity) {
+                    final long eventTime = event.getEventTime() - mLastDownEventTime;
+                    if (deltaMoveY > mTouchSlop
+                            || eventTime >= ViewConfiguration.getLongPressTimeout()) {
+                        if (mIsLongClicked) {
+                            mIsLongClicked = false;
+                        }
+                        ensureScrollWheelAdjusted(deltaMoveY);
                         startFadeAnimation(true);
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                    } else if (Math.abs(initialVelocity) > mMinimumFlingVelocity
-                            && Math.abs(initialVelocity) > mShortFlickThreshold) {
-                        if (deltaMoveY > mTouchSlop || !mPerformClickOnTap) {
-                            fling(initialVelocity);
-                            onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
-                        } else {
-                            mPerformClickOnTap = false;
-                            performClick();
-                            onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                        }
+                    } else if (mPerformClickOnTap) {
+                        mPerformClickOnTap = false;
+                        performClick();
                     } else {
-                        final long eventTime = event.getEventTime();
-                        if (deltaMoveY <= mTouchSlop) {
-                            if (mPerformClickOnTap) {
-                                mPerformClickOnTap = false;
-                                performClick();
-                            } else {
-                                if (eventY > mBottomSelectionDividerBottom) {
-                                    changeValueByOne(true);
-                                    mPressedStateHelper.buttonTapped(PressedStateHelper.BUTTON_INCREMENT);
-                                } else if (eventY < mTopSelectionDividerTop) {
-                                    changeValueByOne(false);
-                                    mPressedStateHelper.buttonTapped(PressedStateHelper.BUTTON_DECREMENT);
-                                } else {
-                                    ensureScrollWheelAdjusted(deltaMoveY);
-                                }
-                                startFadeAnimation(true);
-                            }
+                        if (eventY > mBottomSelectionDividerBottom) {
+                            changeValueByOne(true);
+                            mPressedStateHelper.buttonTapped(PressedStateHelper.BUTTON_INCREMENT);
+                        } else if (eventY < mTopSelectionDividerTop) {
+                            changeValueByOne(false);
+                            mPressedStateHelper.buttonTapped(PressedStateHelper.BUTTON_DECREMENT);
                         } else {
-                            if (mIsLongClicked) {
-                                showSoftInput();
-                                mIsLongClicked = false;
-                            }
                             ensureScrollWheelAdjusted(deltaMoveY);
-                            startFadeAnimation(true);
                         }
-                        mIsValueChanged = false;
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                        startFadeAnimation(true);
                     }
-                    mVelocityTracker.recycle();
-                    mVelocityTracker = null;
+                    mIsValueChanged = false;
+                    onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                } else if (deltaMoveY > mTouchSlop || !mPerformClickOnTap) {
+                    fling(initialVelocity);
+                    onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+                } else {
+                    mPerformClickOnTap = false;
+                    performClick();
+                    onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
                 }
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
             } break;
             case MotionEvent.ACTION_MOVE: {
                 if (mIgnoreMoveEvents) {
@@ -1026,7 +750,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (!mDelegator.isEnabled() || mIsEditTextMode || mIsStartingAnimation) {
+        if (!mDelegator.isEnabled() || mIsStartingAnimation) {
             return false;
         }
 
@@ -1045,12 +769,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        boolean previousBoldText = mIsBoldTextEnabled;
-        updateBoldTextEnabledInSettings();
-        if (previousBoldText != mIsBoldTextEnabled) {
-            mSelectorWheelPaint.setFakeBoldText(mIsBoldTextEnabled);
-        }
-
         if (!mCustomTypefaceSet) {
             if (isCharacterNumberLanguage()) {
                 mInputText.setIncludeFontPadding(true);
@@ -1069,33 +787,26 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     @Override
     public void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         if (gainFocus) {
-            if (mIsEditTextMode) {
-                mLastFocusedChildVirtualViewId = View.NO_ID;
-                if (mInputText.getVisibility() == View.VISIBLE) {
-                    mInputText.requestFocus();
-                }
-            } else {
-                mLastFocusedChildVirtualViewId = 1;
-                if (!mWrapSelectorWheel && getValue() == getMinValue()) {
-                    mLastFocusedChildVirtualViewId = 2;
-                }
+            InputMethodManager inputMethodManager
+                    = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(mDelegator.getWindowToken(), 0);
+            }
+
+            mLastFocusedChildVirtualViewId = 1;
+            if (!mWrapSelectorWheel && getValue().equals(getMinValue())) {
+                mLastFocusedChildVirtualViewId = 2;
             }
 
             AccessibilityNodeProviderImpl provider
                     = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
             if (mAccessibilityManager.isEnabled() && provider != null) {
-                if (mIsEditTextMode) {
-                    mLastFocusedChildVirtualViewId = 2;
-                }
                 provider.performAction(mLastFocusedChildVirtualViewId, 64, null);
             }
         } else {
             AccessibilityNodeProviderImpl provider
                     = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
             if (mAccessibilityManager.isEnabled() && provider != null) {
-                if (mIsEditTextMode) {
-                    mLastFocusedChildVirtualViewId = 2;
-                }
                 provider.performAction(mLastFocusedChildVirtualViewId, 128, null);
             }
             mLastFocusedChildVirtualViewId = View.NO_ID;
@@ -1117,9 +828,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_UP:
                 case KeyEvent.KEYCODE_DPAD_DOWN:
-                    if (mIsEditTextMode) {
-                        return false;
-                    }
                     switch (action) {
                         case KeyEvent.ACTION_DOWN:
                             if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
@@ -1128,7 +836,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                     mDelegator.invalidate();
                                     return true;
                                 } else if (mLastFocusedChildVirtualViewId == 2) {
-                                    if (!mWrapSelectorWheel && getValue() == getMaxValue()) {
+                                    if (!mWrapSelectorWheel && getValue().equals(getMinValue())) {
                                         return false;
                                     }
                                     mLastFocusedChildVirtualViewId = 3;
@@ -1142,7 +850,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                         mDelegator.invalidate();
                                         return true;
                                     }
-                                } else if (!mWrapSelectorWheel && getValue() == getMinValue()) {
+                                } else if (!mWrapSelectorWheel && getValue().equals(getMinValue())) {
                                     return false;
                                 } else {
                                     mLastFocusedChildVirtualViewId = 1;
@@ -1187,28 +895,26 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             }
         }
 
-        if (!mIsEditTextMode && action == KeyEvent.ACTION_UP) {
+        if (action == KeyEvent.ACTION_UP) {
             if (mLastFocusedChildVirtualViewId == 2) {
-                if (!mIsEditTextModeEnabled) {
-                    return false;
-                }
-                mInputText.setVisibility(View.VISIBLE);
-                mInputText.requestFocus();
-                showSoftInput();
+                performClick();
                 removeAllCallbacks();
-                return true;
             } else if (mFlingScroller.isFinished()) {
                 if (mLastFocusedChildVirtualViewId == 1) {
                     startFadeAnimation(false);
                     changeValueByOne(false);
-                    if (!mWrapSelectorWheel && getValue() == getMinValue() + 1) {
+                    Calendar minValue = (Calendar) getMinValue().clone();
+                    minValue.add(Calendar.DAY_OF_MONTH, 1);
+                    if (!mWrapSelectorWheel && getValue().equals(minValue)) {
                         mLastFocusedChildVirtualViewId = 2;
                     }
                     startFadeAnimation(true);
                 } else if (mLastFocusedChildVirtualViewId == 3) {
                     startFadeAnimation(false);
                     changeValueByOne(true);
-                    if (!mWrapSelectorWheel && getValue() == getMaxValue() - 1) {
+                    Calendar maxValue = (Calendar) getMaxValue().clone();
+                    maxValue.add(Calendar.DAY_OF_MONTH, -1);
+                    if (!mWrapSelectorWheel && getValue().equals(maxValue)) {
                         mLastFocusedChildVirtualViewId = 2;
                     }
                     startFadeAnimation(true);
@@ -1235,12 +941,10 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             final int eventY = (int) event.getY();
 
             int index = 2;
-            if (!mIsEditTextMode) {
-                if (eventY <= mTopSelectionDividerTop) {
-                    index = 1;
-                } else if (mBottomSelectionDividerBottom <= eventY) {
-                    index = 3;
-                }
+            if (eventY <= mTopSelectionDividerTop) {
+                index = 1;
+            } else if (mBottomSelectionDividerBottom <= eventY) {
+                index = 3;
             }
 
             final int action = event.getActionMasked();
@@ -1272,11 +976,15 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
     }
 
+    @Override
+    public void setSkipValuesOnLongPressEnabled(boolean enabled) {
+        mSkipNumbers = enabled;
+    }
+
     private void playSoundAndHapticFeedback() {
-        mAudioManager.playSoundEffect(mCurVelocity > FAST_SCROLL_VELOCITY_START
-                ? mPickerSoundFastIndex : mPickerSoundSlowIndex);
+        mAudioManager.playSoundEffect(mPickerSoundIndex);
         if (!mHapticPreDrawListener.mSkipHapticCalls) {
-            mDelegator.performHapticFeedback(SAMSUNG_VIBRATION_START);
+            mDelegator.performHapticFeedback(mPickerVibrateIndex);
             mHapticPreDrawListener.mSkipHapticCalls = true;
         }
     }
@@ -1331,53 +1039,30 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     // TODO rework this method
     // kang
-    @Override
     public void scrollBy(int var1, int var2) {
         /* var1 = x; var2 = y; */
-        int[] var3 = this.mSelectorIndices;
+        Calendar[] var3 = this.mSelectorIndices;
         if (var2 != 0 && this.mSelectorElementHeight > 0) {
             var1 = var2;
-            int var4;
-            int var5;
             if (!this.mWrapSelectorWheel) {
-                var4 = this.mCurrentScrollOffset;
-                var5 = this.mInitialScrollOffset;
                 var1 = var2;
-                if (var4 + var2 > var5) {
+                if (this.mCurrentScrollOffset + var2 > this.mInitialScrollOffset) {
                     var1 = var2;
-                    if (var3[2] <= this.mMinValue) {
-                        var2 = var5 - var4;
+                    if (var3[2].compareTo(this.mMinValue) <= 0) {
                         this.stopFlingAnimation();
-                        var1 = var2;
-                        if (this.mIsAmPm) {
-                            var1 = var2;
-                            if (this.mLastDownOrMoveEventY > (float)this.mDelegator.getBottom()) {
-                                this.mIgnoreMoveEvents = true;
-                                return;
-                            }
-                        }
+                        var1 = this.mInitialScrollOffset - this.mCurrentScrollOffset;
                     }
                 }
             }
 
             var2 = var1;
             if (!this.mWrapSelectorWheel) {
-                var5 = this.mCurrentScrollOffset;
-                var4 = this.mInitialScrollOffset;
                 var2 = var1;
-                if (var5 + var1 < var4) {
+                if (this.mCurrentScrollOffset + var1 < this.mInitialScrollOffset) {
                     var2 = var1;
-                    if (var3[2] >= this.mMaxValue) {
-                        var1 = var4 - var5;
+                    if (var3[2].compareTo(this.mMaxValue) >= 0) {
                         this.stopFlingAnimation();
-                        var2 = var1;
-                        if (this.mIsAmPm) {
-                            var2 = var1;
-                            if (this.mLastDownOrMoveEventY < (float)this.mDelegator.getTop()) {
-                                this.mIgnoreMoveEvents = true;
-                                return;
-                            }
-                        }
+                        var2 = this.mInitialScrollOffset - this.mCurrentScrollOffset;
                     }
                 }
             }
@@ -1395,15 +1080,18 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
                         this.mCurrentScrollOffset = var1 + this.mSelectorElementHeight;
                         this.incrementSelectorIndices(var3);
-                        this.playSoundAndHapticFeedback();
                         if (!this.mIsStartingAnimation) {
                             this.setValueInternal(var3[2], true);
                             this.mIsValueChanged = true;
-                        } else if (this.mWheelInterval != 1 && this.mCustomWheelIntervalMode) {
-                            this.initializeSelectorWheelIndices();
+                            var1 = this.mLongPressCount;
+                            if (var1 > 0) {
+                                this.mLongPressCount = var1 - 1;
+                            } else {
+                                this.playSoundAndHapticFeedback();
+                            }
                         }
 
-                        if (!this.mWrapSelectorWheel && var3[2] >= this.mMaxValue) {
+                        if (!this.mWrapSelectorWheel && var3[2].compareTo(this.mMaxValue) >= 0) {
                             this.mCurrentScrollOffset = this.mInitialScrollOffset;
                         }
                     }
@@ -1411,15 +1099,18 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
                 this.mCurrentScrollOffset = var1 - this.mSelectorElementHeight;
                 this.decrementSelectorIndices(var3);
-                this.playSoundAndHapticFeedback();
                 if (!this.mIsStartingAnimation) {
                     this.setValueInternal(var3[2], true);
                     this.mIsValueChanged = true;
-                } else if (this.mWheelInterval != 1 && this.mCustomWheelIntervalMode) {
-                    this.initializeSelectorWheelIndices();
+                    var1 = this.mLongPressCount;
+                    if (var1 > 0) {
+                        this.mLongPressCount = var1 - 1;
+                    } else {
+                        this.playSoundAndHapticFeedback();
+                    }
                 }
 
-                if (!this.mWrapSelectorWheel && var3[2] <= this.mMinValue) {
+                if (!this.mWrapSelectorWheel && var3[2].compareTo(this.mMinValue) <= 0) {
                     this.mCurrentScrollOffset = this.mInitialScrollOffset;
                 }
             }
@@ -1434,7 +1125,9 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public int computeVerticalScrollRange() {
-        return (mMaxValue - mMinValue + 1) * mSelectorElementHeight;
+        return (((int) TimeUnit.MILLISECONDS
+                .toDays(mMaxValue.getTimeInMillis() - mMinValue.getTimeInMillis())) + 1)
+                * mSelectorElementHeight;
     }
 
     @Override
@@ -1443,33 +1136,39 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
 
     @Override
-    public void setOnValueChangedListener(SeslNumberPicker.OnValueChangeListener onValueChangeListener) {
+    public void setOnValueChangedListener(
+            SeslSpinningDatePickerSpinner.OnValueChangeListener onValueChangeListener) {
         mOnValueChangeListener = onValueChangeListener;
     }
 
     @Override
-    public void setOnScrollListener(SeslNumberPicker.OnScrollListener onScrollListener) {
+    public void setOnScrollListener(
+            SeslSpinningDatePickerSpinner.OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
     }
 
     @Override
-    public void setOnEditTextModeChangedListener(
-            SeslNumberPicker.OnEditTextModeChangedListener onEditTextModeChangedListener) {
-        mOnEditTextModeChangedListener = onEditTextModeChangedListener;
+    public void setOnSpinnerDateClickListener(
+            SeslSpinningDatePickerSpinner.OnSpinnerDateClickListener onSpinnerDateClickListener) {
+        mOnSpinnerDateClickListener = onSpinnerDateClickListener;
     }
 
     @Override
-    public void setFormatter(SeslNumberPicker.Formatter formatter) {
+    public SeslSpinningDatePickerSpinner.OnSpinnerDateClickListener getOnSpinnerDateClickListener() {
+        return mOnSpinnerDateClickListener;
+    }
+
+    @Override
+    public void setFormatter(SeslSpinningDatePickerSpinner.Formatter formatter) {
         if (formatter == mFormatter) {
             return;
         }
         mFormatter = formatter;
         initializeSelectorWheelIndices();
-        updateInputTextView();
     }
 
     @Override
-    public void setValue(int value) {
+    public void setValue(Calendar value) {
         if (!mFlingScroller.isFinished() || mSpringAnimation.isRunning()) {
             stopScrollAnimation();
         }
@@ -1477,123 +1176,109 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
 
     @Override
-    public boolean isEditTextModeNotAmPm() {
-        return mIsEditTextMode && !mIsAmPm;
-    }
-
-    @Override
     public void performClick() {
-        if (mIsEditTextModeEnabled) {
-            showSoftInput();
+        stopScrollAnimation();
+
+        if (mOnSpinnerDateClickListener != null) {
+            Calendar value = null;
+            SeslSpinningDatePicker.LunarDate lunarDate;
+            if (mIsLunar) {
+                lunarDate = new SeslSpinningDatePicker.LunarDate();
+                value = convertSolarToLunar(mValue, lunarDate);
+            } else {
+                lunarDate = null;
+            }
+            if (!mIsLunar) {
+                value = mValue;
+            }
+
+            mOnSpinnerDateClickListener.onSpinnerDateClicked(value, lunarDate);
         }
     }
 
     @Override
     public void performClick(boolean toIncrement) {
-        if (mIsAmPm) {
-            toIncrement = mValue != mMaxValue;
-        }
         changeValueByOne(toIncrement);
     }
 
     @Override
     public void performLongClick() {
         mIgnoreMoveEvents = true;
-        if (mIsEditTextModeEnabled) {
-            mIsLongClicked = true;
-        }
+        mIsLongClicked = true;
     }
 
-    private void showSoftInputForWindowFocused() {
-        mDelegator.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager inputMethodManager
-                        = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (inputMethodManager != null) {
-                    if (mIsEditTextMode && mInputText.isFocused() && !inputMethodManager.showSoftInput(mInputText, 0)) {
-                        mDelegator.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                InputMethodManager inputMethodManager
-                                        = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                                if (inputMethodManager != null && mIsEditTextMode && mInputText.isFocused()) {
-                                    inputMethodManager.showSoftInput(mInputText, 0);
-                                }
-                            }
-                        }, 20);
-                    }
-                }
-            }
-        }, 20);
-    }
-
-    private void showSoftInput() {
-        InputMethodManager inputMethodManager
-                = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null) {
-            mInputText.setVisibility(View.VISIBLE);
-            mInputText.requestFocus();
-            inputMethodManager.viewClicked(mInputText);
-            inputMethodManager.showSoftInput(mInputText, 0);
-        }
-    }
-
-    private void hideSoftInput() {
-        InputMethodManager inputMethodManager
-                = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null && inputMethodManager.isActive(mInputText)) {
-            inputMethodManager.hideSoftInputFromWindow(mDelegator.getWindowToken(), 0);
-            mInputText.setVisibility(View.INVISIBLE);
-        }
-    }
-
+    // TODO rework this method
+    // kang
     private void tryComputeMaxWidth() {
-        if (!mComputeMaxWidth) {
-            return;
-        }
-        int maxTextWidth = 0;
-        int i;
-        if (mDisplayedValues == null) {
-            float maxDigitWidth = 0;
-            for (i = 0; i <= 9; i++) {
-                final float digitWidth
-                        = mSelectorWheelPaint.measureText(formatNumberWithLocale(i));
-                if (digitWidth > maxDigitWidth) {
-                    maxDigitWidth = digitWidth;
+        if (this.mComputeMaxWidth) {
+            byte var1 = 0;
+            float var2 = 0.0F;
+            int var3 = 0;
+
+            float var4;
+            float var5;
+            float var6;
+            for(var4 = 0.0F; var3 <= 9; var4 = var6) {
+                var5 = this.mSelectorWheelPaint.measureText(formatNumberWithLocale(var3));
+                var6 = var4;
+                if (var5 > var4) {
+                    var6 = var5;
                 }
+
+                ++var3;
             }
-            int numberOfDigits = 0;
-            int current = mMaxValue;
-            while (current > 0) {
-                numberOfDigits++;
-                current = current / 10;
-            }
-            maxTextWidth = (int) (numberOfDigits * maxDigitWidth);
-        } else {
-            final int valueCount = mDisplayedValues.length;
-            for (i = 0; i < valueCount; i++) {
-                final float textWidth = mSelectorWheelPaint.measureText(mDisplayedValues[i]);
-                if (textWidth > maxTextWidth) {
-                    maxTextWidth = (int) textWidth;
+
+            float var7 = (float)((int)((float)2 * var4));
+            String[] var8 = (new android.icu.text.DateFormatSymbols(Locale.getDefault())).getShortWeekdays();
+            int var9 = var8.length;
+            var3 = 0;
+
+            String var10;
+            for(var6 = 0.0F; var3 < var9; var6 = var4) {
+                var10 = var8[var3];
+                var5 = this.mSelectorWheelPaint.measureText(var10);
+                var4 = var6;
+                if (var5 > var6) {
+                    var4 = var5;
                 }
+
+                ++var3;
             }
-        }
-        maxTextWidth += mInputText.getPaddingLeft() + mInputText.getPaddingRight();
-        if (isHighContrastFontEnabled()) {
-            maxTextWidth += ((int) Math.ceil(
-                    (double) (SeslPaintReflector.getHCTStrokeWidth(mSelectorWheelPaint) / 2.0f)))
-                        * (i + 2);
-        }
-        if (mMaxWidth != maxTextWidth) {
-            if (maxTextWidth > mMinWidth) {
-                mMaxWidth = maxTextWidth;
-            } else {
-                mMaxWidth = mMinWidth;
+
+            var8 = (new android.icu.text.DateFormatSymbols(Locale.getDefault())).getShortMonths();
+            var9 = var8.length;
+
+            for(var3 = var1; var3 < var9; var2 = var4) {
+                var10 = var8[var3];
+                var5 = this.mSelectorWheelPaint.measureText(var10);
+                var4 = var2;
+                if (var5 > var2) {
+                    var4 = var5;
+                }
+
+                ++var3;
             }
-            mDelegator.invalidate();
+
+            int var11 = (int)(var7 + var6 + var2 + this.mSelectorWheelPaint.measureText(" ") * 2.0F + this.mSelectorWheelPaint.measureText(",")) + this.mInputText.getPaddingLeft() + this.mInputText.getPaddingRight();
+            var3 = var11;
+            if (this.isHighContrastFontEnabled()) {
+                var3 = var11 + (int)Math.ceil((double)(SeslPaintReflector.getHCTStrokeWidth(this.mSelectorWheelPaint) / 2.0F)) * 13;
+            }
+
+            if (this.mMaxWidth != var3) {
+                var11 = this.mMinWidth;
+                if (var3 > var11) {
+                    this.mMaxWidth = var3;
+                } else {
+                    this.mMaxWidth = var11;
+                }
+
+                this.mDelegator.invalidate();
+            }
+
         }
     }
+    // kang
 
     @Override
     public boolean getWrapSelectorWheel() {
@@ -1608,7 +1293,9 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     private void updateWrapSelectorWheel() {
         boolean wrapSelectorWheel = true;
-        final boolean wrappingAllowed = mMaxValue - mMinValue >= mSelectorIndices.length;
+        final boolean wrappingAllowed = ((int) TimeUnit.MILLISECONDS
+                .toDays(mMaxValue.getTimeInMillis() - mMinValue.getTimeInMillis()))
+                >= mSelectorIndices.length;
         if (!wrappingAllowed || !mWrapSelectorWheelPreferred) {
             wrapSelectorWheel = false;
         }
@@ -1620,62 +1307,53 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
 
     @Override
-    public int getValue() {
+    public void setOnLongPressUpdateInterval(long interval) {
+        mLongPressUpdateInterval = interval;
+    }
+
+    @Override
+    public Calendar getValue() {
         return mValue;
     }
 
     @Override
-    public int getMinValue() {
+    public Calendar getMinValue() {
         return mMinValue;
     }
 
     @Override
-    public void setMinValue(int minValue) {
-        if (mMinValue == minValue) {
+    public void setMinValue(Calendar minValue) {
+        if (mMinValue.equals(minValue)) {
             return;
         }
-        if (minValue < 0) {
-            throw new IllegalArgumentException("minValue must be >= 0");
+        clearCalendar(mMinValue, minValue);
+        if (mMinValue.compareTo(mValue) > 0) {
+            clearCalendar(mValue, mMinValue);
         }
-        if (mWheelInterval == DEFAULT_WHEEL_INTERVAL || minValue % mWheelInterval == 0) {
-            mMinValue = minValue;
-            if (mMinValue > mValue) {
-                mValue = mMinValue;
-            }
-            updateWrapSelectorWheel();
-            initializeSelectorWheelIndices();
-            updateInputTextView();
-            tryComputeMaxWidth();
-            mDelegator.invalidate();
-        }
+        updateWrapSelectorWheel();
+        initializeSelectorWheelIndices();
+        tryComputeMaxWidth();
+        mDelegator.invalidate();
     }
 
     @Override
-    public int getMaxValue() {
+    public Calendar getMaxValue() {
         return mMaxValue;
     }
 
     @Override
-    public void setMaxValue(int maxValue) {
-        if (mMaxValue == maxValue) {
+    public void setMaxValue(Calendar maxValue) {
+        if (mMaxValue.equals(maxValue)) {
             return;
         }
-        if (maxValue < 0) {
-            throw new IllegalArgumentException("maxValue must be >= 0");
+        clearCalendar(mMaxValue, maxValue);
+        if (mMaxValue.compareTo(mValue) < 0) {
+            clearCalendar(mValue, mMaxValue);
         }
-        final boolean wrapSelectorWheel = mWrapSelectorWheel;
-        if (mWheelInterval == DEFAULT_WHEEL_INTERVAL
-                || ((wrapSelectorWheel ? 1 : 0) + maxValue) % mWheelInterval == 0) {
-            mMaxValue = maxValue;
-            if (mMaxValue < mValue) {
-                mValue = mMaxValue;
-            }
-            updateWrapSelectorWheel();
-            initializeSelectorWheelIndices();
-            updateInputTextView();
-            tryComputeMaxWidth();
-            mDelegator.invalidate();
-        }
+        updateWrapSelectorWheel();
+        initializeSelectorWheelIndices();
+        tryComputeMaxWidth();
+        mDelegator.invalidate();
     }
 
     @Override
@@ -1699,41 +1377,12 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
 
     @Override
-    public String[] getDisplayedValues() {
-        return mDisplayedValues;
-    }
-
-    @Override
-    public void setDisplayedValues(String[] displayedValues) {
-        if (mDisplayedValues == displayedValues) {
-            return;
-        }
-        mDisplayedValues = displayedValues;
-        if (mDisplayedValues != null) {
-            mInputText.setRawInputType(InputType.TYPE_CLASS_TEXT
-                    | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        } else {
-            mInputText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
-        }
-        updateInputTextView();
-        initializeSelectorWheelIndices();
-        tryComputeMaxWidth();
-    }
-
-    @Override
-    public void setErrorToastMessage(String msg) {
-        if (!TextUtils.isEmpty(msg)) {
-            mToastText = msg;
-        }
-    }
-
-    @Override
     public void setTextSize(float size) {
         final int scaledSize = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, size, mContext.getResources().getDisplayMetrics());
         mTextSize = scaledSize;
-        mSelectorWheelPaint.setTextSize((float) scaledSize);
-        mInputText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) mTextSize);
+        mSelectorWheelPaint.setTextSize(scaledSize);
+        mInputText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         tryComputeMaxWidth();
     }
 
@@ -1767,7 +1416,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             } else {
                 mSelectorWheelPaint.setTypeface(mPickerSubTypeface);
             }
-            mSelectorWheelPaint.setTextSize((float) mTextSize);
         }
     }
 
@@ -1796,95 +1444,59 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
     }
 
-    // TODO rework this method
     @Override
-    public void startAnimation(int delayMillis, SeslAnimationListener listener) {
+    public void startAnimation(int delayTime, SeslAnimationListener listener) {
         mAnimationListener = listener;
-        if (!mIsEditTextMode) {
-            if (!mIsAmPm && !mWrapSelectorWheel && getValue() - getMinValue() == 0) {
-                if (mAnimationListener != null) {
-                    mAnimationListener.onAnimationEnd();
-                }
-            } else {
-                if (mFadeOutAnimator.isStarted()) {
-                    mFadeOutAnimator.cancel();
-                }
-                if (mFadeInAnimator.isStarted()) {
-                    mFadeInAnimator.cancel();
-                }
-                if (mColorInAnimator.isStarted()) {
-                    mColorInAnimator.cancel();
-                }
-                if (mColorOutAnimator.isStarted()) {
-                    mColorOutAnimator.cancel();
-                }
+        mAlpha = mActivatedAlpha;
 
-                mDelegator.post(new Runnable() {
+        mDelegator.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mSelectorElementHeight == 0) {
+                    mReservedStartAnimation = true;
+                    return;
+                }
+                mIsStartingAnimation = true;
+                mFlingScroller = mCustomScroller;
+                scrollBy(0, mSelectorElementHeight * 5);
+                mDelegator.invalidate();
+
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (mSelectorElementHeight == 0) {
-                            mReservedStartAnimation = true;
-                            return;
-                        }
-
-                        mIsStartingAnimation = true;
-                        mFlingScroller = mCustomScroller;
-
-                        // kang
-                        int i2;
-                        if (SeslNumberPickerSpinnerDelegate.this.getValue() != SeslNumberPickerSpinnerDelegate.this.getMinValue()) {
-                            i2 = SeslNumberPickerSpinnerDelegate.this.mSelectorElementHeight;
-                        } else {
-                            i2 = -SeslNumberPickerSpinnerDelegate.this.mSelectorElementHeight;
-                        }
-                        int value = SeslNumberPickerSpinnerDelegate.this.getValue() - SeslNumberPickerSpinnerDelegate.this.getMinValue();
-                        int i3 = (SeslNumberPickerSpinnerDelegate.this.mWrapSelectorWheel || value >= 5) ? 5 : value;
-                        float f = (SeslNumberPickerSpinnerDelegate.this.mWrapSelectorWheel || value >= 5) ? 5.4f : ((float) value) + 0.4f;
-                        int i4 = SeslNumberPickerSpinnerDelegate.this.mIsAmPm ? i2 : SeslNumberPickerSpinnerDelegate.this.mSelectorElementHeight * i3;
-                        if (!SeslNumberPickerSpinnerDelegate.this.mIsAmPm) {
-                            i2 = (int) (((float) SeslNumberPickerSpinnerDelegate.this.mSelectorElementHeight) * f);
-                        }
-                        SeslNumberPickerSpinnerDelegate.this.scrollBy(0, i4);
-                        SeslNumberPickerSpinnerDelegate.this.mDelegator.invalidate();
-                        int finalI = i2;
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                int forwardDistance = (int) (mSelectorElementHeight * 5.4d);
+                                if (!moveToFinalScrollerPosition(mFlingScroller)) {
+                                    moveToFinalScrollerPosition(mAdjustScroller);
+                                }
+                                mPreviousScrollerY = 0;
+                                mFlingScroller.startScroll(0, 0, 0, -forwardDistance, START_ANIMATION_SCROLL_DURATION_2016B);
+                                mDelegator.invalidate();
+
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (!SeslNumberPickerSpinnerDelegate.this.moveToFinalScrollerPosition(SeslNumberPickerSpinnerDelegate.this.mFlingScroller)) {
-                                            SeslNumberPickerSpinnerDelegate.this.moveToFinalScrollerPosition(SeslNumberPickerSpinnerDelegate.this.mAdjustScroller);
+                                        moveToFinalScrollerPosition(mFlingScroller);
+                                        mFlingScroller.abortAnimation();
+                                        mAdjustScroller.abortAnimation();
+                                        ensureScrollWheelAdjusted();
+                                        mFlingScroller = mLinearScroller;
+                                        mIsStartingAnimation = false;
+                                        mDelegator.invalidate();
+                                        startFadeAnimation(true);
+                                        if (mAnimationListener != null) {
+                                            mAnimationListener.onAnimationEnd();
                                         }
-                                        SeslNumberPickerSpinnerDelegate.this.startFadeAnimation(false);
-                                        SeslNumberPickerSpinnerDelegate.this.mPreviousScrollerY = 0;
-                                        SeslNumberPickerSpinnerDelegate.this.mFlingScroller.startScroll(0, 0, 0, -finalI, SeslNumberPickerSpinnerDelegate.this.mIsAmPm ? SeslNumberPickerSpinnerDelegate.START_ANIMATION_SCROLL_DURATION : SeslNumberPickerSpinnerDelegate.START_ANIMATION_SCROLL_DURATION_2016B);
-                                        SeslNumberPickerSpinnerDelegate.this.mDelegator.invalidate();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override // java.lang.Runnable
-                                            public void run() {
-                                                SeslNumberPickerSpinnerDelegate.this.moveToFinalScrollerPosition(SeslNumberPickerSpinnerDelegate.this.mFlingScroller);
-                                                SeslNumberPickerSpinnerDelegate.this.mFlingScroller.abortAnimation();
-                                                SeslNumberPickerSpinnerDelegate.this.mAdjustScroller.abortAnimation();
-                                                SeslNumberPickerSpinnerDelegate.this.ensureScrollWheelAdjusted();
-                                                SeslNumberPickerSpinnerDelegate.this.mFlingScroller = SeslNumberPickerSpinnerDelegate.this.mLinearScroller;
-                                                SeslNumberPickerSpinnerDelegate.this.mIsStartingAnimation = false;
-                                                SeslNumberPickerSpinnerDelegate.this.mDelegator.invalidate();
-                                                SeslNumberPickerSpinnerDelegate.this.startFadeAnimation(true);
-                                                if (SeslNumberPickerSpinnerDelegate.this.mAnimationListener != null) {
-                                                    SeslNumberPickerSpinnerDelegate.this.mAnimationListener.onAnimationEnd();
-                                                }
-                                            }
-                                        }, START_ANIMATION_SCROLL_DURATION);
                                     }
-                                }, 100);
+                                }, START_ANIMATION_SCROLL_DURATION);
                             }
-                        }, (long) delayMillis);
-                        // kang
+                        }, 100);
                     }
-                });
+                }, delayTime);
             }
-        }
+        });
     }
 
     private void stopScrollAnimation() {
@@ -1893,8 +1505,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         mGravityScroller.abortAnimation();
         mSpringAnimation.cancel();
         mSpringFlingRunning = false;
-        mIsStartingAnimation = false;
-        if (!moveToFinalScrollerPosition(mFlingScroller)) {
+        if (!mIsStartingAnimation && !moveToFinalScrollerPosition(mFlingScroller)) {
             moveToFinalScrollerPosition(mAdjustScroller);
         }
         ensureScrollWheelAdjusted();
@@ -1910,13 +1521,12 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     private void startFadeAnimation(boolean fadeOut) {
         if (fadeOut) {
-            mFadeOutAnimator.setStartDelay((mFlingScroller.isFinished() ?
+            mFadeOutAnimator.setStartDelay(mFlingScroller.getDuration() + 100);
+            mColorOutAnimator.setStartDelay((mFlingScroller.isFinished() ?
                     0 : mFlingScroller.getDuration()) + 100);
-            mColorOutAnimator.setStartDelay(mFlingScroller.isFinished() ?
-                    0 : mFlingScroller.getDuration() + 100);
             mColorOutAnimator.start();
             mFadeOutAnimator.start();
-        } else  {
+        } else {
             mFadeInAnimator.setFloatValues(mAlpha, mActivatedAlpha);
             mColorInAnimator.setIntValues(mTextColor, mTextColorScrolling);
             mColorOutAnimator.cancel();
@@ -1971,28 +1581,21 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             }
         }
 
-        int[] var8 = this.mSelectorIndices;
+        Calendar[] var17 = this.mSelectorIndices;
+        int var8 = var17.length;
 
-        for(var3 = 0; var3 < var8.length; ++var3) {
-            int var9 = var8[var3];
-            String var10 = (String)this.mSelectorIndexToStringCache.get(var9);
-            String var17 = var10;
-            if (!var10.isEmpty()) {
-                var17 = var10;
-                if (!this.mUnitValue.isEmpty()) {
-                    var17 = var10 + this.mUnitValue;
-                }
+        for(var3 = 0; var3 < var8; ++var3) {
+            Calendar var9 = var17[var3];
+            String var18 = (String)this.mSelectorIndexToStringCache.get(var9);
+            float var10 = this.mAlpha;
+            float var11 = this.mIdleAlpha;
+            float var12 = var10;
+            if (var10 < var11) {
+                var12 = var11;
             }
 
-            float var11 = this.mAlpha;
-            float var12 = this.mIdleAlpha;
-            float var13 = var11;
-            if (var11 < var12) {
-                var13 = var12;
-            }
-
-            label44: {
-                var9 = (int)((this.mSelectorWheelPaint.descent() - this.mSelectorWheelPaint.ascent()) / 2.0F + var6 - this.mSelectorWheelPaint.descent());
+            label38: {
+                int var13 = (int)((this.mSelectorWheelPaint.descent() - this.mSelectorWheelPaint.ascent()) / 2.0F + var6 - this.mSelectorWheelPaint.descent());
                 int var14 = this.mTopSelectionDividerTop;
                 int var15 = this.mInitialScrollOffset;
                 if (var6 >= (float)(var14 - var15)) {
@@ -2003,38 +1606,38 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                             var1.clipRect(0, this.mTopSelectionDividerTop, var2, this.mBottomSelectionDividerBottom);
                             this.mSelectorWheelPaint.setColor(this.mTextColor);
                             this.mSelectorWheelPaint.setTypeface(this.mPickerTypeface);
-                            var11 = (float)var9;
-                            var1.drawText(var17, var5, var11, this.mSelectorWheelPaint);
+                            var11 = (float)var13;
+                            var1.drawText(var18, var5, var11, this.mSelectorWheelPaint);
                             var1.restore();
                             var1.save();
                             var1.clipRect(0, 0, var2, this.mTopSelectionDividerTop);
                             this.mSelectorWheelPaint.setTypeface(this.mPickerSubTypeface);
-                            this.mSelectorWheelPaint.setAlpha((int)(var13 * 255.0F * this.mInitialAlpha));
-                            var1.drawText(var17, var5, var11, this.mSelectorWheelPaint);
+                            this.mSelectorWheelPaint.setAlpha((int)(var12 * 255.0F * this.mInitialAlpha));
+                            var1.drawText(var18, var5, var11, this.mSelectorWheelPaint);
                             var1.restore();
                         } else {
                             var1.save();
                             var1.clipRect(0, this.mTopSelectionDividerTop, var2, this.mBottomSelectionDividerBottom);
                             this.mSelectorWheelPaint.setTypeface(this.mPickerTypeface);
                             this.mSelectorWheelPaint.setColor(this.mTextColor);
-                            var11 = (float)var9;
-                            var1.drawText(var17, var5, var11, this.mSelectorWheelPaint);
+                            var11 = (float)var13;
+                            var1.drawText(var18, var5, var11, this.mSelectorWheelPaint);
                             var1.restore();
                             var1.save();
                             var1.clipRect(0, this.mBottomSelectionDividerBottom, var2, var4);
-                            this.mSelectorWheelPaint.setAlpha((int)(var13 * 255.0F * this.mInitialAlpha));
+                            this.mSelectorWheelPaint.setAlpha((int)(var12 * 255.0F * this.mInitialAlpha));
                             this.mSelectorWheelPaint.setTypeface(this.mPickerSubTypeface);
-                            var1.drawText(var17, var5, var11, this.mSelectorWheelPaint);
+                            var1.drawText(var18, var5, var11, this.mSelectorWheelPaint);
                             var1.restore();
                         }
-                        break label44;
+                        break label38;
                     }
                 }
 
                 var1.save();
-                this.mSelectorWheelPaint.setAlpha((int)(var13 * 255.0F * this.mInitialAlpha));
+                this.mSelectorWheelPaint.setAlpha((int)(var12 * 255.0F * this.mInitialAlpha));
                 this.mSelectorWheelPaint.setTypeface(this.mPickerSubTypeface);
-                var1.drawText(var17, var5, (float)var9, this.mSelectorWheelPaint);
+                var1.drawText(var18, var5, (float)var13, this.mSelectorWheelPaint);
                 var1.restore();
             }
 
@@ -2046,17 +1649,19 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
-        event.setClassName(android.widget.NumberPicker.class.getName());
+        event.setClassName(SeslSpinningDatePickerSpinner.class.getName());
         event.setScrollable(true);
-        event.setScrollY((mMinValue + mValue) * mSelectorElementHeight);
-        event.setMaxScrollY((mMaxValue - mMinValue) * mSelectorElementHeight);
+        event.setScrollY(((int) TimeUnit.MILLISECONDS
+                .toDays(mValue.getTimeInMillis() - mMinValue.getTimeInMillis())) * mSelectorElementHeight);
+        event.setMaxScrollY(((int) TimeUnit.MILLISECONDS
+                .toDays(mMaxValue.getTimeInMillis() - mMinValue.getTimeInMillis())) * mSelectorElementHeight);
     }
 
     @Override
     public void onPopulateAccessibilityEvent(AccessibilityEvent event) {
         AccessibilityNodeProviderImpl provider
                 = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-        event.getText().add(provider.getVirtualCurrentButtonText(true));
+        event.getText().add(provider.getVirtualCurrentButtonText());
     }
 
     @Override
@@ -2065,6 +1670,22 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             mAccessibilityNodeProvider = new AccessibilityNodeProviderImpl();
         }
         return mAccessibilityNodeProvider;
+    }
+
+    @Override
+    public void setLunar(boolean isLunar, boolean isLeapMonth) {
+        mIsLunar = isLunar;
+        mIsLeapMonth = isLeapMonth;
+
+        if (isLunar) {
+            if (mSolarLunarConverter == null) {
+                mPathClassLoader = SeslSpinningDatePicker.LunarUtils.getPathClassLoader(mContext);
+                mSolarLunarConverter = SeslFeatureReflector.getSolarLunarConverter(mPathClassLoader);
+            }
+        } else {
+            mPathClassLoader = null;
+            mSolarLunarConverter = null;
+        }
     }
 
     private int makeMeasureSpec(int measureSpec, int maxSize) {
@@ -2096,58 +1717,83 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     private void initializeSelectorWheelIndices() {
         mSelectorIndexToStringCache.clear();
-        int[] selectorIndices = mSelectorIndices;
-        int current = mIsStartingAnimation ? selectorIndices[2] : getValue();
+        Calendar[] selectorIndices = mSelectorIndices;
+        Calendar current = getValue();
         for (int i = 0; i < mSelectorIndices.length; i++) {
-            int selectorIndex = current + ((i - SELECTOR_MIDDLE_ITEM_INDEX)
-                    * (mCustomWheelIntervalMode ? mWheelInterval : DEFAULT_WHEEL_INTERVAL));
+            Calendar value = (Calendar) current.clone();
+            value.add(Calendar.DAY_OF_MONTH, i - 2);
             if (mWrapSelectorWheel) {
-                selectorIndex = getWrappedSelectorIndex(selectorIndex);
+                value = getWrappedSelectorIndex(value);
             }
-            selectorIndices[i] = selectorIndex;
+            selectorIndices[i] = value;
             ensureCachedScrollSelectorValue(selectorIndices[i]);
         }
     }
 
-    private void setValueInternal(int current, boolean notifyChange) {
-        if (mValue != current) {
-            if (mWrapSelectorWheel) {
-                current = getWrappedSelectorIndex(current);
-            } else {
-                current = Math.max(current, mMinValue);
-                current = Math.min(current, mMaxValue);
-            }
-            int previous = mValue;
-            mValue = current;
-            updateInputTextView();
-            if (notifyChange) {
-                notifyChange(previous, current);
-            }
-            initializeSelectorWheelIndices();
-            mDelegator.invalidate();
-            if (mAccessibilityManager.isEnabled() && mDelegator.getParent() != null) {
-                mDelegator.getParent().notifySubtreeAccessibilityStateChanged(mDelegator, mDelegator, 1);
-            }
+    private void setValueInternal(Calendar current, boolean notifyChange) {
+        if (mWrapSelectorWheel) {
+            current = getWrappedSelectorIndex(current);
         } else {
-            if (isCharacterNumberLanguage()) {
-                updateInputTextView();
-                mDelegator.invalidate();
+            if (current.compareTo(mMinValue) < 0) {
+                current = (Calendar) mMinValue.clone();
+            }
+            if (current.compareTo(mMaxValue) > 0) {
+                current = (Calendar) mMaxValue.clone();
             }
         }
+        Calendar previous = (Calendar) mValue.clone();
+        clearCalendar(mValue, current);
+        if (notifyChange) {
+            notifyChange(previous);
+        }
+        initializeSelectorWheelIndices();
+        mDelegator.invalidate();
     }
 
     private void changeValueByOne(boolean increment) {
-        mInputText.setVisibility(View.INVISIBLE);
         if (!moveToFinalScrollerPosition(mFlingScroller)) {
             moveToFinalScrollerPosition(mAdjustScroller);
         }
         mPreviousScrollerY = 0;
+        mChangeValueBy = DEFAULT_CHANGE_VALUE_BY;
+        if (mLongPressed_FIRST_SCROLL) {
+            mLongPressed_FIRST_SCROLL = false;
+            mLongPressed_SECOND_SCROLL = true;
+        } else if (mLongPressed_SECOND_SCROLL) {
+            mLongPressed_SECOND_SCROLL = false;
+            mLongPressed_THIRD_SCROLL = true;
+
+            if (getValue().get(Calendar.DAY_OF_MONTH) % LONG_PRESSED_SCROLL_COUNT == 0) {
+                mChangeValueBy = LONG_PRESSED_SCROLL_COUNT;
+            } else {
+                if (increment) {
+                    mChangeValueBy = LONG_PRESSED_SCROLL_COUNT
+                            - (getValue().get(Calendar.DAY_OF_MONTH) % LONG_PRESSED_SCROLL_COUNT);
+                } else {
+                    mChangeValueBy = getValue().get(Calendar.DAY_OF_MONTH) % LONG_PRESSED_SCROLL_COUNT;
+                }
+            }
+        } else if (mLongPressed_THIRD_SCROLL) {
+            mChangeValueBy = LONG_PRESSED_SCROLL_COUNT;
+        }
+
+        int duration = SNAP_SCROLL_DURATION;
+        if (mIsLongPressed && mSkipNumbers) {
+            duration = 200;
+            mLongPressUpdateInterval = 600;
+        } else if (mIsLongPressed) {
+            duration = 100;
+            mChangeValueBy = DEFAULT_CHANGE_VALUE_BY;
+            mLongPressUpdateInterval = DEFAULT_LONG_PRESS_UPDATE_INTERVAL;
+        }
+        mLongPressCount = mChangeValueBy - 1;
+
         if (increment) {
             mFlingScroller.startScroll(0, 0,
-                    0, -mSelectorElementHeight, SNAP_SCROLL_DURATION);
+                    0, (-mSelectorElementHeight) * mChangeValueBy, duration);
         } else {
             mFlingScroller.startScroll(0, 0,
-                    0, mSelectorElementHeight, SNAP_SCROLL_DURATION);
+                    0, mSelectorElementHeight * mChangeValueBy, duration);
         }
         mDelegator.invalidate();
     }
@@ -2165,11 +1811,11 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         float totalTextGapHeight = (mDelegator.getBottom() - mDelegator.getTop()) - totalTextHeight;
         mSelectorTextGapHeight = (int) ((totalTextGapHeight / 3) + 0.5f);
         mSelectorElementHeight = mTextSize + mSelectorTextGapHeight;
-        mValueChangeOffset = (mModifiedTxtHeight > mSelectorElementHeight || mIsAmPm) ?
+        mValueChangeOffset = (mModifiedTxtHeight > mSelectorElementHeight) ?
                 mDelegator.getHeight() / 3 : mModifiedTxtHeight;
         mInitialScrollOffset = (mInputText.getTop() + (mModifiedTxtHeight / 2)) - mSelectorElementHeight;
         mCurrentScrollOffset = mInitialScrollOffset;
-        ((SeslNumberPicker.CustomEditText) mInputText).setEditTextPosition(
+        ((SeslSpinningDatePickerSpinner.CustomEditText) mInputText).setEditTextPosition(
                 ((int) (((mSelectorWheelPaint.descent() - mSelectorWheelPaint.ascent()) / 2.0f) - mSelectorWheelPaint.descent()))
                         - (mInputText.getBaseline() - (mModifiedTxtHeight / 2)));
         if (mReservedStartAnimation) {
@@ -2180,14 +1826,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     private void onScrollerFinished(Scroller scroller) {
         if (scroller == mFlingScroller) {
-            if (!ensureScrollWheelAdjusted()) {
-                updateInputTextView();
-            }
             onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-        } else {
-            if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                updateInputTextView();
-            }
         }
     }
 
@@ -2204,17 +1843,17 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     // TODO rework this method
     // kang
     private void fling(int velocityY) {
-        if (!this.mWrapSelectorWheel && velocityY > 0 && getValue() == getMinValue()) {
+        if (!this.mWrapSelectorWheel && velocityY > 0 && getValue().equals(getMinValue())) {
             startFadeAnimation(true);
-        } else if (this.mWrapSelectorWheel || velocityY >= 0 || getValue() != getMaxValue()) {
+        } else if (this.mWrapSelectorWheel || velocityY >= 0 || !getValue().equals(getMaxValue())) {
             this.mPreviousScrollerY = 0;
-            float f = (float) velocityY;
-            Math.round((((float) Math.abs(velocityY)) / ((float) this.mMaximumFlingVelocity)) * f);
-            this.mPreviousSpringY = (float) this.mCurrentScrollOffset;
+            float f = velocityY;
+            Math.round((Math.abs(velocityY) / this.mMaximumFlingVelocity) * f);
+            this.mPreviousSpringY = this.mCurrentScrollOffset;
             this.mSpringAnimation.setStartVelocity(f);
             this.mGravityScroller.forceFinished(true);
             this.mGravityScroller.fling(0, this.mCurrentScrollOffset, 0, velocityY, 0, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            int round = Math.round(((float) (this.mGravityScroller.getFinalY() + this.mCurrentScrollOffset)) / ((float) this.mSelectorElementHeight));
+            int round = Math.round((this.mGravityScroller.getFinalY() + this.mCurrentScrollOffset) / this.mSelectorElementHeight);
             int i2 = this.mSelectorElementHeight;
             int i3 = this.mInitialScrollOffset;
             int i4 = (round * i2) + i3;
@@ -2224,9 +1863,9 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             } else {
                 i = Math.min(i4, (-i2) + i3);
             }
-            this.mSpringAnimation.setStartValue((float) this.mCurrentScrollOffset);
+            this.mSpringAnimation.setStartValue(this.mCurrentScrollOffset);
             this.mSpringFlingRunning = true;
-            this.mSpringAnimation.animateToFinalPosition((float) i);
+            this.mSpringAnimation.animateToFinalPosition(i);
             this.mDelegator.invalidate();
         } else {
             startFadeAnimation(true);
@@ -2234,246 +1873,241 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
     // kang
 
-    private int getWrappedSelectorIndex(int selectorIndex) {
-        if (selectorIndex > mMaxValue) {
-            return mMinValue + (selectorIndex - mMaxValue) % (mMaxValue - mMinValue) - 1;
-        } else if (selectorIndex < mMinValue) {
-            return mMaxValue - (mMinValue - selectorIndex) % (mMaxValue - mMinValue) + 1;
+    private Calendar getWrappedSelectorIndex(Calendar selectorIndex) {
+        if (selectorIndex.compareTo(mMaxValue) > 0) {
+            Calendar minValue = (Calendar) mMinValue.clone();
+            minValue.add(Calendar.DAY_OF_MONTH, ((int) TimeUnit.MILLISECONDS
+                    .toDays(selectorIndex.getTimeInMillis() - mMinValue.getTimeInMillis()))
+                    % (((int) TimeUnit.MILLISECONDS
+                        .toDays(mMaxValue.getTimeInMillis() - mMinValue.getTimeInMillis())) + 1));
+            return minValue;
+        } else if (selectorIndex.compareTo(mMinValue) < 0) {
+            Calendar maxValue = (Calendar) mMaxValue.clone();
+            maxValue.add(Calendar.DAY_OF_MONTH, -(((int) TimeUnit.MILLISECONDS
+                    .toDays(mMaxValue.getTimeInMillis() - selectorIndex.getTimeInMillis()))
+                    % (((int) TimeUnit.MILLISECONDS
+                    .toDays(mMaxValue.getTimeInMillis() - mMinValue.getTimeInMillis())) + 1)));
+            return maxValue;
         }
         return selectorIndex;
     }
 
-    private void incrementSelectorIndices(int[] selectorIndices) {
+    private void incrementSelectorIndices(Calendar[] selectorIndices) {
         System.arraycopy(selectorIndices, 1, selectorIndices,
                 0, selectorIndices.length - 1);
-        int nextScrollSelectorIndex = selectorIndices[selectorIndices.length - 2] + 1;
-        if (mWrapSelectorWheel && nextScrollSelectorIndex > mMaxValue) {
-            nextScrollSelectorIndex = mMinValue;
+        Calendar nextScrollSelectorIndex = (Calendar) selectorIndices[selectorIndices.length - 2].clone();
+        if (mWrapSelectorWheel && nextScrollSelectorIndex.compareTo(mMaxValue) > 0) {
+            clearCalendar(nextScrollSelectorIndex, mMinValue);
         }
         selectorIndices[selectorIndices.length - 1] = nextScrollSelectorIndex;
         ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
     }
 
-    private void decrementSelectorIndices(int[] selectorIndices) {
+    private void decrementSelectorIndices(Calendar[] selectorIndices) {
         System.arraycopy(selectorIndices, 0, selectorIndices,
                 1, selectorIndices.length - 1);
-        int nextScrollSelectorIndex = selectorIndices[1] - 1;
-        if (mWrapSelectorWheel && nextScrollSelectorIndex < mMinValue) {
+        Calendar nextScrollSelectorIndex = (Calendar) selectorIndices[1].clone();
+        if (mWrapSelectorWheel && nextScrollSelectorIndex.compareTo(mMinValue) < 0) {
             nextScrollSelectorIndex = mMaxValue;
         }
         selectorIndices[0] = nextScrollSelectorIndex;
         ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
     }
 
-    private void ensureCachedScrollSelectorValue(int selectorIndex) {
-        SparseArray<String> cache = mSelectorIndexToStringCache;
+    private void ensureCachedScrollSelectorValue(Calendar selectorIndex) {
+        HashMap<Calendar, String> cache = mSelectorIndexToStringCache;
         String scrollSelectorValue = cache.get(selectorIndex);
         if (scrollSelectorValue != null) {
             return;
         }
-        if (selectorIndex < mMinValue || selectorIndex > mMaxValue) {
+        if (selectorIndex.compareTo(mMinValue) < 0 || selectorIndex.compareTo(mMaxValue) > 0) {
             scrollSelectorValue = "";
         } else {
-            if (mDisplayedValues != null) {
-                int displayedValueIndex = selectorIndex - mMinValue;
-                scrollSelectorValue = mDisplayedValues[displayedValueIndex];
+            if (mIsLunar) {
+                scrollSelectorValue = formatDateForLunar(selectorIndex);
             } else {
-                scrollSelectorValue = formatNumber(selectorIndex);
+                scrollSelectorValue = formatDate(selectorIndex);
             }
         }
         cache.put(selectorIndex, scrollSelectorValue);
     }
 
-    private String formatNumber(int value) {
-        return (mFormatter != null) ?
-                mFormatter.format(value) : formatNumberWithLocale(value);
+    // TODO rework this method
+    // kang
+    private String formatDateForLunar(Calendar calendar) {
+        String str;
+        int i;
+        Calendar calendar2 = (Calendar) calendar.clone();
+        SeslSpinningDatePicker.LunarDate lunarDate = new SeslSpinningDatePicker.LunarDate();
+        convertSolarToLunar(calendar, lunarDate);
+        SeslSpinningDatePickerSpinner.Formatter formatter = this.mFormatter;
+        if (formatter == null) {
+            str = formatDateWithLocale(calendar2);
+        } else if (formatter instanceof SeslSpinningDatePickerSpinner.DateFormatter) {
+            str = ((SeslSpinningDatePickerSpinner.DateFormatter) formatter).format(calendar2, this.mContext);
+        } else {
+            str = formatter.format(calendar2);
+        }
+        String dayWithLocale = getDayWithLocale(lunarDate.day);
+        String formatDayWithLocale = formatDayWithLocale(calendar2);
+        String monthWithLocale = getMonthWithLocale(lunarDate.month);
+        String formatMonthWithLocale = formatMonthWithLocale(calendar2);
+        StringBuilder sb = new StringBuilder(str);
+        if (Locale.getDefault().getLanguage() == "vi") {
+            i = sb.lastIndexOf(" " + formatDayWithLocale) + 1;
+        } else {
+            i = sb.lastIndexOf(formatDayWithLocale);
+        }
+        if (i != -1) {
+            sb.replace(i, formatDayWithLocale.length() + i, dayWithLocale);
+        }
+        int lastIndexOf = sb.lastIndexOf(formatMonthWithLocale);
+        if (lastIndexOf != -1) {
+            sb.replace(lastIndexOf, formatMonthWithLocale.length() + lastIndexOf, monthWithLocale);
+        }
+        return sb.toString();
+    }
+    // kang
+
+    // TODO rework this method
+    // kang
+    private String formatDateForLunarForAccessibility(Calendar calendar) {
+        String str;
+        Calendar calendar2 = (Calendar) calendar.clone();
+        SeslSpinningDatePicker.LunarDate lunarDate = new SeslSpinningDatePicker.LunarDate();
+        convertSolarToLunar(calendar, lunarDate);
+        SeslSpinningDatePickerSpinner.Formatter formatter = this.mFormatter;
+        if (formatter == null) {
+            str = formatDateWithLocaleForAccessibility(calendar2);
+        } else if (formatter instanceof SeslSpinningDatePickerSpinner.DateFormatter) {
+            str = ((SeslSpinningDatePickerSpinner.DateFormatter) formatter).formatForAccessibility(calendar2, this.mContext);
+        } else {
+            str = formatter.format(calendar2);
+        }
+        String dayWithLocale = getDayWithLocale(lunarDate.day);
+        String formatDayWithLocale = formatDayWithLocale(calendar2);
+        String monthWithLocaleForAccessibility = getMonthWithLocaleForAccessibility(lunarDate.month);
+        String formatMonthWithLocaleForAccessibility = formatMonthWithLocaleForAccessibility(calendar2);
+        StringBuilder sb = new StringBuilder(str);
+        int lastIndexOf = sb.lastIndexOf(formatDayWithLocale);
+        if (lastIndexOf != -1) {
+            sb.replace(lastIndexOf, formatDayWithLocale.length() + lastIndexOf, dayWithLocale);
+        }
+        int lastIndexOf2 = sb.lastIndexOf(formatMonthWithLocaleForAccessibility);
+        if (lastIndexOf2 != -1) {
+            sb.replace(lastIndexOf2, formatMonthWithLocaleForAccessibility.length() + lastIndexOf2, monthWithLocaleForAccessibility);
+        }
+        return sb.toString();
+    }
+    // kang
+
+    private String formatDate(Calendar value) {
+        if (mFormatter != null) {
+            if (mFormatter instanceof SeslSpinningDatePickerSpinner.DateFormatter) {
+                return ((SeslSpinningDatePickerSpinner.DateFormatter) mFormatter)
+                        .format(value, mContext);
+            } else {
+                return mFormatter.format(value);
+            }
+        } else {
+            return formatDateWithLocale(value);
+        }
+    }
+
+    private String formatDateForAccessibility(Calendar value) {
+        if (mFormatter != null) {
+            if (mFormatter instanceof SeslSpinningDatePickerSpinner.DateFormatter) {
+                return ((SeslSpinningDatePickerSpinner.DateFormatter) mFormatter)
+                        .formatForAccessibility(value, mContext);
+            } else {
+                return mFormatter.format(value);
+            }
+        } else {
+            return formatDateWithLocale(value);
+        }
     }
 
     private void validateInputTextView(View v) {
         String str = String.valueOf(((TextView) v).getText());
-        int current = getSelectedPos(str);
-        if (TextUtils.isEmpty(str) || mValue == current) {
-            if (mWheelInterval != DEFAULT_WHEEL_INTERVAL
-                    && mCustomWheelIntervalMode && mIsPressedBackKey) {
-                applyWheelCustomInterval(current % mWheelInterval == 0);
-            } else {
-                updateInputTextView();
-            }
-        } else {
-            if (mWheelInterval != DEFAULT_WHEEL_INTERVAL && mCustomWheelIntervalMode) {
-                applyWheelCustomInterval(current % mWheelInterval == 0);
-            }
+        Calendar current = getSelectedPos(str);
+        if (!TextUtils.isEmpty(str) && !mValue.equals(current)) {
             setValueInternal(current, true);
         }
     }
 
-    private boolean updateInputTextView() {
-        String text = (mDisplayedValues == null) ?
-                formatNumber(mValue) : mDisplayedValues[mValue - mMinValue];
-        if (!TextUtils.isEmpty(text)) {
-            CharSequence beforeText = mInputText.getText();
-            if (!text.equals(beforeText.toString())) {
-                mInputText.setText(text);
-                Selection.setSelection(mInputText.getText(), mInputText.getText().length());
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void notifyChange(int previous, int current) {
+    private void notifyChange(Calendar previous) {
         if (mAccessibilityManager.isEnabled() && !mIsStartingAnimation) {
-            final int value = getWrappedSelectorIndex(mValue);
+            Calendar value = getWrappedSelectorIndex(mValue);
             String text = null;
-            if (value <= mMaxValue) {
-                text = mDisplayedValues == null ?
-                        formatNumber(value) : mDisplayedValues[value - mMinValue];
+            if (value.compareTo(mMaxValue) <= 0) {
+                if (this.mIsLunar) {
+                    text = formatDateForLunarForAccessibility(value);
+                } else {
+                    text = formatDateForAccessibility(value);
+                }
+                mDelegator.sendAccessibilityEvent(4);
             }
-            mDelegator.sendAccessibilityEvent(4);
-            AccessibilityNodeProviderImpl provider
-                    = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            if (!mIsEditTextModeEnabled && provider != null) {
-                provider.performAction(2, 64, null);
-            }
-            if (provider != null && !mWrapSelectorWheel
-                    && (getValue() == getMaxValue() || getValue() == getMinValue())) {
-                provider.sendAccessibilityEventForVirtualView(2, 32768);
-            }
-        }
 
-        if (mOnValueChangeListener != null) {
-            mOnValueChangeListener.onValueChange(mDelegator, previous, mValue);
+            if (mOnValueChangeListener != null) {
+                if (mIsLunar) {
+                    SeslSpinningDatePicker.LunarDate lunarDate = new SeslSpinningDatePicker.LunarDate();
+                    mOnValueChangeListener.onValueChange(mDelegator,
+                            convertSolarToLunar(previous, null),
+                            convertSolarToLunar(mValue, lunarDate), lunarDate.isLeapMonth, lunarDate);
+                } else {
+                    mOnValueChangeListener.onValueChange(mDelegator,
+                            previous, mValue, false, null);
+                }
+            }
         }
     }
 
-    private void postSwitchIntervalOnLongPress() {
-        if (mSwitchIntervalOnLongPressCommand == null) {
-            mSwitchIntervalOnLongPressCommand = new SwitchIntervalOnLongPressCommand();
+    private void postChangeCurrentByOneFromLongPress(boolean increment, long delayMillis) {
+        if (mChangeCurrentByOneFromLongPressCommand == null) {
+            mChangeCurrentByOneFromLongPressCommand = new ChangeCurrentByOneFromLongPressCommand();
         } else {
-            mDelegator.removeCallbacks(mSwitchIntervalOnLongPressCommand);
+            mDelegator.removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
         }
-        mDelegator.postDelayed(mSwitchIntervalOnLongPressCommand,
-                ViewConfiguration.getLongPressTimeout());
+        mIsLongPressed = true;
+        mLongPressed_FIRST_SCROLL = true;
+        mChangeCurrentByOneFromLongPressCommand.setStep(increment);
+        mDelegator.postDelayed(mChangeCurrentByOneFromLongPressCommand, delayMillis);
     }
 
-    private void removeSwitchIntervalOnLongPress() {
-        if (mSwitchIntervalOnLongPressCommand != null) {
-            mDelegator.removeCallbacks(mSwitchIntervalOnLongPressCommand);
+    private void removeChangeCurrentByOneFromLongPress() {
+        if (mIsLongPressed) {
+            mIsLongPressed = false;
+            mCurrentScrollOffset = mInitialScrollOffset;
         }
-    }
-
-    private void postBeginSoftInputOnLongPressCommand() {
-        if (mBeginSoftInputOnLongPressCommand == null) {
-            mBeginSoftInputOnLongPressCommand = new BeginSoftInputOnLongPressCommand();
-        } else {
-            mDelegator.removeCallbacks(mBeginSoftInputOnLongPressCommand);
-        }
-        mDelegator.postDelayed(mBeginSoftInputOnLongPressCommand,
-                ViewConfiguration.getLongPressTimeout());
-    }
-
-    private void removeBeginSoftInputCommand() {
-        if (mBeginSoftInputOnLongPressCommand != null) {
-            mDelegator.removeCallbacks(mBeginSoftInputOnLongPressCommand);
+        mLongPressed_FIRST_SCROLL = false;
+        mLongPressed_SECOND_SCROLL = false;
+        mLongPressed_THIRD_SCROLL = false;
+        mChangeValueBy = DEFAULT_CHANGE_VALUE_BY;
+        mLongPressUpdateInterval = DEFAULT_LONG_PRESS_UPDATE_INTERVAL;
+        if (mChangeCurrentByOneFromLongPressCommand != null) {
+            mDelegator.removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
         }
     }
 
     private void removeAllCallbacks() {
-        if (mSwitchIntervalOnLongPressCommand != null) {
-            mDelegator.removeCallbacks(mSwitchIntervalOnLongPressCommand);
+        if (mIsLongPressed) {
+            mIsLongPressed = false;
+            mCurrentScrollOffset = mInitialScrollOffset;
         }
-        if (mBeginSoftInputOnLongPressCommand != null) {
-            mDelegator.removeCallbacks(mBeginSoftInputOnLongPressCommand);
+        mLongPressed_FIRST_SCROLL = false;
+        mLongPressed_SECOND_SCROLL = false;
+        mLongPressed_THIRD_SCROLL = false;
+        mChangeValueBy = DEFAULT_CHANGE_VALUE_BY;
+        mLongPressUpdateInterval = DEFAULT_LONG_PRESS_UPDATE_INTERVAL;
+        if (mChangeCurrentByOneFromLongPressCommand != null) {
+            mDelegator.removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
         }
         mPressedStateHelper.cancel();
     }
 
-    private int getSelectedPos(String value) {
-        try {
-            if (mDisplayedValues == null) {
-                return Integer.parseInt(value);
-            } else {
-                for (int i = 0; i < mDisplayedValues.length; i++) {
-                    value = value.toLowerCase();
-                    if (mDisplayedValues[i].toLowerCase().startsWith(value)) {
-                        return mMinValue + i;
-                    }
-                }
-                return Integer.parseInt(value);
-            }
-        } catch (NumberFormatException ignored) {
-            return mMinValue;
-        }
-    }
-
-    class InputTextFilter extends NumberKeyListener {
-        public int getInputType() {
-            return InputType.TYPE_CLASS_TEXT;
-        }
-
-        @Override
-        protected char[] getAcceptedChars() {
-            return DIGIT_CHARACTERS;
-        }
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (mDisplayedValues == null) {
-                CharSequence filtered = super.filter(source, start, end, dest, dstart, dend);
-                if (filtered == null) {
-                    filtered = source.subSequence(start, end);
-                }
-
-                String result = String.valueOf(
-                        dest.subSequence(0, dstart)) + filtered + dest.subSequence(dend, dest.length());
-
-                if ("".equals(result)) {
-                    return result;
-                }
-
-                if (getSelectedPos(result) > mMaxValue) {
-                    if (mIsEditTextMode) {
-                        if (mToast == null) {
-                            initToastObject();
-                        }
-                        mToast.show();
-                    }
-                    return "";
-                } else {
-                    if (result.length() <= formatNumber(mMaxValue).length()) {
-                        return filtered;
-                    }
-                }
-            } else {
-                CharSequence filtered = String.valueOf(source.subSequence(start, end));
-                String result = String.valueOf(
-                        dest.subSequence(0, dstart)) + filtered + dest.subSequence(dend, dest.length());
-                String str = String.valueOf(result).toLowerCase();
-                for (String val : mDisplayedValues) {
-                    String valLowerCase = val.toLowerCase();
-                    if ((needCompareEqualMonthLanguage()
-                            && valLowerCase.equals(str)) || valLowerCase.startsWith(str)) {
-                        return filtered;
-                    }
-                }
-                if (mIsEditTextMode && !TextUtils.isEmpty(str)) {
-                    if (mToast == null) {
-                        initToastObject();
-                    }
-                    mToast.show();
-                }
-            }
-            return "";
-        }
-    }
-
-    private void initToastObject() {
-        mToast = Toast.makeText(mContext, mToastText, Toast.LENGTH_SHORT);
-        View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.sesl_custom_toast_layout, null);
-        ((TextView) view.findViewById(R.id.message)).setText(mToastText);
-        mToast.setView(view);
+    private Calendar getSelectedPos(String value) {
+        Calendar calendar = SeslSpinningDatePickerSpinner.getDateFormatter().parse(value);
+        return calendar == null ? (Calendar) mMinValue.clone() : calendar;
     }
 
     private boolean ensureScrollWheelAdjusted() {
@@ -2597,27 +2231,25 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
     }
 
-    class SwitchIntervalOnLongPressCommand implements Runnable {
-        @Override
-        public void run() {
-            mIgnoreMoveEvents = true;
-            mIgnoreUpEvent = true;
-            applyWheelCustomInterval(!mCustomWheelIntervalMode);
-        }
-    }
+    class ChangeCurrentByOneFromLongPressCommand implements Runnable {
+        private boolean mIncrement;
 
-    class BeginSoftInputOnLongPressCommand implements Runnable {
+        private void setStep(boolean increment) {
+            mIncrement = increment;
+        }
+
         @Override
         public void run() {
-            performLongClick();
+            changeValueByOne(mIncrement);
+            mDelegator.postDelayed(this, mLongPressUpdateInterval);
         }
     }
 
     class AccessibilityNodeProviderImpl extends AccessibilityNodeProvider {
         private static final int UNDEFINED = Integer.MIN_VALUE;
         private static final int VIRTUAL_VIEW_ID_DECREMENT = 1;
+        private static final int VIRTUAL_VIEW_ID_CENTER = 2;
         private static final int VIRTUAL_VIEW_ID_INCREMENT = 3;
-        private static final int VIRTUAL_VIEW_ID_INPUT = 2;
         private final Rect mTempRect = new Rect();
         private final int[] mTempArray = new int[2];
         private int mAccessibilityFocusedView = Integer.MIN_VALUE;
@@ -2635,7 +2267,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                     || mLastHoveredChildVirtualViewId != Integer.MIN_VALUE) {
                 switch (virtualViewId) {
                     case View.NO_ID:
-                        return createAccessibilityNodeInfoForNumberPicker(
+                        return createAccessibilityNodeInfoForDatePickerWidget(
                                 mScrollX,
                                 mScrollY,
                                 mScrollX + (mRight - mLeft),
@@ -2648,8 +2280,8 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                 mScrollY,
                                 mScrollX + (mRight - mLeft),
                                 mTopSelectionDividerTop + mSelectionDividerHeight);
-                    case VIRTUAL_VIEW_ID_INPUT:
-                        return createAccessibiltyNodeInfoForInputText(
+                    case VIRTUAL_VIEW_ID_CENTER:
+                        return createAccessibiltyNodeInfoForCenter(
                                 mScrollX,
                                 mTopSelectionDividerTop + mSelectionDividerHeight,
                                 mScrollX + (mRight - mLeft),
@@ -2682,13 +2314,13 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             switch (virtualViewId) {
                 case View.NO_ID: {
                     findAccessibilityNodeInfosByTextInChild(searchedLowerCase, VIRTUAL_VIEW_ID_DECREMENT, result);
-                    findAccessibilityNodeInfosByTextInChild(searchedLowerCase, VIRTUAL_VIEW_ID_INPUT, result);
+                    findAccessibilityNodeInfosByTextInChild(searchedLowerCase, VIRTUAL_VIEW_ID_CENTER, result);
                     findAccessibilityNodeInfosByTextInChild(searchedLowerCase, VIRTUAL_VIEW_ID_INCREMENT, result);
                     return result;
                 }
                 case VIRTUAL_VIEW_ID_DECREMENT:
-                case VIRTUAL_VIEW_ID_INCREMENT:
-                case VIRTUAL_VIEW_ID_INPUT: {
+                case VIRTUAL_VIEW_ID_CENTER:
+                case VIRTUAL_VIEW_ID_INCREMENT: {
                     findAccessibilityNodeInfosByTextInChild(searchedLowerCase, virtualViewId, result);
                     return result;
                 }
@@ -2725,7 +2357,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                         }
                         case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD: {
                             if (mDelegator.isEnabled()
-                                    && (getWrapSelectorWheel() || getValue() < getMaxValue())) {
+                                    && (getWrapSelectorWheel() || getValue().compareTo(getMaxValue()) < 0)) {
                                 startFadeAnimation(false);
                                 changeValueByOne(true);
                                 startFadeAnimation(true);
@@ -2734,7 +2366,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                         } return false;
                         case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD: {
                             if (mDelegator.isEnabled()
-                                    && (getWrapSelectorWheel() || getValue() > getMinValue())) {
+                                    && (getWrapSelectorWheel() || getValue().compareTo(getMinValue()) > 0)) {
                                 startFadeAnimation(false);
                                 changeValueByOne(false);
                                 startFadeAnimation(true);
@@ -2743,30 +2375,40 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                         } return false;
                     }
                 } break;
-                case VIRTUAL_VIEW_ID_INPUT: {
+                case VIRTUAL_VIEW_ID_DECREMENT: {
                     switch (action) {
-                        case AccessibilityNodeInfo.ACTION_FOCUS: {
-                            if (mDelegator.isEnabled() && !mInputText.isFocused()) {
-                                return mInputText.requestFocus();
-                            }
-                        } break;
-                        case AccessibilityNodeInfo.ACTION_CLEAR_FOCUS: {
-                            if (mDelegator.isEnabled() && mInputText.isFocused()) {
-                                mInputText.clearFocus();
+                        case AccessibilityNodeInfo.ACTION_CLICK: {
+                            if (mDelegator.isEnabled()) {
+                                startFadeAnimation(false);
+                                changeValueByOne(false);
+                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_CLICKED);
+                                startFadeAnimation(true);
                                 return true;
                             }
-                            return false;
-                        }
+                        } return false;
+                        case AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS: {
+                            if (mAccessibilityFocusedView != virtualViewId) {
+                                mAccessibilityFocusedView = virtualViewId;
+                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
+                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
+                                return true;
+                            }
+                        } return false;
+                        case  AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS: {
+                            if (mAccessibilityFocusedView == virtualViewId) {
+                                mAccessibilityFocusedView = UNDEFINED;
+                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
+                                return true;
+                            }
+                        } return false;
+                    }
+                } return false;
+                case VIRTUAL_VIEW_ID_CENTER: {
+                    switch (action) {
                         case AccessibilityNodeInfo.ACTION_CLICK: {
                             if (mDelegator.isEnabled()) {
                                 performClick();
-                                return true;
-                            }
-                            return false;
-                        }
-                        case AccessibilityNodeInfo.ACTION_LONG_CLICK: {
-                            if (mDelegator.isEnabled()) {
-                                performLongClick();
                                 return true;
                             }
                             return false;
@@ -2779,7 +2421,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                 return true;
                             }
                         } return false;
-                        case  AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS: {
+                        case AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS: {
                             if (mAccessibilityFocusedView == virtualViewId) {
                                 mAccessibilityFocusedView = UNDEFINED;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
@@ -2787,9 +2429,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                 return true;
                             }
                         } return false;
-                        default: {
-                            return mInputText.performAccessibilityAction(action, arguments);
-                        }
                     }
                 } return false;
                 case VIRTUAL_VIEW_ID_INCREMENT: {
@@ -2816,35 +2455,6 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                 mAccessibilityFocusedView = UNDEFINED;
                                 sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
                                 mDelegator.invalidate(0, mBottomSelectionDividerBottom, mRight, mBottom);
-                                return true;
-                            }
-                        } return false;
-                    }
-                } return false;
-                case VIRTUAL_VIEW_ID_DECREMENT: {
-                    switch (action) {
-                        case AccessibilityNodeInfo.ACTION_CLICK: {
-                            if (mDelegator.isEnabled()) {
-                                startFadeAnimation(false);
-                                changeValueByOne(false);
-                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_CLICKED);
-                                startFadeAnimation(true);
-                                return true;
-                            }
-                        } return false;
-                        case AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS: {
-                            if (mAccessibilityFocusedView != virtualViewId) {
-                                mAccessibilityFocusedView = virtualViewId;
-                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
-                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
-                                return true;
-                            }
-                        } return false;
-                        case  AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS: {
-                            if (mAccessibilityFocusedView == virtualViewId) {
-                                mAccessibilityFocusedView = UNDEFINED;
-                                sendAccessibilityEventForVirtualView(virtualViewId, AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-                                mDelegator.invalidate(0, 0, mRight, mTopSelectionDividerTop);
                                 return true;
                             }
                         } return false;
@@ -2862,8 +2472,8 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                                 virtualViewId, eventType, getVirtualDecrementButtonText());
                     }
                 } break;
-                case VIRTUAL_VIEW_ID_INPUT: {
-                    sendAccessibilityEventForVirtualText(eventType);
+                case VIRTUAL_VIEW_ID_CENTER: {
+                    sendAccessibilityEventForCenter(eventType);
                 } break;
                 case VIRTUAL_VIEW_ID_INCREMENT: {
                     if (hasVirtualIncrementButton()) {
@@ -2874,12 +2484,14 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             }
         }
 
-        private void sendAccessibilityEventForVirtualText(int eventType) {
+        private void sendAccessibilityEventForCenter(int eventType) {
             if (mAccessibilityManager.isEnabled()) {
                 AccessibilityEvent event = AccessibilityEvent.obtain(eventType);
-                mInputText.onInitializeAccessibilityEvent(event);
-                mInputText.onPopulateAccessibilityEvent(event);
-                event.setSource(mDelegator, VIRTUAL_VIEW_ID_INPUT);
+                event.setPackageName(mContext.getPackageName());
+                event.getText().add(getVirtualCurrentButtonText()
+                        + mContext.getString(R.string.sesl_date_picker_switch_to_calendar_description));
+                event.setEnabled(mDelegator.isEnabled());
+                event.setSource(mDelegator, VIRTUAL_VIEW_ID_CENTER);
                 mDelegator.requestSendAccessibilityEvent(mDelegator, event);
             }
         }
@@ -2904,10 +2516,10 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_DECREMENT));
                     }
                 } return;
-                case VIRTUAL_VIEW_ID_INPUT: {
-                    CharSequence text = mInputText.getText();
+                case VIRTUAL_VIEW_ID_CENTER: {
+                    CharSequence text = getVirtualCurrentButtonText();
                     if (!TextUtils.isEmpty(text) && text.toString().toLowerCase().contains(searchedLowerCase)) {
-                        outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_INPUT));
+                        outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_CENTER));
                     }
                 } return;
                 case VIRTUAL_VIEW_ID_INCREMENT: {
@@ -2919,22 +2531,21 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             }
         }
 
-        private AccessibilityNodeInfo createAccessibiltyNodeInfoForInputText(int left, int top, int right, int bottom) {
-            AccessibilityNodeInfo info = mInputText.createAccessibilityNodeInfo();
-            info.setSource(mDelegator, VIRTUAL_VIEW_ID_INPUT);
-            if (mAccessibilityFocusedView != VIRTUAL_VIEW_ID_INPUT) {
+        private AccessibilityNodeInfo createAccessibiltyNodeInfoForCenter(int left, int top, int right, int bottom) {
+            AccessibilityNodeInfo info = AccessibilityNodeInfo.obtain();
+            info.setPackageName(mContext.getPackageName());
+            info.setSource(mDelegator, VIRTUAL_VIEW_ID_CENTER);
+            info.setParent(mDelegator);
+            info.setText(getVirtualCurrentButtonText()
+                    + mContext.getString(R.string.sesl_date_picker_switch_to_calendar_description));
+            info.setClickable(true);
+            info.setEnabled(mDelegator.isEnabled());
+            if (mAccessibilityFocusedView != VIRTUAL_VIEW_ID_CENTER) {
                 info.setAccessibilityFocused(false);
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            } else if (mAccessibilityFocusedView == VIRTUAL_VIEW_ID_INPUT) {
+            } else {
                 info.setAccessibilityFocused(true);
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
-            }
-            if (!mIsEditTextModeEnabled) {
-                info.setClassName(TextView.class.getName());
-                info.setText(getVirtualCurrentButtonText(false));
-                AccessibilityNodeInfoCompat.wrap(info).setTooltipText(mPickerContentDescription);
-                info.setSelected(true);
-                info.setAccessibilityFocused(false);
             }
             Rect boundsInParent = mTempRect;
             boundsInParent.set(left, top, right, bottom);
@@ -2948,14 +2559,13 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             return info;
         }
 
-        private AccessibilityNodeInfo createAccessibilityNodeInfoForVirtualButton(int virtualViewId,String text, int left, int top, int right, int bottom) {
+        private AccessibilityNodeInfo createAccessibilityNodeInfoForVirtualButton(int virtualViewId, String text, int left, int top, int right, int bottom) {
             AccessibilityNodeInfo info = AccessibilityNodeInfo.obtain();
             info.setClassName(Button.class.getName());
             info.setPackageName(mContext.getPackageName());
             info.setSource(mDelegator, virtualViewId);
             info.setParent(mDelegator);
             info.setText(text);
-            AccessibilityNodeInfoCompat.wrap(info).setTooltipText(mPickerContentDescription);
             info.setClickable(true);
             info.setLongClickable(true);
             info.setEnabled(mDelegator.isEnabled());
@@ -2971,7 +2581,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
             if (mAccessibilityFocusedView != virtualViewId) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            } else if (mAccessibilityFocusedView == virtualViewId) {
+            } else {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {
@@ -2981,17 +2591,17 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
             return info;
         }
 
-        private AccessibilityNodeInfo createAccessibilityNodeInfoForNumberPicker(
+        private AccessibilityNodeInfo createAccessibilityNodeInfoForDatePickerWidget(
                 int left, int top, int right, int bottom) {
             AccessibilityNodeInfo info = AccessibilityNodeInfo.obtain();
-            info.setClassName(android.widget.NumberPicker.class.getName());
+            info.setClassName(SeslSpinningDatePickerSpinner.class.getName());
             info.setPackageName(mContext.getPackageName());
             info.setSource(mDelegator);
 
             if (hasVirtualDecrementButton()) {
                 info.addChild(mDelegator, VIRTUAL_VIEW_ID_DECREMENT);
             }
-            info.addChild(mDelegator, VIRTUAL_VIEW_ID_INPUT);
+            info.addChild(mDelegator, VIRTUAL_VIEW_ID_CENTER);
             if (hasVirtualIncrementButton()) {
                 info.addChild(mDelegator, VIRTUAL_VIEW_ID_INCREMENT);
             }
@@ -3019,14 +2629,14 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
             if (mAccessibilityFocusedView != View.NO_ID) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            } else if (mAccessibilityFocusedView == View.NO_ID) {
+            } else {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {
-                if (getWrapSelectorWheel() || getValue() < getMaxValue()) {
+                if (getWrapSelectorWheel() || getValue().compareTo(getMaxValue()) < 0) {
                     info.addAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
                 }
-                if (getWrapSelectorWheel() || getValue() > getMinValue()) {
+                if (getWrapSelectorWheel() || getValue().compareTo(getMinValue()) > 0) {
                     info.addAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
                 }
             }
@@ -3044,87 +2654,101 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
         }
 
         private boolean hasVirtualDecrementButton() {
-            return getWrapSelectorWheel() || getValue() > getMinValue();
+            return getWrapSelectorWheel() || getValue().compareTo(getMinValue()) > 0;
         }
 
         private boolean hasVirtualIncrementButton() {
-            return getWrapSelectorWheel() || getValue() < getMaxValue();
+            return getWrapSelectorWheel() || getValue().compareTo(getMaxValue()) < 0;
         }
 
         private String getVirtualDecrementButtonText() {
-            final int interval = mWheelInterval != DEFAULT_WHEEL_INTERVAL
-                    && mCustomWheelIntervalMode
-                        ? mWheelInterval : 1;
-            int value = mValue - interval;
+            Calendar value = (Calendar) mValue.clone();
             if (mWrapSelectorWheel) {
                 value = getWrappedSelectorIndex(value);
             }
-            if (value >= mMinValue) {
-                return (mDisplayedValues == null)
-                        ? formatNumber(value) : mDisplayedValues[value - mMinValue];
+            if (value.compareTo(mMinValue) >= 0) {
+                return mIsLunar
+                        ? formatDateForLunarForAccessibility(value) :
+                        formatDateForAccessibility(value) + ", "
+                                + mPickerContentDescription + ", ";
             }
             return null;
         }
 
         private String getVirtualIncrementButtonText() {
-            final int interval = mWheelInterval != DEFAULT_WHEEL_INTERVAL
-                    && mCustomWheelIntervalMode
-                        ? mWheelInterval : 1;
-            int value = mValue + interval;
+            Calendar value = (Calendar) mValue.clone();
             if (mWrapSelectorWheel) {
                 value = getWrappedSelectorIndex(value);
             }
-            if (value <= mMaxValue) {
-                return (mDisplayedValues == null)
-                        ? formatNumber(value) : mDisplayedValues[value - mMinValue];
+            if (value.compareTo(mMaxValue) <= 0) {
+                return mIsLunar
+                        ? formatDateForLunarForAccessibility(value) :
+                        formatDateForAccessibility(value) + ", "
+                                + mPickerContentDescription + ", ";
             }
             return null;
         }
 
-        private String getVirtualCurrentButtonText(boolean showContentDescription) {
-            int value = mValue;
+        private String getVirtualCurrentButtonText() {
+            Calendar value = (Calendar) mValue.clone();
             if (mWrapSelectorWheel) {
                 value = getWrappedSelectorIndex(value);
             }
-            String text = null;
-            if (value <= mMaxValue) {
-                text = (mDisplayedValues == null)
-                        ? formatNumber(value) : mDisplayedValues[value - mMinValue];
+            if (value.compareTo(mMaxValue) <= 0) {
+                return mIsLunar
+                        ? formatDateForLunarForAccessibility(value) :
+                        formatDateForAccessibility(value) + ", "
+                                + mPickerContentDescription + ", ";
             }
-            return text != null && showContentDescription
-                    ? text + ", " + mPickerContentDescription : text;
+            return null;
         }
     }
 
-    static private String formatNumberWithLocale(int value) {
+    private void clearCalendar(Calendar oldCalendar, Calendar newCalendar) {
+        oldCalendar.set(Calendar.YEAR, newCalendar.get(Calendar.YEAR));
+        oldCalendar.set(Calendar.MONTH, newCalendar.get(Calendar.MONTH));
+        oldCalendar.set(Calendar.DAY_OF_MONTH, newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private static String formatDateWithLocale(Calendar value) {
+        return new SimpleDateFormat("EEE, MMM d", Locale.getDefault())
+                .format(value.getTime());
+    }
+
+    private static String formatDateWithLocaleForAccessibility(Calendar value) {
+        return new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
+                .format(value.getTime());
+    }
+
+    private static String formatDayWithLocale(Calendar value) {
+        return new SimpleDateFormat("d", Locale.getDefault())
+                .format(value.getTime());
+    }
+
+    private static String getDayWithLocale(int value) {
         return String.format(Locale.getDefault(), "%d", value);
     }
 
-    @Override
-    public void setMaxInputLength(int limit) {
-        InputFilter[] filterArr = mInputText.getFilters();
-        InputFilter backupFilter = filterArr[0];
-        InputFilter lengthFilter = new InputFilter.LengthFilter(limit);
-        mInputText.setFilters(new InputFilter[]{backupFilter, lengthFilter});
+    private static String formatMonthWithLocale(Calendar value) {
+        return new SimpleDateFormat("MMM", Locale.getDefault())
+                .format(value.getTime());
     }
 
-    @Override
-    public EditText getEditText() {
-        return mInputText;
+    private static String formatMonthWithLocaleForAccessibility(Calendar value) {
+        return new SimpleDateFormat("MMMM", Locale.getDefault())
+                .format(value.getTime());
     }
 
-    @Override
-    public void setMonthInputMode() {
-        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
-        mInputText.setPrivateImeOptions(INPUT_TYPE_MONTH);
-        mInputText.setText("");
+    private String getMonthWithLocale(int value) {
+        return mShortMonths[value];
     }
 
-    @Override
-    public void setYearDateTimeInputMode() {
-        mInputText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
-        mInputText.setPrivateImeOptions(INPUT_TYPE_YEAR_DATE_TIME);
-        mInputText.setText("");
+    private String getMonthWithLocaleForAccessibility(int value) {
+        return mLongMonths[value];
+    }
+
+    private static String formatNumberWithLocale(int value) {
+        return String.format(Locale.getDefault(), "%d", value);
     }
 
     private boolean isCharacterNumberLanguage() {
@@ -3133,20 +2757,51 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
     }
 
     private boolean needCompareEqualMonthLanguage() {
-        return "vi".equals(Locale.getDefault().getLanguage())
-                && INPUT_TYPE_MONTH.equals(mInputText.getPrivateImeOptions());
+        return "vi".equals(Locale.getDefault().getLanguage());
+    }
+
+    @Override
+    public Calendar convertLunarToSolar(Calendar calendar, int year, int monthOfYear, int dayOfMonth) {
+        Calendar newCalendar = (Calendar) calendar.clone();
+        SeslSolarLunarConverterReflector
+                .convertLunarToSolar(mPathClassLoader, mSolarLunarConverter, year, monthOfYear, dayOfMonth, mIsLeapMonth);
+        newCalendar.set(SeslSolarLunarConverterReflector.getYear(mPathClassLoader, mSolarLunarConverter),
+                SeslSolarLunarConverterReflector.getMonth(mPathClassLoader, mSolarLunarConverter),
+                SeslSolarLunarConverterReflector.getDay(mPathClassLoader, mSolarLunarConverter));
+        return newCalendar;
+    }
+
+    @Override
+    public Calendar convertSolarToLunar(Calendar calendar, SeslSpinningDatePicker.LunarDate lunarDate) {
+        Calendar newCalendar = (Calendar) calendar.clone();
+        SeslSolarLunarConverterReflector
+                .convertSolarToLunar(mPathClassLoader, mSolarLunarConverter,
+                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        newCalendar.set(SeslSolarLunarConverterReflector.getYear(mPathClassLoader, mSolarLunarConverter),
+                SeslSolarLunarConverterReflector.getMonth(mPathClassLoader, mSolarLunarConverter),
+                SeslSolarLunarConverterReflector.getDay(mPathClassLoader, mSolarLunarConverter));
+        if (lunarDate != null) {
+            lunarDate.day = SeslSolarLunarConverterReflector.getDay(mPathClassLoader, mSolarLunarConverter);
+            lunarDate.month = SeslSolarLunarConverterReflector.getMonth(mPathClassLoader, mSolarLunarConverter);
+            lunarDate.year = SeslSolarLunarConverterReflector.getYear(mPathClassLoader, mSolarLunarConverter);
+            lunarDate.isLeapMonth = SeslSolarLunarConverterReflector.isLeapMonth(mPathClassLoader, mSolarLunarConverter);
+        }
+        return newCalendar;
+    }
+
+    private Calendar getCalendarForLocale(Calendar oldCalendar, Locale locale) {
+        Calendar newCalendar = Calendar.getInstance(locale);
+        if (oldCalendar != null) {
+            newCalendar.setTimeInMillis(oldCalendar.getTimeInMillis());
+        }
+        newCalendar.set(Calendar.HOUR_OF_DAY, 12);
+        newCalendar.set(Calendar.MINUTE, 0);
+        newCalendar.set(Calendar.SECOND, 0);
+        newCalendar.set(Calendar.MILLISECOND, 0);
+        return newCalendar;
     }
 
     private boolean isHighContrastFontEnabled() {
         return SeslViewReflector.isHighContrastTextEnabled(mInputText);
-    }
-
-    private boolean updateBoldTextEnabledInSettings() {
-        if (Build.VERSION.SDK_INT < 28) {
-            return false;
-        }
-        mIsBoldTextEnabled = Settings.Global.getInt(mContext.getContentResolver(),
-                "bold_text", 0) != 0;
-        return mIsBoldTextEnabled;
     }
 }

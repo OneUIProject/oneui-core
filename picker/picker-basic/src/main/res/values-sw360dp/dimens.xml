@@ -26,4 +26,7 @@
     <dimen name="sesl_date_picker_gap_between_weekend_and_calender">8.0dip</dimen>
     <dimen name="sesl_date_picker_selected_day_circle_radius">14.0dip</dimen>
 
+    <dimen name="sesl_spinning_date_picker_height">278.0dip</dimen>
+    <dimen name="sesl_spinning_date_picker_height_dialog">278.0dip</dimen>
+
 </resources>

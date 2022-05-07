@@ -17,16 +17,16 @@ While the old library was a completely separated module, we now are implementing
 
 # Libraries
 ### Android Jetpack:
-- appcompat ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/appcompat?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.39-sesl4)
+- appcompat ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/appcompat?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.41-sesl4)
 - coordinatorlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/coordinatorlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.2-sesl4)
 - drawerlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/drawerlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.2-sesl4)
 - preference ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/preference?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.5-sesl4)
-- recyclerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/recyclerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.21-sesl4)
+- recyclerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/recyclerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.24-sesl4)
 - swiperefreshlayout ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/swiperefreshlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.10-sesl4)
-- viewpager ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.3-sesl4)
+- viewpager ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.4-sesl4)
 - viewpager2 ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager2?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.1-sesl4)
 ### Material Components:
-- material ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/material?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.34-sesl4)
+- material ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/material?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.37-sesl4)
 
   - [x] appbar
   - [ ] bottomnavigation
@@ -35,14 +35,13 @@ While the old library was a completely separated module, we now are implementing
   - [ ] snackbar
   - [ ] tabs
 ### Samsung:
-- apppickerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/apppickerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.17-sesl4)
+- apppickerview ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/apppickerview?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.18-sesl4)
 - indexscroll ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/indexscroll?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.14-sesl4)
-- picker-color ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.18-sesl4)
+- picker-basic ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.34-sesl4)
+- picker-color ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.20-sesl4)
 
-## Uncomplete/to-be-added libs:
-- picker-basic ![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=%23C71A36&logoColor=%23C11920&style=flat-square) (based on 1.0.33-sesl4): still needs complete merging
+## Uncomplete libs:
 - slidingpanelayout (based on 1.0.8-sesl4): broken, needs fixes
-- Unnamed lib (will contain all the utilities and resources from the previous library)
 
 # More info
 - [Samsung's EULA](https://www.samsung.com/sg/Legal/SamsungLegal-EULA/)

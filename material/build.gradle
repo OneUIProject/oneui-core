@@ -112,7 +112,7 @@ task writeVersionFile() {
     def versionFileName = "com.google.android.material_material.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.34-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.37-sesl4" + "\n"
 }
 
 ext {

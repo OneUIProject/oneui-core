@@ -25,27 +25,27 @@ import android.util.Log;
  */
 
 public class SeslDisplayUtils {
-    private static final String TAG = "SeslDisplayUtils";
+  private static final String TAG = "SeslDisplayUtils";
 
-    public static boolean isPinEdgeEnabled(Context context) {
-        try {
-            return Settings.System.getInt(context.getContentResolver(), "panel_mode", 0) == 1;
-        } catch (Exception e) {
-            Log.w(TAG, "Failed get panel mode " + e.toString());
-            return false;
-        }
+  public static boolean isPinEdgeEnabled(Context context) {
+    try {
+      return Settings.System.getInt(context.getContentResolver(), "panel_mode", 0) == 1;
+    } catch (Exception e) {
+      Log.w(TAG, "Failed get panel mode " + e.toString());
+      return false;
     }
+  }
 
-    public static int getPinnedEdgeWidth(Context context) {
-        try {
-            return Settings.System.getInt(context.getContentResolver(), "pinned_edge_width");
-        } catch (Settings.SettingNotFoundException e) {
-            Log.w(TAG, "Failed get EdgeWidth " + e.toString());
-            return 0;
-        }
+  public static int getPinnedEdgeWidth(Context context) {
+    try {
+      return Settings.System.getInt(context.getContentResolver(), "pinned_edge_width");
+    } catch (Settings.SettingNotFoundException e) {
+      Log.w(TAG, "Failed get EdgeWidth " + e.toString());
+      return 0;
     }
+  }
 
-    public static int getEdgeArea(Context context) {
-        return Settings.System.getInt(context.getContentResolver(), "active_edge_area", 1);
-    }
+  public static int getEdgeArea(Context context) {
+    return Settings.System.getInt(context.getContentResolver(), "active_edge_area", 1);
+  }
 }

@@ -26,14 +26,14 @@ import android.content.ContextWrapper;
 
 public class SeslContextUtils {
 
-    public static Activity getActivity(Context context) {
-        while (context instanceof ContextWrapper) {
-            if (context instanceof Activity) {
-                return (Activity) context;
-            }
-            context = ((ContextWrapper) context).getBaseContext();
-        }
-        return null;
+  public static Activity getActivity(Context context) {
+    while (context instanceof ContextWrapper) {
+      if (context instanceof Activity) {
+        return (Activity) context;
+      }
+      context = ((ContextWrapper) context).getBaseContext();
     }
+    return null;
+  }
 
 }

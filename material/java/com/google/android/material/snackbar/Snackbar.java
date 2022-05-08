@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,14 @@ import static android.view.accessibility.AccessibilityManager.FLAG_CONTENT_ICONS
 import static android.view.accessibility.AccessibilityManager.FLAG_CONTENT_TEXT;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -45,21 +47,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.reflect.widget.SeslTextViewReflector;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
- * Snackbars provide lightweight feedback about an operation. They show a brief message at the
- * bottom of the screen on mobile and lower left on larger devices. Snackbars appear above all other
- * elements on screen and only one can be displayed at a time.
- *
- * <p>They automatically disappear after a timeout or after user interaction elsewhere on the
- * screen, particularly after interactions that summon a new surface or activity. Snackbars can be
- * swiped off screen.
- *
- * <p>Snackbars can contain an action which is set via {@link #setAction(CharSequence,
- * android.view.View.OnClickListener)}.
- *
- * <p>To be notified when a snackbar has been shown or dismissed, you can provide a {@link Callback}
- * via {@link BaseTransientBottomBar#addCallback(BaseCallback)}.
+ * Samsung Snackbar class.
  */
 public class Snackbar extends BaseTransientBottomBar<Snackbar> {
 
@@ -301,6 +296,8 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
     final SnackbarContentLayout contentLayout = (SnackbarContentLayout) view.getChildAt(0);
     final TextView tv = contentLayout.getMessageView();
     tv.setText(message);
+    semCheckMaxFontScale(tv, getContext().getResources()
+            .getDimensionPixelSize(R.dimen.design_snackbar_text_size));
     return this;
   }
 
@@ -335,6 +332,8 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
   public Snackbar setAction(
       @Nullable CharSequence text, @Nullable final View.OnClickListener listener) {
     final SnackbarContentLayout contentLayout = (SnackbarContentLayout) this.view.getChildAt(0);
+    contentLayout.setBackground(view.getResources()
+            .getDrawable(R.drawable.sem_snackbar_action_frame_mtrl));
     final TextView tv = contentLayout.getActionView();
     if (TextUtils.isEmpty(text) || listener == null) {
       tv.setVisibility(View.GONE);
@@ -344,6 +343,7 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
       hasAction = true;
       tv.setVisibility(View.VISIBLE);
       tv.setText(text);
+      SeslTextViewReflector.semSetButtonShapeEnabled(tv, isShowButtonBackgroundEnabled());
       tv.setOnClickListener(
           new View.OnClickListener() {
             @Override
@@ -353,8 +353,16 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
               dispatchDismiss(BaseCallback.DISMISS_EVENT_ACTION);
             }
           });
+      semCheckMaxFontScale(tv, getContext().getResources()
+              .getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_text_size));
     }
     return this;
+  }
+
+  private boolean isShowButtonBackgroundEnabled() {
+    ContentResolver contentResolver = getContext().getContentResolver();
+    return contentResolver != null
+            && Settings.System.getInt(contentResolver, "show_button_background", 0) == 1;
   }
 
   @Override
@@ -483,6 +491,13 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
     return this;
   }
 
+  private void semCheckMaxFontScale(TextView textView, int size) {
+    final float currentFontScale = getContext().getResources().getConfiguration().fontScale;
+    if (currentFontScale > 1.2f) {
+      textView.setTextSize(0, (size / currentFontScale) * 1.2f);
+    }
+  }
+
   /**
    * @hide Note: this class is here to provide backwards-compatible way for apps written before the
    *     existence of the base {@link BaseTransientBottomBar} class.
@@ -491,10 +506,12 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
   public static final class SnackbarLayout extends BaseTransientBottomBar.SnackbarBaseLayout {
     public SnackbarLayout(Context context) {
       super(context);
+      setBackgroundColor(android.R.color.transparent);
     }
 
     public SnackbarLayout(Context context, AttributeSet attrs) {
       super(context, attrs);
+      setBackgroundColor(android.R.color.transparent);
     }
 
     @Override
@@ -512,6 +529,13 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
           child.measure(
               MeasureSpec.makeMeasureSpec(availableWidth, MeasureSpec.EXACTLY),
               MeasureSpec.makeMeasureSpec(child.getMeasuredHeight(), MeasureSpec.EXACTLY));
+        }
+        if (child.getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+          MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+          if (child.getHeight() + lp.topMargin + lp.bottomMargin
+                  > getMeasuredHeight() - getPaddingBottom() - getPaddingTop()) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+          }
         }
       }
     }

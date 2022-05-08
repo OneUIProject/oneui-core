@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
@@ -85,6 +86,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Base class for lightweight transient bars that are displayed along the bottom edge of the
@@ -213,8 +218,8 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
   static final int ANIMATION_FADE_DURATION = 180;
 
   // Fade and scale animation constants.
-  private static final int ANIMATION_FADE_IN_DURATION = 150;
-  private static final int ANIMATION_FADE_OUT_DURATION = 75;
+  private static final int ANIMATION_FADE_IN_DURATION = 500;
+  private static final int ANIMATION_FADE_OUT_DURATION = 500;
   private static final float ANIMATION_SCALE_FROM_VALUE = 0.8f;
 
   @NonNull static final Handler handler;
@@ -917,7 +922,9 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
     ValueAnimator scaleAnimator = getScaleAnimator(ANIMATION_SCALE_FROM_VALUE, 1);
 
     AnimatorSet animatorSet = new AnimatorSet();
-    animatorSet.playTogether(alphaAnimator, scaleAnimator);
+    animatorSet.playTogether(alphaAnimator);
+    animatorSet.setInterpolator(AnimationUtils
+            .loadInterpolator(context, android.R.interpolator.decelerate_quad));
     animatorSet.setDuration(ANIMATION_FADE_IN_DURATION);
     animatorSet.addListener(
         new AnimatorListenerAdapter() {
@@ -931,6 +938,8 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
 
   private void startFadeOutAnimation(final int event) {
     ValueAnimator animator = getAlphaAnimator(1, 0);
+    animator.setInterpolator(AnimationUtils
+            .loadInterpolator(context, android.R.interpolator.accelerate_quad));
     animator.setDuration(ANIMATION_FADE_OUT_DURATION);
     animator.addListener(
         new AnimatorListenerAdapter() {
@@ -1122,8 +1131,12 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
           @SuppressLint("ClickableViewAccessibility")
           @Override
           public boolean onTouch(View v, MotionEvent event) {
-            // Prevent touches from passing through this view.
-            return true;
+            if (v instanceof ViewGroup) {
+              return findChildUnder((ViewGroup) v, event.getX(), event.getY()) != null;
+            } else {
+              // Prevent touches from passing through this view.
+              return true;
+            }
           }
         };
 
@@ -1149,7 +1162,7 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
         ViewCompat.setElevation(
             this, a.getDimensionPixelSize(R.styleable.SnackbarLayout_elevation, 0));
       }
-      animationMode = a.getInt(R.styleable.SnackbarLayout_animationMode, ANIMATION_MODE_SLIDE);
+      animationMode = a.getInt(R.styleable.SnackbarLayout_animationMode, ANIMATION_MODE_FADE);
       backgroundOverlayColorAlpha =
           a.getFloat(R.styleable.SnackbarLayout_backgroundOverlayColorAlpha, 1);
       setBackgroundTintList(
@@ -1289,6 +1302,24 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
       } else {
         return DrawableCompat.wrap(background);
       }
+    }
+
+    static View findChildUnder(ViewGroup viewGroup, float x, float y) {
+      for (int i = viewGroup.getChildCount() - 1; i >= 0; i--) {
+        View childAt = viewGroup.getChildAt(i);
+        if (isChildUnder(childAt, x, y)) {
+          return childAt;
+        }
+      }
+      return null;
+    }
+
+    static boolean isChildUnder(View view, float x, float y) {
+      final float viewX = view.getX();
+      final float viewY = view.getY();
+      return x >= viewX && y >= viewY
+              && x < ((float) view.getWidth()) + viewX
+              && y < ((float) view.getHeight()) + viewY;
     }
   }
 

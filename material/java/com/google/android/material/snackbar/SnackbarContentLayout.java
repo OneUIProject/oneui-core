@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,41 @@ import com.google.android.material.R;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
+import androidx.reflect.view.inputmethod.SeslInputMethodManagerReflector;
+
 import com.google.android.material.color.MaterialColors;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /** @hide */
 @RestrictTo(LIBRARY_GROUP)
 public class SnackbarContentLayout extends LinearLayout implements ContentViewCallback {
+  // Sesl
+  private static final boolean WIDGET_ONEUI_SNACKBAR = true;
+
+  private InputMethodManager mImm;
+  private SnackbarContentLayout mSnackBarLayout;
+  private WindowManager mWindowManager;
+
+  private int mLastOrientation = Configuration.ORIENTATION_UNDEFINED;
+  private int mWidthWtihAction;
+  // Sesl
   private TextView messageView;
   private Button actionView;
 
@@ -52,6 +72,19 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
     maxInlineActionWidth =
         a.getDimensionPixelSize(R.styleable.SnackbarLayout_maxActionInlineWidth, -1);
     a.recycle();
+
+    final Resources res = context.getResources();
+    seslUpdateSnackBarMaxWidth(res, res.getDisplayMetrics().widthPixels);
+
+    mSnackBarLayout = findViewById(R.id.snackbar_layout);
+    mImm = context.getSystemService(InputMethodManager.class);
+    mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+  }
+
+  private void seslUpdateSnackBarMaxWidth(Resources res, int screenWidth) {
+    mWidthWtihAction = (int) res
+            .getFraction(R.dimen.sesl_config_prefSnackWidth, screenWidth, screenWidth);
+    maxWidth = mWidthWtihAction;
   }
 
   @Override
@@ -80,39 +113,119 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
   }
 
   @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-    if (maxWidth > 0 && getMeasuredWidth() > maxWidth) {
-      widthMeasureSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY);
-      super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    final int multiLineVPadding =
-        getResources().getDimensionPixelSize(R.dimen.design_snackbar_padding_vertical_2lines);
-    final int singleLineVPadding =
-        getResources().getDimensionPixelSize(R.dimen.design_snackbar_padding_vertical);
-    final boolean isMultiLine = messageView.getLayout().getLineCount() > 1;
-
-    boolean remeasure = false;
-    if (isMultiLine
-        && maxInlineActionWidth > 0
-        && actionView.getMeasuredWidth() > maxInlineActionWidth) {
-      if (updateViewsWithinLayout(
-          VERTICAL, multiLineVPadding, multiLineVPadding - singleLineVPadding)) {
-        remeasure = true;
-      }
-    } else {
-      final int messagePadding = isMultiLine ? multiLineVPadding : singleLineVPadding;
-      if (updateViewsWithinLayout(HORIZONTAL, messagePadding, messagePadding)) {
-        remeasure = true;
-      }
-    }
-
-    if (remeasure) {
-      super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+  protected void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    if (mLastOrientation != newConfig.orientation) {
+      final Resources res = getContext().getResources();
+      seslUpdateSnackBarMaxWidth(res, res.getDisplayMetrics().widthPixels);
+      mLastOrientation = newConfig.orientation;
     }
   }
+
+  // TODO rework this method
+  // kang
+  @Override
+  protected void onMeasure(int var1, int var2) {
+    /* var1 = widthMeasureSpec; var2 = heightMeasureSpec; */
+    super.onMeasure(var1, var2);
+    if (this.maxWidth > this.getRootView().getWidth()) {
+      this.seslUpdateSnackBarMaxWidth(this.getContext().getResources(), this.getRootView().getWidth());
+    }
+
+    int var3;
+    int var5;
+    if (this.actionView.getVisibility() != VISIBLE) {
+      var3 = var1;
+      if (this.maxWidth > 0) {
+        int var4 = this.getMeasuredWidth();
+        var5 = this.maxWidth;
+        var3 = var1;
+        if (var4 > var5) {
+          var3 = MeasureSpec.makeMeasureSpec(var5, MeasureSpec.EXACTLY);
+          super.onMeasure(var3, var2);
+        }
+      }
+    } else {
+      var3 = MeasureSpec.makeMeasureSpec(this.mWidthWtihAction, MeasureSpec.EXACTLY);
+      super.onMeasure(var3, var2);
+    }
+
+    Resources var6 = this.getResources();
+    var5 = var6.getDimensionPixelSize(R.dimen.design_snackbar_padding_vertical_2lines);
+    int var7 = var6.getDimensionPixelSize(R.dimen.design_snackbar_padding_vertical);
+    var1 = this.messageView.getLayout().getLineCount();
+    boolean var12 = false;
+    boolean var8 = false;
+    boolean var11;
+    if (var1 > 1) {
+      var11 = true;
+    } else {
+      var11 = false;
+    }
+
+    SnackbarContentLayout var9 = this.mSnackBarLayout;
+    if (var9 != null) {
+      float var10 = (float)(var9.getPaddingLeft() + this.mSnackBarLayout.getPaddingRight() + this.messageView.getMeasuredWidth() + this.actionView.getMeasuredWidth());
+      if (this.maxInlineActionWidth == -1 && this.actionView.getVisibility() == VISIBLE) {
+        if (!(var10 > (float)this.mWidthWtihAction) && !var11) {
+          this.mSnackBarLayout.setOrientation(HORIZONTAL);
+          this.actionView.setPadding(var6.getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_padding_left), 0, var6.getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_padding_right), 0);
+        } else {
+          this.mSnackBarLayout.setOrientation(VERTICAL);
+          this.actionView.setPadding(var6.getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_padding_left), var6.getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_padding_top), var6.getDimensionPixelSize(R.dimen.sesl_design_snackbar_action_padding_right), 0);
+        }
+      }
+
+      label58: {
+        var2 = this.mWindowManager.getDefaultDisplay().getRotation();
+        if (var2 != 1) {
+          var11 = var8;
+          if (var2 != 3) {
+            break label58;
+          }
+        }
+
+        var11 = true;
+      }
+
+      if (this.mImm != null && var11) {
+        MarginLayoutParams var13 = (MarginLayoutParams)this.mSnackBarLayout.getLayoutParams();
+        if (SeslInputMethodManagerReflector.isInputMethodShown(this.mImm)) {
+          var13.bottomMargin = this.getResources().getDimensionPixelOffset(R.dimen.sesl_design_snackbar_layout_sip_padding_bottom);
+        } else {
+          var13.bottomMargin = this.getResources().getDimensionPixelOffset(R.dimen.sesl_design_snackbar_layout_padding_bottom);
+        }
+
+        this.mSnackBarLayout.setLayoutParams(var13);
+      }
+    } else {
+      label93: {
+        if (var11 && this.maxInlineActionWidth > 0 && this.actionView.getMeasuredWidth() > this.maxInlineActionWidth) {
+          var11 = var12;
+          if (!this.updateViewsWithinLayout(1, var5, var5 - var7)) {
+            break label93;
+          }
+        } else {
+          if (!var11) {
+            var5 = var7;
+          }
+
+          var11 = var12;
+          if (!this.updateViewsWithinLayout(0, var5, var5)) {
+            break label93;
+          }
+        }
+
+        var11 = true;
+      }
+
+      if (var11) {
+        super.onMeasure(var3, var2);
+      }
+    }
+
+  }
+  // kang
 
   private boolean updateViewsWithinLayout(
       final int orientation, final int messagePadTop, final int messagePadBottom) {

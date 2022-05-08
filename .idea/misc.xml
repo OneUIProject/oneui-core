@@ -4,14 +4,27 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="1.0" />
+        <entry key="appcompat/src/main/res/drawable-v26/sesl_go_to_top_dark.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_action_bar_item_text_background_light.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_btn_colored.xml" value="0.208" />
+        <entry key="appcompat/src/main/res/drawable/sesl_dialog_background.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_dropdown_scrollbar_handle_dark.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_dropdown_scrollbar_handle_light.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_edit_text_background_dark.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_go_to_top_dark.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_go_to_top_light.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_ic_ab_add_mtrl.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_ic_ab_app_info_mtrl.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_ic_ab_back_light.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_list_divider_dark.xml" value="0.193" />
+        <entry key="appcompat/src/main/res/drawable/sesl_list_go_to_top_dark.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_list_selector_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_list_selector_light.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_menu_list_divider.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_menu_popup_background.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_menu_popup_background_dark.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_noti_badge.xml" value="0.212" />
+        <entry key="appcompat/src/main/res/drawable/sesl_pen_block_selection.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress.xml" value="0.212" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_large.xml" value="0.193" />
         <entry key="appcompat/src/main/res/drawable/sesl_progress_bar_indeterminate_large_transition.xml" value="0.193" />
@@ -38,16 +51,36 @@
         <entry key="appcompat/src/main/res/layout/sesl_list_menu_item_badge.xml" value="0.1721014492753623" />
         <entry key="appcompat/src/main/res/layout/sesl_popup_menu_item_layout.xml" value="0.67" />
         <entry key="appcompat/src/main/res/layout/sesl_search_view.xml" value="0.31927083333333334" />
+        <entry key="indexscroll/src/main/res/drawable/sesl_index_bar_textmode_thumb_shape.xml" value="0.193" />
+        <entry key="material/java/com/google/android/material/bottomnavigation/res/layout/sesl_bottom_navigation_item_text.xml" value="0.15476190476190477" />
+        <entry key="material/java/com/google/android/material/navigation/res/menu/nv_dummy_overflow_menu_icon.xml" value="0.3182291666666667" />
+        <entry key="material/java/com/google/android/material/tabs/res/drawable/sesl_tab_n_badge.xml" value="0.194" />
+        <entry key="material/java/com/google/android/material/tabs/res/drawable/sesl_tablayout_subtab_indicator_background_light.xml" value="0.194" />
+        <entry key="material/java/com/google/android/material/tabs/res/drawable/sesl_tablayout_subtab_indicator_shape_dark.xml" value="0.194" />
+        <entry key="material/java/com/google/android/material/tabs/res/drawable/sesl_tablayout_subtab_indicator_shape_light.xml" value="0.194" />
+        <entry key="material/java/com/google/android/material/tabs/res/drawable/sesl_tabs_default_indicator.xml" value="0.194" />
+        <entry key="material/java/com/google/android/material/tabs/res/layout/sesl_tabs_sub_tab_layout.xml" value="0.15476190476190477" />
         <entry key="picker/picker-basic/src/main/res/drawable/sesl_custom_toast_background.xml" value="0.193" />
         <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_background.xml" value="0.193" />
         <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_header_background.xml" value="0.193" />
         <entry key="picker/picker-basic/src/main/res/drawable/sesl_date_picker_next.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/layout-sw600dp/sesl_spinning_date_picker.xml" value="0.239453125" />
+        <entry key="picker/picker-basic/src/main/res/layout-sw600dp/sesl_spinning_date_picker_legacy.xml" value="0.239453125" />
         <entry key="picker/picker-basic/src/main/res/layout/sesl_custom_toast_layout.xml" value="0.31927083333333334" />
         <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker.xml" value="0.31927083333333334" />
         <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker_dialog.xml" value="0.31927083333333334" />
         <entry key="picker/picker-basic/src/main/res/layout/sesl_date_picker_spinner.xml" value="0.31927083333333334" />
         <entry key="picker/picker-basic/src/main/res/layout/sesl_number_picker_spinner.xml" value="0.31927083333333334" />
-        <entry key="recyclerview/res/drawable-anydpi/sesl_fastscroll_thumb_alpha.xml" value="0.193" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_calendar.xml" value="0.15526849037487336" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_legacy.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_legacy_multipane.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_legacy_phone.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_multipane.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_phone.xml" value="0.31927083333333334" />
+        <entry key="picker/picker-basic/src/main/res/layout/sesl_spinning_date_picker_spinner.xml" value="0.31927083333333334" />
+        <entry key="preference/res/layout/sesl_switch_preference_screen_widget_divider.xml" value="0.3182291666666667" />
+        <entry key="recyclerview/res/drawable-anydpi/sesl_fastscroll_thumb_alpha.xml" value="1.0" />
         <entry key="recyclerview/res/drawable/sesl_fastscroll_label_left.xml" value="0.193" />
         <entry key="recyclerview/res/drawable/sesl_fastscroll_label_right.xml" value="0.193" />
         <entry key="recyclerview/res/drawable/sesl_fastscroll_thumb.xml" value="0.193" />

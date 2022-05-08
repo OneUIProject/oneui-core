@@ -19,11 +19,13 @@
 <!-- Definitions of attributes to be exposed as public -->
 <resources>
   <public name="bottomNavigationStyle" type="attr"/>
-  <public name="seslBottomBarHasIcon" type="attr"/>
   <public name="itemHorizontalTranslationEnabled" type="attr"/>
+  <public name="seslBottomBarHasIcon" type="attr"/>
   <public name="hide_bottom_view_on_scroll_behavior" type="string"/>
   <public name="Widget.Design.BottomNavigationView" type="style"/>
   <public name="Widget.Design.Light.BottomNavigationView" type="style"/>
+  <public name="Widget.Design.BottomNavigationView.Text" type="style"/>
+  <public name="Widget.Design.Light.BottomNavigationView.Text" type="style"/>
   <public name="Widget.MaterialComponents.BottomNavigationView" type="style"/>
   <public name="Widget.MaterialComponents.BottomNavigationView.Colored" type="style"/>
   <public name="Widget.MaterialComponents.BottomNavigationView.PrimarySurface" type="style"/>

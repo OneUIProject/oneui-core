@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2018 The Android Open Source Project
+<!-- Copyright (C) 2022 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!-- Original code by Samsung, all rights reserved to the original author. -->
 
 <!-- Definitions of attributes to be exposed as public -->
 <resources>
@@ -41,7 +42,11 @@
   <public name="tabStyle" type="attr"/>
   <public name="tabTextAppearance" type="attr"/>
   <public name="tabTextColor" type="attr"/>
+  <public name="seslTabSubTextAppearance" type="attr"/>
+  <public name="seslTabSubTextColor" type="attr"/>
+  <public name="seslTabSelectedSubTextColor" type="attr"/>
   <public name="Widget.Design.TabLayout" type="style"/>
+  <public name="Widget.Design.TabLayout.Light" type="style"/>
   <public name="Widget.MaterialComponents.TabLayout" type="style"/>
   <public name="Widget.MaterialComponents.TabLayout.Colored" type="style"/>
   <public name="Widget.MaterialComponents.TabLayout.PrimarySurface" type="style"/>

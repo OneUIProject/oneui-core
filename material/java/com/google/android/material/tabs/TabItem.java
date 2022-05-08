@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,10 @@ import androidx.appcompat.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * TabItem is a special 'view' which allows you to declare tab items for a {@link TabLayout} within
  * a layout. This view is not actually added to TabLayout, it is just a dummy which allows setting
@@ -43,6 +47,7 @@ public class TabItem extends View {
   public final Drawable icon;
   //TODO(b/76413401): make package private after the widget migration
   public final int customLayout;
+  public CharSequence mSubText;
 
   public TabItem(Context context) {
     this(context, null);

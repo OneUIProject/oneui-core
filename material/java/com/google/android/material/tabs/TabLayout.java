@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -37,6 +38,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -45,6 +47,10 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+
+import androidx.appcompat.animation.SeslAnimationUtils;
+import androidx.appcompat.util.SeslMisc;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pools;
 import androidx.core.view.GravityCompat;
@@ -64,17 +70,24 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.BoolRes;
 import androidx.annotation.ColorInt;
@@ -104,77 +117,60 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * TabLayout provides a horizontal layout to display tabs.
- *
- * <p>Population of the tabs to display is done through {@link Tab} instances. You create tabs via
- * {@link #newTab()}. From there you can change the tab's label or icon via {@link Tab#setText(int)}
- * and {@link Tab#setIcon(int)} respectively. To display the tab, you need to add it to the layout
- * via one of the {@link #addTab(Tab)} methods. For example:
- *
- * <pre>
- * TabLayout tabLayout = ...;
- * tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
- * tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
- * tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
- * </pre>
- *
- * You should add a listener via {@link #addOnTabSelectedListener(OnTabSelectedListener)} to be
- * notified when any tab's selection state has been changed.
- *
- * <p>You can also add items to TabLayout in your layout through the use of {@link TabItem}. An
- * example usage is like so:
- *
- * <pre>
- * &lt;com.google.android.material.tabs.TabLayout
- *         android:layout_height=&quot;wrap_content&quot;
- *         android:layout_width=&quot;match_parent&quot;&gt;
- *
- *     &lt;com.google.android.material.tabs.TabItem
- *             android:text=&quot;@string/tab_text&quot;/&gt;
- *
- *     &lt;com.google.android.material.tabs.TabItem
- *             android:icon=&quot;@drawable/ic_android&quot;/&gt;
- *
- * &lt;/com.google.android.material.tabs.TabLayout&gt;
- * </pre>
- *
- * <h3>ViewPager integration</h3>
- *
- * <p>If you're using a {@link androidx.viewpager.widget.ViewPager} together with this layout, you
- * can call {@link #setupWithViewPager(ViewPager)} to link the two together. This layout will be
- * automatically populated from the {@link PagerAdapter}'s page titles.
- *
- * <p>This view also supports being used as part of a ViewPager's decor, and can be added directly
- * to the ViewPager in a layout resource file like so:
- *
- * <pre>
- * &lt;androidx.viewpager.widget.ViewPager
- *     android:layout_width=&quot;match_parent&quot;
- *     android:layout_height=&quot;match_parent&quot;&gt;
- *
- *     &lt;com.google.android.material.tabs.TabLayout
- *         android:layout_width=&quot;match_parent&quot;
- *         android:layout_height=&quot;wrap_content&quot;
- *         android:layout_gravity=&quot;top&quot; /&gt;
- *
- * &lt;/androidx.viewpager.widget.ViewPager&gt;
- * </pre>
- *
- * @see <a href="http://www.google.com/design/spec/components/tabs.html">Tabs</a>
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPadding
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingStart
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingTop
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingEnd
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingBottom
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabContentStart
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabBackground
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabMinWidth
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabMaxWidth
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabTextAppearance
+ * Samsung TabLayout class.
  */
 @ViewPager.DecorView
 public class TabLayout extends HorizontalScrollView {
+  // Sesl
+  private static final int ANIM_SHOW_DURATION = 350;
+  private static final int ANIM_HIDE_DURATION = 400;
+
+  private static final float ANIM_RIPPLE_MINOR_SCALE = 0.95f;
+
+  @Dimension(unit = Dimension.DP)
+  private static final int SESL_DEFAULT_HEIGHT = 60;
+  private static final int SESL_SUB_DEPTH_DEFAULT_HEIGHT = 56;
+
+  private static final int DEPTH_TYPE_MAIN = 1;
+  private static final int DEPTH_TYPE_SUB = 2;
+
+  public static final int SESL_MODE_FIXED_AUTO = 11;
+  public static final int SESL_MODE_WEIGHT_AUTO = 12;
+
+  private static final int BADGE_TYPE_UNKNOWN = -1;
+  private static final int BADGE_TYPE_N = 1;
+  private static final int BADGE_TYPE_DOT = 2;
+
+  private static final int BADGE_N_TEXT_SIZE = 11;
+
+  private Typeface mBoldTypeface;
+  private Typeface mNormalTypeface;
+  ColorStateList mSubTabSubTextColors;
+
+  private int mBadgeColor = Color.WHITE;
+  private int mBadgeTextColor = Color.WHITE;
+  private int mDepthStyle = DEPTH_TYPE_MAIN;
+  private int mFirstTabGravity;
+  private int mIconTextGap = -1;
+  private int mOverScreenMaxWidth = -1;
+  private int mRequestedTabWidth = -1;
+  private int mSubTabIndicator2ndHeight = 1;
+  private int mSubTabIndicatorHeight = 1;
+  private int mSubTabSelectedIndicatorColor = Color.WHITE;
+  int mSubTabSubTextAppearance;
+  int mSubTabTextSize;
+  private int mTabMinSideSpace;
+  private int mTabSelectedIndicatorColor;
+
+  private boolean mIsChangedGravityByLocal;
+  private boolean mIsOverScreen = false;
+  private boolean mIsScaledTextSizeType = false;
+  // Sesl
 
   private static final int DEF_STYLE_RES = R.style.Widget_Design_TabLayout;
 
@@ -234,7 +230,8 @@ public class TabLayout extends HorizontalScrollView {
 
   /** @hide */
   @RestrictTo(LIBRARY_GROUP)
-  @IntDef(value = {MODE_SCROLLABLE, MODE_FIXED, MODE_AUTO})
+  @IntDef(value = {MODE_SCROLLABLE, MODE_FIXED, MODE_AUTO,
+          SESL_MODE_FIXED_AUTO, SESL_MODE_WEIGHT_AUTO})
   @Retention(RetentionPolicy.SOURCE)
   public @interface Mode {}
 
@@ -505,13 +502,12 @@ public class TabLayout extends HorizontalScrollView {
             LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
     TypedArray a =
-        ThemeEnforcement.obtainStyledAttributes(
-            context,
+            context.obtainStyledAttributes(
             attrs,
             R.styleable.TabLayout,
             defStyleAttr,
-            DEF_STYLE_RES,
-            R.styleable.TabLayout_tabTextAppearance);
+            SeslMisc.isLightTheme(context) ?
+                    R.style.Widget_Design_TabLayout_Light : R.style.Widget_Design_TabLayout);
 
     if (getBackground() instanceof ColorDrawable) {
       ColorDrawable background = (ColorDrawable) getBackground();
@@ -528,6 +524,8 @@ public class TabLayout extends HorizontalScrollView {
         a.getColor(R.styleable.TabLayout_tabIndicatorColor, Color.TRANSPARENT));
     slidingTabIndicator.setSelectedIndicatorHeight(
         a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorHeight, -1));
+    mTabSelectedIndicatorColor
+            = a.getColor(R.styleable.TabLayout_tabIndicatorColor, Color.TRANSPARENT);
     setSelectedTabIndicatorGravity(
         a.getInt(R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
     setTabIndicatorFullWidth(a.getBoolean(R.styleable.TabLayout_tabIndicatorFullWidth, true));
@@ -548,21 +546,64 @@ public class TabLayout extends HorizontalScrollView {
     tabTextAppearance =
         a.getResourceId(R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab);
 
+    TypedArray seslArray =
+            context.obtainStyledAttributes(
+                    tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
+    tabTextSize = seslArray.getDimensionPixelSize(
+            androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
+    mIsScaledTextSizeType = seslArray.getText(
+            androidx.appcompat.R.styleable.TextAppearance_android_textSize).toString().contains("sp");
+    tabTextColors = MaterialResources.getColorStateList(
+            context, seslArray, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
+
+    final Resources res = getResources();
+    if (Build.VERSION.SDK_INT >= 31) {
+      mBoldTypeface = Typeface.create(
+              res.getString(androidx.appcompat.R.string.sesl_font_family_medium), Typeface.BOLD);
+      mNormalTypeface = Typeface.create(
+              res.getString(androidx.appcompat.R.string.sesl_font_family_regular), Typeface.NORMAL);
+    } else {
+      String fontFamily = res.getString(androidx.appcompat.R.string.sesl_font_family_regular);
+      mBoldTypeface = Typeface.create(fontFamily, Typeface.BOLD);
+      mNormalTypeface = Typeface.create(fontFamily, Typeface.NORMAL);
+    }
+
+    mSubTabIndicatorHeight = res.getDimensionPixelSize(
+            R.dimen.sesl_tablayout_subtab_indicator_height);
+    mSubTabIndicator2ndHeight = res.getDimensionPixelSize(
+            R.dimen.sesl_tablayout_subtab_indicator_2nd_height);
+    mTabMinSideSpace = res.getDimensionPixelSize(R.dimen.sesl_tab_min_side_space);
+    mSubTabSubTextAppearance = seslArray.getResourceId(
+            R.styleable.TabLayout_seslTabSubTextAppearance, R.style.TextAppearance_Design_Tab_SubText);
+
     // Text colors/sizes come from the text appearance first
     final TypedArray ta =
         context.obtainStyledAttributes(
             tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
     try {
-      tabTextSize =
-          ta.getDimensionPixelSize(
-              androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
-      tabTextColors =
-          MaterialResources.getColorStateList(
-              context,
-              ta,
-              androidx.appcompat.R.styleable.TextAppearance_android_textColor);
+      mSubTabTextSize =
+              ta.getDimensionPixelSize(
+                      androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
+      mSubTabSubTextColors =
+              MaterialResources.getColorStateList(
+                      context,
+                      ta,
+                      androidx.appcompat.R.styleable.TextAppearance_android_textColor);
     } finally {
+      seslArray.recycle();
       ta.recycle();
+    }
+
+    if (a.hasValue(R.styleable.TabLayout_seslTabSubTextColor)) {
+      mSubTabSubTextColors =
+              MaterialResources.getColorStateList(context,
+                      a, R.styleable.TabLayout_seslTabSubTextColor);
+    }
+
+    if (a.hasValue(R.styleable.TabLayout_seslTabSelectedSubTextColor)) {
+      mSubTabSubTextColors = createColorStateList(
+              mSubTabSubTextColors.getDefaultColor(),
+              a.getColor(R.styleable.TabLayout_seslTabSelectedSubTextColor, Color.TRANSPARENT));
     }
 
     if (a.hasValue(R.styleable.TabLayout_tabTextColor)) {
@@ -598,15 +639,14 @@ public class TabLayout extends HorizontalScrollView {
     contentInsetStart = a.getDimensionPixelSize(R.styleable.TabLayout_tabContentStart, 0);
     // noinspection WrongConstant
     mode = a.getInt(R.styleable.TabLayout_tabMode, MODE_FIXED);
-    tabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
+    mFirstTabGravity = tabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
     inlineLabel = a.getBoolean(R.styleable.TabLayout_tabInlineLabel, false);
     unboundedRipple = a.getBoolean(R.styleable.TabLayout_tabUnboundedRipple, false);
     a.recycle();
 
     // TODO add attr for these
-    final Resources res = getResources();
-    tabTextMultiLineSize = res.getDimensionPixelSize(R.dimen.design_tab_text_size_2line);
-    scrollableTabMinWidth = res.getDimensionPixelSize(R.dimen.design_tab_scrollable_min_width);
+    tabTextMultiLineSize = res.getDimensionPixelSize(R.dimen.sesl_tab_text_size_2line);
+    scrollableTabMinWidth = res.getDimensionPixelSize(R.dimen.sesl_tab_scrollable_min_width);
 
     // Now apply the tab mode and gravity
     applyModeAndGravity();
@@ -624,7 +664,20 @@ public class TabLayout extends HorizontalScrollView {
    * @attr ref com.google.android.material.R.styleable#TabLayout_tabIndicatorColor
    */
   public void setSelectedTabIndicatorColor(@ColorInt int color) {
-    this.tabSelectedIndicatorColor = color;
+    mTabSelectedIndicatorColor = color;
+
+    Iterator<Tab> tabs = this.tabs.iterator();
+    while (tabs.hasNext()) {
+      SeslAbsIndicatorView indicatorView = tabs.next().view.mIndicatorView;
+      if (indicatorView != null) {
+        if (mDepthStyle != DEPTH_TYPE_SUB || mSubTabSelectedIndicatorColor == Color.WHITE) {
+          indicatorView.setSelectedIndicatorColor(color);
+        } else {
+          indicatorView.setSelectedIndicatorColor(mSubTabSelectedIndicatorColor);
+        }
+        indicatorView.invalidate();
+      }
+    }
   }
 
   /**
@@ -690,7 +743,7 @@ public class TabLayout extends HorizontalScrollView {
 
     // Update the 'selected state' view as we scroll, if enabled
     if (updateSelectedText) {
-      setSelectedTabView(roundedPosition);
+      setSelectedTabView(roundedPosition, true);
     }
   }
 
@@ -757,6 +810,9 @@ public class TabLayout extends HorizontalScrollView {
     }
     if (!TextUtils.isEmpty(item.getContentDescription())) {
       tab.setContentDescription(item.getContentDescription());
+    }
+    if (item.mSubText != null) {
+      tab.seslSetSubText(item.mSubText);
     }
     addTab(tab);
   }
@@ -978,6 +1034,7 @@ public class TabLayout extends HorizontalScrollView {
     if (mode != this.mode) {
       this.mode = mode;
       applyModeAndGravity();
+      updateBadgePosition();
     }
   }
 
@@ -1470,6 +1527,22 @@ public class TabLayout extends HorizontalScrollView {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
 
+    for (int i = 0; i < getTabCount(); i++) {
+      Tab tab = getTabAt(i);
+      if (tab != null && tab.view != null) {
+        if (tab.view.mMainTabTouchBackground != null) {
+          tab.view.mMainTabTouchBackground.setAlpha(0f);
+        }
+        if (tab.view.mIndicatorView != null) {
+          if (getSelectedTabPosition() == i) {
+            tab.view.mIndicatorView.setShow();
+          } else {
+            tab.view.mIndicatorView.setHide();
+          }
+        }
+      }
+    }
+
     MaterialShapeUtils.setParentAbsoluteElevation(this);
 
     if (viewPager == null) {
@@ -1533,7 +1606,7 @@ public class TabLayout extends HorizontalScrollView {
       if (viewPager != null && adapterCount > 0) {
         final int curItem = viewPager.getCurrentItem();
         if (curItem != getSelectedTabPosition() && curItem < getTabCount()) {
-          selectTab(getTabAt(curItem));
+          selectTab(getTabAt(curItem), true, true);
         }
       }
     }
@@ -1550,6 +1623,9 @@ public class TabLayout extends HorizontalScrollView {
     TabView tabView = tabViewPool != null ? tabViewPool.acquire() : null;
     if (tabView == null) {
       tabView = new TabView(getContext());
+    }
+    if (tabView.mMainTabTouchBackground != null) {
+      tabView.mMainTabTouchBackground.setAlpha(0f);
     }
     tabView.setTab(tab);
     tabView.setFocusable(true);
@@ -1619,6 +1695,9 @@ public class TabLayout extends HorizontalScrollView {
     if (mode == MODE_FIXED && tabGravity == GRAVITY_FILL) {
       lp.width = 0;
       lp.weight = 1;
+    } else if (mode == SESL_MODE_FIXED_AUTO || mode == SESL_MODE_WEIGHT_AUTO) {
+      lp.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+      lp.weight = 0;
     } else {
       lp.width = LinearLayout.LayoutParams.WRAP_CONTENT;
       lp.weight = 0;
@@ -1708,6 +1787,10 @@ public class TabLayout extends HorizontalScrollView {
           // Resize the child so that it doesn't scroll
           remeasure = child.getMeasuredWidth() != getMeasuredWidth();
           break;
+        case SESL_MODE_FIXED_AUTO:
+        case SESL_MODE_WEIGHT_AUTO:
+          remeasure = true;
+          break;
       }
 
       if (remeasure) {
@@ -1721,6 +1804,16 @@ public class TabLayout extends HorizontalScrollView {
         int childWidthMeasureSpec =
             MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY);
         child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+      }
+
+      checkOverScreen();
+      if (mIsOverScreen
+              && getChildAt(0).getMeasuredWidth() < getMeasuredWidth()) {
+        setPaddingRelative(
+                (getMeasuredWidth() - getChildAt(0).getMeasuredWidth()) / 2,
+                0, 0, 0);
+      } else {
+        setPaddingRelative(0, 0, 0, 0);
       }
     }
   }
@@ -1785,16 +1878,56 @@ public class TabLayout extends HorizontalScrollView {
 
   /**
    * Called when a selected tab is added. Unselects all other tabs in the TabLayout.
-   *
-   * @param position Position of the selected tab.
    */
-  private void setSelectedTabView(int position) {
+  private void setSelectedTabView(int position, boolean isPressed) {
     final int tabCount = slidingTabIndicator.getChildCount();
     if (position < tabCount) {
       for (int i = 0; i < tabCount; i++) {
         final View child = slidingTabIndicator.getChildAt(i);
         child.setSelected(i == position);
         child.setActivated(i == position);
+      }
+
+      tabs.get(position).view.setSelected(true);
+
+      for (int i = 0; i < getTabCount(); i++) {
+        final TabView tabView = tabs.get(i).view;
+
+        if (i == position) {
+          if (tabView.textView != null) {
+            startTextColorChangeAnimation(
+                    tabView.textView, getSelectedTabTextColor());
+            tabView.textView.setTypeface(mBoldTypeface);
+            tabView.textView.setSelected(true);
+          }
+          if (mDepthStyle == DEPTH_TYPE_SUB && tabView.mSubTextView != null) {
+            startTextColorChangeAnimation(
+                    tabView.mSubTextView, seslGetSelectedTabSubTextColor());
+            tabView.mSubTextView.setSelected(true);
+          }
+          if (tabView.mIndicatorView != null) {
+            if (!isPressed) {
+              tabs.get(i).view.mIndicatorView.setReleased();
+            } else if (tabView.mIndicatorView.getAlpha() != 1.0f) {
+              tabView.mIndicatorView.setShow();
+            }
+          }
+        } else {
+          if (tabView.mIndicatorView != null) {
+            tabView.mIndicatorView.setHide();
+          }
+          if (tabView.textView != null) {
+            tabView.textView.setTypeface(mNormalTypeface);
+            startTextColorChangeAnimation(
+                    tabView.textView, tabTextColors.getDefaultColor());
+            tabView.textView.setSelected(false);
+          }
+          if (mDepthStyle == DEPTH_TYPE_SUB && tabView.mSubTextView != null) {
+            startTextColorChangeAnimation(
+                    tabView.mSubTextView, mSubTabSubTextColors.getDefaultColor());
+            tabView.mSubTextView.setSelected(false);
+          }
+        }
       }
     }
   }
@@ -1818,6 +1951,24 @@ public class TabLayout extends HorizontalScrollView {
    * @see #selectTab(Tab)
    */
   public void selectTab(@Nullable final Tab tab, boolean updateIndicator) {
+    selectTab(tab, updateIndicator, true);
+  }
+
+  /**
+   * Selects the given tab. Will always animate to the selected tab if the current tab is
+   * reselected, regardless of the value of {@code updateIndicator}.
+   *
+   * @see #selectTab(Tab, boolean)
+   */
+  public void selectTab(@Nullable final Tab tab, boolean updateIndicator,
+                        boolean isPressed) {
+    if (tab != null && !tab.view.isEnabled()) {
+      if (viewPager != null) {
+        viewPager.setCurrentItem(getSelectedTabPosition());
+        return;
+      }
+    }
+
     final Tab currentTab = selectedTab;
 
     if (currentTab == tab) {
@@ -1836,7 +1987,7 @@ public class TabLayout extends HorizontalScrollView {
           animateToTab(newPosition);
         }
         if (newPosition != Tab.INVALID_POSITION) {
-          setSelectedTabView(newPosition);
+          setSelectedTabView(newPosition, isPressed);
         }
       }
       // Setting selectedTab before dispatching 'tab unselected' events, so that currentTab's state
@@ -1870,7 +2021,8 @@ public class TabLayout extends HorizontalScrollView {
   }
 
   private int calculateScrollXForTab(int position, float positionOffset) {
-    if (mode == MODE_SCROLLABLE || mode == MODE_AUTO) {
+    if (mode == MODE_SCROLLABLE || mode == MODE_AUTO
+            || mode == SESL_MODE_FIXED_AUTO || mode == SESL_MODE_WEIGHT_AUTO) {
       final View selectedChild = slidingTabIndicator.getChildAt(position);
       final View nextChild =
           position + 1 < slidingTabIndicator.getChildCount()
@@ -1892,12 +2044,7 @@ public class TabLayout extends HorizontalScrollView {
   }
 
   private void applyModeAndGravity() {
-    int paddingStart = 0;
-    if (mode == MODE_SCROLLABLE || mode == MODE_AUTO) {
-      // If we're scrollable, or fixed at start, inset using padding
-      paddingStart = Math.max(0, contentInsetStart - tabPaddingStart);
-    }
-    ViewCompat.setPaddingRelative(slidingTabIndicator, paddingStart, 0, 0, 0);
+    ViewCompat.setPaddingRelative(slidingTabIndicator, 0, 0, 0, 0);
 
     switch (mode) {
       case MODE_AUTO:
@@ -1911,6 +2058,8 @@ public class TabLayout extends HorizontalScrollView {
         slidingTabIndicator.setGravity(Gravity.CENTER_HORIZONTAL);
         break;
       case MODE_SCROLLABLE:
+      case SESL_MODE_FIXED_AUTO:
+      case SESL_MODE_WEIGHT_AUTO:
         applyGravityForModeScrollable(tabGravity);
         break;
     }
@@ -1946,6 +2095,7 @@ public class TabLayout extends HorizontalScrollView {
         child.requestLayout();
       }
     }
+    updateBadgePosition();
   }
 
   /** A tab in this layout. Instances can be created via {@link #newTab()}. */
@@ -1962,6 +2112,7 @@ public class TabLayout extends HorizontalScrollView {
     @Nullable private Object tag;
     @Nullable private Drawable icon;
     @Nullable private CharSequence text;
+    private CharSequence subText;
     // This represents the content description that has been explicitly set on the Tab or TabItem
     // in XML or through #setContentDescription. If the content description is empty, text should
     // be used as the content description instead, but contentDesc should remain empty.
@@ -2044,6 +2195,9 @@ public class TabLayout extends HorizontalScrollView {
      */
     @NonNull
     public Tab setCustomView(@Nullable View view) {
+      if (this.view.textView != null) {
+        this.view.removeAllViews();
+      }
       customView = view;
       updateView();
       return this;
@@ -2101,6 +2255,11 @@ public class TabLayout extends HorizontalScrollView {
       return text;
     }
 
+    @Nullable
+    public CharSequence seslGetSubText() {
+      return subText;
+    }
+
     /**
      * Set the icon displayed on this tab.
      *
@@ -2153,6 +2312,12 @@ public class TabLayout extends HorizontalScrollView {
       }
 
       this.text = text;
+      updateView();
+      return this;
+    }
+
+    public Tab seslSetSubText(@Nullable CharSequence text) {
+      subText = text;
       updateView();
       return this;
     }
@@ -2320,11 +2485,38 @@ public class TabLayout extends HorizontalScrollView {
       contentDesc = null;
       position = INVALID_POSITION;
       customView = null;
+      subText = null;
+    }
+
+    public TextView seslGetTextView() {
+      if (customView == null && view != null) {
+        return view.textView;
+      }
+      return null;
+    }
+
+    public TextView seslGetSubTextView() {
+      if (customView == null && view != null) {
+        return view.mSubTextView;
+      }
+      return null;
     }
   }
 
   /** A {@link LinearLayout} containing {@link Tab} instances for use with {@link TabLayout}. */
   public final class TabView extends LinearLayout {
+    // Sesl
+    private TextView mDotBadgeView;
+    private SeslAbsIndicatorView mIndicatorView;
+    private View mMainTabTouchBackground;
+    private TextView mNBadgeView;
+    private TextView mSubTextView;
+    private RelativeLayout mTabParentView;
+
+    private int mIconSize;
+
+    private boolean mIsCallPerformClick;
+    // Sesl
     private Tab tab;
     private TextView textView;
     private ImageView iconView;
@@ -2338,61 +2530,37 @@ public class TabLayout extends HorizontalScrollView {
 
     private int defaultMaxLines = 2;
 
+    View.OnKeyListener mTabViewKeyListener = new View.OnKeyListener() {
+      @Override
+      public boolean onKey(View v, int keyCode, KeyEvent event) {
+        return false;
+      }
+    };
+
     public TabView(@NonNull Context context) {
       super(context);
       updateBackgroundDrawable(context);
-      ViewCompat.setPaddingRelative(
-          this, tabPaddingStart, tabPaddingTop, tabPaddingEnd, tabPaddingBottom);
       setGravity(Gravity.CENTER);
       setOrientation(inlineLabel ? HORIZONTAL : VERTICAL);
       setClickable(true);
-      ViewCompat.setPointerIcon(
-          this, PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
+      setOnKeyListener(mTabViewKeyListener);
+      if (mDepthStyle == DEPTH_TYPE_MAIN) {
+        ViewCompat.setPaddingRelative(
+                this, 0, tabPaddingTop, 0, tabPaddingBottom);
+      }
+      mIconSize = getResources().getDimensionPixelOffset(R.dimen.sesl_tab_icon_size);
     }
 
     private void updateBackgroundDrawable(Context context) {
-      if (tabBackgroundResId != 0) {
+      if (tabBackgroundResId != 0 && mDepthStyle != DEPTH_TYPE_SUB) {
         baseBackgroundDrawable = AppCompatResources.getDrawable(context, tabBackgroundResId);
         if (baseBackgroundDrawable != null && baseBackgroundDrawable.isStateful()) {
           baseBackgroundDrawable.setState(getDrawableState());
         }
+        ViewCompat.setBackground(this, baseBackgroundDrawable);
       } else {
         baseBackgroundDrawable = null;
       }
-
-      Drawable background;
-      Drawable contentDrawable = new GradientDrawable();
-      ((GradientDrawable) contentDrawable).setColor(Color.TRANSPARENT);
-
-      if (tabRippleColorStateList != null) {
-        GradientDrawable maskDrawable = new GradientDrawable();
-        // TODO: Find a workaround for this. Currently on certain devices/versions,
-        // LayerDrawable will draw a black background underneath any layer with a non-opaque color,
-        // (e.g. ripple) unless we set the shape to be something that's not a perfect rectangle.
-        maskDrawable.setCornerRadius(0.00001F);
-        maskDrawable.setColor(Color.WHITE);
-
-        ColorStateList rippleColor =
-            RippleUtils.convertToRippleDrawableColor(tabRippleColorStateList);
-
-        // TODO: Add support to RippleUtils.compositeRippleColorStateList for different ripple color
-        // for selected items vs non-selected items
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-          background =
-              new RippleDrawable(
-                  rippleColor,
-                  unboundedRipple ? null : contentDrawable,
-                  unboundedRipple ? null : maskDrawable);
-        } else {
-          Drawable rippleDrawable = DrawableCompat.wrap(maskDrawable);
-          DrawableCompat.setTintList(rippleDrawable, rippleColor);
-          background = new LayerDrawable(new Drawable[] {contentDrawable, rippleDrawable});
-        }
-      } else {
-        background = contentDrawable;
-      }
-      ViewCompat.setBackground(this, background);
-      TabLayout.this.invalidate();
     }
 
     /**
@@ -2415,20 +2583,19 @@ public class TabLayout extends HorizontalScrollView {
     @Override
     protected void drawableStateChanged() {
       super.drawableStateChanged();
-      boolean changed = false;
       int[] state = getDrawableState();
       if (baseBackgroundDrawable != null && baseBackgroundDrawable.isStateful()) {
-        changed |= baseBackgroundDrawable.setState(state);
-      }
-
-      if (changed) {
-        invalidate();
-        TabLayout.this.invalidate(); // Invalidate TabLayout, which draws mBaseBackgroundDrawable
+        baseBackgroundDrawable.setState(state);
       }
     }
 
     @Override
     public boolean performClick() {
+      if (mIsCallPerformClick) {
+        mIsCallPerformClick = false;
+        return true;
+      }
+
       final boolean handled = super.performClick();
 
       if (tab != null) {
@@ -2444,25 +2611,33 @@ public class TabLayout extends HorizontalScrollView {
 
     @Override
     public void setSelected(final boolean selected) {
-      final boolean changed = isSelected() != selected;
+      if (isEnabled()) {
+        final boolean changed = isSelected() != selected;
 
-      super.setSelected(selected);
+        super.setSelected(selected);
 
-      if (changed && selected && Build.VERSION.SDK_INT < 16) {
-        // Pre-JB we need to manually send the TYPE_VIEW_SELECTED event
-        sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
-      }
+        if (changed && selected && Build.VERSION.SDK_INT < 16) {
+          // Pre-JB we need to manually send the TYPE_VIEW_SELECTED event
+          sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+        }
 
-      // Always dispatch this to the child views, regardless of whether the value has
-      // changed
-      if (textView != null) {
-        textView.setSelected(selected);
-      }
-      if (iconView != null) {
-        iconView.setSelected(selected);
-      }
-      if (customView != null) {
-        customView.setSelected(selected);
+        // Always dispatch this to the child views, regardless of whether the value has
+        // changed
+        if (textView != null) {
+          textView.setSelected(selected);
+        }
+        if (iconView != null) {
+          iconView.setSelected(selected);
+        }
+        if (customView != null) {
+          customView.setSelected(selected);
+        }
+        if (mIndicatorView != null) {
+          mIndicatorView.setSelected(selected);
+        }
+        if (mSubTextView != null) {
+          mSubTextView.setSelected(selected);
+        }
       }
     }
 
@@ -2488,6 +2663,15 @@ public class TabLayout extends HorizontalScrollView {
         infoCompat.removeAction(AccessibilityActionCompat.ACTION_CLICK);
       }
       infoCompat.setRoleDescription(getResources().getString(R.string.item_view_role_description));
+
+      if (mNBadgeView != null) {
+        if (mNBadgeView.getVisibility() == VISIBLE
+                && mNBadgeView.getContentDescription() != null) {
+          CharSequence customContentDescription = getContentDescription();
+          infoCompat.setContentDescription(
+                  customContentDescription + ", " + mNBadgeView.getContentDescription());
+        }
+      }
     }
 
     @Override
@@ -2496,24 +2680,35 @@ public class TabLayout extends HorizontalScrollView {
       final int specWidthMode = MeasureSpec.getMode(origWidthMeasureSpec);
       final int maxWidth = getTabMaxWidth();
 
-      final int widthMeasureSpec;
+      int widthMeasureSpec = origWidthMeasureSpec;
       final int heightMeasureSpec = origHeightMeasureSpec;
 
-      if (maxWidth > 0 && (specWidthMode == MeasureSpec.UNSPECIFIED || specWidthSize > maxWidth)) {
-        // If we have a max width and a given spec which is either unspecified or
-        // larger than the max width, update the width spec using the same mode
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec(tabMaxWidth, MeasureSpec.AT_MOST);
+      if (mode != SESL_MODE_FIXED_AUTO && mode != SESL_MODE_WEIGHT_AUTO) {
+        if (mRequestedTabWidth != INVALID_WIDTH) {
+          widthMeasureSpec = MeasureSpec.makeMeasureSpec(mRequestedTabWidth, MeasureSpec.EXACTLY);
+        } else if (maxWidth > 0 && (specWidthMode == MeasureSpec.UNSPECIFIED || specWidthSize > maxWidth)) {
+          // If we have a max width and a given spec which is either unspecified or
+          // larger than the max width, update the width spec using the same mode
+          widthMeasureSpec = MeasureSpec.makeMeasureSpec(tabMaxWidth, MeasureSpec.AT_MOST);
+        }
       } else {
-        // Else, use the original width spec
-        widthMeasureSpec = origWidthMeasureSpec;
+        if (specWidthMode == MeasureSpec.UNSPECIFIED) {
+          widthMeasureSpec = MeasureSpec.makeMeasureSpec(tabMaxWidth, MeasureSpec.UNSPECIFIED);
+        } else if (specWidthMode == MeasureSpec.EXACTLY) {
+          widthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidthSize, MeasureSpec.EXACTLY);
+        }
       }
 
       // Now lets measure
       super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
       // We need to switch the text size based on whether the text is spanning 2 lines or not
-      if (textView != null) {
+      if (textView != null && customView == null) {
         float textSize = tabTextSize;
+        checkMaxFontScale(textView, (int) textSize);
+        if (mDepthStyle == DEPTH_TYPE_SUB && mSubTextView != null) {
+          checkMaxFontScale(mSubTextView, mSubTabTextSize);
+        }
         int maxLines = defaultMaxLines;
 
         if (iconView != null && iconView.getVisibility() == VISIBLE) {
@@ -2548,9 +2743,33 @@ public class TabLayout extends HorizontalScrollView {
 
           if (updateTextView) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            checkMaxFontScale(textView, (int) textSize);
+            if (mDepthStyle == DEPTH_TYPE_SUB && mSubTextView != null) {
+              checkMaxFontScale(textView, mSubTabTextSize);
+            }
             textView.setMaxLines(maxLines);
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
           }
+        }
+      }
+
+      if (customTextView == null && mTabParentView != null
+              && textView != null && tab != null) {
+        if (mode == MODE_SCROLLABLE && mDepthStyle == DEPTH_TYPE_SUB) {
+          if (tabMaxWidth > 0) {
+            textView.measure(tabMaxWidth, 0);
+          } else {
+            textView.measure(0, 0);
+          }
+
+          ViewGroup.LayoutParams lp = mTabParentView.getLayoutParams();
+          lp.width = textView.getMeasuredWidth()
+                  + (getContext().getResources()
+                      .getDimensionPixelSize(R.dimen.sesl_tablayout_subtab_side_space) * 2);
+          mTabParentView.setLayoutParams(lp);
+
+          super.onMeasure(
+                  MeasureSpec.makeMeasureSpec(lp.width, MeasureSpec.AT_MOST), origHeightMeasureSpec);
         }
       }
     }
@@ -2567,85 +2786,219 @@ public class TabLayout extends HorizontalScrollView {
       setSelected(false);
     }
 
+    // TODO rework this method
+    // kang
     final void update() {
-      final Tab tab = this.tab;
-      final View custom = tab != null ? tab.getCustomView() : null;
-      if (custom != null) {
-        final ViewParent customParent = custom.getParent();
-        if (customParent != this) {
-          if (customParent != null) {
-            ((ViewGroup) customParent).removeView(custom);
-          }
-          addView(custom);
-        }
-        customView = custom;
-        if (this.textView != null) {
-          this.textView.setVisibility(GONE);
-        }
-        if (this.iconView != null) {
-          this.iconView.setVisibility(GONE);
-          this.iconView.setImageDrawable(null);
-        }
-
-        customTextView = custom.findViewById(android.R.id.text1);
-        if (customTextView != null) {
-          defaultMaxLines = TextViewCompat.getMaxLines(customTextView);
-        }
-        customIconView = custom.findViewById(android.R.id.icon);
+      Tab var1 = this.tab;
+      Object var2 = null;
+      View var3;
+      if (var1 != null) {
+        var3 = var1.getCustomView();
       } else {
-        // We do not have a custom view. Remove one if it already exists
-        if (customView != null) {
-          removeView(customView);
-          customView = null;
-        }
-        customTextView = null;
-        customIconView = null;
+        var3 = null;
       }
 
-      if (customView == null) {
-        // If there isn't a custom view, we'll us our own in-built layouts
-        if (this.iconView == null) {
-          inflateAndAddDefaultIconView();
+      if (var3 != null) {
+        ViewParent var4 = var3.getParent();
+        if (var4 != this) {
+          if (var4 != null) {
+            ((ViewGroup)var4).removeView(var3);
+          }
+
+          this.addView(var3);
         }
-        final Drawable icon =
-            (tab != null && tab.getIcon() != null)
-                ? DrawableCompat.wrap(tab.getIcon()).mutate()
-                : null;
-        if (icon != null) {
-          DrawableCompat.setTintList(icon, tabIconTint);
-          if (tabIconTintMode != null) {
-            DrawableCompat.setTintMode(icon, tabIconTintMode);
+
+        this.customView = var3;
+        TextView var9 = this.textView;
+        if (var9 != null) {
+          var9.setVisibility(8);
+        }
+
+        ImageView var10 = this.iconView;
+        if (var10 != null) {
+          var10.setVisibility(8);
+          this.iconView.setImageDrawable((Drawable)null);
+        }
+
+        var9 = this.mSubTextView;
+        if (var9 != null) {
+          var9.setVisibility(8);
+        }
+
+        var9 = (TextView)var3.findViewById(16908308);
+        this.customTextView = var9;
+        if (var9 != null) {
+          this.defaultMaxLines = TextViewCompat.getMaxLines(var9);
+        }
+
+        this.customIconView = (ImageView)var3.findViewById(16908294);
+      } else {
+        var3 = this.customView;
+        if (var3 != null) {
+          this.removeView(var3);
+          this.customView = null;
+        }
+
+        this.customTextView = null;
+        this.customIconView = null;
+      }
+
+      var3 = this.customView;
+      boolean var5 = true;
+      TextView var11;
+      if (var3 == null && this.tab != null) {
+        RelativeLayout var12;
+        if (this.mTabParentView == null) {
+          if (mDepthStyle == 2) {
+            this.mTabParentView = (RelativeLayout)LayoutInflater.from(this.getContext()).inflate(R.layout.sesl_tabs_sub_tab_layout, this, false);
+          } else {
+            var12 = (RelativeLayout)LayoutInflater.from(this.getContext()).inflate(R.layout.sesl_tabs_main_tab_layout, this, false);
+            this.mTabParentView = var12;
+            var3 = var12.findViewById(R.id.main_tab_touch_background);
+            this.mMainTabTouchBackground = var3;
+            if (var3 != null && tab.icon == null) {
+              View var13 = this.mMainTabTouchBackground;
+              Context var14 = this.getContext();
+              int var6;
+              if (SeslMisc.isLightTheme(this.getContext())) {
+                var6 = R.drawable.sesl_tablayout_maintab_touch_background_light;
+              } else {
+                var6 = R.drawable.sesl_tablayout_maintab_touch_background_dark;
+              }
+
+              ViewCompat.setBackground(var13, ContextCompat.getDrawable(var14, var6));
+              this.mMainTabTouchBackground.setAlpha(0.0F);
+            }
+          }
+        }
+
+        if (this.mIndicatorView == null) {
+          this.mIndicatorView = (SeslAbsIndicatorView)this.mTabParentView.findViewById(R.id.indicator);
+        }
+
+        int var7 = mDepthStyle;
+        byte var18 = -1;
+        if (var7 == 2) {
+          if (this.mIndicatorView != null && mSubTabSelectedIndicatorColor != -1) {
+            this.mIndicatorView.setSelectedIndicatorColor(mSubTabSelectedIndicatorColor);
+          }
+        } else {
+          SeslAbsIndicatorView var15 = this.mIndicatorView;
+          if (var15 != null) {
+            var15.setSelectedIndicatorColor(mTabSelectedIndicatorColor);
           }
         }
 
         if (this.textView == null) {
-          inflateAndAddDefaultTextView();
-          defaultMaxLines = TextViewCompat.getMaxLines(this.textView);
+          this.textView = (TextView)this.mTabParentView.findViewById(R.id.title);
         }
+
+        this.defaultMaxLines = TextViewCompat.getMaxLines(this.textView);
         TextViewCompat.setTextAppearance(this.textView, tabTextAppearance);
-        if (tabTextColors != null) {
-          this.textView.setTextColor(tabTextColors);
+        if (this.isSelected()) {
+          this.textView.setTypeface(mBoldTypeface);
+        } else {
+          this.textView.setTypeface(mNormalTypeface);
         }
-        updateTextAndIcon(this.textView, this.iconView);
 
-        tryUpdateBadgeAnchor();
-        addOnLayoutChangeListener(iconView);
-        addOnLayoutChangeListener(textView);
+        checkMaxFontScale(this.textView, (int)tabTextSize);
+        this.textView.setTextColor(tabTextColors);
+        if (mDepthStyle == 2) {
+          if (this.mSubTextView == null) {
+            this.mSubTextView = (TextView)this.mTabParentView.findViewById(R.id.sub_title);
+          }
+
+          TextViewCompat.setTextAppearance(this.mSubTextView, mSubTabSubTextAppearance);
+          this.mSubTextView.setTextColor(mSubTabSubTextColors);
+          var11 = this.mSubTextView;
+          if (var11 != null) {
+            checkMaxFontScale(var11, mSubTabTextSize);
+          }
+        }
+
+        if (this.iconView == null) {
+          var12 = this.mTabParentView;
+          if (var12 != null) {
+            this.iconView = (ImageView)var12.findViewById(R.id.icon);
+          }
+        }
+
+        Drawable var19;
+        if (var1 != null && var1.getIcon() != null) {
+          var19 = DrawableCompat.wrap(var1.getIcon()).mutate();
+        } else {
+          var19 = null;
+        }
+
+        if (var19 != null) {
+          DrawableCompat.setTintList(var19, tabIconTint);
+          if (tabIconTintMode != null) {
+            DrawableCompat.setTintMode(var19, tabIconTintMode);
+          }
+        }
+
+        this.seslUpdateTextAndIcon(this.textView, this.mSubTextView, this.iconView);
+        boolean var8;
+        if (mDepthStyle == 2) {
+          if (mode == 0) {
+            var18 = -2;
+          }
+
+          CharSequence var20 = (CharSequence)var2;
+          if (var1 != null) {
+            var20 = var1.seslGetSubText();
+          }
+
+          if (TextUtils.isEmpty(var20) ^ true) {
+            var7 = mSubTabIndicator2ndHeight;
+          } else {
+            var7 = mSubTabIndicatorHeight;
+          }
+
+          if (this.mTabParentView.getHeight() != var7) {
+            var8 = true;
+          } else {
+            var8 = false;
+          }
+        } else {
+          var19 = tab.icon;
+          var8 = false;
+          if (var19 != null) {
+            var7 = -1;
+            var18 = -2;
+          } else {
+            var7 = -1;
+          }
+        }
+
+        if (this.mTabParentView.getParent() == null) {
+          this.addView(this.mTabParentView, var18, var7);
+        } else if (var8) {
+          this.removeView(this.mTabParentView);
+          this.addView(this.mTabParentView, var18, var7);
+        }
+
+        this.tryUpdateBadgeAnchor();
+        this.addOnLayoutChangeListener(this.iconView);
+        this.addOnLayoutChangeListener(this.textView);
       } else {
-        // Else, we'll see if there is a TextView or ImageView present and update them
-        if (customTextView != null || customIconView != null) {
-          updateTextAndIcon(customTextView, customIconView);
+        var11 = this.customTextView;
+        if (var11 != null || this.customIconView != null) {
+          this.updateTextAndIcon(var11, this.customIconView);
         }
       }
 
-      if (tab != null && !TextUtils.isEmpty(tab.contentDesc)) {
-        // Only update the TabView's content description from Tab if the Tab's content description
-        // has been explicitly set.
-        setContentDescription(tab.contentDesc);
+      if (var1 != null && !TextUtils.isEmpty(var1.contentDesc)) {
+        this.setContentDescription(var1.contentDesc);
       }
-      // Finally update our selected state
-      setSelected(tab != null && tab.isSelected());
+
+      if (var1 == null || !var1.isSelected()) {
+        var5 = false;
+      }
+
+      this.setSelected(var5);
     }
+    // kang
 
     private void inflateAndAddDefaultIconView() {
       ViewGroup iconViewParent = this;
@@ -2656,7 +3009,7 @@ public class TabLayout extends HorizontalScrollView {
       this.iconView =
           (ImageView)
               LayoutInflater.from(getContext())
-                  .inflate(R.layout.design_layout_tab_icon, iconViewParent, false);
+                  .inflate(R.layout.sesl_layout_tab_icon, iconViewParent, false);
       iconViewParent.addView(iconView, 0);
     }
 
@@ -2669,8 +3022,21 @@ public class TabLayout extends HorizontalScrollView {
       this.textView =
           (TextView)
               LayoutInflater.from(getContext())
-                  .inflate(R.layout.design_layout_tab_text, textViewParent, false);
+                  .inflate(R.layout.sesl_layout_tab_text, textViewParent, false);
       textViewParent.addView(textView);
+    }
+
+    private void inflateAndAddDefaultSubTextView() {
+      ViewGroup subTextViewParent = this;
+      if (BadgeUtils.USE_COMPAT_PARENT) {
+        subTextViewParent = createPreApi18BadgeAnchorRoot();
+        addView(subTextViewParent);
+      }
+      this.textView =
+          (TextView)
+              LayoutInflater.from(getContext())
+                  .inflate(R.layout.sesl_layout_tab_sub_text, subTextViewParent, false);
+      subTextViewParent.addView(textView);
     }
 
     @NonNull
@@ -2814,6 +3180,34 @@ public class TabLayout extends HorizontalScrollView {
       }
     }
 
+    private void seslUpdateTextAndIcon(
+            @Nullable final TextView textView,
+            @Nullable final TextView subTextView,
+            @Nullable final ImageView iconView) {
+      updateTextAndIcon(textView, iconView);
+
+      if (subTextView != null) {
+        CharSequence subText = tab != null ? tab.seslGetSubText() : null;
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) textView.getLayoutParams();
+        if (!TextUtils.isEmpty(subText)) {
+          lp.removeRule(13);
+          lp.addRule(2, R.id.center_anchor);
+          subTextView.setText(subText);
+          if (tab.labelVisibilityMode == TAB_LABEL_VISIBILITY_LABELED) {
+            subTextView.setVisibility(VISIBLE);
+          } else {
+            subTextView.setVisibility(GONE);
+          }
+          setVisibility(VISIBLE);
+        } else {
+          lp.addRule(13);
+          lp.removeRule(2);
+          subTextView.setVisibility(GONE);
+          subTextView.setText(null);
+        }
+      }
+    }
+
     private void updateTextAndIcon(
         @Nullable final TextView textView, @Nullable final ImageView iconView) {
       final Drawable icon =
@@ -2854,23 +3248,23 @@ public class TabLayout extends HorizontalScrollView {
         int iconMargin = 0;
         if (hasText && iconView.getVisibility() == VISIBLE) {
           // If we're showing both text and icon, add some margin bottom to the icon
-          iconMargin = (int) ViewUtils.dpToPx(getContext(), DEFAULT_GAP_TEXT_ICON);
+          iconMargin = mIconTextGap != -1
+                  ? mIconTextGap
+                  : (int) ViewUtils.dpToPx(getContext(), DEFAULT_GAP_TEXT_ICON);
         }
-        if (inlineLabel) {
-          if (iconMargin != MarginLayoutParamsCompat.getMarginEnd(lp)) {
-            MarginLayoutParamsCompat.setMarginEnd(lp, iconMargin);
-            lp.bottomMargin = 0;
-            // Calls resolveLayoutParams(), necessary for layout direction
-            iconView.setLayoutParams(lp);
-            iconView.requestLayout();
-          }
-        } else {
-          if (iconMargin != lp.bottomMargin) {
-            lp.bottomMargin = iconMargin;
-            MarginLayoutParamsCompat.setMarginEnd(lp, 0);
-            // Calls resolveLayoutParams(), necessary for layout direction
-            iconView.setLayoutParams(lp);
-            iconView.requestLayout();
+        if (iconMargin != MarginLayoutParamsCompat.getMarginEnd(lp)) {
+          MarginLayoutParamsCompat.setMarginEnd(lp, iconMargin);
+          lp.bottomMargin = 0;
+          // Calls resolveLayoutParams(), necessary for layout direction
+          iconView.setLayoutParams(lp);
+          iconView.requestLayout();
+          if (textView != null) {
+            RelativeLayout.LayoutParams lp2
+                    = (RelativeLayout.LayoutParams) textView.getLayoutParams();
+            lp2.addRule(13, 0);
+            lp2.addRule(15, 1);
+            lp2.addRule(17, R.id.icon);
+            textView.setLayoutParams(lp2);
           }
         }
       }
@@ -2878,7 +3272,7 @@ public class TabLayout extends HorizontalScrollView {
       final CharSequence contentDesc = tab != null ? tab.contentDesc : null;
       // Avoid calling tooltip for L and M devices because long pressing twuice may freeze devices.
       if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP || VERSION.SDK_INT > VERSION_CODES.M) {
-        TooltipCompat.setTooltipText(this, hasText ? text : contentDesc);
+        TooltipCompat.setTooltipText(this, contentDesc);
       }
     }
 
@@ -2954,6 +3348,211 @@ public class TabLayout extends HorizontalScrollView {
     private float approximateLineWidth(@NonNull Layout layout, int line, float textSize) {
       return layout.getLineWidth(line) * (textSize / layout.getPaint().getTextSize());
     }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      mIconSize = getResources().getDimensionPixelOffset(R.dimen.sesl_tab_icon_size);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+      super.setEnabled(enabled);
+      if (mMainTabTouchBackground != null) {
+        mMainTabTouchBackground.setVisibility(enabled
+                ? VISIBLE : GONE);
+      }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+      super.onLayout(changed, l, t, r, b);
+
+      if (mMainTabTouchBackground != null) {
+        mMainTabTouchBackground.setLeft(0);
+        mMainTabTouchBackground.setRight(mTabParentView != null
+                ? mTabParentView.getWidth() : r - l);
+        if (mMainTabTouchBackground.getAnimation() != null
+                && mMainTabTouchBackground.getAnimation().hasEnded()) {
+          mMainTabTouchBackground.setAlpha(0.0f);
+        }
+      }
+
+      if (iconView != null && tab.icon != null) {
+        if (textView != null && mIndicatorView != null && mTabParentView != null) {
+          int measuredWidth = mIconSize + textView.getMeasuredWidth();
+          if (mIconTextGap != -1) {
+            measuredWidth += mIconTextGap;
+          }
+
+          int offset = Math.abs((getWidth() - measuredWidth) / 2);
+          if (ViewUtils.isLayoutRtl(this)) {
+            if (iconView.getRight() == mTabParentView.getRight()) {
+              textView.offsetLeftAndRight(-offset);
+              iconView.offsetLeftAndRight(-offset);
+              mIndicatorView.offsetLeftAndRight(-offset);
+            }
+          } else if (iconView.getLeft() == this.mTabParentView.getLeft()) {
+            textView.offsetLeftAndRight(offset);
+            iconView.offsetLeftAndRight(offset);
+            mIndicatorView.offsetLeftAndRight(offset);
+          }
+        }
+      }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+      if (!isEnabled()) {
+        return super.onTouchEvent(event);
+      }
+      if (tab.getCustomView() != null) {
+        return super.onTouchEvent(event);
+      }
+      return startTabTouchAnimation(event, null);
+    }
+
+    private boolean startTabTouchAnimation(MotionEvent motionEvent, KeyEvent keyEvent) {
+      if (motionEvent == null || tab.getCustomView() != null
+              || textView == null || ((motionEvent == null && keyEvent == null)
+              || (motionEvent != null && keyEvent != null))) {
+        return false;
+      }
+
+      final int action = motionEvent.getAction() & MotionEvent.ACTION_MASK;
+
+      switch (action) {
+        case MotionEvent.ACTION_DOWN:
+          mIsCallPerformClick = false;
+          if (tab.position != getSelectedTabPosition() && textView != null) {
+            textView.setTypeface(mBoldTypeface);
+            startTextColorChangeAnimation(textView,
+                    getSelectedTabTextColor());
+
+            if (mIndicatorView != null) {
+              mIndicatorView.setPressed();
+            }
+
+            final Tab tab = getTabAt(getSelectedTabPosition());
+            if (tab != null) {
+              if (tab.view.textView != null) {
+                tab.view.textView.setTypeface(mNormalTypeface);
+                startTextColorChangeAnimation(
+                        tab.view.textView, tabTextColors.getDefaultColor());
+              }
+              if (tab.view.mIndicatorView != null) {
+                tab.view.mIndicatorView.setHide();
+              }
+            }
+          } else if (tab.position == getSelectedTabPosition() && mIndicatorView != null) {
+            mIndicatorView.setPressed();
+          }
+          showMainTabTouchBackground(MotionEvent.ACTION_DOWN);
+          break;
+        case MotionEvent.ACTION_UP:
+          showMainTabTouchBackground(MotionEvent.ACTION_UP);
+          if (mIndicatorView != null) {
+            mIndicatorView.setReleased();
+            mIndicatorView.onTouchEvent(motionEvent);
+          }
+          performClick();
+          mIsCallPerformClick = true;
+          break;
+        case MotionEvent.ACTION_CANCEL:
+          textView.setTypeface(mNormalTypeface);
+          startTextColorChangeAnimation(
+                  textView, tabTextColors.getDefaultColor());
+
+          if (mIndicatorView != null && !mIndicatorView.isSelected()) {
+            mIndicatorView.setHide();
+          }
+
+          final Tab tab = getTabAt(getSelectedTabPosition());
+          if (tab != null) {
+            if (tab.view.textView != null) {
+              tab.view.textView.setTypeface(mBoldTypeface);
+              startTextColorChangeAnimation(
+                      tab.view.textView, getSelectedTabTextColor());
+            }
+            if (tab.view.mIndicatorView != null) {
+              tab.view.mIndicatorView.setShow();
+            }
+          }
+          if (mDepthStyle == DEPTH_TYPE_MAIN) {
+            showMainTabTouchBackground(MotionEvent.ACTION_CANCEL);
+          } else {
+            if (mIndicatorView != null && mIndicatorView.isSelected()) {
+              mIndicatorView.setReleased();
+            }
+          }
+          break;
+      }
+
+      return super.onTouchEvent(motionEvent);
+    }
+
+    private void showMainTabTouchBackground(int action) {
+      if (mMainTabTouchBackground != null
+              && mDepthStyle == DEPTH_TYPE_MAIN && tabBackgroundResId == 0) {
+        mMainTabTouchBackground.setAlpha(1f);
+
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.setFillAfter(true);
+
+        switch (action) {
+          case MotionEvent.ACTION_DOWN:
+            AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
+            fadeIn.setDuration(100);
+            fadeIn.setFillAfter(true);
+            animSet.addAnimation(fadeIn);
+
+            ScaleAnimation scaleAnim
+                    = new ScaleAnimation(ANIM_RIPPLE_MINOR_SCALE, 1f,
+                    ANIM_RIPPLE_MINOR_SCALE, 1f,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f);
+            scaleAnim.setDuration(ANIM_SHOW_DURATION);
+            scaleAnim.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
+            scaleAnim.setFillAfter(true);
+            animSet.addAnimation(scaleAnim);
+
+            mMainTabTouchBackground.startAnimation(animSet);
+            break;
+          case MotionEvent.ACTION_UP:
+          case MotionEvent.ACTION_CANCEL:
+            if (mMainTabTouchBackground.getAnimation() != null) {
+              if (mMainTabTouchBackground.getAnimation().hasEnded()) {
+                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
+                fadeOut.setDuration(ANIM_HIDE_DURATION);
+                fadeOut.setFillAfter(true);
+                animSet.addAnimation(fadeOut);
+
+                mMainTabTouchBackground.startAnimation(animSet);
+              } else {
+                mMainTabTouchBackground.getAnimation().setAnimationListener(
+                        new Animation.AnimationListener() {
+                          @Override
+                          public void onAnimationStart(Animation animation) {
+                          }
+
+                          @Override
+                          public void onAnimationRepeat(Animation animation) {
+                          }
+
+                          @Override
+                          public void onAnimationEnd(Animation animation) {
+                            AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
+                            fadeOut.setDuration(ANIM_HIDE_DURATION);
+                            fadeOut.setFillAfter(true);
+                            mMainTabTouchBackground.startAnimation(fadeOut);
+                          }
+                        });
+              }
+            }
+            break;
+        }
+      }
+    }
   }
 
   class SlidingTabIndicator extends LinearLayout {
@@ -3025,65 +3624,159 @@ public class TabLayout extends HorizontalScrollView {
       }
     }
 
+    // TODO rework this method
+    // kang
     @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-      super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onMeasure(int var1, int var2) {
+      /* var1 = widthMeasureSpec; var2 = heightMeasureSpec; */
+      super.onMeasure(var1, var2);
+      if (MeasureSpec.getMode(var1) == 1073741824) {
+        int var3 = mode;
+        byte var4 = 0;
+        byte var5 = 0;
+        byte var6 = 0;
+        byte var7 = 0;
+        boolean var8 = true;
+        boolean var9 = true;
+        int var12;
+        int var13;
+        if (var3 != 11 && mode != 12) {
+          if (tabGravity == 1 || mode == 2 || mFirstTabGravity == 1) {
+            int var14 = this.getChildCount();
+            View var18;
+            if (tabGravity == 0 && mFirstTabGravity == 1) {
+              for(var3 = 0; var3 < var14; ++var3) {
+                var18 = this.getChildAt(var3);
+                LayoutParams var20 = (LayoutParams)var18.getLayoutParams();
+                var20.width = -2;
+                var20.weight = 0.0F;
+                var18.measure(MeasureSpec.makeMeasureSpec(0, 0), var2);
+              }
+            }
 
-      if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.EXACTLY) {
-        // HorizontalScrollView will first measure use with UNSPECIFIED, and then with
-        // EXACTLY. Ignore the first call since anything we do will be overwritten anyway
-        return;
-      }
+            var3 = 0;
 
-      // GRAVITY_CENTER will make all tabs the same width as the largest tab, and center them in the
-      // SlidingTabIndicator's width (with a "gutter" of padding on either side). If the Tabs do not
-      // fit in the SlidingTabIndicator, then fall back to GRAVITY_FILL behavior.
-      if ((tabGravity == GRAVITY_CENTER) || mode == MODE_AUTO) {
-        final int count = getChildCount();
+            for(var12 = var3; var3 < var14; var12 = var13) {
+              var18 = this.getChildAt(var3);
+              var13 = var12;
+              if (var18.getVisibility() == 0) {
+                var13 = Math.max(var12, var18.getMeasuredWidth());
+              }
 
-        // First we'll find the widest tab
-        int largestTabWidth = 0;
-        for (int i = 0, z = count; i < z; i++) {
-          View child = getChildAt(i);
-          if (child.getVisibility() == VISIBLE) {
-            largestTabWidth = Math.max(largestTabWidth, child.getMeasuredWidth());
-          }
-        }
+              ++var3;
+            }
 
-        if (largestTabWidth <= 0) {
-          // If we don't have a largest child yet, skip until the next measure pass
-          return;
-        }
+            if (var12 <= 0) {
+              return;
+            }
 
-        final int gutter = (int) ViewUtils.dpToPx(getContext(), FIXED_WRAP_GUTTER_MIN);
-        boolean remeasure = false;
+            var3 = (int)ViewUtils.dpToPx(this.getContext(), 16);
+            boolean var15;
+            if (var12 * var14 > this.getMeasuredWidth() - var3 * 2) {
+              tabGravity = 0;
+              updateTabViews(false);
+              var15 = var9;
+            } else {
+              var15 = false;
+              var13 = var7;
 
-        if (largestTabWidth * count <= getMeasuredWidth() - gutter * 2) {
-          // If the tabs fit within our width minus gutters, we will set all tabs to have
-          // the same width
-          for (int i = 0; i < count; i++) {
-            final LinearLayout.LayoutParams lp = (LayoutParams) getChildAt(i).getLayoutParams();
-            if (lp.width != largestTabWidth || lp.weight != 0) {
-              lp.width = largestTabWidth;
-              lp.weight = 0;
-              remeasure = true;
+              while(true) {
+                if (var13 >= var14) {
+                  if (tabGravity == 0 && mFirstTabGravity == 1) {
+                    tabGravity = 1;
+                  }
+                  break;
+                }
+
+                LayoutParams var19 = (LayoutParams)this.getChildAt(var13).getLayoutParams();
+                if (var19.width != var12 || var19.weight != 0.0F) {
+                  var19.width = var12;
+                  var19.weight = 0.0F;
+                  var15 = true;
+                }
+
+                ++var13;
+              }
+            }
+
+            if (var15) {
+              super.onMeasure(var1, var2);
             }
           }
         } else {
-          // If the tabs will wrap to be larger than the width minus gutters, we need
-          // to switch to GRAVITY_FILL.
-          // TODO (b/129799806): This overrides the user TabGravity setting.
-          tabGravity = GRAVITY_FILL;
-          updateTabViews(false);
-          remeasure = true;
-        }
+          checkOverScreen();
+          if (mIsOverScreen) {
+            var1 = mOverScreenMaxWidth;
+          } else {
+            var1 = MeasureSpec.getSize(var1);
+          }
 
-        if (remeasure) {
-          // Now re-measure after our changes
-          super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+          int var16 = this.getChildCount();
+          int[] var10 = new int[var16];
+          var12 = 0;
+
+          for(var3 = var12; var12 < var16; var3 = var13) {
+            View var11 = this.getChildAt(var12);
+            var13 = var3;
+            if (var11.getVisibility() == 0) {
+              var11.measure(MeasureSpec.makeMeasureSpec(tabMaxWidth, 0), var2);
+              var10[var12] = var11.getMeasuredWidth() + mTabMinSideSpace * 2;
+              var13 = var3 + var10[var12];
+            }
+
+            ++var12;
+          }
+
+          int var17 = var1 / var16;
+          if (var3 > var1) {
+            for(var12 = var4; var12 < var16; ++var12) {
+              ((LayoutParams)this.getChildAt(var12).getLayoutParams()).width = var10[var12];
+            }
+          } else {
+            boolean var21 = var8;
+            if (mode == 11) {
+              var12 = 0;
+
+              while(true) {
+                if (var12 >= var16) {
+                  var21 = false;
+                  break;
+                }
+
+                if (var10[var12] > var17) {
+                  var21 = var8;
+                  break;
+                }
+
+                ++var12;
+              }
+            }
+
+            var13 = var6;
+            if (var21) {
+              var13 = (var1 - var3) / var16;
+
+              for(var12 = var5; var12 < var16; ++var12) {
+                ((LayoutParams)this.getChildAt(var12).getLayoutParams()).width = var10[var12] + var13;
+              }
+            } else {
+              while(var13 < var16) {
+                ((LayoutParams)this.getChildAt(var13).getLayoutParams()).width = var17;
+                ++var13;
+              }
+            }
+          }
+
+          var12 = var1;
+          if (var3 > var1) {
+            var12 = var3;
+          }
+
+          super.onMeasure(MeasureSpec.makeMeasureSpec(var12, 1073741824), var2);
         }
       }
     }
+    // kang
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -3104,9 +3797,6 @@ public class TabLayout extends HorizontalScrollView {
 
     /** Immediately update the indicator position to the currently selected position. */
     private void jumpIndicatorToSelectedPosition() {
-      final View currentView = getChildAt(selectedPosition);
-      tabIndicatorInterpolator.setIndicatorBoundsForTab(
-          TabLayout.this, currentView, tabSelectedIndicator);
     }
 
     /**
@@ -3148,11 +3838,6 @@ public class TabLayout extends HorizontalScrollView {
      * @param duration The duration over which the animation should take place.
      */
     void animateIndicatorToPosition(final int position, int duration) {
-      if (indicatorAnimator != null && indicatorAnimator.isRunning()) {
-        indicatorAnimator.cancel();
-      }
-
-      updateOrRecreateIndicatorAnimation(/* recreateAnimation= */ true, position, duration);
     }
 
     /**
@@ -3165,106 +3850,10 @@ public class TabLayout extends HorizontalScrollView {
      */
     private void updateOrRecreateIndicatorAnimation(
         boolean recreateAnimation, final int position, int duration) {
-      final View currentView = getChildAt(selectedPosition);
-      final View targetView = getChildAt(position);
-      if (targetView == null) {
-        // If we don't have a view, just update the position now and return
-        jumpIndicatorToSelectedPosition();
-        return;
-      }
-
-      // Create the update listener with the new target indicator positions. If we're not recreating
-      // then animationStartLeft/Right will be the same as when the previous animator was created.
-      ValueAnimator.AnimatorUpdateListener updateListener =
-          new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-              tweenIndicatorPosition(currentView, targetView, valueAnimator.getAnimatedFraction());
-            }
-          };
-
-      if (recreateAnimation) {
-        // Create & start a new indicatorAnimator.
-        ValueAnimator animator = indicatorAnimator = new ValueAnimator();
-        animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-        animator.setDuration(duration);
-        animator.setFloatValues(0F, 1F);
-        animator.addUpdateListener(updateListener);
-        animator.addListener(
-            new AnimatorListenerAdapter() {
-              @Override
-              public void onAnimationStart(Animator animator) {
-                selectedPosition = position;
-              }
-
-              @Override
-              public void onAnimationEnd(Animator animator) {
-                selectedPosition = position;
-              }
-            });
-        animator.start();
-      } else {
-        // Reuse the existing animator. Updating the listener only modifies the target positions.
-        indicatorAnimator.removeAllUpdateListeners();
-        indicatorAnimator.addUpdateListener(updateListener);
-      }
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-      int indicatorHeight = tabSelectedIndicator.getBounds().height();
-      if (indicatorHeight < 0) {
-        indicatorHeight = tabSelectedIndicator.getIntrinsicHeight();
-      }
-
-      int indicatorTop = 0;
-      int indicatorBottom = 0;
-
-      switch (tabIndicatorGravity) {
-        case INDICATOR_GRAVITY_BOTTOM:
-          indicatorTop = getHeight() - indicatorHeight;
-          indicatorBottom = getHeight();
-          break;
-        case INDICATOR_GRAVITY_CENTER:
-          indicatorTop = (getHeight() - indicatorHeight) / 2;
-          indicatorBottom = (getHeight() + indicatorHeight) / 2;
-          break;
-        case INDICATOR_GRAVITY_TOP:
-          indicatorTop = 0;
-          indicatorBottom = indicatorHeight;
-          break;
-        case INDICATOR_GRAVITY_STRETCH:
-          indicatorTop = 0;
-          indicatorBottom = getHeight();
-          break;
-        default:
-          break;
-      }
-
-      // Ensure the drawable actually has a width and is worth drawing
-      if (tabSelectedIndicator.getBounds().width() > 0) {
-        // Use the left and right bounds of the drawable, as set by the indicator interpolator.
-        // Update the top and bottom to respect the indicator gravity property.
-        Rect indicatorBounds = tabSelectedIndicator.getBounds();
-        tabSelectedIndicator.setBounds(
-            indicatorBounds.left, indicatorTop, indicatorBounds.right, indicatorBottom);
-        Drawable indicator = tabSelectedIndicator;
-
-        // If a tint color has been specified using TabLayout's setSelectedTabIndicatorColor, wrap
-        // the drawable and tint it as specified.
-        if (tabSelectedIndicatorColor != Color.TRANSPARENT) {
-          indicator = DrawableCompat.wrap(indicator);
-          if (VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
-            indicator.setColorFilter(tabSelectedIndicatorColor, PorterDuff.Mode.SRC_IN);
-          } else {
-            DrawableCompat.setTint(indicator, tabSelectedIndicatorColor);
-          }
-        }
-
-        indicator.draw(canvas);
-      }
-
-      // Draw the tab item contents (icon and label) on top of the background + indicator layers
       super.draw(canvas);
     }
   }
@@ -3289,15 +3878,9 @@ public class TabLayout extends HorizontalScrollView {
 
   @Dimension(unit = Dimension.DP)
   private int getDefaultHeight() {
-    boolean hasIconAndText = false;
-    for (int i = 0, count = tabs.size(); i < count; i++) {
-      Tab tab = tabs.get(i);
-      if (tab != null && tab.getIcon() != null && !TextUtils.isEmpty(tab.getText())) {
-        hasIconAndText = true;
-        break;
-      }
-    }
-    return (hasIconAndText && !inlineLabel) ? DEFAULT_HEIGHT_WITH_TEXT_ICON : DEFAULT_HEIGHT;
+    return mDepthStyle == DEPTH_TYPE_SUB
+            ? SESL_SUB_DEPTH_DEFAULT_HEIGHT
+            : SESL_DEFAULT_HEIGHT;
   }
 
   private int getTabMinWidth() {
@@ -3305,8 +3888,7 @@ public class TabLayout extends HorizontalScrollView {
       // If we have been given a min width, use it
       return requestedTabMinWidth;
     }
-    // Else, we'll use the default value
-    return (mode == MODE_SCROLLABLE || mode == MODE_AUTO) ? scrollableTabMinWidth : 0;
+    return 0;
   }
 
   @Override
@@ -3443,6 +4025,408 @@ public class TabLayout extends HorizontalScrollView {
 
     void setAutoRefresh(boolean autoRefresh) {
       this.autoRefresh = autoRefresh;
+    }
+  }
+
+  public void seslSetSubTabStyle() {
+    if (mDepthStyle == DEPTH_TYPE_MAIN) {
+      mDepthStyle = DEPTH_TYPE_SUB;
+
+      tabTextColors = getResources()
+              .getColorStateList(SeslMisc.isLightTheme(getContext())
+                      ? R.color.sesl_tablayout_subtab_text_color_light
+                      : R.color.sesl_tablayout_subtab_text_color_dark);
+
+      if (tabs.size() > 0) {
+        int selectedTab = getSelectedTabPosition();
+        ArrayList<Tab> tabs = new ArrayList<>(this.tabs.size());
+
+        for (int i = 0; i < this.tabs.size(); i++) {
+          Tab tab = newTab();
+          tab.text = this.tabs.get(i).text;
+          tab.icon = this.tabs.get(i).icon;
+          tab.customView = this.tabs.get(i).customView;
+          tab.subText = this.tabs.get(i).subText;
+          if (i == selectedTab) {
+            tab.select();
+          }
+          tab.view.update();
+          tabs.add(tab);
+        }
+
+        removeAllTabs();
+
+        for (int i = 0; i < this.tabs.size(); i++) {
+          addTab((Tab) tabs.get(i), i == selectedTab);
+          if (this.tabs.get(i) != null) {
+            this.tabs.get(i).view.update();
+          }
+        }
+
+        tabs.clear();
+      }
+    }
+  }
+
+  // TODO rework this method
+  // kang
+  private void updateBadgePosition() {
+    ArrayList var1 = this.tabs;
+    if (var1 != null && var1.size() != 0) {
+      for(int var2 = 0; var2 < this.tabs.size(); ++var2) {
+        com.google.android.material.tabs.TabLayout.Tab var11 = (com.google.android.material.tabs.TabLayout.Tab)this.tabs.get(var2);
+        com.google.android.material.tabs.TabLayout.TabView var3 = ((com.google.android.material.tabs.TabLayout.Tab)this.tabs.get(var2)).view;
+        if (var11 != null && var3 != null) {
+          TextView var4 = var3.textView;
+          Object var5 = var3.iconView;
+          if (var3.getWidth() > 0) {
+            TextView var12 = null;
+            byte var6 = -1;
+            int var7;
+            int var8;
+            if (var3.mNBadgeView != null && var3.mNBadgeView.getVisibility() == 0) {
+              var12 = var3.mNBadgeView;
+              var7 = ((android.widget.RelativeLayout.LayoutParams)var12.getLayoutParams()).getMarginStart();
+              var8 = this.getContext().getResources().getDimensionPixelSize(R.dimen.sesl_tablayout_subtab_n_badge_xoffset);
+              var6 = 1;
+            } else if (var3.mDotBadgeView != null && var3.mDotBadgeView.getVisibility() == 0) {
+              var12 = var3.mDotBadgeView;
+              var7 = ((android.widget.RelativeLayout.LayoutParams)var12.getLayoutParams()).getMarginStart();
+              var8 = this.getContext().getResources().getDimensionPixelSize(R.dimen.sesl_tablayout_subtab_dot_badge_offset_x);
+              var6 = 2;
+            } else {
+              var8 = this.getContext().getResources().getDimensionPixelSize(R.dimen.sesl_tablayout_subtab_n_badge_xoffset);
+              var7 = 0;
+            }
+
+            if (var12 != null && var12.getVisibility() == 0) {
+              var12.measure(0, 0);
+              int var9;
+              if (var6 == 1) {
+                var9 = var12.getMeasuredWidth();
+              } else {
+                var9 = this.getResources().getDimensionPixelSize(R.dimen.sesl_tab_badge_dot_size);
+              }
+
+              if (var4 != null && var4.getWidth() > 0) {
+                var5 = var4;
+              }
+
+              if (var5 == null) {
+                return;
+              }
+
+              int var10;
+              int var14;
+              label70: {
+                var10 = var3.getWidth();
+                if (var7 != 0) {
+                  var14 = var7;
+                  if (var7 >= ((View)var5).getRight()) {
+                    break label70;
+                  }
+                }
+
+                var14 = ((View)var5).getRight() + var8;
+              }
+
+              if (var14 > var10) {
+                var7 = var10 - var9;
+              } else {
+                var7 = var14 + var9;
+                if (var7 > var10) {
+                  var7 = var14 - (var7 - var10);
+                } else {
+                  var7 = var14;
+                  if (var14 > ((View)var5).getRight() + var8) {
+                    var7 = ((View)var5).getRight() + var8;
+                  }
+                }
+              }
+
+              var8 = Math.max(0, var7);
+              android.widget.RelativeLayout.LayoutParams var13 = (android.widget.RelativeLayout.LayoutParams)var12.getLayoutParams();
+              var7 = var13.width;
+              if (var13.getMarginStart() != var8 || var7 != var9) {
+                var13.setMarginStart(var8);
+                var13.width = var9;
+                var12.setLayoutParams(var13);
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+  // kang
+
+  public void seslSetSubTabSelectedIndicatorColor(int color) {
+    mSubTabSelectedIndicatorColor = color;
+    setSelectedTabIndicatorColor(color);
+  }
+
+  @Deprecated
+  public void seslSetTabTextColor(ColorStateList color, boolean refresh) {
+    if (tabTextColors != color) {
+      tabTextColors = color;
+      if (refresh) {
+        updateAllTabs();
+      } else if (tabs != null) {
+        for (int i = 0; i < tabs.size(); i++) {
+          TabView tabView = tabs.get(i).view;
+          if (tabView != null && tabView.textView != null) {
+            tabView.textView.setTextColor(tabTextColors);
+          }
+        }
+      }
+    }
+  }
+
+  public void seslSetBadgeColor(int color) {
+    mBadgeColor = color;
+  }
+
+  public void seslSetBadgeTextColor(int color) {
+    mBadgeTextColor = color;
+  }
+
+  public void seslSetTabWidth(int width) {
+    mRequestedTabWidth = width;
+  }
+
+  private int getSelectedTabTextColor() {
+    if (tabTextColors != null) {
+      return tabTextColors.getColorForState(
+              new int[] {
+                      android.R.attr.state_selected,
+                      android.R.attr.state_enabled
+              }, tabTextColors.getDefaultColor());
+    }
+    return Color.WHITE;
+  }
+
+  private void startTextColorChangeAnimation(
+          TextView textView, int color) {
+    if (textView != null) {
+      textView.setTextColor(color);
+    }
+  }
+
+  private void checkMaxFontScale(TextView textView, int size) {
+    final float currentFontScale
+            = getResources().getConfiguration().fontScale;
+    if (textView != null
+            && mIsScaledTextSizeType && currentFontScale > 1.3f) {
+      textView.setTextSize(
+              TypedValue.COMPLEX_UNIT_PX,
+              (size / currentFontScale) * 1.3f);
+    }
+  }
+
+  // TODO rework this method
+  // kang
+  private void createAddBadge(int badgeType, TabView tabView) {
+    if (tabView != null && tabView.mTabParentView != null) {
+      TextView textView = new TextView(getContext());
+      Resources resources = getResources();
+      int i2 = -1;
+      if (badgeType == 2) {
+        if (tabView.mDotBadgeView == null) {
+          textView.setVisibility(8);
+          ViewCompat.setBackground(textView, resources.getDrawable(R.drawable.sesl_dot_badge));
+          textView.setId(R.id.sesl_badge_dot);
+          int dimensionPixelSize = resources.getDimensionPixelSize(R.dimen.sesl_tab_badge_dot_size);
+          RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
+          if (tabView.textView != null) {
+            i2 = tabView.textView.getWidth();
+          }
+          if (i2 > 0 || tabView.iconView == null || tabView.iconView.getVisibility() != 0) {
+            layoutParams.addRule(6, R.id.title);
+          } else {
+            layoutParams.addRule(6, R.id.icon);
+          }
+          textView.setMinHeight(dimensionPixelSize);
+          textView.setMinWidth(dimensionPixelSize);
+          tabView.mTabParentView.addView(textView, layoutParams);
+          tabView.mDotBadgeView = textView;
+        }
+      } else if (tabView.mNBadgeView == null) {
+        textView.setVisibility(8);
+        textView.setMinWidth(resources.getDimensionPixelSize(R.dimen.sesl_tab_badge_number_min_width));
+        textView.setTextSize(1, 11.0f);
+        textView.setGravity(17);
+        textView.setTextColor(resources.getColor(R.color.sesl_badge_text_color));
+        ViewCompat.setBackground(textView, resources.getDrawable(R.drawable.sesl_tab_n_badge));
+        textView.setId(R.id.sesl_badge_n);
+        textView.setMaxLines(1);
+        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(-2, resources.getDimensionPixelSize(R.dimen.sesl_tab_badge_number_height));
+        if (tabView.textView != null) {
+          i2 = tabView.textView.getWidth();
+        }
+        if (i2 > 0 || tabView.iconView == null || tabView.iconView.getVisibility() != 0) {
+          layoutParams2.addRule(6, R.id.title);
+        } else {
+          layoutParams2.addRule(6, R.id.icon);
+        }
+        layoutParams2.setMargins(0, -resources.getDimensionPixelSize(R.dimen.sesl_tab_badge_offset_y), 0, 0);
+        tabView.mTabParentView.addView(textView, layoutParams2);
+        tabView.mNBadgeView = textView;
+      }
+    }
+  }
+  // kang
+
+  public void seslShowDotBadge(int index, boolean show) {
+    if (tabs.get(index) != null
+            && tabs.get(index).view != null) {
+      TabView tabView = tabs.get(index).view;
+
+      if (tabView.mDotBadgeView == null) {
+        createAddBadge(BADGE_TYPE_DOT, tabView);
+      }
+
+      if (tabView.mDotBadgeView != null) {
+        if (show) {
+          tabView.mDotBadgeView.setVisibility(VISIBLE);
+          if (mBadgeColor != Color.WHITE) {
+            DrawableCompat.setTint(
+                    tabView.mDotBadgeView.getBackground(), mBadgeColor);
+          }
+          updateBadgePosition();
+        } else {
+          tabView.mDotBadgeView.setVisibility(GONE);
+        }
+      }
+    }
+  }
+
+  public void seslShowBadge(int index, boolean show, String text) {
+    seslShowBadge(index, show, text, null);
+  }
+
+  public void seslShowBadge(int index, boolean show, String text,
+                            String contentDescription) {
+    if (mDepthStyle != DEPTH_TYPE_SUB
+            && tabs.get(index) != null && tabs.get(index).view != null) {
+      TabView tabView = tabs.get(index).view;
+
+      if (tabView.mNBadgeView == null) {
+        createAddBadge(BADGE_TYPE_N, tabView);
+      }
+
+      if (tabView.mNBadgeView != null) {
+        tabView.mNBadgeView.setText(text);
+        if (show) {
+          tabView.mNBadgeView.setVisibility(VISIBLE);
+
+          if (mBadgeColor != Color.WHITE) {
+            DrawableCompat.setTint(
+                    tabView.mNBadgeView.getBackground(), mBadgeColor);
+          }
+          if (mBadgeTextColor != Color.WHITE) {
+            tabView.mNBadgeView.setTextColor(mBadgeTextColor);
+          }
+          if (contentDescription != null) {
+            tabView.mNBadgeView
+                    .setContentDescription(contentDescription);
+          }
+
+          updateBadgePosition();
+          tabView.mNBadgeView.requestLayout();
+        } else {
+          tabView.mNBadgeView.setVisibility(GONE);
+        }
+      }
+    } else {
+      Log.w(LOG_TAG,
+              "seslShowBadge not supported with DEPTH_TYPE_SUB");
+    }
+  }
+
+  @Override
+  protected void onLayout(boolean changed,
+                          int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
+    updateBadgePosition();
+  }
+
+  @Override
+  protected void onVisibilityChanged(View changedView, int visibility) {
+    super.onVisibilityChanged(changedView, visibility);
+
+    for (int i = 0; i < getTabCount(); i++) {
+      Tab tab = getTabAt(i);
+      if (tab != null && tab.view != null
+              && tab.view.mMainTabTouchBackground != null) {
+        tab.view.mMainTabTouchBackground.setAlpha(0f);
+      }
+    }
+  }
+
+  @Override
+  protected void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+
+    for (int i = 0; i < getTabCount(); i++) {
+      Tab tab = getTabAt(i);
+      if (tab != null && tab.view != null
+              && tab.view.mMainTabTouchBackground != null) {
+        tab.view.mMainTabTouchBackground.setAlpha(0f);
+      }
+    }
+
+    updateBadgePosition();
+  }
+
+  public void seslSetSubTabIndicatorHeight(int height) {
+    mSubTabIndicatorHeight = height;
+  }
+
+  public void seslSetIconTextGap(int gap) {
+    mIconTextGap = gap;
+    updateAllTabs();
+  }
+
+  public void seslSetTabSubTextColors(@Nullable ColorStateList color) {
+    if (mSubTabSubTextColors != color) {
+      mSubTabSubTextColors = color;
+      updateAllTabs();
+    }
+  }
+
+  public ColorStateList seslGetTabSubTextColors() {
+    return mSubTabSubTextColors;
+  }
+
+  public void seslSetTabSubTextColors(int defaultColor,
+                                      int selectedColor) {
+    seslSetTabSubTextColors(
+            createColorStateList(defaultColor, selectedColor));
+  }
+
+  private int seslGetSelectedTabSubTextColor() {
+    if (mSubTabSubTextColors != null) {
+      return mSubTabSubTextColors
+              .getColorForState(new int[] {
+                      android.R.attr.state_selected,
+                      android.R.attr.state_enabled
+              }, mSubTabSubTextColors.getDefaultColor());
+    }
+    return Color.WHITE;
+  }
+
+  private void checkOverScreen() {
+    final int measuredWidth = getMeasuredWidth();
+    if (measuredWidth
+            > ((int) (getResources()
+            .getInteger(R.integer.sesl_tablayout_over_screen_width_dp)
+              * (getContext().getResources().getDisplayMetrics().densityDpi / 160.0f)))) {
+      mIsOverScreen = true;
+      mOverScreenMaxWidth = (int) (getResources()
+              .getFloat(R.dimen.sesl_tablayout_over_screen_max_width_rate) * measuredWidth);
+    } else {
+      mIsOverScreen = false;
     }
   }
 }

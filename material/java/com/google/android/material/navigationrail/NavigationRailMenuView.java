@@ -142,9 +142,11 @@ public class NavigationRailMenuView extends NavigationBarMenuView {
   }
 
   void setMenuGravity(int gravity) {
-    if (layoutParams.gravity != gravity) {
-      layoutParams.gravity = gravity;
-      setLayoutParams(layoutParams);
+    if (layoutParams != null) {
+      if (layoutParams.gravity != gravity) {
+        layoutParams.gravity = gravity;
+        setLayoutParams(layoutParams);
+      }
     }
   }
 

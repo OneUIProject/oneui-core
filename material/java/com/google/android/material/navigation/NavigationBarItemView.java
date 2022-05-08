@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,17 @@ package com.google.android.material.navigation;
 
 import com.google.android.material.R;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 import static java.lang.Math.max;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
+import android.os.Build;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.PointerIconCompat;
 import androidx.core.view.ViewCompat;
@@ -36,12 +39,18 @@ import androidx.core.widget.TextViewCompat;
 import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.TooltipCompat;
+
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,6 +65,10 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
  * Provides a view that will be used to render destination items inside a {@link
  * NavigationBarMenuView}.
@@ -64,10 +77,29 @@ import com.google.android.material.badge.BadgeUtils;
  */
 @RestrictTo(LIBRARY_GROUP)
 public abstract class NavigationBarItemView extends FrameLayout implements MenuView.ItemView {
+  // Sesl
+  private String TAG = NavigationBarItemView.class.getSimpleName();
+
+  private static final float MAX_FONT_SCALE = 1.3f;
+
+  static final int BADGE_TYPE_OVERFLOW = 0;
+  static final int BADGE_TYPE_DOT = 1;
+  static final int BADGE_TYPE_N = 2;
+
+  private SpannableStringBuilder mLabelImgSpan;
+
+  private int mBadgeType = BADGE_TYPE_DOT;
+  private int mLargeLabelAppearance;
+  private int mSmallLabelAppearance;
+  private int mViewType;
+
+  private boolean mIsBadgeNumberless;
+  // Sesl
+
   private static final int INVALID_ITEM_POSITION = -1;
   private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
 
-  private final int defaultMargin;
+  private int defaultMargin;
   private float shiftAmount;
   private float scaleUpFactor;
   private float scaleDownFactor;
@@ -90,7 +122,23 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
   @Nullable private BadgeDrawable badgeDrawable;
 
   public NavigationBarItemView(@NonNull Context context) {
-    super(context);
+    this(context, null, NavigationBarView.SESL_TYPE_ICON_LABEL);
+  }
+
+  public NavigationBarItemView(@NonNull Context context, int defStyleAttr) {
+    this(context, null, defStyleAttr);
+  }
+
+  public NavigationBarItemView(@NonNull Context context,
+                               @Nullable AttributeSet attrs, int viewType) {
+    this(context, attrs, 0, viewType);
+  }
+
+  public NavigationBarItemView(@NonNull Context context,
+                               @Nullable AttributeSet attrs, int defStyleAttr, int viewType) {
+    super(context, attrs, defStyleAttr);
+
+    mViewType = viewType;
 
     LayoutInflater.from(context).inflate(getItemLayoutResId(), this, true);
     icon = findViewById(R.id.navigation_bar_item_icon_view);
@@ -134,6 +182,13 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
             }
           });
     }
+
+    ViewCompat.setAccessibilityDelegate(this, null);
+  }
+
+  @RestrictTo(LIBRARY)
+  public int getViewType() {
+    return mViewType;
   }
 
   @Override
@@ -167,16 +222,28 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
       setContentDescription(itemData.getContentDescription());
     }
 
-    CharSequence tooltipText =
-        !TextUtils.isEmpty(itemData.getTooltipText())
-            ? itemData.getTooltipText()
-            : itemData.getTitle();
+    CharSequence tooltipText = itemData.getTooltipText();
+    TooltipCompat.setTooltipText(this, tooltipText);
 
-    // Avoid calling tooltip for L and M devices because long pressing twuice may freeze devices.
-    if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP || VERSION.SDK_INT > VERSION_CODES.M) {
-      TooltipCompat.setTooltipText(this, tooltipText);
+    String badgeText = itemData.getBadgeText();
+    int badgeType = BADGE_TYPE_DOT;
+    if (badgeText != null && !badgeText.equals("") && !badgeText.isEmpty()) {
+      badgeType = itemData.getItemId() == R.id.bottom_overflow ?
+              BADGE_TYPE_OVERFLOW : BADGE_TYPE_N;
     }
-    setVisibility(itemData.isVisible() ? View.VISIBLE : View.GONE);
+    setBadgeType(badgeType);
+  }
+
+  void setBadgeType(int type) {
+    mBadgeType = type;
+  }
+
+  int getBadgeType() {
+    return mBadgeType;
+  }
+
+  TextView getLabel() {
+    return smallLabel != null ? smallLabel : largeLabel;
   }
 
   public void setItemPosition(int position) {
@@ -219,18 +286,27 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
   public void setTitle(@Nullable CharSequence title) {
     smallLabel.setText(title);
     largeLabel.setText(title);
+    if (TextUtils.isEmpty(title)) {
+      smallLabel.setVisibility(View.GONE);
+      largeLabel.setVisibility(View.GONE);
+    }
     if (itemData == null || TextUtils.isEmpty(itemData.getContentDescription())) {
       setContentDescription(title);
     }
 
     CharSequence tooltipText =
-        itemData == null || TextUtils.isEmpty(itemData.getTooltipText())
-            ? title
-            : itemData.getTooltipText();
-    // Avoid calling tooltip for L and M devices because long pressing twuice may freeze devices.
-    if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP || VERSION.SDK_INT > VERSION_CODES.M) {
-      TooltipCompat.setTooltipText(this, tooltipText);
-    }
+        itemData == null ? null : itemData.getTooltipText();
+    TooltipCompat.setTooltipText(this, tooltipText);
+  }
+
+  void setLabelImageSpan(SpannableStringBuilder span) {
+    mLabelImgSpan = span;
+    smallLabel.setText(span);
+    largeLabel.setText(span);
+  }
+
+  SpannableStringBuilder getLabelImageSpan() {
+    return mLabelImgSpan;
   }
 
   @Override
@@ -245,28 +321,27 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
     smallLabel.setPivotX(smallLabel.getWidth() / 2);
     smallLabel.setPivotY(smallLabel.getBaseline());
 
+    if (getViewType() != NavigationBarView.SESL_TYPE_LABEL_ONLY) {
+      defaultMargin = getResources().getDimensionPixelSize(R.dimen.sesl_navigation_bar_icon_inset);
+    }
+
     switch (labelVisibilityMode) {
       case NavigationBarView.LABEL_VISIBILITY_AUTO:
         if (isShifting) {
           if (checked) {
             setViewLayoutParams(icon, defaultMargin, Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-            updateViewPaddingBottom(
-                labelGroup, (int) labelGroup.getTag(R.id.mtrl_view_tag_bottom_padding));
-            largeLabel.setVisibility(VISIBLE);
+            setViewScaleValues(largeLabel, 1f, 1f, VISIBLE);
           } else {
             setViewLayoutParams(icon, defaultMargin, Gravity.CENTER);
-            updateViewPaddingBottom(labelGroup, 0);
-            largeLabel.setVisibility(INVISIBLE);
+            setViewScaleValues(largeLabel, 0.5f, 0.5f, INVISIBLE);
           }
           smallLabel.setVisibility(INVISIBLE);
         } else {
-          updateViewPaddingBottom(
-              labelGroup, (int) labelGroup.getTag(R.id.mtrl_view_tag_bottom_padding));
           if (checked) {
             setViewLayoutParams(
                 icon, (int) (defaultMargin + shiftAmount), Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-            setViewScaleValues(largeLabel, 1f, 1f, VISIBLE);
-            setViewScaleValues(smallLabel, scaleUpFactor, scaleUpFactor, INVISIBLE);
+            setViewScaleValues(largeLabel, 1f, 1f, INVISIBLE);
+            setViewScaleValues(smallLabel, scaleUpFactor, scaleUpFactor, VISIBLE);
           } else {
             setViewLayoutParams(icon, defaultMargin, Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             setViewScaleValues(largeLabel, scaleDownFactor, scaleDownFactor, INVISIBLE);
@@ -278,20 +353,15 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
       case NavigationBarView.LABEL_VISIBILITY_SELECTED:
         if (checked) {
           setViewLayoutParams(icon, defaultMargin, Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-          updateViewPaddingBottom(
-              labelGroup, (int) labelGroup.getTag(R.id.mtrl_view_tag_bottom_padding));
-          largeLabel.setVisibility(VISIBLE);
+          setViewScaleValues(largeLabel, 1f, 1f, VISIBLE);
         } else {
           setViewLayoutParams(icon, defaultMargin, Gravity.CENTER);
-          updateViewPaddingBottom(labelGroup, 0);
-          largeLabel.setVisibility(INVISIBLE);
+          setViewScaleValues(largeLabel, 0.5f, 0.5f, INVISIBLE);
         }
         smallLabel.setVisibility(INVISIBLE);
         break;
 
       case NavigationBarView.LABEL_VISIBILITY_LABELED:
-        updateViewPaddingBottom(
-            labelGroup, (int) labelGroup.getTag(R.id.mtrl_view_tag_bottom_padding));
         if (checked) {
           setViewLayoutParams(
               icon, (int) (defaultMargin + shiftAmount), Gravity.CENTER_HORIZONTAL | Gravity.TOP);
@@ -315,37 +385,97 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
     }
 
     refreshDrawableState();
-
-    // Set the item as selected to send an AccessibilityEvent.TYPE_VIEW_SELECTED from View, so that
-    // the item is read out as selected.
-    setSelected(checked);
   }
 
-  @Override
-  public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
-    super.onInitializeAccessibilityNodeInfo(info);
-    if (badgeDrawable != null && badgeDrawable.isVisible()) {
-      CharSequence customContentDescription = itemData.getTitle();
-      if (!TextUtils.isEmpty(itemData.getContentDescription())) {
-        customContentDescription = itemData.getContentDescription();
+  void updateLabelGroupTopMargin(int topMargin) {
+    if (labelGroup != null) {
+      defaultMargin = getResources()
+              .getDimensionPixelSize(R.dimen.sesl_bottom_navigation_icon_inset);
+
+      ViewGroup.MarginLayoutParams lp
+              = (ViewGroup.MarginLayoutParams) labelGroup.getLayoutParams();
+      if (lp != null) {
+        lp.topMargin = topMargin + defaultMargin;
+        labelGroup.setLayoutParams(lp);
       }
-      info.setContentDescription(
-          customContentDescription + ", " + badgeDrawable.getContentDescription());
     }
-    AccessibilityNodeInfoCompat infoCompat = AccessibilityNodeInfoCompat.wrap(info);
-    infoCompat.setCollectionItemInfo(
-        CollectionItemInfoCompat.obtain(
-            /* rowIndex= */ 0,
-            /* rowSpan= */ 1,
-            /* columnIndex= */ getItemVisiblePosition(),
-            /* columnSpan= */ 1,
-            /* heading= */ false,
-            /* selected= */ isSelected()));
-    if (isSelected()) {
-      infoCompat.setClickable(false);
-      infoCompat.removeAction(AccessibilityActionCompat.ACTION_CLICK);
+  }
+
+  void setBadgeNumberless(boolean numberless) {
+    mIsBadgeNumberless = numberless;
+  }
+
+  // TODO rework this method
+  // kang
+  @Override
+  public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo var1) {
+    /* var1 = info */
+    super.onInitializeAccessibilityNodeInfo(var1);
+    if (this.itemData != null) {
+      BadgeDrawable var2 = this.badgeDrawable;
+      if (var2 != null && var2.isVisible()) {
+        CharSequence var6 = this.itemData.getTitle();
+        if (!TextUtils.isEmpty(this.itemData.getContentDescription())) {
+          var6 = this.itemData.getContentDescription();
+        }
+
+        var1.setContentDescription(var6 + ", " + this.badgeDrawable.getContentDescription());
+      }
     }
-    infoCompat.setRoleDescription(getResources().getString(R.string.item_view_role_description));
+
+    TextView var3 = (TextView)this.findViewById(R.id.notifications_badge);
+    if (this.itemData != null && var3 != null && var3.getVisibility() == 0 && var3.getWidth() > 0) {
+      CharSequence var4 = this.itemData.getTitle();
+      String var7 = var4.toString();
+      if (TextUtils.isEmpty(this.itemData.getContentDescription())) {
+        int var5 = this.mBadgeType;
+        if (var5 != 0) {
+          if (var5 != 1) {
+            if (var5 == 2) {
+              var7 = var3.getText().toString();
+              if (this.isNumericValue(var7)) {
+                var5 = Integer.parseInt(var7);
+                var7 = var4 + " , " + this.getResources().getQuantityString(R.plurals.mtrl_badge_content_description, var5, new Object[]{var5});
+              } else if (this.mIsBadgeNumberless) {
+                var7 = var4 + " , " + this.getResources().getString(R.string.mtrl_exceed_max_badge_number_content_description, new Object[]{999});
+              } else {
+                var7 = var4 + " , " + this.getResources().getString(R.string.sesl_material_badge_description);
+              }
+            }
+          } else {
+            var7 = var4 + " , " + this.getResources().getString(R.string.mtrl_badge_numberless_content_description);
+          }
+        } else {
+          var7 = var4 + " , " + this.getResources().getString(R.string.sesl_material_badge_description);
+        }
+      } else {
+        var7 = this.itemData.getContentDescription().toString();
+      }
+
+      var1.setContentDescription(var7);
+    }
+
+    AccessibilityNodeInfoCompat var8 = AccessibilityNodeInfoCompat.wrap(var1);
+    var8.setCollectionItemInfo(CollectionItemInfoCompat.obtain(0, 1, this.getItemVisiblePosition(), 1, false, this.isSelected()));
+    if (this.isSelected()) {
+      var8.setClickable(false);
+      var8.removeAction(AccessibilityActionCompat.ACTION_CLICK);
+    }
+
+    var1.setClassName(Button.class.getName());
+  }
+  // kang
+
+  private boolean isNumericValue(String value) {
+    if (value == null) {
+      return false;
+    }
+    try {
+      Integer.parseInt(value);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 
   /**
@@ -446,7 +576,8 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
 
   public void setIconTintList(@Nullable ColorStateList tint) {
     iconTint = tint;
-    if (itemData != null && wrappedIconDrawable != null) {
+    if ((itemData != null || wrappedIconDrawable != null)
+            && itemData != null && wrappedIconDrawable != null) {
       DrawableCompat.setTintList(wrappedIconDrawable, iconTint);
       wrappedIconDrawable.invalidateSelf();
     }
@@ -457,6 +588,15 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
     iconParams.width = iconSize;
     iconParams.height = iconSize;
     icon.setLayoutParams(iconParams);
+  }
+
+  public void seslSetLabelTextAppearance(@StyleRes int labelTextAppearance) {
+    mLargeLabelAppearance = labelTextAppearance;
+    mSmallLabelAppearance = labelTextAppearance;
+    TextViewCompat.setTextAppearance(smallLabel, labelTextAppearance);
+    calculateTextScaleFactors(smallLabel.getTextSize(), largeLabel.getTextSize());
+    setLargeTextSize(mLargeLabelAppearance, largeLabel);
+    setLargeTextSize(mSmallLabelAppearance, smallLabel);
   }
 
   public void setTextAppearanceInactive(@StyleRes int inactiveTextAppearance) {
@@ -477,9 +617,26 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
   }
 
   private void calculateTextScaleFactors(float smallLabelSize, float largeLabelSize) {
-    shiftAmount = smallLabelSize - largeLabelSize;
-    scaleUpFactor = 1f * largeLabelSize / smallLabelSize;
-    scaleDownFactor = 1f * smallLabelSize / largeLabelSize;
+    if (largeLabelSize == 0f || smallLabelSize == 0f) {
+      Log.e(TAG, "LabelSize is invalid");
+      scaleUpFactor = 1f;
+      scaleDownFactor = 1f;
+      shiftAmount = 0f;
+    } else {
+      shiftAmount = smallLabelSize - largeLabelSize;
+      scaleUpFactor = 1f * largeLabelSize / smallLabelSize;
+      scaleDownFactor = 1f * smallLabelSize / largeLabelSize;
+      if (scaleUpFactor >= Float.MAX_VALUE || scaleUpFactor <= -Float.MAX_VALUE) {
+        Log.e(TAG, "scaleUpFactor is invalid");
+        scaleUpFactor = 1f;
+        shiftAmount = 0f;
+      }
+      if (scaleDownFactor >= Float.MAX_VALUE || scaleDownFactor <= -Float.MAX_VALUE) {
+        Log.e(TAG, "scaleDownFactor is invalid");
+        scaleDownFactor = 1f;
+        shiftAmount = 0f;
+      }
+    }
   }
 
   public void setItemBackground(int background) {
@@ -605,6 +762,40 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
   @DimenRes
   protected int getItemDefaultMarginResId() {
     return R.dimen.mtrl_navigation_bar_item_default_margin;
+  }
+
+  @Override
+  protected void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    setLargeTextSize(mLargeLabelAppearance, largeLabel);
+    setLargeTextSize(mSmallLabelAppearance, smallLabel);
+  }
+
+  @RestrictTo(LIBRARY_GROUP_PREFIX)
+  void setShowButtonShape(int textColor, ColorStateList bgColor) {
+    Drawable background = getResources()
+            .getDrawable(R.drawable.sesl_bottom_nav_show_button_shapes_background);
+    if (Build.VERSION.SDK_INT >= 28) {
+      smallLabel.setTextColor(textColor);
+      largeLabel.setTextColor(textColor);
+      smallLabel.setBackground(background);
+      largeLabel.setBackground(background);
+      smallLabel.setBackgroundTintList(bgColor);
+      largeLabel.setBackgroundTintList(bgColor);
+    } else {
+      ViewCompat.setBackground(this, background);
+    }
+  }
+
+  private void setLargeTextSize(int resId, TextView textView) {
+    if (textView != null) {
+      TypedArray a = getContext().obtainStyledAttributes(resId, R.styleable.TextAppearance);
+      TypedValue outValue = a.peekValue(R.styleable.TextAppearance_android_textSize);
+      a.recycle();
+      textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+              TypedValue.complexToFloat(outValue.data)
+                      * Math.min(getResources().getConfiguration().fontScale, MAX_FONT_SCALE));
+    }
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,79 @@ package com.google.android.material.navigation;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.BaseMenuPresenter;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuItemImpl;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.SubMenuBuilder;
 import android.util.SparseArray;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.PathInterpolator;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
+
+import com.google.android.material.R;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.internal.ParcelableSparseArray;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * For internal use only.
  *
  * @hide
  */
+@RequiresApi(21)
 @RestrictTo(LIBRARY_GROUP)
-public class NavigationBarPresenter implements MenuPresenter {
+public class NavigationBarPresenter extends BaseMenuPresenter {
+  private static final int ANIM_UPDATE_DURATION = 400;
+  private static final int ANIM_UPDATE_DELAY = 180;
+  private static final int MSG_UPDATE_ANIMATION = 100;
+
+  private Context mContext;
+  private OverflowPopup mOverflowPopup;
+  private OpenOverflowRunnable mPostedOpenRunnable;
+
   private MenuBuilder menu;
   private NavigationBarMenuView menuView;
   private boolean updateSuspended = false;
+  private boolean mSetAnim = false;
   private int id;
+
+  private Handler mAnimationHandler = new Handler(Looper.getMainLooper()) {
+    @Override
+    public void handleMessage(Message msg) {
+      if (msg.what == MSG_UPDATE_ANIMATION) {
+        updateMenuViewWithAnimate();
+      }
+    }
+  };
+
+  private final PopupPresenterCallback mPopupPresenterCallback = new PopupPresenterCallback();
+
+  NavigationBarPresenter(Context context) {
+    super(context, R.layout.sesl_action_menu_layout, R.layout.sesl_action_menu_item_layout);
+  }
 
   public void setMenuView(@NonNull NavigationBarMenuView menuView) {
     this.menuView = menuView;
@@ -55,6 +100,7 @@ public class NavigationBarPresenter implements MenuPresenter {
   public void initForMenu(@NonNull Context context, @NonNull MenuBuilder menu) {
     this.menu = menu;
     menuView.initialize(this.menu);
+    mContext = context;
   }
 
   @Override
@@ -63,20 +109,71 @@ public class NavigationBarPresenter implements MenuPresenter {
     return menuView;
   }
 
+  void setAnimationEnable(boolean enabled) {
+    mSetAnim = enabled;
+  }
+
   @Override
   public void updateMenuView(boolean cleared) {
     if (updateSuspended) {
       return;
     }
-    if (cleared) {
-      menuView.buildMenuView();
+    if (mSetAnim) {
+      if (cleared) {
+        if (mAnimationHandler.hasMessages(MSG_UPDATE_ANIMATION)) {
+          mAnimationHandler.removeMessages(MSG_UPDATE_ANIMATION);
+        }
+        mAnimationHandler.sendEmptyMessage(MSG_UPDATE_ANIMATION);
+      } else {
+        menuView.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            menuView.updateMenuView();
+          }
+        }, ANIM_UPDATE_DELAY);
+      }
     } else {
-      menuView.updateMenuView();
+      if (cleared) {
+        menuView.buildMenuView();
+      } else {
+        menuView.updateMenuView();
+      }
+    }
+  }
+
+  private void updateMenuViewWithAnimate() {
+    if (menuView != null) {
+      final PathInterpolator SINE_IN_OUT_90
+              = new PathInterpolator(0.33f, 0.0f, 0.1f, 1.0f);
+
+      ObjectAnimator anim = ObjectAnimator
+              .ofFloat(menuView, "y", menuView.getHeight());
+      anim.setDuration(ANIM_UPDATE_DURATION);
+      anim.setInterpolator(SINE_IN_OUT_90);
+      anim.start();
+
+      anim.addListener(new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+          menuView.buildMenuView();
+
+          ObjectAnimator anim = ObjectAnimator.ofFloat(menuView, "y", 0.0f);
+          anim.setDuration(ANIM_UPDATE_DURATION);
+          anim.setInterpolator(SINE_IN_OUT_90);
+          anim.start();
+
+          super.onAnimationEnd(animation);
+        }
+      });
     }
   }
 
   @Override
   public void setCallback(@Nullable Callback cb) {}
+
+  @Override
+  public void bindItemView(MenuItemImpl item, MenuView.ItemView itemView) {
+  }
 
   @Override
   public boolean onSubMenuSelected(@Nullable SubMenuBuilder subMenu) {
@@ -171,5 +268,109 @@ public class NavigationBarPresenter implements MenuPresenter {
             return new SavedState[size];
           }
         };
+  }
+
+  boolean showOverflowMenu(MenuBuilder menu) {
+    if (isOverflowMenuShowing()) {
+      return false;
+    }
+
+    if (menu != null && menuView != null) {
+      if (mPostedOpenRunnable == null && !menu.getNonActionItems().isEmpty()) {
+        mOverflowPopup
+                = new OverflowPopup(mContext, menu, menuView.mOverflowButton, true);
+        mPostedOpenRunnable = new OpenOverflowRunnable(mOverflowPopup);
+        menuView.post(mPostedOpenRunnable);
+        super.onSubMenuSelected(null);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  boolean isOverflowMenuShowing() {
+    return mOverflowPopup != null && mOverflowPopup.isShowing();
+  }
+
+  private class OverflowPopup extends MenuPopupHelper {
+    private OverflowPopup(Context context, MenuBuilder builder,
+                          View anchorView, boolean overflowOnly) {
+      super(context, builder, anchorView, overflowOnly, R.attr.actionOverflowBottomMenuStyle);
+      setGravity(Gravity.END);
+      setPresenterCallback(mPopupPresenterCallback);
+      setAnchorView(anchorView);
+      seslSetOverlapAnchor(false);
+      seslForceShowUpper(true);
+    }
+
+    protected void onDismiss() {
+      if (menu != null) {
+        menu.close();
+      }
+      mOverflowPopup = null;
+      super.onDismiss();
+    }
+  }
+
+  boolean hideOverflowMenu() {
+    if (mPostedOpenRunnable == null || mMenuView == null) {
+      if (mOverflowPopup == null) {
+        return false;
+      }
+      mOverflowPopup.dismiss();
+      return true;
+    } else {
+      ((ViewGroup) mMenuView).removeCallbacks(mPostedOpenRunnable);
+      mPostedOpenRunnable = null;
+      return true;
+    }
+  }
+
+  private class PopupPresenterCallback implements MenuPresenter.Callback {
+    @Override
+    public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
+      if (menu instanceof SubMenuBuilder) {
+        menu.getRootMenu().close(false);
+      }
+      MenuPresenter.Callback callback = getCallback();
+      if (callback != null) {
+        callback.onCloseMenu(menu, allMenusAreClosing);
+      }
+    }
+
+    @Override
+    public boolean onOpenSubMenu(MenuBuilder subMenu) {
+      if (subMenu == null) {
+        return false;
+      }
+
+      final int itemId = ((SubMenuBuilder) subMenu).getItem().getItemId();
+      MenuPresenter.Callback callback = getCallback();
+      return callback != null && callback.onOpenSubMenu(subMenu);
+    }
+  }
+
+  private class OpenOverflowRunnable implements Runnable {
+    private OverflowPopup mPopup;
+
+    private OpenOverflowRunnable(OverflowPopup popup) {
+      mPopup = popup;
+    }
+
+    @Override
+    public void run() {
+      if (menu != null) {
+        menu.changeMenuMode();
+      }
+
+      if (menuView != null) {
+        if (menuView.getWindowToken() != null && mPopup.tryShow(0, 0)) {
+          mOverflowPopup = mPopup;
+        }
+      }
+
+      mPostedOpenRunnable = null;
+    }
   }
 }

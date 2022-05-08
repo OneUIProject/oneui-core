@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,15 +59,19 @@ import androidx.annotation.RestrictTo;
 import androidx.annotation.StyleRes;
 import androidx.core.content.ContextCompat;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.internal.ContextUtils;
 import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.internal.NavigationMenuPresenter;
 import com.google.android.material.internal.ScrimInsetsFrameLayout;
+import com.google.android.material.internal.SeslContextUtils;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.shape.ShapeAppearanceModel;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Represents a standard navigation menu for application. The menu contents can be populated by a
@@ -683,7 +687,7 @@ public class NavigationView extends ScrimInsetsFrameLayout {
         presenter.setBehindStatusBar(isBehindStatusBar);
         setDrawTopInsetForeground(isBehindStatusBar);
 
-        Activity activity = ContextUtils.getActivity(getContext());
+        Activity activity = SeslContextUtils.getActivity(getContext());
         if (activity != null && VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
           boolean isBehindSystemNav =
               activity.findViewById(android.R.id.content).getHeight() == getHeight();

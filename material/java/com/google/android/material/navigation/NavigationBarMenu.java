@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Provides a {@link MenuBuilder} that can be used to build a menu that can be placed inside
@@ -62,17 +66,6 @@ public final class NavigationBarMenu extends MenuBuilder {
   @NonNull
   protected MenuItem addInternal(
       int group, int id, int categoryOrder, @NonNull CharSequence title) {
-    if (size() + 1 > maxItemCount) {
-      String viewClassName = viewClass.getSimpleName();
-      throw new IllegalArgumentException(
-          "Maximum number of items supported by "
-              + viewClassName
-              + " is "
-              + maxItemCount
-              + ". Limit can be checked with "
-              + viewClassName
-              + "#getMaxItemCount()");
-    }
     stopDispatchingItemsChanged();
     final MenuItem item = super.addInternal(group, id, categoryOrder, title);
     if (item instanceof MenuItemImpl) {

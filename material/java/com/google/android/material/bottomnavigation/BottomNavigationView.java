@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import com.google.android.material.R;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Build.VERSION;
+
+import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -38,49 +41,12 @@ import com.google.android.material.navigation.NavigationBarMenuView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * Represents a standard bottom navigation bar for application. It is an implementation of <a
- * href="https://material.google.com/components/bottom-navigation.html">material design bottom
- * navigation</a>.
- *
- * <p>Bottom navigation bars make it easy for users to explore and switch between top-level views in
- * a single tap. They should be used when an application has three to five top-level destinations.
- *
- * <p>The bar can disappear on scroll, based on {@link
- * com.google.android.material.behavior.HideBottomViewOnScrollBehavior}, when it is placed within a
- * {@link CoordinatorLayout} and one of the children within the {@link CoordinatorLayout} is
- * scrolled. This behavior is only set if the {@code layout_behavior} property is set to {@link
- * HideBottomViewOnScrollBehavior}.
- *
- * <p>The bar contents can be populated by specifying a menu resource file. Each menu item title,
- * icon and enabled state will be used for displaying bottom navigation bar items. Menu items can
- * also be used for programmatically selecting which destination is currently active. It can be done
- * using {@code MenuItem#setChecked(true)}
- *
- * <pre>
- * layout resource file:
- * &lt;com.google.android.material.bottomnavigation.BottomNavigationView
- *     xmlns:android="http://schemas.android.com/apk/res/android"
- *     xmlns:app="http://schema.android.com/apk/res/res-auto"
- *     android:id="@+id/navigation"
- *     android:layout_width="match_parent"
- *     android:layout_height="56dp"
- *     android:layout_gravity="start"
- *     app:menu="@menu/my_navigation_items" /&gt;
- *
- * res/menu/my_navigation_items.xml:
- * &lt;menu xmlns:android="http://schemas.android.com/apk/res/android"&gt;
- *     &lt;item android:id="@+id/action_search"
- *          android:title="@string/menu_search"
- *          android:icon="@drawable/ic_search" /&gt;
- *     &lt;item android:id="@+id/action_settings"
- *          android:title="@string/menu_settings"
- *          android:icon="@drawable/ic_add" /&gt;
- *     &lt;item android:id="@+id/action_navigation"
- *          android:title="@string/menu_navigation"
- *          android:icon="@drawable/ic_action_navigation_menu" /&gt;
- * &lt;/menu&gt;
- * </pre>
+ * Samsung BottomNavigationView class.
  */
 public class BottomNavigationView extends NavigationBarView {
   static final int MAX_ITEM_COUNT = 5;
@@ -118,6 +84,17 @@ public class BottomNavigationView extends NavigationBarView {
 
     if (shouldDrawCompatibilityTopDivider()) {
       addCompatibilityTopDivider(context);
+    }
+
+    if (Build.VERSION.SDK_INT >= 21) {
+      MenuView menuView = getMenuView();
+      if (menuView instanceof NavigationBarMenuView) {
+        if (((NavigationBarMenuView) menuView).getViewType() == NavigationBarView.SESL_TYPE_LABEL_ONLY) {
+          final int padding
+                  = getResources().getDimensionPixelSize(R.dimen.sesl_navigation_bar_text_mode_padding_horizontal);
+          setPadding(padding, getPaddingTop(), padding, getPaddingBottom());
+        }
+      }
     }
   }
 
@@ -176,13 +153,18 @@ public class BottomNavigationView extends NavigationBarView {
   private void addCompatibilityTopDivider(@NonNull Context context) {
     View divider = new View(context);
     divider.setBackgroundColor(
-        ContextCompat.getColor(context, R.color.design_bottom_navigation_shadow_color));
+        ContextCompat.getColor(context, R.color.sesl_bottom_navigation_shadow_color));
     FrameLayout.LayoutParams dividerParams =
         new FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            getResources().getDimensionPixelSize(R.dimen.design_bottom_navigation_shadow_height));
+            getResources().getDimensionPixelSize(R.dimen.sesl_bottom_navigation_shadow_height));
     divider.setLayoutParams(dividerParams);
     addView(divider);
+  }
+
+  @Override
+  public void seslSetGroupDividerEnabled(boolean enabled) {
+    super.seslSetGroupDividerEnabled(enabled);
   }
 
   /**

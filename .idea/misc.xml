@@ -51,6 +51,12 @@
         <entry key="appcompat/src/main/res/layout/sesl_list_menu_item_badge.xml" value="0.1721014492753623" />
         <entry key="appcompat/src/main/res/layout/sesl_popup_menu_item_layout.xml" value="0.67" />
         <entry key="appcompat/src/main/res/layout/sesl_search_view.xml" value="0.31927083333333334" />
+        <entry key="apppickerview/src/main/res/drawable/btn_check_material_background.xml" value="0.194" />
+        <entry key="apppickerview/src/main/res/drawable/grid_background.xml" value="0.194" />
+        <entry key="apppickerview/src/main/res/drawable/ic_applist_setting_mtrl.xml" value="0.194" />
+        <entry key="apppickerview/src/main/res/drawable/ic_gallery_btn_check_bg_mtrl.xml" value="0.194" />
+        <entry key="apppickerview/src/main/res/drawable/ic_gallery_btn_uncheck_bg_mtrl.xml" value="0.194" />
+        <entry key="apppickerview/src/main/res/layout/app_picker_dialog.xml" value="0.3182291666666667" />
         <entry key="indexscroll/src/main/res/drawable/sesl_index_bar_textmode_thumb_shape.xml" value="0.193" />
         <entry key="material/java/com/google/android/material/bottomnavigation/res/layout/sesl_bottom_navigation_item_text.xml" value="0.15476190476190477" />
         <entry key="material/java/com/google/android/material/navigation/res/menu/nv_dummy_overflow_menu_icon.xml" value="0.3182291666666667" />

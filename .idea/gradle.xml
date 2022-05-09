@@ -30,7 +30,6 @@
             <option value="$PROJECT_DIR$/viewpager2" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

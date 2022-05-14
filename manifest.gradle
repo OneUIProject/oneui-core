@@ -34,7 +34,7 @@ ext {
     sesl_material_version = "1.0.0-beta02"
     sesl_picker_basic_version = "1.0.0-beta01"
     sesl_picker_color_version = "1.0.0-beta02"
-    sesl_preference_version = "1.0.0-beta01"
+    sesl_preference_version = "1.0.0"
     sesl_recyclerview_version = "1.0.0-beta01"
     sesl_slidingpanelayout_version = "1.0.0-alpha01"
     sesl_swiperefreshlayout_version = "1.0.0"

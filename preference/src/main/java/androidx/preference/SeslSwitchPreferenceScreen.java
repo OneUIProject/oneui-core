@@ -58,6 +58,8 @@ public class SeslSwitchPreferenceScreen extends SwitchPreferenceCompat {
                         }
                     }
                     break;
+                default:
+                    return false;
             }
 
             return true;

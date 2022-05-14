@@ -32,7 +32,7 @@ import androidx.annotation.RestrictTo;
  */
 
 @RestrictTo(LIBRARY_GROUP_PREFIX)
-public class SeslSeekBarDialogPreference extends DialogPreference {
+class SeslSeekBarDialogPreference extends DialogPreference {
     private final Drawable mMyIcon;
 
     public SeslSeekBarDialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

@@ -432,7 +432,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
         setChildrenDrawingOrderEnabled(true);
         // the absolute offset has to take into account that the circle starts at an offset
         mSpinnerOffsetEnd = (int) (DEFAULT_CIRCLE_TARGET * metrics.density);
-        mTotalDragDistance = mSpinnerOffsetEnd + metrics.density * 26.0f;
+        mTotalDragDistance = mSpinnerOffsetEnd + ((int) (metrics.density * 26.0f));
         mNestedScrollingParentHelper = new NestedScrollingParentHelper(this);
 
         mNestedScrollingChildHelper = new NestedScrollingChildHelper(this);

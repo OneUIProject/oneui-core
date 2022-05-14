@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opsiya</string>
     <string name="sesl_color_picker_recently_used_colors">Oxirgi ishlatilgan ranglar</string>
     <string name="sesl_color_picker_white">Oq</string>
+    <string name="sesl_picker_done">OK</string>
     <string name="sesl_color_picker_dark_green">To‘q yashil</string>
     <string name="sesl_color_opacity_text">Chaplanish</string>
     <string name="sesl_color_picker_light_gray">Och kul rang</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Binafsha rang</string>
     <string name="sesl_color_picker_color_six">Oltinchi rang</string>
     <string name="sesl_color_picker_dark_red">To‘q qizil</string>
+    <string name="sesl_picker_cancel">Bekor qilish</string>
     <string name="sesl_color_picker_light_violet">Och binafsha</string>
     <string name="sesl_color_picker_green">Yashil</string>
     <string name="sesl_color_picker_dark_yellow">To‘q sariq</string>

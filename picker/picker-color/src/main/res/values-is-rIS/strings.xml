@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Valkostur</string>
     <string name="sesl_color_picker_recently_used_colors">Nýlega notaðir litir</string>
     <string name="sesl_color_picker_white">Hvítur</string>
+    <string name="sesl_picker_done">Lokið</string>
     <string name="sesl_color_picker_dark_green">Dökkgrænn</string>
     <string name="sesl_color_opacity_text">Gegnsæi</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Fjólublár</string>
     <string name="sesl_color_picker_color_six">Litur sex</string>
     <string name="sesl_color_picker_dark_red">Dökkrauður</string>
+    <string name="sesl_picker_cancel">Hætta við</string>
     <string name="sesl_color_picker_light_violet">Ljósfjólublár</string>
     <string name="sesl_color_picker_green">Grænn</string>
     <string name="sesl_color_picker_dark_yellow">Dökkgulur</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">الخيار</string>
     <string name="sesl_color_picker_recently_used_colors">الألوان المستخدمة مؤخراً</string>
     <string name="sesl_color_picker_white">أبيض</string>
+    <string name="sesl_picker_done">تم</string>
     <string name="sesl_color_picker_dark_green">أخضر داكن</string>
     <string name="sesl_color_opacity_text">معدل الشفافية</string>
     <string name="sesl_color_picker_light_gray">رمادي فاتح</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">بنفسجي</string>
     <string name="sesl_color_picker_color_six">اللون السادس</string>
     <string name="sesl_color_picker_dark_red">أحمر داكن</string>
+    <string name="sesl_picker_cancel">إلغاء</string>
     <string name="sesl_color_picker_light_violet">بنفسجي فاتح</string>
     <string name="sesl_color_picker_green">أخضر</string>
     <string name="sesl_color_picker_dark_yellow">أصفر داكن</string>

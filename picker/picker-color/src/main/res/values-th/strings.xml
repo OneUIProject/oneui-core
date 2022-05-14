@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ตัวเลือก</string>
     <string name="sesl_color_picker_recently_used_colors">สีที่ใช้ล่าสุด</string>
     <string name="sesl_color_picker_white">สีขาว</string>
+    <string name="sesl_picker_done">เรียบร้อย</string>
     <string name="sesl_color_picker_dark_green">สีเขียวเข้ม</string>
     <string name="sesl_color_opacity_text">ความทึบ</string>
     <string name="sesl_color_picker_light_gray">สีเทาอ่อน</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">สีม่วง</string>
     <string name="sesl_color_picker_color_six">สีหมายเลขหก</string>
     <string name="sesl_color_picker_dark_red">สีแดงเข้ม</string>
+    <string name="sesl_picker_cancel">ยกเลิก</string>
     <string name="sesl_color_picker_light_violet">สีม่วงอ่อน</string>
     <string name="sesl_color_picker_green">สีเขียว</string>
     <string name="sesl_color_picker_dark_yellow">สีเหลืองเข้ม</string>

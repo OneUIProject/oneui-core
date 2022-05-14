@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Parinktis</string>
     <string name="sesl_color_picker_recently_used_colors">Neseniai naudotos spalvos</string>
     <string name="sesl_color_picker_white">Balta</string>
+    <string name="sesl_picker_done">Atlikta</string>
     <string name="sesl_color_picker_dark_green">Tamsiai žalia</string>
     <string name="sesl_color_opacity_text">Drumstumas</string>
     <string name="sesl_color_picker_light_gray">Šviesiai pilka</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violetinė</string>
     <string name="sesl_color_picker_color_six">Šešta spalva</string>
     <string name="sesl_color_picker_dark_red">Rusvai raudona</string>
+    <string name="sesl_picker_cancel">Atšaukti</string>
     <string name="sesl_color_picker_light_violet">Šviesiai violetinė</string>
     <string name="sesl_color_picker_green">Žalia</string>
     <string name="sesl_color_picker_dark_yellow">Tamsiai geltona</string>

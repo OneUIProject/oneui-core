@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Ôpcyjo</string>
     <string name="sesl_color_picker_recently_used_colors">Niydŏwno używane farby</string>
     <string name="sesl_color_picker_white">Bioło</string>
+    <string name="sesl_picker_done">Fertich</string>
     <string name="sesl_color_picker_dark_green">Ćmawoziylōny</string>
     <string name="sesl_color_opacity_text">Niyprzeźroczystość</string>
     <string name="sesl_color_picker_light_gray">Bladosiwy</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Lilowy</string>
     <string name="sesl_color_picker_color_six">Farba szōsto</string>
     <string name="sesl_color_picker_dark_red">Ciemnoczerwony</string>
+    <string name="sesl_picker_cancel">Pociep</string>
     <string name="sesl_color_picker_light_violet">Jasnofioletowy</string>
     <string name="sesl_color_picker_green">Zielōno</string>
     <string name="sesl_color_picker_dark_yellow">Ciemnożółty</string>

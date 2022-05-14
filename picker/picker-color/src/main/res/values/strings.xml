@@ -16,6 +16,9 @@
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
 
+    <string name="sesl_picker_cancel">Cancel</string>
+    <string name="sesl_picker_done">Done</string>
+
     <string name="sesl_color_blue_text">Blue</string>
     <string name="sesl_color_green_text">Green</string>
     <string name="sesl_color_hex_text">Hex</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Вариант</string>
     <string name="sesl_color_picker_recently_used_colors">Недавно использовавшиеся цвета</string>
     <string name="sesl_color_picker_white">Белый</string>
+    <string name="sesl_picker_done">Готово</string>
     <string name="sesl_color_picker_dark_green">Темно-зеленый</string>
     <string name="sesl_color_opacity_text">Непрозрачность</string>
     <string name="sesl_color_picker_light_gray">Светло-серый</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Фиолетовый</string>
     <string name="sesl_color_picker_color_six">Шестой цвет</string>
     <string name="sesl_color_picker_dark_red">Темно-красный</string>
+    <string name="sesl_picker_cancel">Отмена</string>
     <string name="sesl_color_picker_light_violet">Светло-фиолетовый</string>
     <string name="sesl_color_picker_green">Зеленый</string>
     <string name="sesl_color_picker_dark_yellow">Темно-желтый</string>

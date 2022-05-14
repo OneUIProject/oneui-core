@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opsiyon</string>
     <string name="sesl_color_picker_recently_used_colors">Mga kulay na ginamit kamakailan</string>
     <string name="sesl_color_picker_white">Puti</string>
+    <string name="sesl_picker_done">Tapos na</string>
     <string name="sesl_color_picker_dark_green">Dark green</string>
     <string name="sesl_color_opacity_text">Opacity</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violet</string>
     <string name="sesl_color_picker_color_six">Color six</string>
     <string name="sesl_color_picker_dark_red">Dark red</string>
+    <string name="sesl_picker_cancel">Kanselahin</string>
     <string name="sesl_color_picker_light_violet">Light violet</string>
     <string name="sesl_color_picker_green">Berde</string>
     <string name="sesl_color_picker_dark_yellow">Madilim na dilaw</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">选项</string>
     <string name="sesl_color_picker_recently_used_colors">最近使用的颜色</string>
     <string name="sesl_color_picker_white">白色</string>
+    <string name="sesl_picker_done">完成</string>
     <string name="sesl_color_picker_dark_green">深绿色</string>
     <string name="sesl_color_opacity_text">不透明度</string>
     <string name="sesl_color_picker_light_gray">浅灰</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">紫色</string>
     <string name="sesl_color_picker_color_six">颜色六</string>
     <string name="sesl_color_picker_dark_red">深红色</string>
+    <string name="sesl_picker_cancel">取消</string>
     <string name="sesl_color_picker_light_violet">浅紫色</string>
     <string name="sesl_color_picker_green">绿色</string>
     <string name="sesl_color_picker_dark_yellow">深黄色</string>

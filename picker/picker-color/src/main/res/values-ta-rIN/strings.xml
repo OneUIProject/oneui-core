@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">தெரிவு</string>
     <string name="sesl_color_picker_recently_used_colors">சமீபத்தில் பயன்படுத்தப்பட்ட நிறங்கள்</string>
     <string name="sesl_color_picker_white">வெள்ளை</string>
+    <string name="sesl_picker_done">முடிந்தது</string>
     <string name="sesl_color_picker_dark_green">கரும் பச்சை நிறம்</string>
     <string name="sesl_color_opacity_text">ஒளிபுகாத்தன்மை</string>
     <string name="sesl_color_picker_light_gray">வெளிர் சாம்பல்</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ஊதா</string>
     <string name="sesl_color_picker_color_six">ஆறாவது நிறம்</string>
     <string name="sesl_color_picker_dark_red">அடர் சிவப்பு</string>
+    <string name="sesl_picker_cancel">ரத்து</string>
     <string name="sesl_color_picker_light_violet">வெளிர் ஊதா</string>
     <string name="sesl_color_picker_green">பச்சை</string>
     <string name="sesl_color_picker_dark_yellow">கரும் மஞ்சள்</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opțiune</string>
     <string name="sesl_color_picker_recently_used_colors">Culori utilizate recent</string>
     <string name="sesl_color_picker_white">Alb</string>
+    <string name="sesl_picker_done">Efectuat</string>
     <string name="sesl_color_picker_dark_green">Verde închis</string>
     <string name="sesl_color_opacity_text">Opacitate</string>
     <string name="sesl_color_picker_light_gray">Gri deschis</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violet</string>
     <string name="sesl_color_picker_color_six">A șasea culoare</string>
     <string name="sesl_color_picker_dark_red">Roșu închis</string>
+    <string name="sesl_picker_cancel">Anulare</string>
     <string name="sesl_color_picker_light_violet">Violet deschis</string>
     <string name="sesl_color_picker_green">Verde</string>
     <string name="sesl_color_picker_dark_yellow">Galben închis</string>

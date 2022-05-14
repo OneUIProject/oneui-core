@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Valik</string>
     <string name="sesl_color_picker_recently_used_colors">Hiljuti kasutatud värvid</string>
     <string name="sesl_color_picker_white">Valge</string>
+    <string name="sesl_picker_done">Valmis</string>
     <string name="sesl_color_picker_dark_green">Tumeroheline</string>
     <string name="sesl_color_opacity_text">Läbipaistmatus</string>
     <string name="sesl_color_picker_light_gray">Helehall</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violetne</string>
     <string name="sesl_color_picker_color_six">Värv kuus</string>
     <string name="sesl_color_picker_dark_red">Tumepunane</string>
+    <string name="sesl_picker_cancel">Tühista</string>
     <string name="sesl_color_picker_light_violet">Helevioletne</string>
     <string name="sesl_color_picker_green">Roheline</string>
     <string name="sesl_color_picker_dark_yellow">Tumekollane</string>

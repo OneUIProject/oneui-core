@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ေရြးစရာ</string>
     <string name="sesl_color_picker_recently_used_colors">လတ္တေလာ သံုးထားေသာ အေရာင္မ်ား</string>
     <string name="sesl_color_picker_white">အျဖဴ</string>
+    <string name="sesl_picker_done">ၿပီးပါၿပီ</string>
     <string name="sesl_color_picker_dark_green">အစိမ္းပုပ္</string>
     <string name="sesl_color_opacity_text">အလင္းပိတ္</string>
     <string name="sesl_color_picker_light_gray">မီးခုိးအေဖ်ာ့</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ခရမ္းေရာင္</string>
     <string name="sesl_color_picker_color_six">အေရာင္ ေျခာက္</string>
     <string name="sesl_color_picker_dark_red">အနီရင့္</string>
+    <string name="sesl_picker_cancel">ပယ္ဖ်က္</string>
     <string name="sesl_color_picker_light_violet">ခရမ္းႏုေရာင္</string>
     <string name="sesl_color_picker_green">အစိမ္း</string>
     <string name="sesl_color_picker_dark_yellow">အဝါရင့္ေရာင္</string>

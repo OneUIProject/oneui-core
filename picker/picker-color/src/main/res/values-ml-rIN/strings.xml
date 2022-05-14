@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ഐച്ഛികം</string>
     <string name="sesl_color_picker_recently_used_colors">സമീപകാലത്ത് ഉപയോഗിച്ച നിറങ്ങൾ</string>
     <string name="sesl_color_picker_white">വെള്ള</string>
+    <string name="sesl_picker_done">ചെയ്തു</string>
     <string name="sesl_color_picker_dark_green">ഡാർക്ക് ഗ്രീൻ</string>
     <string name="sesl_color_opacity_text">അതാര്യത</string>
     <string name="sesl_color_picker_light_gray">ഇളം ചാരനിറം</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">വയലറ്റ്</string>
     <string name="sesl_color_picker_color_six">ആറാമത്തെ നിറം</string>
     <string name="sesl_color_picker_dark_red">കടുംചുവപ്പ്</string>
+    <string name="sesl_picker_cancel">റദ്ദാക്കുക</string>
     <string name="sesl_color_picker_light_violet">ലൈറ്റ് വയലറ്റ്</string>
     <string name="sesl_color_picker_green">പച്ച</string>
     <string name="sesl_color_picker_dark_yellow">ഇരുണ്ട മഞ്ഞ</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ಆಯ್ಕೆ</string>
     <string name="sesl_color_picker_recently_used_colors">ಇತ್ತೀಚೆಗೆ ಬಳಸಿರುವ ಬಣ್ಣಗಳು</string>
     <string name="sesl_color_picker_white">ಬಿಳಿ</string>
+    <string name="sesl_picker_done">ಮಾಡಿದೆ</string>
     <string name="sesl_color_picker_dark_green">ಗಾಢ ಹಸಿರು</string>
     <string name="sesl_color_opacity_text">ಅಪಾರದರ್ಶಕತೆ</string>
     <string name="sesl_color_picker_light_gray">ತಿಳಿ ಬೂದು ಬಣ್ಣ</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ನೇರಳೆ ಬಣ್ಣ</string>
     <string name="sesl_color_picker_color_six">ಆರನೇ ಬಣ್ಣ</string>
     <string name="sesl_color_picker_dark_red">ಗಾಢ ಕೆಂಪು ಬಣ್ಣ</string>
+    <string name="sesl_picker_cancel">ರದ್ದು</string>
     <string name="sesl_color_picker_light_violet">ತಿಳಿ ನೇರಳೆ ಬಣ್ಣ</string>
     <string name="sesl_color_picker_green">ಹಸಿರು</string>
     <string name="sesl_color_picker_dark_yellow">ಗಾಢ ಹಳದಿ</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">વિકલ્પ</string>
     <string name="sesl_color_picker_recently_used_colors">તાજેતરમાં ઉપયોગ કરાયેલા રંગો</string>
     <string name="sesl_color_picker_white">સફેદ</string>
+    <string name="sesl_picker_done">પૂર્ણ</string>
     <string name="sesl_color_picker_dark_green">ઘેરો લીલો</string>
     <string name="sesl_color_opacity_text">અપારદર્શિતા</string>
     <string name="sesl_color_picker_light_gray">આછો ભૂખરો</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">જાંબુડી</string>
     <string name="sesl_color_picker_color_six">રંગ છ</string>
     <string name="sesl_color_picker_dark_red">ઘેરો લાલ</string>
+    <string name="sesl_picker_cancel">રદ કરો</string>
     <string name="sesl_color_picker_light_violet">આછો જાંબુડી</string>
     <string name="sesl_color_picker_green">લીલો</string>
     <string name="sesl_color_picker_dark_yellow">ઘેરો પીળો</string>

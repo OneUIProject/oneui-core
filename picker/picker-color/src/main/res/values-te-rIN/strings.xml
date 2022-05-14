@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ఎంపిక</string>
     <string name="sesl_color_picker_recently_used_colors">ఇటీవలి ఉపయోగించిన రంగులు</string>
     <string name="sesl_color_picker_white">తెలుపు రంగు</string>
+    <string name="sesl_picker_done">పూర్తి</string>
     <string name="sesl_color_picker_dark_green">ముదురు ఆకుపచ్చ</string>
     <string name="sesl_color_opacity_text">అస్పష్టత</string>
     <string name="sesl_color_picker_light_gray">లైట్ గ్రే</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ఊదా రంగు</string>
     <string name="sesl_color_picker_color_six">ఆరవ రంగు</string>
     <string name="sesl_color_picker_dark_red">ముదురు ఎరుపు</string>
+    <string name="sesl_picker_cancel">రద్దు</string>
     <string name="sesl_color_picker_light_violet">లేత ఊదా రంగు</string>
     <string name="sesl_color_picker_green">ఆకుపచ్చ రంగు</string>
     <string name="sesl_color_picker_dark_yellow">ముదురు పసుపు రంగు</string>

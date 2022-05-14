@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Rogha</string>
     <string name="sesl_color_picker_recently_used_colors">Dathanna a úsáideadh le déanaí</string>
     <string name="sesl_color_picker_white">Bán</string>
+    <string name="sesl_picker_done">Déanta</string>
     <string name="sesl_color_picker_dark_green">Dúghlas</string>
     <string name="sesl_color_opacity_text">Teimhneacht</string>
     <string name="sesl_color_picker_light_gray">Liath geal</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Corcairghorm</string>
     <string name="sesl_color_picker_color_six">Dath a sé</string>
     <string name="sesl_color_picker_dark_red">Dúdhearg</string>
+    <string name="sesl_picker_cancel">Cuir ar ceal</string>
     <string name="sesl_color_picker_light_violet">Vialait éadrom</string>
     <string name="sesl_color_picker_green">Glas</string>
     <string name="sesl_color_picker_dark_yellow">Dúbhuí</string>

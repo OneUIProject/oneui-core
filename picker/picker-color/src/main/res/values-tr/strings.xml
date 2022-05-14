@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Seçenek</string>
     <string name="sesl_color_picker_recently_used_colors">Son kullanılan renkler</string>
     <string name="sesl_color_picker_white">Beyaz</string>
+    <string name="sesl_picker_done">Tamam</string>
     <string name="sesl_color_picker_dark_green">Koyu yeşil</string>
     <string name="sesl_color_opacity_text">Opaklık</string>
     <string name="sesl_color_picker_light_gray">Açık gri</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Eflatun</string>
     <string name="sesl_color_picker_color_six">Renk altı</string>
     <string name="sesl_color_picker_dark_red">Koyu kırmızı</string>
+    <string name="sesl_picker_cancel">İptal</string>
     <string name="sesl_color_picker_light_violet">Açık eflatun</string>
     <string name="sesl_color_picker_green">Yeşil</string>
     <string name="sesl_color_picker_dark_yellow">Koyu sarı</string>

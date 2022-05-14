@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Ընտրանք</string>
     <string name="sesl_color_picker_recently_used_colors">Վերջերս օգտագործված գույներ</string>
     <string name="sesl_color_picker_white">Սպիտակ</string>
+    <string name="sesl_picker_done">Արված է</string>
     <string name="sesl_color_picker_dark_green">Մուգ կանաչ</string>
     <string name="sesl_color_opacity_text">Անթափանցություն</string>
     <string name="sesl_color_picker_light_gray">Բաց մոխրագույն</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Մանուշակագույն</string>
     <string name="sesl_color_picker_color_six">Գույն վեց</string>
     <string name="sesl_color_picker_dark_red">Մուգ կարմիր</string>
+    <string name="sesl_picker_cancel">Չեղարկել</string>
     <string name="sesl_color_picker_light_violet">Բաց մանուշակագույն</string>
     <string name="sesl_color_picker_green">Կանաչ</string>
     <string name="sesl_color_picker_dark_yellow">Մուգ դեղին</string>

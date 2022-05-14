@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Сонголт</string>
     <string name="sesl_color_picker_recently_used_colors">Сүүлд ашигласан өнгө</string>
     <string name="sesl_color_picker_white">Цагаан</string>
+    <string name="sesl_picker_done">Болсон</string>
     <string name="sesl_color_picker_dark_green">Бараан ногоон</string>
     <string name="sesl_color_opacity_text">Тунгалаг биш</string>
     <string name="sesl_color_picker_light_gray">Цайвар саарал</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Чернилийн ягаан</string>
     <string name="sesl_color_picker_color_six">Өнгө зургаа</string>
     <string name="sesl_color_picker_dark_red">Хар улаан</string>
+    <string name="sesl_picker_cancel">Цуцлах</string>
     <string name="sesl_color_picker_light_violet">Цайвар хөх ягаан</string>
     <string name="sesl_color_picker_green">Ногоон</string>
     <string name="sesl_color_picker_dark_yellow">Бараан шар</string>

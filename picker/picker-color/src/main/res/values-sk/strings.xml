@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Možnosť</string>
     <string name="sesl_color_picker_recently_used_colors">Nedávno používané farby</string>
     <string name="sesl_color_picker_white">Biela</string>
+    <string name="sesl_picker_done">Hotovo</string>
     <string name="sesl_color_picker_dark_green">Tmavozelená</string>
     <string name="sesl_color_opacity_text">Nepriehľadnosť</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Fialová</string>
     <string name="sesl_color_picker_color_six">Farba šesť</string>
     <string name="sesl_color_picker_dark_red">Tmavá červená</string>
+    <string name="sesl_picker_cancel">Zrušiť</string>
     <string name="sesl_color_picker_light_violet">Svetlá fialová</string>
     <string name="sesl_color_picker_green">Zelená</string>
     <string name="sesl_color_picker_dark_yellow">Tmavožltá</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ຕົວເລືອກ</string>
     <string name="sesl_color_picker_recently_used_colors">ສີທີ່ໃຊ້ຫຼ້າສຸດ</string>
     <string name="sesl_color_picker_white">ສີຂາວ</string>
+    <string name="sesl_picker_done">ສໍາເລັດແລ້ວ</string>
     <string name="sesl_color_picker_dark_green">ສີຂຽວຄໍ້າ</string>
     <string name="sesl_color_opacity_text">ຄວາມມົວແສງ</string>
     <string name="sesl_color_picker_light_gray">ສີເທົາອ່ອນ</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ສີມ່ວງ</string>
     <string name="sesl_color_picker_color_six">ສີຫົກ</string>
     <string name="sesl_color_picker_dark_red">ສີແດງແກ່</string>
+    <string name="sesl_picker_cancel">ຍົກເລີກ</string>
     <string name="sesl_color_picker_light_violet">ສີມ້ວງອ່ອນ</string>
     <string name="sesl_color_picker_green">ສີຂຽວ</string>
     <string name="sesl_color_picker_dark_yellow">ສີເຫຼືອງແກ່</string>

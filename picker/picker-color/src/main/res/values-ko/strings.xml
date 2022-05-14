@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">옵션</string>
     <string name="sesl_color_picker_recently_used_colors">최근에 사용한 색상</string>
     <string name="sesl_color_picker_white">흰색</string>
+    <string name="sesl_picker_done">완료</string>
     <string name="sesl_color_picker_dark_green">다크 그린</string>
     <string name="sesl_color_opacity_text">불투명도</string>
     <string name="sesl_color_picker_light_gray">밝은 회색</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">보라</string>
     <string name="sesl_color_picker_color_six">색상 육</string>
     <string name="sesl_color_picker_dark_red">진한 빨간색</string>
+    <string name="sesl_picker_cancel">취소</string>
     <string name="sesl_color_picker_light_violet">연한 보라색</string>
     <string name="sesl_color_picker_green">초록색</string>
     <string name="sesl_color_picker_dark_yellow">진한 노란색</string>

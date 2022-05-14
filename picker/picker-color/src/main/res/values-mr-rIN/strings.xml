@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">पर्याय</string>
     <string name="sesl_color_picker_recently_used_colors">अलीकडे वापरलेले रंग</string>
     <string name="sesl_color_picker_white">पांढरा</string>
+    <string name="sesl_picker_done">झाले</string>
     <string name="sesl_color_picker_dark_green">गडद हिरवा</string>
     <string name="sesl_color_opacity_text">अपारदर्शकता</string>
     <string name="sesl_color_picker_light_gray">सौम्य करडा</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">जांभळा</string>
     <string name="sesl_color_picker_color_six">सहा रंग</string>
     <string name="sesl_color_picker_dark_red">गडद लाल रंग</string>
+    <string name="sesl_picker_cancel">रद्द</string>
     <string name="sesl_color_picker_light_violet">फिकट जांभळा रंग</string>
     <string name="sesl_color_picker_green">हिरवा</string>
     <string name="sesl_color_picker_dark_yellow">गडद पिवळा</string>

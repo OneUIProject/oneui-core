@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">གདམ་འཐུ</string>
     <string name="sesl_color_picker_recently_used_colors">ཉེ་དུས་བེད་སྤྱོད་བྱེད་པའི་ཚོན་མདོག</string>
     <string name="sesl_color_picker_white">དཀར་པོ།</string>
+    <string name="sesl_picker_done">ལས་ཟིན།</string>
     <string name="sesl_color_picker_dark_green">ལྗང་ནག</string>
     <string name="sesl_color_opacity_text">སྒྲིབ་ཚད།</string>
     <string name="sesl_color_picker_light_gray">སྐྱ་པོ།</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">སྨུག་པོ།</string>
     <string name="sesl_color_picker_color_six">ཚོན་མདོག་དྲུག་པ།</string>
     <string name="sesl_color_picker_dark_red">དམར་ནག</string>
+    <string name="sesl_picker_cancel">རྩིས་མེད།</string>
     <string name="sesl_color_picker_light_violet">སྨུག་སྲབ།</string>
     <string name="sesl_color_picker_green">ལྗང་གུ</string>
     <string name="sesl_color_picker_dark_yellow">སེར་སྟུག</string>

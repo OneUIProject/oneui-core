@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Опция</string>
     <string name="sesl_color_picker_recently_used_colors">Соңғы пайдаланылған түстер</string>
     <string name="sesl_color_picker_white">Ақ</string>
+    <string name="sesl_picker_done">Дайын</string>
     <string name="sesl_color_picker_dark_green">Қою жасыл</string>
     <string name="sesl_color_opacity_text">Бұлыңғырлық</string>
     <string name="sesl_color_picker_light_gray">Ашық сұр</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Күлгін</string>
     <string name="sesl_color_picker_color_six">Алтыншы түс</string>
     <string name="sesl_color_picker_dark_red">Қою қызыл</string>
+    <string name="sesl_picker_cancel">Тоқтату</string>
     <string name="sesl_color_picker_light_violet">Ашық күлгін</string>
     <string name="sesl_color_picker_green">Жасыл</string>
     <string name="sesl_color_picker_dark_yellow">Қою сары</string>

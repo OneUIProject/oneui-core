@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ਵਿਕਲਪ</string>
     <string name="sesl_color_picker_recently_used_colors">ਹਾਲ ਹੀ ਵਿੱਚ ਵਰਤੇ ਗਏ ਰੰਗ</string>
     <string name="sesl_color_picker_white">ਸਫੈਦ</string>
+    <string name="sesl_picker_done">ਪੂਰਨ</string>
     <string name="sesl_color_picker_dark_green">ਗੂੜ੍ਹਾ ਹਰਾ</string>
     <string name="sesl_color_opacity_text">ਅਪਾਰਦਰਸ਼ਤਾ</string>
     <string name="sesl_color_picker_light_gray">ਹਲਕਾ ਸਲੇਟੀ</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ਜਾਮਣੀ</string>
     <string name="sesl_color_picker_color_six">ਛੇਵਾਂ ਰੰਗ</string>
     <string name="sesl_color_picker_dark_red">ਗੂੜਾ ਲਾਲ</string>
+    <string name="sesl_picker_cancel">ਰੱਦ ਕਰੋ</string>
     <string name="sesl_color_picker_light_violet">ਹਲਕਾ ਜਾਮਣੀ</string>
     <string name="sesl_color_picker_green">ਹਰਾ</string>
     <string name="sesl_color_picker_dark_yellow">ਗੂੜ੍ਹਾ ਪੀਲਾ</string>

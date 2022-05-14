@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">گزینه</string>
     <string name="sesl_color_picker_recently_used_colors">رنگ‌های اخیراً استفاده شده</string>
     <string name="sesl_color_picker_white">سفید</string>
+    <string name="sesl_picker_done">انجام شد</string>
     <string name="sesl_color_picker_dark_green">سبز تیره</string>
     <string name="sesl_color_opacity_text">شفافیت</string>
     <string name="sesl_color_picker_light_gray">خاکستری روشن</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">بنفش</string>
     <string name="sesl_color_picker_color_six">رنگ شش</string>
     <string name="sesl_color_picker_dark_red">قرمز تیره</string>
+    <string name="sesl_picker_cancel">لغو</string>
     <string name="sesl_color_picker_light_violet">بنفش روشن</string>
     <string name="sesl_color_picker_green">سبز</string>
     <string name="sesl_color_picker_dark_yellow">زرد تیره</string>

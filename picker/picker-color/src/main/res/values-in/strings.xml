@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opsi</string>
     <string name="sesl_color_picker_recently_used_colors">Warna yang baru digunakan</string>
     <string name="sesl_color_picker_white">Putih</string>
+    <string name="sesl_picker_done">Selesai</string>
     <string name="sesl_color_picker_dark_green">Dark green</string>
     <string name="sesl_color_opacity_text">Keburaman</string>
     <string name="sesl_color_picker_light_gray">Abu-abu muda</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violet</string>
     <string name="sesl_color_picker_color_six">Warna enam</string>
     <string name="sesl_color_picker_dark_red">Merah tua</string>
+    <string name="sesl_picker_cancel">Batal</string>
     <string name="sesl_color_picker_light_violet">Violet muda</string>
     <string name="sesl_color_picker_green">Hijau</string>
     <string name="sesl_color_picker_dark_yellow">Kuning tua</string>

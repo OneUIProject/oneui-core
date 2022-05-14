@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Iespēja</string>
     <string name="sesl_color_picker_recently_used_colors">Nesen lietotās krāsas</string>
     <string name="sesl_color_picker_white">Balta</string>
+    <string name="sesl_picker_done">Gatavs</string>
     <string name="sesl_color_picker_dark_green">Tumši zaļa</string>
     <string name="sesl_color_opacity_text">Necaurredzamība</string>
     <string name="sesl_color_picker_light_gray">Gaiši pelēka</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violeta</string>
     <string name="sesl_color_picker_color_six">Sestā krāsa</string>
     <string name="sesl_color_picker_dark_red">Tumši sarkana</string>
+    <string name="sesl_picker_cancel">Atcelt</string>
     <string name="sesl_color_picker_light_violet">Gaiši violeta</string>
     <string name="sesl_color_picker_green">Zaļa</string>
     <string name="sesl_color_picker_dark_yellow">Tumši dzeltena</string>

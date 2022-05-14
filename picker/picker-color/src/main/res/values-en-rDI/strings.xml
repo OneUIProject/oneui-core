@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">DREAM_IDLE_TBOPT_OPTION</string>
     <string name="sesl_color_picker_recently_used_colors">DREAM_ST_HEADER_RECENTLY_USED_COLORS</string>
     <string name="sesl_color_picker_white">DREAM_IDLE_TBOPT_WHITE</string>
+    <string name="sesl_picker_done">IDS_GALLERY_BUTTON_DONE</string>
     <string name="sesl_color_picker_dark_green">DREAM_IDLE_TBOPT_DARK_GREEN</string>
     <string name="sesl_color_opacity_text">DREAM_IDLE_OPT_OPACITY</string>
     <string name="sesl_color_picker_light_gray">DREAM_IDLE_TBOPT_LIGHT_GRAY</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">DREAM_IDLE_TBOPT_VIOLET</string>
     <string name="sesl_color_picker_color_six">DREAM_IDLE_TBOPT_COLOR_SIX</string>
     <string name="sesl_color_picker_dark_red">DREAM_IDLE_TBOPT_DARK_RED</string>
+    <string name="sesl_picker_cancel">IDS_COM_SK_CANCEL</string>
     <string name="sesl_color_picker_light_violet">DREAM_IDLE_TBOPT_LIGHT_VIOLET</string>
     <string name="sesl_color_picker_green">sesl_color_picker_green</string>
     <string name="sesl_color_picker_dark_yellow">DREAM_IDLE_TBOPT_DARK_YELLOW</string>

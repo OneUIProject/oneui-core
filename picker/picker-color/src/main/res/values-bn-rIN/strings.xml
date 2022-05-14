@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">বিকল্প</string>
     <string name="sesl_color_picker_recently_used_colors">সম্প্রতি ব্যবহৃত রঙগুলি</string>
     <string name="sesl_color_picker_white">সাদা</string>
+    <string name="sesl_picker_done">সম্পন্ন</string>
     <string name="sesl_color_picker_dark_green">গাঢ় সবুজ</string>
     <string name="sesl_color_opacity_text">অস্বচ্ছতা</string>
     <string name="sesl_color_picker_light_gray">হালকা ধূসর</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">বেগুলী</string>
     <string name="sesl_color_picker_color_six">ছয় নম্বরের রঙ</string>
     <string name="sesl_color_picker_dark_red">গাঢ় লাল</string>
+    <string name="sesl_picker_cancel">বাতিল</string>
     <string name="sesl_color_picker_light_violet">হালকা বেগুনী</string>
     <string name="sesl_color_picker_green">সবুজ</string>
     <string name="sesl_color_picker_dark_yellow">গাঢ় হলুদ</string>

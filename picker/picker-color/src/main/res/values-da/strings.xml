@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Indstilling</string>
     <string name="sesl_color_picker_recently_used_colors">Senest brugte farver</string>
     <string name="sesl_color_picker_white">Hvid</string>
+    <string name="sesl_picker_done">Udført</string>
     <string name="sesl_color_picker_dark_green">Mørkegrøn</string>
     <string name="sesl_color_opacity_text">Uigennemsigtighed</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violet</string>
     <string name="sesl_color_picker_color_six">Farve seks</string>
     <string name="sesl_color_picker_dark_red">Mørkerød</string>
+    <string name="sesl_picker_cancel">Annuller</string>
     <string name="sesl_color_picker_light_violet">Lys violet</string>
     <string name="sesl_color_picker_green">Grøn</string>
     <string name="sesl_color_picker_dark_yellow">Mørk gul</string>

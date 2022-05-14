@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opció</string>
     <string name="sesl_color_picker_recently_used_colors">Colors utilitzats fa poc</string>
     <string name="sesl_color_picker_white">Blanc</string>
+    <string name="sesl_picker_done">Fet</string>
     <string name="sesl_color_picker_dark_green">Verd fosc</string>
     <string name="sesl_color_opacity_text">Opacitat</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violeta</string>
     <string name="sesl_color_picker_color_six">Sisè color</string>
     <string name="sesl_color_picker_dark_red">Vermell fosc</string>
+    <string name="sesl_picker_cancel">Cancel·lar</string>
     <string name="sesl_color_picker_light_violet">Violeta clar</string>
     <string name="sesl_color_picker_green">Verd</string>
     <string name="sesl_color_picker_dark_yellow">Groc fosc</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ବିକଳ୍ପ</string>
     <string name="sesl_color_picker_recently_used_colors">ସାମ୍ପ୍ରତିକ ଭାବେ ବ୍ୟବହାର ହୋଇଥିବା ରଙ୍ଗଗୁଡିକ</string>
     <string name="sesl_color_picker_white">ଧଳା</string>
+    <string name="sesl_picker_done">ସମାପ୍ତ</string>
     <string name="sesl_color_picker_dark_green">ଗାଢ ସବୁଜ</string>
     <string name="sesl_color_opacity_text">ଓପାସିଟି</string>
     <string name="sesl_color_picker_light_gray">ହାଲୁକା ଧୂସର</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ବାଇଗଣୀ</string>
     <string name="sesl_color_picker_color_six">ରଙ୍ଗ ଛଅ</string>
     <string name="sesl_color_picker_dark_red">ଗାଢ ଲାଲ୍</string>
+    <string name="sesl_picker_cancel">ବାତିଲ୍</string>
     <string name="sesl_color_picker_light_violet">ହାଲୁକା ଭାଓଲେଟ୍</string>
     <string name="sesl_color_picker_green">ସବୁଜ</string>
     <string name="sesl_color_picker_dark_yellow">ଗାଢ ହଳଦିଆ</string>

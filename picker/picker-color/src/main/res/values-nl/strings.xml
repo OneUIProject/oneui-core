@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Optie</string>
     <string name="sesl_color_picker_recently_used_colors">Recent gebruikte kleuren</string>
     <string name="sesl_color_picker_white">Wit</string>
+    <string name="sesl_picker_done">Gereed</string>
     <string name="sesl_color_picker_dark_green">Donkergroen</string>
     <string name="sesl_color_opacity_text">Ondoorzichtigheid</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Paars</string>
     <string name="sesl_color_picker_color_six">Kleur zes</string>
     <string name="sesl_color_picker_dark_red">Donkerrood</string>
+    <string name="sesl_picker_cancel">Annuleren</string>
     <string name="sesl_color_picker_light_violet">Lichtpaars</string>
     <string name="sesl_color_picker_green">Groen</string>
     <string name="sesl_color_picker_dark_yellow">Donkergeel</string>

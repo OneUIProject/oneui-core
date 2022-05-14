@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opsiýa</string>
     <string name="sesl_color_picker_recently_used_colors">Soňky ulanylan reňkler</string>
     <string name="sesl_color_picker_white">Ak</string>
+    <string name="sesl_picker_done">Tamam</string>
     <string name="sesl_color_picker_dark_green">Goýy ýaşyl</string>
     <string name="sesl_color_opacity_text">Tutuklyk</string>
     <string name="sesl_color_picker_light_gray">Açyk çal</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Melewşe</string>
     <string name="sesl_color_picker_color_six">Reňk alty</string>
     <string name="sesl_color_picker_dark_red">Goýy gyzyl</string>
+    <string name="sesl_picker_cancel">Ýatyr</string>
     <string name="sesl_color_picker_light_violet">Açyk melewşe</string>
     <string name="sesl_color_picker_green">Ýaşyl</string>
     <string name="sesl_color_picker_dark_yellow">Goýy sary</string>

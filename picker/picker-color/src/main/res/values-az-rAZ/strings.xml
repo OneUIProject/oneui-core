@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Seçim</string>
     <string name="sesl_color_picker_recently_used_colors">Son istifadə edilən rənglər</string>
     <string name="sesl_color_picker_white">Ağ</string>
+    <string name="sesl_picker_done">Tamam</string>
     <string name="sesl_color_picker_dark_green">Tünd yaşıl</string>
     <string name="sesl_color_opacity_text">Tutqunluq</string>
     <string name="sesl_color_picker_light_gray">Açıq boz</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Bənövşəyi</string>
     <string name="sesl_color_picker_color_six">Rəng altı</string>
     <string name="sesl_color_picker_dark_red">Tünd al qırmızı</string>
+    <string name="sesl_picker_cancel">Ləğv et</string>
     <string name="sesl_color_picker_light_violet">Açıq bənövşəyi</string>
     <string name="sesl_color_picker_green">Yaşıl</string>
     <string name="sesl_color_picker_dark_yellow">Tünd sarı</string>

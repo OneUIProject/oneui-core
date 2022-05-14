@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">বিকল্প</string>
     <string name="sesl_color_picker_recently_used_colors">শেহতীয়াকৈ ব্যৱহৃত ৰং</string>
     <string name="sesl_color_picker_white">বগা</string>
+    <string name="sesl_picker_done">সম্পন্ন</string>
     <string name="sesl_color_picker_dark_green">গাঢ় সেউজীয়া</string>
     <string name="sesl_color_opacity_text">অস্পষ্টতা</string>
     <string name="sesl_color_picker_light_gray">পাতল ধূষৰ ৰং</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">বেঙুনীয়া</string>
     <string name="sesl_color_picker_color_six">ছষ্ঠ ৰং</string>
     <string name="sesl_color_picker_dark_red">গাঢ় ৰঙা</string>
+    <string name="sesl_picker_cancel">বাতিল কৰক</string>
     <string name="sesl_color_picker_light_violet">পাতল বেঙুনীয়া</string>
     <string name="sesl_color_picker_green">সেউজীয়া</string>
     <string name="sesl_color_picker_dark_yellow">গাঢ় হালধীয়া</string>

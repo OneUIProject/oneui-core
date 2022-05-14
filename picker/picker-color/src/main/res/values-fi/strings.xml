@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Asetus</string>
     <string name="sesl_color_picker_recently_used_colors">Viimeksi käytetyt värit</string>
     <string name="sesl_color_picker_white">Valkoinen</string>
+    <string name="sesl_picker_done">Valmis</string>
     <string name="sesl_color_picker_dark_green">Dark green</string>
     <string name="sesl_color_opacity_text">Peittävyys</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violetti</string>
     <string name="sesl_color_picker_color_six">Väri kuusi</string>
     <string name="sesl_color_picker_dark_red">Tummanpunainen</string>
+    <string name="sesl_picker_cancel">Peruuta</string>
     <string name="sesl_color_picker_light_violet">Vaalea violetti</string>
     <string name="sesl_color_picker_green">Vihreä</string>
     <string name="sesl_color_picker_dark_yellow">Tummankeltainen</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opzione</string>
     <string name="sesl_color_picker_recently_used_colors">Colori usati di recente</string>
     <string name="sesl_color_picker_white">Bianco</string>
+    <string name="sesl_picker_done">Fatto</string>
     <string name="sesl_color_picker_dark_green">Verde scuro</string>
     <string name="sesl_color_opacity_text">Opacità</string>
     <string name="sesl_color_picker_light_gray">Grigio chiaro</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violetto</string>
     <string name="sesl_color_picker_color_six">Sesto colore</string>
     <string name="sesl_color_picker_dark_red">Rosso scuro</string>
+    <string name="sesl_picker_cancel">Annulla</string>
     <string name="sesl_color_picker_light_violet">Viola chiaro</string>
     <string name="sesl_color_picker_green">Verde</string>
     <string name="sesl_color_picker_dark_yellow">Giallo scuro</string>

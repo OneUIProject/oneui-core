@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Alternativ</string>
     <string name="sesl_color_picker_recently_used_colors">Nyligen använda färger</string>
     <string name="sesl_color_picker_white">Vitt</string>
+    <string name="sesl_picker_done">Klar</string>
     <string name="sesl_color_picker_dark_green">Mörkgrönt</string>
     <string name="sesl_color_opacity_text">Transparens</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Violett</string>
     <string name="sesl_color_picker_color_six">Färg sex</string>
     <string name="sesl_color_picker_dark_red">Mörkrött</string>
+    <string name="sesl_picker_cancel">Avbryt</string>
     <string name="sesl_color_picker_light_violet">Ljust violett</string>
     <string name="sesl_color_picker_green">Grönt</string>
     <string name="sesl_color_picker_dark_yellow">Mörkgul</string>

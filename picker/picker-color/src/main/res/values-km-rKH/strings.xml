@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ជម្រើស</string>
     <string name="sesl_color_picker_recently_used_colors">ពណ៌​ដែល​បាន​ប្រើ​ថ្មីៗ</string>
     <string name="sesl_color_picker_white">ស</string>
+    <string name="sesl_picker_done">រួចរាល់</string>
     <string name="sesl_color_picker_dark_green">បៃតង​ចាស់</string>
     <string name="sesl_color_opacity_text">ភាពស្រអាប់</string>
     <string name="sesl_color_picker_light_gray">ប្រផេះ​ស្រាល</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">ស្វាយ</string>
     <string name="sesl_color_picker_color_six">ពណ៌​ប្រាំមួយ</string>
     <string name="sesl_color_picker_dark_red">ក្រហម​ចាស់</string>
+    <string name="sesl_picker_cancel">បោះបង់</string>
     <string name="sesl_color_picker_light_violet">ស្វាយ​ស្រាល</string>
     <string name="sesl_color_picker_green">បៃតង</string>
     <string name="sesl_color_picker_dark_yellow">លឿង​ចាស់</string>

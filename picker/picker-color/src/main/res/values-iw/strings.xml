@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">אפשרות</string>
     <string name="sesl_color_picker_recently_used_colors">צבעים שהיו בשימוש לאחרונה</string>
     <string name="sesl_color_picker_white">לבן</string>
+    <string name="sesl_picker_done">סיום</string>
     <string name="sesl_color_picker_dark_green">ירוק כהה</string>
     <string name="sesl_color_opacity_text">שקיפות</string>
     <string name="sesl_color_picker_light_gray">אפור בהיר</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">סגול</string>
     <string name="sesl_color_picker_color_six">צבע שישי</string>
     <string name="sesl_color_picker_dark_red">אדום כהה</string>
+    <string name="sesl_picker_cancel">ביטול</string>
     <string name="sesl_color_picker_light_violet">סגול בהיר</string>
     <string name="sesl_color_picker_green">ירוק</string>
     <string name="sesl_color_picker_dark_yellow">צהוב כהה</string>

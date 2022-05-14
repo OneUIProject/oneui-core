@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opsion</string>
     <string name="sesl_color_picker_recently_used_colors">Ngjyrat përdorur së fundi</string>
     <string name="sesl_color_picker_white">E bardhë</string>
+    <string name="sesl_picker_done">Kryer</string>
     <string name="sesl_color_picker_dark_green">E gjelbër e errët</string>
     <string name="sesl_color_opacity_text">Opaciteti</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Vjollcë</string>
     <string name="sesl_color_picker_color_six">Ngjyra gjashtë</string>
     <string name="sesl_color_picker_dark_red">E kuqe e errët</string>
+    <string name="sesl_picker_cancel">Anulo</string>
     <string name="sesl_color_picker_light_violet">Vjollcë e çelët</string>
     <string name="sesl_color_picker_green">E gjelbër</string>
     <string name="sesl_color_picker_dark_yellow">E verdhë e errët</string>

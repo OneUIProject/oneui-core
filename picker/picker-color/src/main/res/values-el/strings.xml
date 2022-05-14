@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Επιλογή</string>
     <string name="sesl_color_picker_recently_used_colors">Χρώματα που χρησιμοποιήθηκαν πρόσφατα</string>
     <string name="sesl_color_picker_white">Λευκό</string>
+    <string name="sesl_picker_done">Τέλος</string>
     <string name="sesl_color_picker_dark_green">Σκούρο πράσινο</string>
     <string name="sesl_color_opacity_text">Αδιαφάνεια</string>
     <string name="sesl_color_picker_light_gray">Ανοιχτό γκρί</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Βιολετί</string>
     <string name="sesl_color_picker_color_six">Χρώμα έξι</string>
     <string name="sesl_color_picker_dark_red">Σκούρο κόκκινο</string>
+    <string name="sesl_picker_cancel">Ακύρωση</string>
     <string name="sesl_color_picker_light_violet">Ανοιχτό βιολετί</string>
     <string name="sesl_color_picker_green">Πράσινο</string>
     <string name="sesl_color_picker_dark_yellow">Σκούρο κίτρινο</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">اختیار</string>
     <string name="sesl_color_picker_recently_used_colors">حالیہ استعمال کردہ رنگیں</string>
     <string name="sesl_color_picker_white">سفید</string>
+    <string name="sesl_picker_done">مکمل</string>
     <string name="sesl_color_picker_dark_green">گہرا سبز</string>
     <string name="sesl_color_opacity_text">دھندلا پن</string>
     <string name="sesl_color_picker_light_gray">ہلکا سرمئی</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">وایلیٹ</string>
     <string name="sesl_color_picker_color_six">چھٹا رنگ</string>
     <string name="sesl_color_picker_dark_red">گہرا لال</string>
+    <string name="sesl_picker_cancel">منسوخ</string>
     <string name="sesl_color_picker_light_violet">ہلکا بنفشہ</string>
     <string name="sesl_color_picker_green">سبز</string>
     <string name="sesl_color_picker_dark_yellow">گاڑھا پیلا</string>

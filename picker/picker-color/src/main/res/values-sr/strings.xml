@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Opcija</string>
     <string name="sesl_color_picker_recently_used_colors">Nedavno korišćene boje</string>
     <string name="sesl_color_picker_white">Bela</string>
+    <string name="sesl_picker_done">Gotovo</string>
     <string name="sesl_color_picker_dark_green">Tamnozelena</string>
     <string name="sesl_color_opacity_text">Neprozirnost</string>
     <string name="sesl_color_picker_light_gray">Svetlosiva</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Ljubičasta</string>
     <string name="sesl_color_picker_color_six">Boja broj šest</string>
     <string name="sesl_color_picker_dark_red">Tamnocrvena</string>
+    <string name="sesl_picker_cancel">Otkaži</string>
     <string name="sesl_color_picker_light_violet">Svetloljubičasta</string>
     <string name="sesl_color_picker_green">Zelena</string>
     <string name="sesl_color_picker_dark_yellow">Tamnožuta</string>

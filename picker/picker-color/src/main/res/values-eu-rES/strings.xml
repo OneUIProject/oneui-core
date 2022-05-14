@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Aukera</string>
     <string name="sesl_color_picker_recently_used_colors">Berriki erabilitako koloreak</string>
     <string name="sesl_color_picker_white">Zuria</string>
+    <string name="sesl_picker_done">Eginda</string>
     <string name="sesl_color_picker_dark_green">Berde iluna</string>
     <string name="sesl_color_opacity_text">Opakutasuna</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Bioleta</string>
     <string name="sesl_color_picker_color_six">Seigarren kolorea</string>
     <string name="sesl_color_picker_dark_red">Gorri iluna</string>
+    <string name="sesl_picker_cancel">Utzi</string>
     <string name="sesl_color_picker_light_violet">Bioleta argia</string>
     <string name="sesl_color_picker_green">Berdea</string>
     <string name="sesl_color_picker_dark_yellow">Hori iluna</string>

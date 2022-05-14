@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Имкон</string>
     <string name="sesl_color_picker_recently_used_colors">Рангҳои ба наздикӣ истифодашуда</string>
     <string name="sesl_color_picker_white">Сафед</string>
+    <string name="sesl_picker_done">Иҷро шуд</string>
     <string name="sesl_color_picker_dark_green">Сабзи амиқ</string>
     <string name="sesl_color_opacity_text">Ношаффофӣ</string>
     <string name="sesl_color_picker_light_gray">Хокистариранги кушод</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Бунафш</string>
     <string name="sesl_color_picker_color_six">Ранги шаш</string>
     <string name="sesl_color_picker_dark_red">Сурхи тира</string>
+    <string name="sesl_picker_cancel">Бекор кардан</string>
     <string name="sesl_color_picker_light_violet">Бунафшранги кушод</string>
     <string name="sesl_color_picker_green">Сабз</string>
     <string name="sesl_color_picker_dark_yellow">Зарди тира</string>

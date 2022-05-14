@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">विकल्प</string>
     <string name="sesl_color_picker_recently_used_colors">हालै प्रयोग गरिएका रङहरू</string>
     <string name="sesl_color_picker_white">सेतो</string>
+    <string name="sesl_picker_done">भयो</string>
     <string name="sesl_color_picker_dark_green">गाढा हरियो</string>
     <string name="sesl_color_opacity_text">अपारदर्शिता</string>
     <string name="sesl_color_picker_light_gray">हल्क‍ा खैरो</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">प्याजी</string>
     <string name="sesl_color_picker_color_six">रंग छ</string>
     <string name="sesl_color_picker_dark_red">गाढा रातो</string>
+    <string name="sesl_picker_cancel">रद्द</string>
     <string name="sesl_color_picker_light_violet">हल्का बैजनी</string>
     <string name="sesl_color_picker_green">हरियो</string>
     <string name="sesl_color_picker_dark_yellow">गाढा पहेंलो</string>

@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">Beállítás</string>
     <string name="sesl_color_picker_recently_used_colors">Legutóbb használt színek</string>
     <string name="sesl_color_picker_white">Fehér</string>
+    <string name="sesl_picker_done">Kész</string>
     <string name="sesl_color_picker_dark_green">Sötétzöld</string>
     <string name="sesl_color_opacity_text">Áttetszőség</string>
     <string name="sesl_color_picker_light_gray">Light gray</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">Ibolya</string>
     <string name="sesl_color_picker_color_six">Hatodik szín</string>
     <string name="sesl_color_picker_dark_red">Sötétpiros</string>
+    <string name="sesl_picker_cancel">Mégse</string>
     <string name="sesl_color_picker_light_violet">Világosibolya</string>
     <string name="sesl_color_picker_green">Zöld</string>
     <string name="sesl_color_picker_dark_yellow">Sötétsárga</string>

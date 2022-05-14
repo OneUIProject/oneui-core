@@ -5,6 +5,7 @@
     <string name="sesl_color_picker_option">ვარიანტი</string>
     <string name="sesl_color_picker_recently_used_colors">ბოლოდროს გამოყენებული ფერები</string>
     <string name="sesl_color_picker_white">თეთრი</string>
+    <string name="sesl_picker_done">შესრულდა</string>
     <string name="sesl_color_picker_dark_green">მუქი მწვანე</string>
     <string name="sesl_color_opacity_text">გამჭვირვალობა</string>
     <string name="sesl_color_picker_light_gray">ღია ნაცრისფერი</string>
@@ -33,6 +34,7 @@
     <string name="sesl_color_picker_violet">იისფერი</string>
     <string name="sesl_color_picker_color_six">ფერი ექვსი</string>
     <string name="sesl_color_picker_dark_red">მუქი წითელი</string>
+    <string name="sesl_picker_cancel">გაუქმება</string>
     <string name="sesl_color_picker_light_violet">ღია იისფერი</string>
     <string name="sesl_color_picker_green">მწვანე</string>
     <string name="sesl_color_picker_dark_yellow">მუქი ყვითელი</string>

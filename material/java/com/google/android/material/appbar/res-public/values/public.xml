@@ -48,6 +48,9 @@
   <public name="ThemeOverlay.MaterialComponents.Toolbar.Surface" type="style"/>
   <public name="TextAppearance.Design.CollapsingToolbar.Expanded" type="style"/>
   <public name="appbar_scrolling_view_behavior" type="string"/>
+  <public name="sesl_blur_header_behavior" type="string"/>
+  <public name="sesl_blur_scroll1ing_behavior" type="string"/>
+  <public name="sesl_immersive_scrolling_behavior" type="string"/>
   <public name="expanded" type="attr"/>
   <public name="liftOnScroll" type="attr"/>
   <public name="liftOnScrollTargetViewId" type="attr"/>

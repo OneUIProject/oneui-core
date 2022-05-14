@@ -235,8 +235,8 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
             mBundle = getBundle();
 
             if (mBundle != null) {
-                if (mBundle.containsKey("indexscroll_index_titles")
-                        && mBundle.containsKey("indexscroll_index_counts")) {
+                if (mBundle.containsKey(INDEXSCROLL_INDEX_TITLES)
+                        && mBundle.containsKey(INDEXSCROLL_INDEX_COUNTS)) {
                     getBundleInfo();
                 }
             } else {
@@ -404,8 +404,8 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
     // kang
 
     private void getBundleInfo() {
-        final String[] sections = mBundle.getStringArray("indexscroll_index_titles");
-        final int[] counts = mBundle.getIntArray("indexscroll_index_counts");
+        final String[] sections = mBundle.getStringArray(INDEXSCROLL_INDEX_TITLES);
+        final int[] counts = mBundle.getIntArray(INDEXSCROLL_INDEX_COUNTS);
 
         int basePosition = mProfileItemCount;
         int baseSectionIndex = 0;

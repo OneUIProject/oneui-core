@@ -872,7 +872,8 @@ public class SeslIndexScrollView extends FrameLayout {
             mPreviewLimitY = rsrc.getDimension(R.dimen.sesl_index_scroll_preview_ypos_limit);
 
             TypedValue outValue = new TypedValue();
-            mContext.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
+            final Resources.Theme theme = mContext.getTheme();
+            theme.resolveAttribute(R.attr.colorPrimary, outValue, true);
             final int colorPrimary = outValue.resourceId != 0
                     ? ResourcesCompat.getColor(rsrc, outValue.resourceId, null) : outValue.data;
 
@@ -890,20 +891,16 @@ public class SeslIndexScrollView extends FrameLayout {
 
             mContext.getTheme().resolveAttribute(R.attr.isLightTheme, outValue, true);
             if (outValue.data != 0) {
-                mTextColorDimmed = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_text_color_light,
-                        mContext.getTheme());
-                mBgTintColor = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_background_tint_color_light,
-                        mContext.getTheme());
+                mTextColorDimmed = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_text_color_light, theme);
+                mBgTintColor = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_background_tint_color_light, theme);
                 mIndexScrollPreview.setBackgroundColor(getColorWithAlpha(colorPrimary, 0.8f));
             } else {
-                mTextColorDimmed = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_text_color_dark,
-                        mContext.getTheme());
-                mBgTintColor = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_background_tint_color_dark,
-                        mContext.getTheme());
+                mTextColorDimmed = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_text_color_dark, theme);
+                mBgTintColor = ResourcesCompat.getColor(rsrc, R.color.sesl_index_bar_background_tint_color_dark, theme);
                 mIndexScrollPreview.setBackgroundColor(getColorWithAlpha(colorPrimary, 0.75f));
             }
 
-            mBgDrawableDefault = rsrc.getDrawable(R.drawable.sesl_index_bar_bg, mContext.getTheme());;
+            mBgDrawableDefault = rsrc.getDrawable(R.drawable.sesl_index_bar_bg, theme);
             mBgDrawableDefault.setColorFilter(mBgTintColor, PorterDuff.Mode.MULTIPLY);
 
             mEnableTextMode = false;
@@ -1506,12 +1503,14 @@ public class SeslIndexScrollView extends FrameLayout {
         @Override
         protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
             if (mId == virtualViewId) {
+                final Resources res = getResources();
+
                 StringBuilder contentDescription
-                        = new StringBuilder(getResources().getString(R.string.sesl_index_section));
+                        = new StringBuilder(res.getString(R.string.sesl_index_section));
                 contentDescription.append(", ");
-                contentDescription.append(getResources().getString(R.string.sesl_index_scrollbar));
+                contentDescription.append(res.getString(R.string.sesl_index_scrollbar));
                 contentDescription.append(", ");
-                contentDescription.append(getResources().getString(R.string.sesl_index_assistant_text));
+                contentDescription.append(res.getString(R.string.sesl_index_assistant_text));
 
                 node.setContentDescription(contentDescription);
                 node.setBoundsInParent(mIndexScroll.mBgRect);

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">ಸ್ಕ್ರಾಲ್ ಮಾಡಲು ಎರಡು ಕೈಬೆರಳುಗಳೊಂದಿಗೆ ಮೇಲಕ್ಕೆ ಅಥವಾ ಕೆಳಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ.</string>
-    <string name="sesl_index_section">ವಿಭಾಗ ಇಂಡೆಕ್ಸ್</string>
-    <string name="sesl_index_selected">ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ</string>
-    <string name="sesl_index_scrollbar">ಸ್ಕ್ರಾಲ್ ಬಾರ್</string>
-</resources>

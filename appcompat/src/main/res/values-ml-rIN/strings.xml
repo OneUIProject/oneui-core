@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">കൂടുതല്‍</string>
     <string name="sesl_searchview_description_query">തിരച്ചില്‍ സംശയം</string>
     <string name="sesl_searchview_description_submit">ക്വറി സമര്‍പ്പിക്കുക</string>
+    <string name="sesl_index_assistant_text">സ്ക്രോൾ ചെയ്യുന്നതിന് രണ്ട് വിരലുകളുപയോഗിച്ച് മേലേയ്ക്കോ താഴേയ്ക്കോ സ്വൈപ് ചെയ്യുക.</string>
+    <string name="sesl_index_section">വിഭാഗ സൂചിക</string>
+    <string name="sesl_index_selected">തിരഞ്ഞെടുത്തു</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">പുതിയ ഉള്ളടക്കം ലഭ്യം</string>
     <string name="sesl_search_hint">തിരയുക</string>
     <string name="sesl_action_menu_overflow_description">കൂടുതൽ ഐച്ഛികങ്ങൾ</string>
     <string name="sesl_switchbar_off_text">ഓഫ്</string>
     <string name="sesl_switchbar_on_text">ഓണ്‍</string>
+    <string name="sesl_index_scrollbar">സ്ക്രോൾ ബാർ</string>
     <string name="sesl_searchview_description_clear">തിരയൽ ഫീൽഡ് മായ്ക്കുക</string>
     <string name="sesl_searchview_description_search">തിരയുക</string>
     <string name="sesl_toolbar_collapse_description">ചുരുക്കുക</string>

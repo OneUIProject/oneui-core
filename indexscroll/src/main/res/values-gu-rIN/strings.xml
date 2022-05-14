@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">સ્ક્રોલ કરવા માટે બે આંગળી વડે ઉપર અથવા નીચે સ્વાઇપ કરો.</string>
-    <string name="sesl_index_section">વિભાગની અનુક્રમણિકા</string>
-    <string name="sesl_index_selected">પસંદ કરેલ</string>
-    <string name="sesl_index_scrollbar">સ્ક્રૉલ બાર</string>
-</resources>

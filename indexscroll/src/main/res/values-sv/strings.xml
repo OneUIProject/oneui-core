@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Bläddra genom att svepa uppåt eller nedåt med två fingrar.</string>
-    <string name="sesl_index_section">Avsnittsindex</string>
-    <string name="sesl_index_selected">Valt</string>
-    <string name="sesl_index_scrollbar">Rullningslist</string>
-</resources>

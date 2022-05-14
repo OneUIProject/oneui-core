@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Przeciągnij w górę lub w dół dwoma palcami, aby przewinąć.</string>
-    <string name="sesl_index_section">Indeks sekcji</string>
-    <string name="sesl_index_selected">Wybrano</string>
-    <string name="sesl_index_scrollbar">Pasek przewijania</string>
-</resources>

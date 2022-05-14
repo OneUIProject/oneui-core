@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">اسکرول کرنے کیلئے دو انگلیوں کی مدد سے اوپر یا نیچے سوائپ کریں۔</string>
-    <string name="sesl_index_section">سیکشن انڈیکس</string>
-    <string name="sesl_index_selected">منتخب شدہ</string>
-    <string name="sesl_index_scrollbar">اسکرول بار</string>
-</resources>

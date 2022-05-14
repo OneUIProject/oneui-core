@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Veeg omhoog of omlaag met twee vingers om te scrollen.</string>
-    <string name="sesl_index_section">Sectie-index</string>
-    <string name="sesl_index_selected">Geselecteerd</string>
-    <string name="sesl_index_scrollbar">Schuifbalk</string>
-</resources>

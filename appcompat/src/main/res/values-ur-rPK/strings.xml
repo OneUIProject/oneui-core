@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">مزید</string>
     <string name="sesl_searchview_description_query">سوال تلاش کریں</string>
     <string name="sesl_searchview_description_submit">سوال ارسال کریں</string>
+    <string name="sesl_index_assistant_text">اسکرول کرنے کیلئے دو انگلیوں کی مدد سے اوپر یا نیچے سوائپ کریں۔</string>
+    <string name="sesl_index_section">سیکشن انڈیکس</string>
+    <string name="sesl_index_selected">منتخب شدہ</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">نیا مواد دستیاب ہے</string>
     <string name="sesl_search_hint">تلاش کریں</string>
     <string name="sesl_action_menu_overflow_description">مزيد اختیارات</string>
     <string name="sesl_switchbar_off_text">آف</string>
     <string name="sesl_switchbar_on_text">آن</string>
+    <string name="sesl_index_scrollbar">اسکرول بار</string>
     <string name="sesl_searchview_description_clear">تلاش فیلڈ صاف کریں</string>
     <string name="sesl_searchview_description_search">تلاش کریں</string>
     <string name="sesl_toolbar_collapse_description">ڈھیر کریں</string>

@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Бусад</string>
     <string name="sesl_searchview_description_query">Хайлтын лавлагаа</string>
     <string name="sesl_searchview_description_submit">Лавлагаа оруулах</string>
+    <string name="sesl_index_assistant_text">Гүйлгэхийн тулд хоёр хуруугаараа дээш эсвэл доош шударна уу.</string>
+    <string name="sesl_index_section">Бүлгийн индекс</string>
+    <string name="sesl_index_selected">Сонгосон</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Ш</string>
     <string name="sesl_action_menu_overflow_badge_description">Шинэ контент гарлаа</string>
     <string name="sesl_search_hint">Хайх</string>
     <string name="sesl_action_menu_overflow_description">Өөр сонголтууд</string>
     <string name="sesl_switchbar_off_text">Идэвхгүй</string>
     <string name="sesl_switchbar_on_text">Идэвхтэй</string>
+    <string name="sesl_index_scrollbar">Гүйлгэх мөр</string>
     <string name="sesl_searchview_description_clear">Хайлтын талбарыг цэвэрлэх</string>
     <string name="sesl_searchview_description_search">Хайх</string>
     <string name="sesl_toolbar_collapse_description">Хураах</string>

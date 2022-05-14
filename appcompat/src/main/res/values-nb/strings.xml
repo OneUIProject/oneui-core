@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Utfør søket"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Send forespørsel</string>
+    <string name="sesl_index_assistant_text">Stryk opp eller ned med to fingre for å rulle.</string>
+    <string name="sesl_index_section">Delindeks</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Søk"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"slett"</string>
     <string name="abc_activitychooserview_choose_application">"Velg en app"</string>
     <string name="abc_action_menu_overflow_description">"Flere alternativer"</string>
+    <string name="sesl_index_scrollbar">Rullefelt</string>
     <string name="abc_shareactionprovider_share_with">"Del med"</string>
     <string name="abc_shareactionprovider_share_with_application">"Del med %s"</string>
     <string name="sesl_searchview_description_clear">Tøm søkefeltet</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Slett søket"</string>
     <string name="abc_menu_space_shortcut_label">"mellomrom"</string>
     <string name="sesl_searchview_description_query">Søkeforespørsel</string>
+    <string name="sesl_index_selected">Valgt</string>
     <string name="sesl_action_menu_overflow_badge_description">Nytt innhold er tilgjengelig</string>
     <string name="abc_action_bar_home_description">"Naviger hjem"</string>
     <string name="sesl_search_hint">Søk</string>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">අනුචලනයට ඇඟිලි දෙකක් සමග ඉහළට හෝ පහළට ස්වයිප් කරන්න.</string>
-    <string name="sesl_index_section">අංශ දර්ශකය</string>
-    <string name="sesl_index_selected">තේරිණි</string>
-    <string name="sesl_index_scrollbar">අනුචලන තීරුව</string>
-</resources>

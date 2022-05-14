@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">تېخىمۇ كۆپ</string>
     <string name="sesl_searchview_description_query">سۆزلۈك تىزىمى ئىزدەش</string>
     <string name="sesl_searchview_description_submit">سۆزلۈك تىزىمى يوللاش</string>
+    <string name="sesl_index_assistant_text">用两根手指向上或向下滑动来滚动。</string>
+    <string name="sesl_index_section">章节索引</string>
+    <string name="sesl_index_selected">تاللاندى</string>
     <string name="sesl_action_menu_overflow_badge_text_n">ي</string>
     <string name="sesl_action_menu_overflow_badge_description">يېڭى مەزمۇن مەۋجۇت</string>
     <string name="sesl_search_hint">ئىزدەش</string>
     <string name="sesl_action_menu_overflow_description">باشقا تاللانمىلار</string>
     <string name="sesl_switchbar_off_text">ئېتىك</string>
     <string name="sesl_switchbar_on_text">ئوچۇق</string>
+    <string name="sesl_index_scrollbar">滚动条</string>
     <string name="sesl_searchview_description_clear">ئىزدەش رامكىسىنى تازىلاش</string>
     <string name="sesl_searchview_description_search">ئىزدەش</string>
     <string name="sesl_toolbar_collapse_description">يىغىش</string>

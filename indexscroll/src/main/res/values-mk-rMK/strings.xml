@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Поминете нагоре или надолу со два прста за да листате.</string>
-    <string name="sesl_index_section">Индекс на дел</string>
-    <string name="sesl_index_selected">Избрано</string>
-    <string name="sesl_index_scrollbar">Лента за листање</string>
-</resources>

@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Isumite ang query"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Isumite ang katanungan</string>
+    <string name="sesl_index_assistant_text">Mag-swipe pataas o pababa gamit ang dalawang daliri para mag-scroll.</string>
+    <string name="sesl_index_section">Index ng seksiyon</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Maghanap"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Pumili ng app"</string>
     <string name="abc_action_menu_overflow_description">"Higit pang opsyon"</string>
+    <string name="sesl_index_scrollbar">Scroll bar</string>
     <string name="abc_shareactionprovider_share_with">"Ibahagi sa/kay"</string>
     <string name="abc_shareactionprovider_share_with_application">"Ibahagi gamit ang %s"</string>
     <string name="sesl_searchview_description_clear">I-clear ang field ng paghahanap</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"I-clear ang query"</string>
     <string name="abc_menu_space_shortcut_label">"space"</string>
     <string name="sesl_searchview_description_query">Katanungan sa paghahanap</string>
+    <string name="sesl_index_selected">Pinili</string>
     <string name="sesl_action_menu_overflow_badge_description">May bagong content na magagamit</string>
     <string name="abc_action_bar_home_description">"Mag-navigate sa home"</string>
     <string name="sesl_search_hint">Maghanap</string>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">ਸਕ੍ਰੌਲ ਕਰਨ ਲਈ ਦੋ ਉਂਗਲਾਂ ਨਾਲ ਉੱਪਰ ਜਾਂ ਹੇਠਾਂ ਵੱਲ ਸਵਾਈਪ ਕਰੋ।</string>
-    <string name="sesl_index_section">ਸੈਕਸ਼ਨ ਇੰਡੈਕਸ</string>
-    <string name="sesl_index_selected">ਚੁਣਿਆ ਗਿਆ</string>
-    <string name="sesl_index_scrollbar">ਸਕ੍ਰੌਲ ਬਾਰ</string>
-</resources>

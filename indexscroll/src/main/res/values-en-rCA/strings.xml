@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Swipe up or down with two fingers to scroll.</string>
-    <string name="sesl_index_section">Section index</string>
-    <string name="sesl_index_selected">Selected</string>
-    <string name="sesl_index_scrollbar">Scroll bar</string>
-</resources>

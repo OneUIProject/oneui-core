@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"କ୍ୱେରୀ ଦାଖଲ କରନ୍ତୁ"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">ଜିଜ୍ଞାସା ଉପସ୍ଥାପନା କରନ୍ତୁ</string>
+    <string name="sesl_index_assistant_text">ସ୍କ୍ରଲ୍ କରିବାକୁ ଦୁଇ ଆଙ୍ଗୁଠିରେ ଉପର କିମ୍ବା ତଳକୁ ସ୍ୱାଇପ୍ କରନ୍ତୁ।</string>
+    <string name="sesl_index_section">ବିଭାଗ ଇଣ୍ତେକ୍ସ</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"ସନ୍ଧାନ କରନ୍ତୁ"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"ଡିଲିଟ୍‌ କରନ୍ତୁ"</string>
     <string name="abc_activitychooserview_choose_application">"ଗୋଟିଏ ଆପ୍‍ ବାଛନ୍ତୁ"</string>
     <string name="abc_action_menu_overflow_description">"ଅଧିକ ବିକଳ୍ପ"</string>
+    <string name="sesl_index_scrollbar">ସ୍କ୍ରଲ୍ ବାର୍</string>
     <string name="abc_shareactionprovider_share_with">"ଏହାଙ୍କ ସହ ସେୟାର୍‌ କରନ୍ତୁ"</string>
     <string name="abc_shareactionprovider_share_with_application">"%s ସହ ସେୟାର୍‍ କରନ୍ତୁ"</string>
     <string name="sesl_searchview_description_clear">ସନ୍ଧାନ କ୍ଷେତ୍ର ଖାଲି କରନ୍ତୁ</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"କ୍ୱେରୀ ଖାଲି କରନ୍ତୁ"</string>
     <string name="abc_menu_space_shortcut_label">"ସ୍ପେସ୍‍"</string>
     <string name="sesl_searchview_description_query">ଜିଜ୍ଞାସା ଖୋଜନ୍ତୁ</string>
+    <string name="sesl_index_selected">ଚୟନିତ</string>
     <string name="sesl_action_menu_overflow_badge_description">ନୂତନ ବିଷୟବସ୍ତୁ ଉପଲବ୍ଧ</string>
     <string name="abc_action_bar_home_description">"ହୋମ୍ ପେଜ୍‌କୁ ନେଭିଗେଟ୍ କରନ୍ତୁ"</string>
     <string name="sesl_search_hint">ସନ୍ଧାନ</string>

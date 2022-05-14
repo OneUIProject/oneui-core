@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">மேலும்</string>
     <string name="sesl_searchview_description_query">வினாவை தேடுக</string>
     <string name="sesl_searchview_description_submit">வினாவை சமர்பிக்கவும்</string>
+    <string name="sesl_index_assistant_text">ஸ்க்ரால் செய்ய, இரு விரல்களால் மேல்நோக்கி அல்லது கீழ்நோக்கி ஸ்வைப் செய்யவும்.</string>
+    <string name="sesl_index_section">பிரிவு உள்ளடக்கம்</string>
+    <string name="sesl_index_selected">தேர்வுசெய்யப்பட்டது</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">புதிய உள்ளடக்கம் கிடைக்கிறது</string>
     <string name="sesl_search_hint">தேடவும்</string>
     <string name="sesl_action_menu_overflow_description">மேலும் தெரிவுகள்</string>
     <string name="sesl_switchbar_off_text">ஆஃப்</string>
     <string name="sesl_switchbar_on_text">ஆன்</string>
+    <string name="sesl_index_scrollbar">ஸ்க்ரால் பட்டை</string>
     <string name="sesl_searchview_description_clear">தேடுபுலத்தை அழிக்கவும்</string>
     <string name="sesl_searchview_description_search">தேடவும்</string>
     <string name="sesl_toolbar_collapse_description">சுருக்கவும்</string>

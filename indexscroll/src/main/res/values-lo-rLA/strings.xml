@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">ຮູດຂຶ້ນເທິງ ຫຼື ລົງລຸ່ມດ້ວຍມືສອງນິ້ວເພື່ອເລື່ອນ.</string>
-    <string name="sesl_index_section">ດັດຊະນີພາກສ່ວນ</string>
-    <string name="sesl_index_selected">ເລືອກແລ້ວ</string>
-    <string name="sesl_index_scrollbar">ແຖບເລື່ອນ</string>
-</resources>

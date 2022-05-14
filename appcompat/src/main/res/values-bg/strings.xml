@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Изпращане на заявката"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Подаване на заявка</string>
+    <string name="sesl_index_assistant_text">Плъзнете нагоре или надолу с два пръста, за да превъртите.</string>
+    <string name="sesl_index_section">Указател на разделите</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Н</string>
     <string name="search_menu_title">"Търсене"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Изберете приложение"</string>
     <string name="abc_action_menu_overflow_description">"Още опции"</string>
+    <string name="sesl_index_scrollbar">Лента за превъртане</string>
     <string name="abc_shareactionprovider_share_with">"Споделяне със:"</string>
     <string name="abc_shareactionprovider_share_with_application">"Споделяне със: %s"</string>
     <string name="sesl_searchview_description_clear">Изчистване на полето за търсене</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Изчистване на заявката"</string>
     <string name="abc_menu_space_shortcut_label">"клавиша за интервал"</string>
     <string name="sesl_searchview_description_query">Заявка за търсене</string>
+    <string name="sesl_index_selected">Избрано</string>
     <string name="sesl_action_menu_overflow_badge_description">Налично е ново съдържание</string>
     <string name="abc_action_bar_home_description">"Навигиране към началния екран"</string>
     <string name="sesl_search_hint">Търсене</string>

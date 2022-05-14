@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Prijeđite dvama prstima prema gore ili dolje za pomicanje.</string>
-    <string name="sesl_index_section">Indeks sekcije</string>
-    <string name="sesl_index_selected">Odabrano</string>
-    <string name="sesl_index_scrollbar">Klizna traka</string>
-</resources>

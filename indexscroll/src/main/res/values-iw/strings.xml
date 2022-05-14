@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">כדי לגלול, החלק מעלה או מטה בשתי אצבעות.</string>
-    <string name="sesl_index_section">אינדקס סעיף</string>
-    <string name="sesl_index_selected">נבחר</string>
-    <string name="sesl_index_scrollbar">פס גלילה</string>
-</resources>

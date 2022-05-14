@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Strjúktu upp eða niður með tveimur fingrum til að fletta.</string>
-    <string name="sesl_index_section">Atriðisorðaskrá fyrir hluta</string>
-    <string name="sesl_index_selected">Valið</string>
-    <string name="sesl_index_scrollbar">Flettistika</string>
-</resources>

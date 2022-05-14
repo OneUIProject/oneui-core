@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Potiahnutím dvomi prstami nahor alebo nadol môžete vykonávať posúvanie.</string>
-    <string name="sesl_index_section">Register sekcie</string>
-    <string name="sesl_index_selected">Vybraté</string>
-    <string name="sesl_index_scrollbar">Posúvač</string>
-</resources>

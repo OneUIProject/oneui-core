@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Vuốt lên hoặc xuống bằng hai ngón tay để cuộn.</string>
-    <string name="sesl_index_section">Chỉ mục phần</string>
-    <string name="sesl_index_selected">Đã chọn</string>
-    <string name="sesl_index_scrollbar">Thanh cuộn</string>
-</resources>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Rrëshqit lart ose poshtë me dy gishta për të lundruar.</string>
-    <string name="sesl_index_section">Indeksi i seksionit</string>
-    <string name="sesl_index_selected">Përzgjedhur</string>
-    <string name="sesl_index_scrollbar">Shiriti i lundrimit</string>
-</resources>

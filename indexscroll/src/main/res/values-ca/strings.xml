@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Llisca cap amunt o cap avall amb dos dits per desplaçar-te.</string>
-    <string name="sesl_index_section">Índex de seccions</string>
-    <string name="sesl_index_selected">Seleccionat</string>
-    <string name="sesl_index_scrollbar">Barra de desplaçament</string>
-</resources>

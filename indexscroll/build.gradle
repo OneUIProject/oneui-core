@@ -22,7 +22,7 @@ android {
 
 dependencies {
     api("androidx.annotation:annotation:$androidx_annotation_version")
-    implementation project(path: ':appcompat')
+    api project(path: ':appcompat')
     api project(path: ':core')
     api project(path: ':customview')
     implementation project(path: ':recyclerview')

@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Ko‘proq</string>
     <string name="sesl_searchview_description_query">Qidirish so‘rovi</string>
     <string name="sesl_searchview_description_submit">So‘rovni jo‘natish</string>
+    <string name="sesl_index_assistant_text">Aylantirish uchun ikkita barmoq bilan yuqoriga yoki pastga suring.</string>
+    <string name="sesl_index_section">Boʻlim indeksi</string>
+    <string name="sesl_index_selected">Tanlangan</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Y</string>
     <string name="sesl_action_menu_overflow_badge_description">Yangi tarkib mavjud</string>
     <string name="sesl_search_hint">Qidirish</string>
     <string name="sesl_action_menu_overflow_description">Qo‘shimcha opsiyalar</string>
     <string name="sesl_switchbar_off_text">O‘chir-gan</string>
     <string name="sesl_switchbar_on_text">Yoq.</string>
+    <string name="sesl_index_scrollbar">Aylantirish satri</string>
     <string name="sesl_searchview_description_clear">Qidirish maydonini tozalash</string>
     <string name="sesl_searchview_description_search">Qidirish</string>
     <string name="sesl_toolbar_collapse_description">O‘rash</string>

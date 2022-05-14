@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Submit query"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Submit query</string>
+    <string name="sesl_index_assistant_text">Swipe up or down with two fingers to scroll.</string>
+    <string name="sesl_index_section">Section index</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Search"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Choose an app"</string>
     <string name="abc_action_menu_overflow_description">"More options"</string>
+    <string name="sesl_index_scrollbar">Scroll bar</string>
     <string name="abc_shareactionprovider_share_with">"Share with"</string>
     <string name="abc_shareactionprovider_share_with_application">"Share with %s"</string>
     <string name="sesl_searchview_description_clear">Clear search field</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Clear query"</string>
     <string name="abc_menu_space_shortcut_label">"space"</string>
     <string name="sesl_searchview_description_query">Search query</string>
+    <string name="sesl_index_selected">Selected</string>
     <string name="sesl_action_menu_overflow_badge_description">New content available</string>
     <string name="abc_action_bar_home_description">"Navigate home"</string>
     <string name="sesl_search_hint">Search</string>

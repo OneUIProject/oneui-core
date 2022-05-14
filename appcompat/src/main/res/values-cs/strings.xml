@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Odeslat dotaz"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Odeslat dotaz</string>
+    <string name="sesl_index_assistant_text">Potažením nahoru nebo dolů dvěma prsty posunete.</string>
+    <string name="sesl_index_section">Sekce rejstříku</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Hledat"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Vybrat aplikaci"</string>
     <string name="abc_action_menu_overflow_description">"Další možnosti"</string>
+    <string name="sesl_index_scrollbar">Posuvník</string>
     <string name="abc_shareactionprovider_share_with">"Sdílet s"</string>
     <string name="abc_shareactionprovider_share_with_application">"Sdílet s aplikací %s"</string>
     <string name="sesl_searchview_description_clear">Vymazat pole Hledat</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Smazat dotaz"</string>
     <string name="abc_menu_space_shortcut_label">"mezerník"</string>
     <string name="sesl_searchview_description_query">Vyhledávací dotaz</string>
+    <string name="sesl_index_selected">Vybráno</string>
     <string name="sesl_action_menu_overflow_badge_description">K dispozici je nový obsah</string>
     <string name="abc_action_bar_home_description">"Přejít na plochu"</string>
     <string name="sesl_search_hint">Hledat</string>

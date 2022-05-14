@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Deslize para cima ou para baixo com dois dedos para rolar.</string>
-    <string name="sesl_index_section">Índice de seção</string>
-    <string name="sesl_index_selected">Selecionado</string>
-    <string name="sesl_index_scrollbar">Barra de rolagem</string>
-</resources>

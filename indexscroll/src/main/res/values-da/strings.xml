@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Stryg op eller ned med to fingre for at rulle.</string>
-    <string name="sesl_index_section">Sektionsindeks</string>
-    <string name="sesl_index_selected">Valgt</string>
-    <string name="sesl_index_scrollbar">Rullepanel</string>
-</resources>

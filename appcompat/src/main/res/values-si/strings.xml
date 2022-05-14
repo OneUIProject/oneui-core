@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"විමසුම යොමු කරන්න"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">විමසුම ඉදිරිපත් කරන්න</string>
+    <string name="sesl_index_assistant_text">අනුචලනයට ඇඟිලි දෙකක් සමග ඉහළට හෝ පහළට ස්වයිප් කරන්න.</string>
+    <string name="sesl_index_section">අංශ දර්ශකය</string>
     <string name="sesl_action_menu_overflow_badge_text_n">න</string>
     <string name="search_menu_title">"සෙවීම"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"මකන්න"</string>
     <string name="abc_activitychooserview_choose_application">"යෙදුමක් තෝරන්න"</string>
     <string name="abc_action_menu_overflow_description">"තවත් විකල්ප"</string>
+    <string name="sesl_index_scrollbar">අනුචලන තීරුව</string>
     <string name="abc_shareactionprovider_share_with">"සමග බෙදා ගන්න"</string>
     <string name="abc_shareactionprovider_share_with_application">"%s සමඟ බෙදා ගන්න"</string>
     <string name="sesl_searchview_description_clear">සෙවුම් ක්ෂේත්‍රය හිස් කරන්න</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"විමසුම හිස් කරන්න"</string>
     <string name="abc_menu_space_shortcut_label">"space"</string>
     <string name="sesl_searchview_description_query">සෙවීම් විමසුම</string>
+    <string name="sesl_index_selected">තේරිණි</string>
     <string name="sesl_action_menu_overflow_badge_description">නව අන්තර්ගතය ඇත</string>
     <string name="abc_action_bar_home_description">"මුල් පිටුවට සංචාලනය කරන්න"</string>
     <string name="sesl_search_hint">සොයන්න</string>

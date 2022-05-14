@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">გადასახვევად გადაუსვით ორი თითი ზემოთ ან ქვემოთ.</string>
-    <string name="sesl_index_section">სექციის ინდექსი</string>
-    <string name="sesl_index_selected">არჩეულია</string>
-    <string name="sesl_index_scrollbar">გადასახვევი ზოლი</string>
-</resources>

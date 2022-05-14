@@ -99,6 +99,11 @@
     <string name="sesl_font_family_medium" translatable="false">sec-roboto-light</string>
     <string name="sesl_font_family_regular" translatable="false">sec-roboto-light</string>
 
+    <string name="sesl_index_assistant_text">Swipe up or down with two finger to adjust</string>
+    <string name="sesl_index_scrollbar">Scroll bar</string>
+    <string name="sesl_index_section">Section index</string>
+    <string name="sesl_index_selected">selected</string>
+
     <string name="sesl_more_item_label">More</string>
 
     <string name="sesl_search_hint">Search…</string>

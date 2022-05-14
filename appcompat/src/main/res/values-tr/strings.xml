@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Sorguyu gönder"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Sorguyu gönderin</string>
+    <string name="sesl_index_assistant_text">Kaydırmak için iki parmağınızla yukarı veya aşağı kaydırın.</string>
+    <string name="sesl_index_section">Bölüm indeksi</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Y</string>
     <string name="search_menu_title">"Ara"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"sil"</string>
     <string name="abc_activitychooserview_choose_application">"Bir uygulama seçin"</string>
     <string name="abc_action_menu_overflow_description">"Diğer seçenekler"</string>
+    <string name="sesl_index_scrollbar">Kaydırma çubuğu</string>
     <string name="abc_shareactionprovider_share_with">"Şununla paylaş:"</string>
     <string name="abc_shareactionprovider_share_with_application">"%s ile paylaş"</string>
     <string name="sesl_searchview_description_clear">Arama alanını temizle</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Sorguyu temizle"</string>
     <string name="abc_menu_space_shortcut_label">"boşluk"</string>
     <string name="sesl_searchview_description_query">Arama sorgusu</string>
+    <string name="sesl_index_selected">Seçildi</string>
     <string name="sesl_action_menu_overflow_badge_description">Yeni içerik mevcut</string>
     <string name="abc_action_bar_home_description">"Eve gidiş yolunu göster"</string>
     <string name="sesl_search_hint">Ara</string>

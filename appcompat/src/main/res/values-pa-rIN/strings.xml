@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">ਹੋਰ</string>
     <string name="sesl_searchview_description_query">ਪ੍ਰਸ਼ਨ ਖੋਜੋ</string>
     <string name="sesl_searchview_description_submit">ਪ੍ਰਸ਼ਨ ਦਰਜ ਕਰੋ</string>
+    <string name="sesl_index_assistant_text">ਸਕ੍ਰੌਲ ਕਰਨ ਲਈ ਦੋ ਉਂਗਲਾਂ ਨਾਲ ਉੱਪਰ ਜਾਂ ਹੇਠਾਂ ਵੱਲ ਸਵਾਈਪ ਕਰੋ।</string>
+    <string name="sesl_index_section">ਸੈਕਸ਼ਨ ਇੰਡੈਕਸ</string>
+    <string name="sesl_index_selected">ਚੁਣਿਆ ਗਿਆ</string>
     <string name="sesl_action_menu_overflow_badge_text_n">ਨਵ.</string>
     <string name="sesl_action_menu_overflow_badge_description">ਨਵੀਂ ਸਮੱਗਰੀ ਉਪਲਬਧ ਹੈ</string>
     <string name="sesl_search_hint">ਖੋਜੋ</string>
     <string name="sesl_action_menu_overflow_description">ਹੋਰ ਵਿਕਲਪ</string>
     <string name="sesl_switchbar_off_text">ਬੰਦ</string>
     <string name="sesl_switchbar_on_text">ਚਾਲੂ</string>
+    <string name="sesl_index_scrollbar">ਸਕ੍ਰੌਲ ਬਾਰ</string>
     <string name="sesl_searchview_description_clear">ਖੋਜ ਖੇਤਰ ਸਾਫ਼ ਕਰੋ</string>
     <string name="sesl_searchview_description_search">ਖੋਜੋ</string>
     <string name="sesl_toolbar_collapse_description">ਸੰਕੁਚਿਤ ਕਰੋ</string>

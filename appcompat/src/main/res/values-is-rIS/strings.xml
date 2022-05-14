@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Meira</string>
     <string name="sesl_searchview_description_query">Leita í beiðni</string>
     <string name="sesl_searchview_description_submit">Senda inn beiðni</string>
+    <string name="sesl_index_assistant_text">Strjúktu upp eða niður með tveimur fingrum til að fletta.</string>
+    <string name="sesl_index_section">Atriðisorðaskrá fyrir hluta</string>
+    <string name="sesl_index_selected">Valið</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">Nýtt efni í boði</string>
     <string name="sesl_search_hint">Leita</string>
     <string name="sesl_action_menu_overflow_description">Fleiri valkostir</string>
     <string name="sesl_switchbar_off_text">Slökkt</string>
     <string name="sesl_switchbar_on_text">Kveikt</string>
+    <string name="sesl_index_scrollbar">Flettistika</string>
     <string name="sesl_searchview_description_clear">Hreinsa leitarreit</string>
     <string name="sesl_searchview_description_search">Leita</string>
     <string name="sesl_toolbar_collapse_description">Fella saman</string>

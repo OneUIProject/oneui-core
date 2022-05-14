@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">스크롤하려면 두 손가락으로 위아래로 미세요.</string>
-    <string name="sesl_index_section">섹션 구분 인덱스</string>
-    <string name="sesl_index_selected">선택됨</string>
-    <string name="sesl_index_scrollbar">스크롤바</string>
-</resources>

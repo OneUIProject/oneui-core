@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">နောက်ထပ်</string>
     <string name="sesl_searchview_description_query">မေးမြန်းချက် ရှာပါ</string>
     <string name="sesl_searchview_description_submit">မေးမြန်းချက် တင်သွင်းပါ</string>
+    <string name="sesl_index_assistant_text">လှိမ့်ဆွဲရန် လက်နှစ်ချောင်းဖြင့် အပေါ် (သို့) အောက်သို့ ပွတ်ဆွဲပါ။</string>
+    <string name="sesl_index_section">အပိုင်း အညွှန်း</string>
+    <string name="sesl_index_selected">ရွေးထားသည်</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">အကြောင်းအရာအသစ် မရှိပါ</string>
     <string name="sesl_search_hint">ရှာဖွေပါ</string>
     <string name="sesl_action_menu_overflow_description">နောက်ထပ် ရွေးစရာများ</string>
     <string name="sesl_switchbar_off_text">ပိတ်</string>
     <string name="sesl_switchbar_on_text">ဖွင့်</string>
+    <string name="sesl_index_scrollbar">လှိမ့်ဘား</string>
     <string name="sesl_searchview_description_clear">ရှာဖွေနေရာ ရှင်းပါ</string>
     <string name="sesl_searchview_description_search">ရှာဖွေပါ</string>
     <string name="sesl_toolbar_collapse_description">ခေါက်သိမ်းပါ</string>

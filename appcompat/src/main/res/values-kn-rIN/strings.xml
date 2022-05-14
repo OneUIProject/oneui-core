@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">ಅಧಿಕ</string>
     <string name="sesl_searchview_description_query">ಪ್ರಶ್ನೆ ಶೋಧಿಸಿ</string>
     <string name="sesl_searchview_description_submit">ಪ್ರಶ್ನೆ ಸಲ್ಲಿಸಿ</string>
+    <string name="sesl_index_assistant_text">ಸ್ಕ್ರಾಲ್ ಮಾಡಲು ಎರಡು ಕೈಬೆರಳುಗಳೊಂದಿಗೆ ಮೇಲಕ್ಕೆ ಅಥವಾ ಕೆಳಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ.</string>
+    <string name="sesl_index_section">ವಿಭಾಗ ಇಂಡೆಕ್ಸ್</string>
+    <string name="sesl_index_selected">ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ</string>
     <string name="sesl_action_menu_overflow_badge_text_n">ಹೊ</string>
     <string name="sesl_action_menu_overflow_badge_description">ಹೊಸ ವಿಷಯ ಲಭ್ಯವಿದೆ</string>
     <string name="sesl_search_hint">ಹುಡುಕಿ</string>
     <string name="sesl_action_menu_overflow_description">ಹೆಚ್ಚು ಆಯ್ಕೆಗಳು</string>
     <string name="sesl_switchbar_off_text">ಆಫ್</string>
     <string name="sesl_switchbar_on_text">ಆನ್</string>
+    <string name="sesl_index_scrollbar">ಸ್ಕ್ರಾಲ್ ಬಾರ್</string>
     <string name="sesl_searchview_description_clear">ಹುಡುಕಾಟ ಕ್ಷೇತ್ರ ತೆರವುಗೊಳಿಸಿ</string>
     <string name="sesl_searchview_description_search">ಹುಡುಕಿ</string>
     <string name="sesl_toolbar_collapse_description">ಕುಸಿತ</string>

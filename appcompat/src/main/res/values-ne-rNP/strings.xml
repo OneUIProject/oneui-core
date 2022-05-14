@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">थप</string>
     <string name="sesl_searchview_description_query">क्वेरी खोज्नुहोस्</string>
     <string name="sesl_searchview_description_submit">क्वेरी बुझाउनुहोस्</string>
+    <string name="sesl_index_assistant_text">स्क्रोल गर्न दुई औँलाले माथि वा तलतिर स्वाइप गर्नुहोस्।</string>
+    <string name="sesl_index_section">खण्डको सूची</string>
+    <string name="sesl_index_selected">चयन गरिएको</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="sesl_action_menu_overflow_badge_description">नयाँ सामग्री उपलब्ध छ</string>
     <string name="sesl_search_hint">खोज्‍नुहोस्</string>
     <string name="sesl_action_menu_overflow_description">थप विकल्पहरू</string>
     <string name="sesl_switchbar_off_text">अफ</string>
     <string name="sesl_switchbar_on_text">अन</string>
+    <string name="sesl_index_scrollbar">स्क्रोल बार</string>
     <string name="sesl_searchview_description_clear">खोजको क्षेत्र खाली गर्नुहोस्</string>
     <string name="sesl_searchview_description_search">खोज्‍नुहोस्</string>
     <string name="sesl_toolbar_collapse_description">संक्षिप्त गर्नुहोस्</string>

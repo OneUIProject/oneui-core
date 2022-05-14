@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Kirim kueri"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Kirim pertanyaan</string>
+    <string name="sesl_index_assistant_text">Usap ke atas atau ke bawah dengan dua jari untuk menggulir.</string>
+    <string name="sesl_index_section">Indeks bagian</string>
     <string name="sesl_action_menu_overflow_badge_text_n">B</string>
     <string name="search_menu_title">"Telusuri"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Pilih aplikasi"</string>
     <string name="abc_action_menu_overflow_description">"Opsi lain"</string>
+    <string name="sesl_index_scrollbar">Bilah gulir</string>
     <string name="abc_shareactionprovider_share_with">"Bagikan dengan"</string>
     <string name="abc_shareactionprovider_share_with_application">"Bagikan dengan %s"</string>
     <string name="sesl_searchview_description_clear">Hapus bidang pencarian</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Hapus kueri"</string>
     <string name="abc_menu_space_shortcut_label">"spasi"</string>
     <string name="sesl_searchview_description_query">Cari pertanyaan</string>
+    <string name="sesl_index_selected">Dipilih</string>
     <string name="sesl_action_menu_overflow_badge_description">Konten baru tersedia</string>
     <string name="abc_action_bar_home_description">"Tunjukkan jalan ke rumah"</string>
     <string name="sesl_search_hint">Cari</string>

@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Daha çox</string>
     <string name="sesl_searchview_description_query">Axtarış sorğusu</string>
     <string name="sesl_searchview_description_submit">Sorğunu göndər</string>
+    <string name="sesl_index_assistant_text">Sürüşdürmək üçün iki barmağınızla yuxarı və ya aşağı sürüşdürün.</string>
+    <string name="sesl_index_section">Bölmə indeksi</string>
+    <string name="sesl_index_selected">Seçilmiş</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Yn</string>
     <string name="sesl_action_menu_overflow_badge_description">Yeni məzmun mövcuddur</string>
     <string name="sesl_search_hint">Axtar</string>
     <string name="sesl_action_menu_overflow_description">Daha çox seçim</string>
     <string name="sesl_switchbar_off_text">Söndür</string>
     <string name="sesl_switchbar_on_text">Qoş</string>
+    <string name="sesl_index_scrollbar">Sürüşdürmə paneli</string>
     <string name="sesl_searchview_description_clear">Axtarış sahəsini sil</string>
     <string name="sesl_searchview_description_search">Axtar</string>
     <string name="sesl_toolbar_collapse_description">Yığ</string>

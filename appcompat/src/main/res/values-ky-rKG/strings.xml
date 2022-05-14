@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Дагы</string>
     <string name="sesl_searchview_description_query">Издөө сурамы</string>
     <string name="sesl_searchview_description_submit">Сурамды которуу</string>
+    <string name="sesl_index_assistant_text">Жылдыруу үчүн эки бармагыңыз менен өйдө же ылдый жылдырыңыз.</string>
+    <string name="sesl_index_section">Бөлүм индекси</string>
+    <string name="sesl_index_selected">Тандалды</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Ж</string>
     <string name="sesl_action_menu_overflow_badge_description">Жаңы мазмун байкалат</string>
     <string name="sesl_search_hint">Издөө</string>
     <string name="sesl_action_menu_overflow_description">Дагы тандоолор</string>
     <string name="sesl_switchbar_off_text">Өчүрүү</string>
     <string name="sesl_switchbar_on_text">Күйүк</string>
+    <string name="sesl_index_scrollbar">Айландыруу тилкеси</string>
     <string name="sesl_searchview_description_clear">Издөө талаасын тазалоо</string>
     <string name="sesl_searchview_description_search">Издөө</string>
     <string name="sesl_toolbar_collapse_description">Жыюу</string>

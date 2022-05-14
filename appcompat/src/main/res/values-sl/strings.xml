@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Pošiljanje poizvedbe"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta +"</string>
     <string name="sesl_searchview_description_submit">Pošlji poizvedbo</string>
+    <string name="sesl_index_assistant_text">Za pomikanje podrsajte z dvema prstoma navzgor ali navzdol.</string>
+    <string name="sesl_index_section">Indeks odsekov</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Iskanje"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt +"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Izbira aplikacije"</string>
     <string name="abc_action_menu_overflow_description">"Več možnosti"</string>
+    <string name="sesl_index_scrollbar">Drsna vrstica</string>
     <string name="abc_shareactionprovider_share_with">"Deljenje z:"</string>
     <string name="abc_shareactionprovider_share_with_application">"Deljenje z drugimi prek aplikacije %s"</string>
     <string name="sesl_searchview_description_clear">Počisti iskalno polje</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Izbris poizvedbe"</string>
     <string name="abc_menu_space_shortcut_label">"preslednica"</string>
     <string name="sesl_searchview_description_query">Iskalna poizvedba</string>
+    <string name="sesl_index_selected">Izbrano</string>
     <string name="sesl_action_menu_overflow_badge_description">Na voljo je nova vsebina</string>
     <string name="abc_action_bar_home_description">"Krmarjenje na začetek"</string>
     <string name="sesl_search_hint">Iskanje</string>

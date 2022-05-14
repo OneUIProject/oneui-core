@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Potažením nahoru nebo dolů dvěma prsty posunete.</string>
-    <string name="sesl_index_section">Sekce rejstříku</string>
-    <string name="sesl_index_selected">Vybráno</string>
-    <string name="sesl_index_scrollbar">Posuvník</string>
-</resources>

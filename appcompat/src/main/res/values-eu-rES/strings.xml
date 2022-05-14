@@ -3,12 +3,16 @@
     <string name="sesl_more_item_label">Gehiago</string>
     <string name="sesl_searchview_description_query">Bilatu galdera</string>
     <string name="sesl_searchview_description_submit">Bidali galdera</string>
+    <string name="sesl_index_assistant_text">Korritzeko, irristatu pantaila gora edo behera bi hatzekin.</string>
+    <string name="sesl_index_section">Sailaren aurkibidea</string>
+    <string name="sesl_index_selected">Hautatuta</string>
     <string name="sesl_action_menu_overflow_badge_text_n">B</string>
     <string name="sesl_action_menu_overflow_badge_description">Eduki berria dago erabilgarri</string>
     <string name="sesl_search_hint">Bilatu</string>
     <string name="sesl_action_menu_overflow_description">Aukera gehiago</string>
     <string name="sesl_switchbar_off_text">Desaktibatu</string>
     <string name="sesl_switchbar_on_text">Aktibatu</string>
+    <string name="sesl_index_scrollbar">Korritze barra</string>
     <string name="sesl_searchview_description_clear">Garbitu bilaketa eremua</string>
     <string name="sesl_searchview_description_search">Bilatu</string>
     <string name="sesl_toolbar_collapse_description">Tolestu</string>

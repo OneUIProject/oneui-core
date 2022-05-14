@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Odoslať dopyt"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Odoslať dotaz</string>
+    <string name="sesl_index_assistant_text">Potiahnutím dvomi prstami nahor alebo nadol môžete vykonávať posúvanie.</string>
+    <string name="sesl_index_section">Register sekcie</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Hľadať"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"odstrániť"</string>
     <string name="abc_activitychooserview_choose_application">"Vybrať aplikáciu"</string>
     <string name="abc_action_menu_overflow_description">"Ďalšie možnosti"</string>
+    <string name="sesl_index_scrollbar">Posúvač</string>
     <string name="abc_shareactionprovider_share_with">"Zdieľať s"</string>
     <string name="abc_shareactionprovider_share_with_application">"Zdieľať s aplikáciou %s"</string>
     <string name="sesl_searchview_description_clear">Vymazať vyhľadávacie pole</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Vymazať dopyt"</string>
     <string name="abc_menu_space_shortcut_label">"medzerník"</string>
     <string name="sesl_searchview_description_query">Vyhľadávací dotaz</string>
+    <string name="sesl_index_selected">Vybraté</string>
     <string name="sesl_action_menu_overflow_badge_description">K dispozícii je nový obsah</string>
     <string name="abc_action_bar_home_description">"Prejsť na plochu"</string>
     <string name="sesl_search_hint">Vyhľadávanie</string>

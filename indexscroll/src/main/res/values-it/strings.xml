@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Trascina verso l’alto o il basso con due dita per scorrere.</string>
-    <string name="sesl_index_section">Indice sezione</string>
-    <string name="sesl_index_selected">Selezionata</string>
-    <string name="sesl_index_scrollbar">Barra di scorrimento</string>
-</resources>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Անցավազքի համար երկու մատը սահեցրեք վերև կամ ներքև:</string>
-    <string name="sesl_index_section">Բաժինների ցուցիչ</string>
-    <string name="sesl_index_selected">Ընտրված</string>
-    <string name="sesl_index_scrollbar">Ոլորագոտի</string>
-</resources>

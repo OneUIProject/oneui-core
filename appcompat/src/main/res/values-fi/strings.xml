@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Lähetä kysely"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Lähetä kysely</string>
+    <string name="sesl_index_assistant_text">Vieritä pyyhkäisemällä kahdella sormella ylös- tai alaspäin.</string>
+    <string name="sesl_index_section">Osion hakemisto</string>
     <string name="sesl_action_menu_overflow_badge_text_n">U</string>
     <string name="search_menu_title">"Haku"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Valitse sovellus"</string>
     <string name="abc_action_menu_overflow_description">"Lisäasetukset"</string>
+    <string name="sesl_index_scrollbar">Vierityspalkki</string>
     <string name="abc_shareactionprovider_share_with">"Jaa…"</string>
     <string name="abc_shareactionprovider_share_with_application">"Jaa: %s"</string>
     <string name="sesl_searchview_description_clear">Tyhjennä hakukenttä</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Tyhjennä kysely"</string>
     <string name="abc_menu_space_shortcut_label">"välilyönti"</string>
     <string name="sesl_searchview_description_query">Hakukysely</string>
+    <string name="sesl_index_selected">Valittu</string>
     <string name="sesl_action_menu_overflow_badge_description">Uutta sisältöä saatavilla</string>
     <string name="abc_action_bar_home_description">"Siirry etusivulle"</string>
     <string name="sesl_search_hint">Hae</string>

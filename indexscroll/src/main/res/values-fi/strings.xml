@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">Vieritä pyyhkäisemällä kahdella sormella ylös- tai alaspäin.</string>
-    <string name="sesl_index_section">Osion hakemisto</string>
-    <string name="sesl_index_selected">Valittu</string>
-    <string name="sesl_index_scrollbar">Vierityspalkki</string>
-</resources>

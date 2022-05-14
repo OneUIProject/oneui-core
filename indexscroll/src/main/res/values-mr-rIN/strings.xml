@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">स्क्रोल करण्यासाठी दोन बोटांनी वर किंवा खाली स्वाइप करा.</string>
-    <string name="sesl_index_section">विभाग निर्देशांक</string>
-    <string name="sesl_index_selected">निवडले</string>
-    <string name="sesl_index_scrollbar">स्‍क्रोल बार</string>
-</resources>

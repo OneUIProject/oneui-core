@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Anfrage senden"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta-Taste +"</string>
     <string name="sesl_searchview_description_submit">Abfrage senden</string>
+    <string name="sesl_index_assistant_text">Streichen Sie zum Scrollen mit zwei Fingern nach oben oder unten.</string>
+    <string name="sesl_index_section">Abschnittsindex</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Suche"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt +"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"Löschen"</string>
     <string name="abc_activitychooserview_choose_application">"App auswählen"</string>
     <string name="abc_action_menu_overflow_description">"Weitere Optionen"</string>
+    <string name="sesl_index_scrollbar">Bildlaufleiste</string>
     <string name="abc_shareactionprovider_share_with">"Teilen mit"</string>
     <string name="abc_shareactionprovider_share_with_application">"Mit %s teilen"</string>
     <string name="sesl_searchview_description_clear">Suchfeld löschen</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Suchanfrage löschen"</string>
     <string name="abc_menu_space_shortcut_label">"Leertaste"</string>
     <string name="sesl_searchview_description_query">Suchanfrage</string>
+    <string name="sesl_index_selected">Ausgewählt</string>
     <string name="sesl_action_menu_overflow_badge_description">Neuer Inhalt verfügbar</string>
     <string name="abc_action_bar_home_description">"Zur Startseite"</string>
     <string name="sesl_search_hint">Suche</string>

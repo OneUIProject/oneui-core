@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">স্ক্রোল করতে দুটি আঙুল দিয়ে উপরে বা নীচে সোয়াইপ করুন।</string>
-    <string name="sesl_index_section">বিভাগ সূচক</string>
-    <string name="sesl_index_selected">নির্বাচিত</string>
-    <string name="sesl_index_scrollbar">স্ক্রোল বার</string>
-</resources>

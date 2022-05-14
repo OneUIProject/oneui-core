@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-    <string name="sesl_index_assistant_text">స్క్రోల్ చేయడానికి రెండు వేళ్లతో ఎగువకు లేదా దిగువకు స్వైప్ చేయండి.</string>
-    <string name="sesl_index_section">విభాగం సూచిక</string>
-    <string name="sesl_index_selected">ఎంచుకోబడింది</string>
-    <string name="sesl_index_scrollbar">స్క్రోల్ బార్</string>
-</resources>

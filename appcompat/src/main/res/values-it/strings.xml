@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Invia query"</string>
     <string name="abc_menu_meta_shortcut_label">"META +"</string>
     <string name="sesl_searchview_description_submit">Invia query</string>
+    <string name="sesl_index_assistant_text">Trascina verso l’alto o il basso con due dita per scorrere.</string>
+    <string name="sesl_index_section">Indice sezione</string>
     <string name="sesl_action_menu_overflow_badge_text_n">N</string>
     <string name="search_menu_title">"Cerca"</string>
     <string name="abc_menu_alt_shortcut_label">"ALT +"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"CANC"</string>
     <string name="abc_activitychooserview_choose_application">"Scelta di un\'app"</string>
     <string name="abc_action_menu_overflow_description">"Altre opzioni"</string>
+    <string name="sesl_index_scrollbar">Barra di scorrimento</string>
     <string name="abc_shareactionprovider_share_with">"Condividi con"</string>
     <string name="abc_shareactionprovider_share_with_application">"Condividi tramite %s"</string>
     <string name="sesl_searchview_description_clear">Cancella campo di ricerca</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Cancella query"</string>
     <string name="abc_menu_space_shortcut_label">"SPAZIO"</string>
     <string name="sesl_searchview_description_query">Ricerca query</string>
+    <string name="sesl_index_selected">Selezionata</string>
     <string name="sesl_action_menu_overflow_badge_description">Nuovi contenuti disponibili</string>
     <string name="abc_action_bar_home_description">"Portami a casa"</string>
     <string name="sesl_search_hint">Cerca</string>

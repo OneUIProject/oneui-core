@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"提交查詢"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta +"</string>
     <string name="sesl_searchview_description_submit">提交查詢</string>
+    <string name="sesl_index_assistant_text">以兩指向上或向下滑動以捲動。</string>
+    <string name="sesl_index_section">區段索引</string>
     <string name="sesl_action_menu_overflow_badge_text_n">新</string>
     <string name="search_menu_title">"搜尋"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt +"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"刪除"</string>
     <string name="abc_activitychooserview_choose_application">"選擇應用程式"</string>
     <string name="abc_action_menu_overflow_description">"更多選項"</string>
+    <string name="sesl_index_scrollbar">捲動列</string>
     <string name="abc_shareactionprovider_share_with">"分享對象"</string>
     <string name="abc_shareactionprovider_share_with_application">"使用「%s」分享"</string>
     <string name="sesl_searchview_description_clear">清除搜尋欄位</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"清除查詢"</string>
     <string name="abc_menu_space_shortcut_label">"空白鍵"</string>
     <string name="sesl_searchview_description_query">搜尋查詢</string>
+    <string name="sesl_index_selected">已選擇</string>
     <string name="sesl_action_menu_overflow_badge_description">有新內容可用</string>
     <string name="abc_action_bar_home_description">"瀏覽主頁"</string>
     <string name="sesl_search_hint">搜尋</string>

@@ -5,6 +5,8 @@
     <string name="abc_searchview_description_submit">"Наіслати запит"</string>
     <string name="abc_menu_meta_shortcut_label">"Meta+"</string>
     <string name="sesl_searchview_description_submit">Надсилання запиту</string>
+    <string name="sesl_index_assistant_text">Щоб прокрутити екран, проведіть двома пальцями вгору або вниз.</string>
+    <string name="sesl_index_section">Покажчик розділу</string>
     <string name="sesl_action_menu_overflow_badge_text_n">Н</string>
     <string name="search_menu_title">"Пошук"</string>
     <string name="abc_menu_alt_shortcut_label">"Alt+"</string>
@@ -13,6 +15,7 @@
     <string name="abc_menu_delete_shortcut_label">"delete"</string>
     <string name="abc_activitychooserview_choose_application">"Вибрати програму"</string>
     <string name="abc_action_menu_overflow_description">"Більше опцій"</string>
+    <string name="sesl_index_scrollbar">Смуга прокрутки</string>
     <string name="abc_shareactionprovider_share_with">"Поділитися:"</string>
     <string name="abc_shareactionprovider_share_with_application">"Поділитися через додаток %s"</string>
     <string name="sesl_searchview_description_clear">Очистити поле пошуку</string>
@@ -30,6 +33,7 @@
     <string name="abc_searchview_description_clear">"Очистити запит"</string>
     <string name="abc_menu_space_shortcut_label">"пробіл"</string>
     <string name="sesl_searchview_description_query">Пошуковий запит</string>
+    <string name="sesl_index_selected">Вибрано</string>
     <string name="sesl_action_menu_overflow_badge_description">Доступний новий вміст</string>
     <string name="abc_action_bar_home_description">"Перейти на головну"</string>
     <string name="sesl_search_hint">Пошук</string>

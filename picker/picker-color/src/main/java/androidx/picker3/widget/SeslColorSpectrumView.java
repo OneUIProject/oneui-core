@@ -37,7 +37,7 @@ import androidx.picker.R;
  * Original code by Samsung, all rights reserved to the original author.
  */
 
-public class SeslColorSpectrumView extends View {
+class SeslColorSpectrumView extends View {
     private static final String TAG = "SeslColorSpectrumView";
 
     private static final float STROKE_WIDTH = 2.0f;

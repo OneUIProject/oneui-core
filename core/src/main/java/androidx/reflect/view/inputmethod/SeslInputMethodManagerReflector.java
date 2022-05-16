@@ -36,6 +36,9 @@ import java.lang.reflect.Method;
 public class SeslInputMethodManagerReflector {
     private static final Class<?> mClass = InputMethodManager.class;
 
+    private SeslInputMethodManagerReflector() {
+    }
+
     /**
      * Returns current accessory keyboard state in the given {@link InputMethodManager}.
      */

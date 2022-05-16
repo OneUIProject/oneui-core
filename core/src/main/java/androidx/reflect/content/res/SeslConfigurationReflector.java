@@ -39,6 +39,9 @@ import java.lang.reflect.Method;
 public class SeslConfigurationReflector {
     private static final Class<?> mClass = Configuration.class;
 
+    private SeslConfigurationReflector() {
+    }
+
     /**
      * Get whether the device in DeX Mode.
      */

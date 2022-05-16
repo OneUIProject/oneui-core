@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslInputDeviceReflector {
     private static final Class<?> mClass = InputDevice.class;
 
+    private SeslInputDeviceReflector() {
+    }
+
     /**
      * Sets the current pointer type in the given {@link InputDevice}.
      */

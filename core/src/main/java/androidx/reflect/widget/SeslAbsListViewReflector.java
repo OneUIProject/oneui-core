@@ -40,6 +40,9 @@ import java.lang.reflect.Method;
 public class SeslAbsListViewReflector {
     private static final Class<?> mClass = AbsListView.class;
 
+    private SeslAbsListViewReflector() {
+    }
+
     /**
      * Returns the <var>mEdgeGlowTop</var> field used in the given {@link AbsListView}.
      */

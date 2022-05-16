@@ -39,6 +39,9 @@ import java.lang.reflect.Method;
 public class SeslStateListDrawableReflector {
     private static final Class<?> mClass = StateListDrawable.class;
 
+    private SeslStateListDrawableReflector() {
+    }
+
     /**
      * Gets the number of states contained in the given {@link StateListDrawable}.
      */

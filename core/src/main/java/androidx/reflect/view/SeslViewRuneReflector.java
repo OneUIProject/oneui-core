@@ -28,7 +28,10 @@ import java.lang.reflect.Method;
  * Samsung ViewRune utility class.
  */
 public class SeslViewRuneReflector {
-    private static final String mClassName = "com.samsung.android.rune.ViewRune";
+    private static String mClassName = "com.samsung.android.rune.ViewRune";
+
+    private SeslViewRuneReflector() {
+    }
 
     /**
      * Get whether the device is a foldable with dual display.

@@ -38,6 +38,9 @@ import java.lang.reflect.Method;
 public class SeslRingtoneManagerReflector {
     private static final Class<?> mClass = RingtoneManager.class;
 
+    private SeslRingtoneManagerReflector() {
+    }
+
     /**
      * Returns <b>RingtoneManager.EXTRA_RINGTONE_AUDIO_ATTRIBUTES_FLAGS</b>.
      */

@@ -31,8 +31,11 @@ import java.lang.reflect.Method;
  * Samsung SemWindowManager utility class, contains only fold-devices related code.
  */
 public class SeslSemWindowManagerReflector {
-    private static final String mClassName = "com.samsung.android.view.SemWindowManager";
-    private static final String mListenerName = "com.samsung.android.view.SemWindowManager$FoldStateListener";
+    private static String mClassName = "com.samsung.android.view.SemWindowManager";
+    private static String mListenerName = "com.samsung.android.view.SemWindowManager$FoldStateListener";
+
+    private SeslSemWindowManagerReflector() {
+    }
 
     /**
      * Returns instance of <b>SemWindowManager</b>.

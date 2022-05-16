@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslHapticFeedbackConstantsReflector {
     private static final Class<?> mClass = HapticFeedbackConstants.class;
 
+    private SeslHapticFeedbackConstantsReflector() {
+    }
+
     /**
      * Returns a <b>feedbackConstant</b> by the given <arg>index</arg>
      */

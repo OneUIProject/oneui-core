@@ -34,7 +34,10 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslCscFeatureReflector {
-    private static final String mClassName;
+    private static String mClassName;
+
+    private SeslCscFeatureReflector() {
+    }
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -69,23 +72,19 @@ public class SeslCscFeatureReflector {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Method method = SeslBaseReflector.getDeclaredMethod(mClassName, "hidden_getString", String.class, String.class);
-            if (method != null) {
-                result = SeslBaseReflector.invoke(null, method, tag, defaultValue);
-            }
+            result = SeslBaseReflector.invoke(null, method, tag, defaultValue);
         } else {
             Object semCscFeature = getInstance();
             if (semCscFeature != null) {
                 Method method = SeslBaseReflector.getMethod(mClassName, "getString", String.class, String.class);
-                if (method != null) {
-                    result = SeslBaseReflector.invoke(semCscFeature, method, tag, defaultValue);
-                }
+                result = SeslBaseReflector.invoke(semCscFeature, method, tag, defaultValue);
             }
         }
 
         if (result instanceof String) {
             return (String) result;
+        } else {
+            return defaultValue;
         }
-
-        return defaultValue;
     }
 }

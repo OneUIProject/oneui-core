@@ -37,6 +37,9 @@ import java.lang.reflect.Field;
 public class SeslCompatibilityInfoReflector {
     private static final String mClassName = "android.content.res.CompatibilityInfo";
 
+    private SeslCompatibilityInfoReflector() {
+    }
+
     /**
      * Returns <b>CompatibilityInfo.applicationScale</b> in the given {@link Resources}.
      */

@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslPopupWindowReflector {
     private static final Class<?> mClass = PopupWindow.class;
 
+    private SeslPopupWindowReflector() {
+    }
+
     /**
      * Allow PopupWindow to scroll the anchor's parent to provide more room
      * for the popup.

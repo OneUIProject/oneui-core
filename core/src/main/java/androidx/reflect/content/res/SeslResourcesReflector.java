@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslResourcesReflector {
     private static final Class<?> mClass = Resources.class;
 
+    private SeslResourcesReflector() {
+    }
+
     /**
      * Return the compatibility mode info for the given {@link Resources}.
      */

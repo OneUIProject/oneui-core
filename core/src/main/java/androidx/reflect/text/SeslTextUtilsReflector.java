@@ -38,6 +38,9 @@ import java.lang.reflect.Method;
 public class SeslTextUtilsReflector {
     private static final Class<?> mClass = TextUtils.class;
 
+    private SeslTextUtilsReflector() {
+    }
+
     /**
      * Calls <b>TextUtils.semGetPrefixCharForSpan(TextPaint, CharSequence, char[])</b>.
      */

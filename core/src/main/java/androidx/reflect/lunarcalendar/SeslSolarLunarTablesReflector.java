@@ -39,6 +39,9 @@ import dalvik.system.PathClassLoader;
 public class SeslSolarLunarTablesReflector {
     private static final String mClassName = "com.samsung.android.calendar.secfeature.lunarcalendar.SolarLunarTables";
 
+    private SeslSolarLunarTablesReflector() {
+    }
+
     /**
      * Calls <b>SolarLunarTables.getDayLengthOf(int, int, boolean)</b>.
      */

@@ -34,11 +34,18 @@ import java.lang.reflect.Field;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslBuildReflector {
+
+    private SeslBuildReflector() {
+    }
+
     /**
      * Samsung Build.VERSION utility class.
      */
     public static class SeslVersionReflector {
         private static final Class<?> mClass = Build.VERSION.class;
+
+        private SeslVersionReflector() {
+        }
 
         /**
          * Returns <b>Build.VERSION.SEM_PLATFORM_INT</b>.
@@ -47,9 +54,8 @@ public class SeslBuildReflector {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 Field field = SeslBaseReflector.getDeclaredField(mClass, "SEM_PLATFORM_INT");
                 if (field != null) {
-                    Object SEM_PLATFORM_INT = SeslBaseReflector.get(null, field);
-                    if (SEM_PLATFORM_INT instanceof Integer) {
-                        return (Integer) SEM_PLATFORM_INT;
+                    if (SeslBaseReflector.get(null, field) instanceof Integer) {
+                        return (Integer) SeslBaseReflector.get(null, field);
                     }
                 }
             }
@@ -57,4 +63,5 @@ public class SeslBuildReflector {
             return -1;
         }
     }
+
 }

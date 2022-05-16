@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslUserHandleReflector {
     private static final Class<?> mClass = UserHandle.class;
 
+    private SeslUserHandleReflector() {
+    }
+
     /**
      * Returns the user id of the current process.
      */

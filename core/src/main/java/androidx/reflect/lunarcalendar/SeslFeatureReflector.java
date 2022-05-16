@@ -37,6 +37,9 @@ import dalvik.system.PathClassLoader;
 public class SeslFeatureReflector {
     private static final String mClassName = "com.android.calendar.Feature";
 
+    private SeslFeatureReflector() {
+    }
+
     /**
      * Returns an instance of <b>SolarLunarConverter</b> in the given {@link PathClassLoader}.
      */

@@ -44,6 +44,9 @@ public class SeslViewReflector {
     private static final String TAG = "SeslViewReflector";
     private static final Class<?> mClass = View.class;
 
+    private SeslViewReflector() {
+    }
+
     /**
      * Set left padding in the given {@link View}.
      */
@@ -102,14 +105,13 @@ public class SeslViewReflector {
      * Get whether the given {@link View} is inside a scrollable view.
      */
     public static boolean isInScrollingContainer(@NonNull View view) {
-        String methodName;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            methodName = "hidden_isInScrollingContainer";
+        Method method;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            method = SeslBaseReflector.getMethod(mClass, "isInScrollingContainer");
         } else {
-            methodName = "isInScrollingContainer";
+            method = SeslBaseReflector.getMethod(mClass, "hidden_isInScrollingContainer");
         }
 
-        Method method = SeslBaseReflector.getMethod(mClass, methodName);
         if (method != null) {
             Object result = SeslBaseReflector.invoke(view, method);
             if (result instanceof Boolean) {
@@ -149,14 +151,13 @@ public class SeslViewReflector {
      * Calls <b>View.notifyViewAccessibilityStateChangedIfNeeded(int)</b>.
      */
     public static void notifyViewAccessibilityStateChangedIfNeeded(@NonNull View view, int changeType) {
-        String methodName;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            methodName = "hidden_notifyViewAccessibilityStateChangedIfNeeded";
+        Method method;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            method = SeslBaseReflector.getMethod(mClass, "notifyViewAccessibilityStateChangedIfNeeded", Integer.TYPE);
         } else {
-            methodName = "notifyViewAccessibilityStateChangedIfNeeded";
+            method = SeslBaseReflector.getMethod(mClass, "hidden_notifyViewAccessibilityStateChangedIfNeeded", Integer.TYPE);
         }
 
-        Method method = SeslBaseReflector.getMethod(mClass, methodName, Integer.TYPE);
         if (method != null) {
             SeslBaseReflector.invoke(view, method, changeType);
         }
@@ -346,14 +347,13 @@ public class SeslViewReflector {
      * Calls <b>View.resolvePadding()</b>.
      */
     public static void resolvePadding(@NonNull View view) {
-        String methodName;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            methodName = "hidden_resolvePadding";
+        Method method;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            method = SeslBaseReflector.getDeclaredMethod(mClass, "resolvePadding");
         } else {
-            methodName = "resolvePadding";
+            method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_resolvePadding");
         }
 
-        Method method = SeslBaseReflector.getDeclaredMethod(mClass, methodName);
         if (method != null) {
             SeslBaseReflector.invoke(view, method);
         }
@@ -373,14 +373,13 @@ public class SeslViewReflector {
      * Calls <b>View.getWindowDisplayFrame(Rect)</b>.
      */
     public static void getWindowDisplayFrame(@NonNull View view, @NonNull Rect outRect) {
-        String methodName;
+        Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            methodName = "getWindowDisplayFrame";
+            method = SeslBaseReflector.getDeclaredMethod(mClass, "getWindowDisplayFrame", Rect.class);
         } else {
-            methodName = "getWindowVisibleDisplayFrame";
+            method = SeslBaseReflector.getDeclaredMethod(mClass, "getWindowVisibleDisplayFrame", Rect.class);
         }
 
-        Method method = SeslBaseReflector.getDeclaredMethod(mClass, methodName, Rect.class);
         if (method != null) {
             SeslBaseReflector.invoke(view, method, outRect);
         }

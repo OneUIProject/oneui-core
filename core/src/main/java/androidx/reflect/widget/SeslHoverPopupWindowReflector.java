@@ -36,9 +36,18 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslHoverPopupWindowReflector {
-    private static final String mClassName = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-            "com.samsung.android.widget.SemHoverPopupWindow" :
-            "android.widget.HoverPopupWindow";
+    private static String mClassName;
+
+    private SeslHoverPopupWindowReflector() {
+    }
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mClassName = "com.samsung.android.widget.SemHoverPopupWindow";
+        } else {
+            mClassName = "android.widget.HoverPopupWindow";
+        }
+    }
 
     /**
      * Returns <b>SemHoverPopupWindow.TYPE_NONE</b>.

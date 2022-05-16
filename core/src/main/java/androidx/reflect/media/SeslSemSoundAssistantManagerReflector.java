@@ -36,7 +36,10 @@ import java.lang.reflect.Method;
  * Samsung SemSoundAssistantManager utility class.
  */
 public class SeslSemSoundAssistantManagerReflector {
-    private static final String mClassName = "com.samsung.android.media.SemSoundAssistantManager";
+    private static String mClassName = "com.samsung.android.media.SemSoundAssistantManager";
+
+    private SeslSemSoundAssistantManagerReflector() {
+    }
 
     /**
      * Returns instance of <b>SemSoundAssistantManager</b>.
@@ -45,16 +48,16 @@ public class SeslSemSoundAssistantManagerReflector {
     @Nullable
     private static Object getInstance(@NonNull Context context) {
         Constructor<?> constructor = SeslBaseReflector.getConstructor(mClassName, Context.class);
-        if (constructor != null) {
-            try {
-                return constructor.newInstance(context);
-            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                Log.e("SeslSemSoundAssistantManagerReflector", "Failed to instantiate class");
-                return null;
-            }
+        if (constructor == null) {
+            return null;
         }
 
-        return null;
+        try {
+            return constructor.newInstance(context);
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            Log.e("SeslSemSoundAssistantManagerReflector", "Failed to instantiate class");
+            return null;
+        }
     }
 
     /**

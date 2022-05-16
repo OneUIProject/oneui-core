@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslPaintReflector {
     private static final Class<?> mClass = Paint.class;
 
+    private SeslPaintReflector() {
+    }
+
     /**
      * Calls <b>Paint.getHCTStrokeWidth()</b>.
      */

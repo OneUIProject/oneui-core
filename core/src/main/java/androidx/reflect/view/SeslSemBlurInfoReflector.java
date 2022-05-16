@@ -42,12 +42,15 @@ public class SeslSemBlurInfoReflector {
     private static final String TAG = "SeslSemBlurInfoReflector";
     private static final String mBuilderClass = "android.view.SemBlurInfo$Builder";
 
+    private SeslSemBlurInfoReflector() {
+    }
+
     /**
      * Creates a <b>SemBlurInfo.Builder</b> instance with the given <arg>blurMode</arg>.
      */
     public static Object semCreateBlurBuilder(int blurMode) {
+        Constructor<?> constructor = SeslBaseReflector.getConstructor(mBuilderClass, Integer.TYPE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Constructor<?> constructor = SeslBaseReflector.getConstructor(mBuilderClass, Integer.TYPE);
             if (constructor != null) {
                 try {
                     return constructor.newInstance(blurMode);
@@ -69,12 +72,16 @@ public class SeslSemBlurInfoReflector {
      */
     @NonNull
     public static Object semSetBuilderBlurRadius(Object builder, int radius) {
+        Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setRadius", Integer.TYPE);
-            if (method != null) {
-                method.setAccessible(true);
-                SeslBaseReflector.invoke(builder, method, radius);
-            }
+            method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setRadius", Integer.TYPE);
+        } else {
+            method = null;
+        }
+
+        if (method != null) {
+            method.setAccessible(true);
+            SeslBaseReflector.invoke(builder, method, radius);
         }
 
         return builder;
@@ -85,12 +92,16 @@ public class SeslSemBlurInfoReflector {
      */
     @NonNull
     public static Object semSetBuilderBlurBackgroundColor(Object builder, int color) {
+        Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundColor", Integer.TYPE);
-            if (method != null) {
-                method.setAccessible(true);
-                SeslBaseReflector.invoke(builder, method, color);
-            }
+            method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundColor", Integer.TYPE);
+        } else {
+            method = null;
+        }
+
+        if (method != null) {
+            method.setAccessible(true);
+            SeslBaseReflector.invoke(builder, method, color);
         }
 
         return builder;
@@ -101,12 +112,16 @@ public class SeslSemBlurInfoReflector {
      */
     @NonNull
     public static Object semSetBuilderBlurBackgroundCornerRadius(Object builder, float cornerRadius) {
+        Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundCornerRadius", Float.TYPE);
-            if (method != null) {
-                method.setAccessible(true);
-                SeslBaseReflector.invoke(builder, method, cornerRadius);
-            }
+            method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_setBackgroundCornerRadius", Float.TYPE);
+        } else {
+            method = null;
+        }
+
+        if (method != null) {
+            method.setAccessible(true);
+            SeslBaseReflector.invoke(builder, method, cornerRadius);
         }
 
         return builder;
@@ -116,12 +131,16 @@ public class SeslSemBlurInfoReflector {
      * Sets a <b>SemBlurInfo.Builder</b> instance in the given <arg>view</arg>.
      */
     public static void semBuildSetBlurInfo(Object builder, @NonNull View view) {
+        Method method;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Method method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_build");
-            if (method != null) {
-                method.setAccessible(true);
-                SeslViewReflector.semSetBlurInfo(view, SeslBaseReflector.invoke(builder, method));
-            }
+            method = SeslBaseReflector.getDeclaredMethod(mBuilderClass, "hidden_build");
+        } else {
+            method = null;
+        }
+
+        if (method != null) {
+            method.setAccessible(true);
+            SeslViewReflector.semSetBlurInfo(view, SeslBaseReflector.invoke(builder, method));
         }
     }
 }

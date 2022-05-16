@@ -39,6 +39,9 @@ public class SeslInputManagerReflector {
     @RequiresApi(21)
     private static final Class<?> mClass = InputManager.class;
 
+    private SeslInputManagerReflector() {
+    }
+
     /**
      * Returns instance of {@link InputManager}.
      */
@@ -59,10 +62,10 @@ public class SeslInputManagerReflector {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Object inputManager = getInstance();
             if (inputManager != null) {
-                Method method;
+                Method method = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_setPointerIconType", Integer.TYPE);
-                } else {
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     method = SeslBaseReflector.getMethod(mClass, "setPointerIconType", Integer.TYPE);
                 }
 

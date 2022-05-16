@@ -35,7 +35,10 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslPointerIconReflector {
-    private static final String mClassName = "android.view.PointerIcon";
+    protected static String mClassName = "android.view.PointerIcon";
+
+    private SeslPointerIconReflector() {
+    }
 
     /**
      * Returns <b>PointerIcon.SEM_TYPE_STYLUS_DEFAULT</b>.

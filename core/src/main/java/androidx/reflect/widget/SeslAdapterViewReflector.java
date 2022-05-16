@@ -40,6 +40,9 @@ import java.lang.reflect.Method;
 public class SeslAdapterViewReflector {
     private static final Class<?> mClass = AdapterView.class;
 
+    private SeslAdapterViewReflector() {
+    }
+
     /**
      * Set a fill out <var>color</var> for the given {@link AdapterView}.
      */

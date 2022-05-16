@@ -40,6 +40,9 @@ import dalvik.system.PathClassLoader;
 public class SeslLunarDateUtilsReflector {
     private static final String mClassName = "com.android.calendar.event.widget.datetimepicker.LunarDateUtils";
 
+    private SeslLunarDateUtilsReflector() {
+    }
+
     /**
      * Calls <b>LunarDateUtils.buildLunarDateString(Calendar, Context)</b>.
      */

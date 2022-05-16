@@ -37,7 +37,10 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslApplicationPackageManagerReflector {
-    private static final String mClassName = "android.app.ApplicationPackageManager";
+    private static String mClassName = "android.app.ApplicationPackageManager";
+
+    private SeslApplicationPackageManagerReflector() {
+    }
 
     /**
      * Retrieve the icon associated with the given <arg>packageName</arg>.

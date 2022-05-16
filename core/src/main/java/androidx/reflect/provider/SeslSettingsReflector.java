@@ -36,11 +36,18 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSettingsReflector {
+
+    private SeslSettingsReflector() {
+    }
+
     /**
      * Samsung Settings.System utility class.
      */
     public static class SeslSystemReflector {
         private static final Class<?> mClass = Settings.System.class;
+
+        private SeslSystemReflector() {
+        }
 
         /**
          * Returns <b>Settings.System.SEM_PEN_HOVERING</b>.
@@ -78,17 +85,21 @@ public class SeslSettingsReflector {
          * Returns <b>Settings.System.SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY</b>.
          */
         public static String getField_SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY() {
+            Object result = null;
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 Method method = SeslBaseReflector.getDeclaredMethod(mClass, "hidden_SEM_ACCESSIBILITY_REDUCE_TRANSPARENCY");
                 if (method != null) {
-                    Object result = SeslBaseReflector.invoke(null, method);
-                    if (result instanceof String) {
-                        return (String) result;
-                    }
+                    result = SeslBaseReflector.invoke(null, method);
                 }
             }
 
-            return "not_supported";
+            if (result instanceof String) {
+                return (String) result;
+            } else {
+                return "not_supported";
+            }
         }
     }
+
 }

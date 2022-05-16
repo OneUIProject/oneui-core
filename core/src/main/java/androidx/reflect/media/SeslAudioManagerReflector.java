@@ -36,6 +36,9 @@ import java.lang.reflect.Field;
 public class SeslAudioManagerReflector {
     private static final Class<?> mClass = AudioManager.class;
 
+    private SeslAudioManagerReflector() {
+    }
+
     /**
      * Returns <b>AudioManager.SOUND_TIME_PICKER_SCROLL</b>.
      */

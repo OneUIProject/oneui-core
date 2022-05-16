@@ -39,10 +39,13 @@ import java.util.Locale;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslLocaleDataReflector {
-    private static final String mClassName = "libcore.icu.LocaleData";
-    private static final String mDateFormatSymbolsClass = "android.icu.text.DateFormatSymbols";
-    private static final String mSemClassName = "com.samsung.sesl.icu.SemLocaleData";
-    private static final String mSemDateFormatSymbolsClass = "com.samsung.sesl.icu.SemDateFormatSymbols";
+    private static String mClassName = "libcore.icu.LocaleData";
+    private static String mDateFormatSymbolsClass = "android.icu.text.DateFormatSymbols";
+    private static String mSemClassName = "com.samsung.sesl.icu.SemLocaleData";
+    private static String mSemDateFormatSymbolsClass = "com.samsung.sesl.icu.SemDateFormatSymbols";
+
+    private SeslLocaleDataReflector() {
+    }
 
     /**
      * Returns a shared LocaleData for the given locale.
@@ -171,15 +174,17 @@ public class SeslLocaleDataReflector {
      */
     public static String[] getAmpmNarrowStrings(@NonNull Object dateFormatSymbols) {
         Method method = SeslBaseReflector.getDeclaredMethod(mSemDateFormatSymbolsClass, "getAmpmNarrowStrings", SeslBaseReflector.getClass(mDateFormatSymbolsClass));
+        Object result = null;
 
         if (method != null) {
-            Object result = SeslBaseReflector.invoke(null, method, dateFormatSymbols);
-            if (result instanceof String[]) {
-                return (String[]) result;
-            }
+            result = SeslBaseReflector.invoke(null, method, dateFormatSymbols);
         }
 
-        Log.e("SeslLocaleDataReflector", "amPm narrow strings failed. Use getAmPmStrings for ampm");
-        return new DateFormatSymbols().getAmPmStrings();
+        if (result instanceof String[]) {
+            return (String[]) result;
+        } else {
+            Log.e("SeslLocaleDataReflector", "amPm narrow strings failed. Use getAmPmStrings for ampm");
+            return new DateFormatSymbols().getAmPmStrings();
+        }
     }
 }

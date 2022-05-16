@@ -34,27 +34,9 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslSystemPropertiesReflector {
-    private static final String mClassName = "android.os.SemSystemProperties";
+    private static String mClassName = "android.os.SemSystemProperties";
 
-    /**
-     * Calls <b>SemSystemProperties.getSalesCode()</b>.
-     */
-    public static String getSalesCode() {
-        Method method;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            method = SeslBaseReflector.getDeclaredMethod(mClassName, "getSalesCode");
-        } else {
-            method = SeslBaseReflector.getMethod(mClassName, "getSalesCode");
-        }
-
-        if (method != null) {
-            Object result = SeslBaseReflector.invoke(null, method);
-            if (result instanceof String) {
-                return (String) result;
-            }
-        }
-
-        return null;
+    private SeslSystemPropertiesReflector() {
     }
 
     /**
@@ -70,6 +52,27 @@ public class SeslSystemPropertiesReflector {
 
         if (method != null) {
             Object result = SeslBaseReflector.invoke(null, method, key);
+            if (result instanceof String) {
+                return (String) result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calls <b>SemSystemProperties.getSalesCode()</b>.
+     */
+    public static String getSalesCode() {
+        Method method;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            method = SeslBaseReflector.getDeclaredMethod(mClassName, "getSalesCode");
+        } else {
+            method = SeslBaseReflector.getMethod(mClassName, "getSalesCode");
+        }
+
+        if (method != null) {
+            Object result = SeslBaseReflector.invoke(null, method);
             if (result instanceof String) {
                 return (String) result;
             }

@@ -38,6 +38,9 @@ import dalvik.system.PathClassLoader;
 public class SeslSolarLunarConverterReflector {
     private static final String mClassName = "com.samsung.android.calendar.secfeature.lunarcalendar.SolarLunarConverter";
 
+    private SeslSolarLunarConverterReflector() {
+    }
+
     /**
      * Calls <b>SolarLunarConverter.convertLunarToSolar(int, int, int, boolean)</b>.
      */

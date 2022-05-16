@@ -40,6 +40,9 @@ public class SeslAudioAttributesReflector {
     @RequiresApi(21)
     private static final Class<?> mClass = AudioAttributes.class;
 
+    private SeslAudioAttributesReflector() {
+    }
+
     /**
      * Returns <b>AudioAttributes.FLAG_BYPASS_INTERRUPTION_POLICY</b>.
      */

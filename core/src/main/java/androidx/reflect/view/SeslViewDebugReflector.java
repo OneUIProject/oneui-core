@@ -37,6 +37,9 @@ import java.lang.reflect.Method;
 public class SeslViewDebugReflector {
     private static final Class<?> mClass = ViewDebug.class;
 
+    private SeslViewDebugReflector() {
+    }
+
     /**
      * Gets the style attributes from the {@link Resources.Theme}. For debugging only.
      *

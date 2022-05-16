@@ -38,6 +38,9 @@ import java.lang.reflect.Method;
 public class SeslOverScrollerReflector {
     private static final Class<?> mClass = OverScroller.class;
 
+    private SeslOverScrollerReflector() {
+    }
+
     /**
      * Calls {@link OverScroller#fling(int, int, int, int, int, int, int, int)}.
      */

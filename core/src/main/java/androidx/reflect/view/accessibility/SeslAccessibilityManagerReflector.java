@@ -32,12 +32,15 @@ import java.lang.reflect.Method;
 public class SeslAccessibilityManagerReflector {
     private static String mClassName = "android.view.accessibility.AccessibilityManager";
 
+    private SeslAccessibilityManagerReflector() {
+    }
+
     /**
      * Returns semScreenReader status in the given <arg>accessibilityManager</arg>.
      */
     public static boolean isScreenReaderEnabled(AccessibilityManager accessibilityManager, boolean defaultValue) {
         Method method = SeslBaseReflector.getDeclaredMethod(mClassName, "semIsScreenReaderEnabled");
-        if (accessibilityManager != null && method != null) {
+        if (method != null && accessibilityManager != null) {
             return (Boolean) SeslBaseReflector.invoke(accessibilityManager, method);
         } else {
             return defaultValue;

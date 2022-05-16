@@ -36,6 +36,9 @@ import java.lang.reflect.Method;
 public class SeslFloatingFeatureReflector {
     private static final String mClassName;
 
+    private SeslFloatingFeatureReflector() {
+    }
+
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mClassName = "com.samsung.sesl.feature.SemFloatingFeature";
@@ -51,14 +54,16 @@ public class SeslFloatingFeatureReflector {
      */
     private static Object getInstance() {
         Method method = SeslBaseReflector.getMethod(mClassName, "getInstance");
-        if (method != null) {
-            Object result = SeslBaseReflector.invoke(null, method);
-            if (result.getClass().getName().equals(mClassName)) {
-                return result;
-            }
+        if (method == null) {
+            return null;
         }
 
-        return null;
+        Object result = SeslBaseReflector.invoke(null, method);
+        if (result.getClass().getName().equals(mClassName)) {
+            return result;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -69,23 +74,19 @@ public class SeslFloatingFeatureReflector {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Method method = SeslBaseReflector.getDeclaredMethod(mClassName, "hidden_getString", String.class, String.class);
-            if (method != null) {
-                result = SeslBaseReflector.invoke(null, method, tag, defaultValue);
-            }
+            result = SeslBaseReflector.invoke(null, method, tag, defaultValue);
         } else {
             Object semFloatingFeature = getInstance();
             if (semFloatingFeature != null) {
                 Method method = SeslBaseReflector.getMethod(mClassName, "getString", String.class, String.class);
-                if (method != null) {
-                    result = SeslBaseReflector.invoke(semFloatingFeature, method, tag, defaultValue);
-                }
+                result = SeslBaseReflector.invoke(semFloatingFeature, method, tag, defaultValue);
             }
         }
 
         if (result instanceof String) {
             return (String) result;
+        } else {
+            return defaultValue;
         }
-
-        return defaultValue;
     }
 }

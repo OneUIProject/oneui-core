@@ -35,6 +35,9 @@ import java.lang.reflect.Method;
 public class SeslTextViewReflector {
     private static final Class<?> mClass = TextView.class;
 
+    private SeslTextViewReflector() {
+    }
+
     /**
      * Set whether the menu item in the given <arg>menuId</arg> is enabled.
      */

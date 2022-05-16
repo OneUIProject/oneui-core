@@ -38,6 +38,9 @@ import java.lang.reflect.Method;
 public class SeslPathClassReflector {
     private static final String TAG = "SeslPathClassReflector";
 
+    private SeslPathClassReflector() {
+    }
+
     /**
      * Returns the {@link Class} object associated with the class or interface with the given
      * string name, using the given class loader.

@@ -38,6 +38,9 @@ import java.lang.reflect.Method;
 public class SeslBaseReflector {
     private static final String TAG = "SeslBaseReflector";
 
+    private SeslBaseReflector() {
+    }
+
     /**
      * Returns the {@link Class} object associated with the class or interface with the given
      * string name.

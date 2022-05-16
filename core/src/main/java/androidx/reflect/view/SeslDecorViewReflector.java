@@ -36,6 +36,10 @@ import java.lang.reflect.Method;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 public class SeslDecorViewReflector {
+
+    private SeslDecorViewReflector() {
+    }
+
     /**
      * Set whether to hide rounded corners in the given <b>DecorView</b>.
      */
@@ -47,4 +51,5 @@ public class SeslDecorViewReflector {
             }
         }
     }
+
 }

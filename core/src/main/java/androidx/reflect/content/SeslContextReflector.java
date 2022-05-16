@@ -40,6 +40,9 @@ import java.lang.reflect.Method;
 public class SeslContextReflector {
     private static final Class<?> mClass = Context.class;
 
+    private SeslContextReflector() {
+    }
+
     /**
      * Return a new {@link Context} object for the given <arg>packageName</arg> and {@link UserHandle}.
      */

@@ -69,7 +69,6 @@ import static android.content.Context.WIFI_SERVICE;
 import static android.content.Context.WINDOW_SERVICE;
 
 import android.accounts.AccountManager;
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AppOpsManager;
@@ -146,7 +145,6 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.os.EnvironmentCompat;
 import androidx.core.os.ExecutorCompat;
-import androidx.core.util.ObjectsCompat;
 
 import java.io.File;
 import java.util.HashMap;
@@ -155,7 +153,6 @@ import java.util.concurrent.Executor;
 /**
  * Helper for accessing features in {@link Context}.
  */
-@SuppressLint("PrivateConstructorForUtilityClass") // Already launched with public constructor
 public class ContextCompat {
     private static final String TAG = "ContextCompat";
 
@@ -546,18 +543,16 @@ public class ContextCompat {
      * Determine whether <em>you</em> have been granted a particular permission.
      *
      * @param permission The name of the permission being checked.
-     *
-     * @return {@link android.content.pm.PackageManager#PERMISSION_GRANTED} if you have the
-     * permission, or {@link android.content.pm.PackageManager#PERMISSION_DENIED} if not.
-     *
-     * @see android.content.pm.PackageManager#checkPermission(String, String)
+     * @return {@link PackageManager#PERMISSION_GRANTED} if you have the
+     * permission, or {@link PackageManager#PERMISSION_DENIED} if not.
+     * @see PackageManager#checkPermission(String, String)
      */
     public static int checkSelfPermission(@NonNull Context context, @NonNull String permission) {
         if (permission == null) {
             throw new IllegalArgumentException("permission is null");
         }
 
-        return context.checkPermission(permission, android.os.Process.myPid(), Process.myUid());
+        return context.checkPermission(permission, Process.myPid(), Process.myUid());
     }
 
     /**
@@ -598,7 +593,6 @@ public class ContextCompat {
      *
      * @return The path of the directory holding application code cache files.
      */
-    @NonNull
     public static File getCodeCacheDir(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= 21) {
             return Api21Impl.getCodeCacheDir(context);
@@ -686,8 +680,7 @@ public class ContextCompat {
      * thread associated with this context. This is the thread used to dispatch
      * calls to application components (activities, services, etc).
      */
-    @NonNull
-    public static Executor getMainExecutor(@NonNull Context context) {
+    public static Executor getMainExecutor(Context context) {
         if (Build.VERSION.SDK_INT >= 28) {
             return Api28Impl.getMainExecutor(context);
         }
@@ -887,6 +880,11 @@ public class ContextCompat {
         }
 
         @DoNotInline
+        static ColorStateList getColorStateList(Context obj, int id) {
+            return obj.getColorStateList(id);
+        }
+
+        @DoNotInline
         static int getColor(Context obj, int id) {
             return obj.getColor(id);
         }
@@ -930,7 +928,6 @@ public class ContextCompat {
             // This class is not instantiable.
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         @DoNotInline
         static ComponentName startForegroundService(Context obj, Intent service) {
             return obj.startForegroundService(service);

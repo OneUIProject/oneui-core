@@ -349,7 +349,7 @@ public class SeslSpinningDatePicker extends LinearLayout
         void onViewTypeChanged(SeslSpinningDatePicker view);
     }
 
-    public interface ValidationCallback {
+    private interface ValidationCallback {
         void onValidationChanged(boolean valid);
     }
 
@@ -522,6 +522,15 @@ public class SeslSpinningDatePicker extends LinearLayout
                                 }
                                 break;
                             case DATE_MODE_END:
+                                clearCalendar(mEndDate, year, month, day);
+                                if (mIsLunar) {
+                                    mLunarEndYear = year;
+                                    mLunarEndMonth = month;
+                                    mLunarEndDay = day;
+                                    mIsLeapEndMonth = isLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
+                                }
+                                break;
+                            default:
                                 clearCalendar(mStartDate, year, month, day);
                                 clearCalendar(mEndDate, year, month, day);
                                 if (mIsLunar) {
@@ -534,15 +543,6 @@ public class SeslSpinningDatePicker extends LinearLayout
                                     mLunarEndDay = day;
                                     mIsLeapEndMonth = isLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
                                     mDatePickerSpinner.setLunar(mIsLunar, mIsLeapMonth);
-                                }
-                                break;
-                            default:
-                                clearCalendar(mEndDate, year, month, day);
-                                if (mIsLunar) {
-                                    mLunarEndYear = year;
-                                    mLunarEndMonth = month;
-                                    mLunarEndDay = day;
-                                    mIsLeapEndMonth = isLeapMonth ? LEAP_MONTH : NOT_LEAP_MONTH;
                                 }
                                 break;
                         }
@@ -720,7 +720,7 @@ public class SeslSpinningDatePicker extends LinearLayout
 
         mOnDateChangedListener = onDateChangedListener;
 
-        updateSimpleMonthView(true);
+        updateSimpleMonthView(false);
         onDateChanged();
 
         mDatePickerSpinner.setMinValue(mMinDate);
@@ -772,12 +772,8 @@ public class SeslSpinningDatePicker extends LinearLayout
                 }
                 break;
             case DATE_MODE_END:
-                clearCalendar(mStartDate, year, month, dayOfMonth);
                 clearCalendar(mEndDate, year, month, dayOfMonth);
                 if (mIsLunar) {
-                    mLunarStartYear = year;
-                    mLunarStartMonth = month;
-                    mLunarStartDay = dayOfMonth;
                     mLunarEndYear = year;
                     mLunarEndMonth = month;
                     mLunarEndDay = dayOfMonth;
@@ -1271,23 +1267,23 @@ public class SeslSpinningDatePicker extends LinearLayout
             dest.writeLong(mMaxDate);
         }
 
-        int getSelectedDay() {
+        public int getSelectedDay() {
             return mSelectedDay;
         }
 
-        int getSelectedMonth() {
+        public int getSelectedMonth() {
             return mSelectedMonth;
         }
 
-        int getSelectedYear() {
+        public int getSelectedYear() {
             return mSelectedYear;
         }
 
-        long getMinDate() {
+        public long getMinDate() {
             return mMinDate;
         }
 
-        long getMaxDate() {
+        public long getMaxDate() {
             return mMaxDate;
         }
 
@@ -2222,8 +2218,6 @@ public class SeslSpinningDatePicker extends LinearLayout
                     msg1.what = MESSAGE_CALENDAR_HEADER_TEXT_VALUE_SET;
                     mHandler.sendMessage(msg1);
 
-                    mCalendarPagerAdapter.notifyDataSetChanged();
-
                     typeChanged = true;
                 }
 
@@ -2552,7 +2546,7 @@ public class SeslSpinningDatePicker extends LinearLayout
     static class LunarUtils {
         private static PathClassLoader mClassLoader;
 
-        public static PathClassLoader getPathClassLoader(Context context) {
+        static PathClassLoader getPathClassLoader(Context context) {
             if (mClassLoader == null) {
                 try {
                     ApplicationInfo appInfo = context.getPackageManager()
@@ -2685,10 +2679,10 @@ public class SeslSpinningDatePicker extends LinearLayout
                     return UAE_WEEK_DAY_STRING_FEATURE;
                 }
             }
-            return null;
         } catch (NoClassDefFoundError e) {
             Log.e(TAG, "msg : " + e.getMessage());
-            return null;
         }
+
+        return null;
     }
 }

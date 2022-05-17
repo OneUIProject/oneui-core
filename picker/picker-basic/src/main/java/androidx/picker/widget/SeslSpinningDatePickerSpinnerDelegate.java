@@ -298,7 +298,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                 .getDimensionPixelSize(R.dimen.sesl_number_picker_spinner_height);
         final int defaultWidth = resources
                 .getDimensionPixelSize(R.dimen.sesl_number_picker_spinner_width);
-        final float defaultEditTextHeight = mContext.getResources()
+        final float defaultEditTextHeight = resources
                 .getDimension(R.dimen.sesl_number_picker_spinner_edit_text_height);
 
         mHeightRatio = defaultEditTextHeight / defaultHeight;
@@ -324,7 +324,6 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                 Calendar.JANUARY, 1);
         mMaxValue.set(a2.getInt(R.styleable.DatePicker_android_endYear, DEFAULT_END_YEAR),
                 Calendar.DECEMBER, 31);
-        a2.recycle();
 
         if (mMinHeight != SIZE_UNSPECIFIED && mMaxHeight != SIZE_UNSPECIFIED
                 && mMinHeight > mMaxHeight) {
@@ -798,16 +797,20 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                 mLastFocusedChildVirtualViewId = 2;
             }
 
-            AccessibilityNodeProviderImpl provider
-                    = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            if (mAccessibilityManager.isEnabled() && provider != null) {
-                provider.performAction(mLastFocusedChildVirtualViewId, 64, null);
+            if (mAccessibilityManager.isEnabled()) {
+                AccessibilityNodeProviderImpl provider
+                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
+                if (provider != null) {
+                    provider.performAction(mLastFocusedChildVirtualViewId, 64, null);
+                }
             }
         } else {
-            AccessibilityNodeProviderImpl provider
-                    = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            if (mAccessibilityManager.isEnabled() && provider != null) {
-                provider.performAction(mLastFocusedChildVirtualViewId, 128, null);
+            if (mAccessibilityManager.isEnabled()) {
+                AccessibilityNodeProviderImpl provider
+                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
+                if (provider != null) {
+                    provider.performAction(mLastFocusedChildVirtualViewId, 128, null);
+                }
             }
             mLastFocusedChildVirtualViewId = View.NO_ID;
             mLastHoveredChildVirtualViewId = Integer.MIN_VALUE;
@@ -822,8 +825,8 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        final int keyCode = event.getKeyCode();
         final int action = event.getAction();
+        final int keyCode = event.getKeyCode();
         if (keyCode != KeyEvent.KEYCODE_ENTER && keyCode != KeyEvent.KEYCODE_NUMPAD_ENTER) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_UP:
@@ -895,7 +898,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
             }
         }
 
-        if (action == KeyEvent.ACTION_UP) {
+        if (action == KeyEvent.ACTION_DOWN) {
             if (mLastFocusedChildVirtualViewId == 2) {
                 performClick();
                 removeAllCallbacks();
@@ -990,7 +993,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
     }
 
     private static class HapticPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
-        public boolean mSkipHapticCalls;
+        boolean mSkipHapticCalls;
 
         private HapticPreDrawListener() {
             mSkipHapticCalls = false;
@@ -1030,7 +1033,6 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
 
     @Override
     public void setEnabled(boolean enabled) {
-        mInputText.setEnabled(enabled);
         if (!enabled && mScrollState != OnScrollListener.SCROLL_STATE_IDLE) {
             stopScrollAnimation();
             onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
@@ -1804,7 +1806,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                 moveToFinalScrollerPosition(mAdjustScroller);
             }
             stopScrollAnimation();
-        } else {
+        } else if (!mIsStartingAnimation) {
             initializeSelectorWheelIndices();
         }
         int totalTextHeight = mTextSize * 3;
@@ -1896,6 +1898,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
         System.arraycopy(selectorIndices, 1, selectorIndices,
                 0, selectorIndices.length - 1);
         Calendar nextScrollSelectorIndex = (Calendar) selectorIndices[selectorIndices.length - 2].clone();
+        nextScrollSelectorIndex.add(Calendar.DAY_OF_MONTH, 1);
         if (mWrapSelectorWheel && nextScrollSelectorIndex.compareTo(mMaxValue) > 0) {
             clearCalendar(nextScrollSelectorIndex, mMinValue);
         }
@@ -1907,8 +1910,9 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
         System.arraycopy(selectorIndices, 0, selectorIndices,
                 1, selectorIndices.length - 1);
         Calendar nextScrollSelectorIndex = (Calendar) selectorIndices[1].clone();
+        nextScrollSelectorIndex.add(Calendar.DAY_OF_MONTH, -1);
         if (mWrapSelectorWheel && nextScrollSelectorIndex.compareTo(mMinValue) < 0) {
-            nextScrollSelectorIndex = mMaxValue;
+            clearCalendar(nextScrollSelectorIndex, mMaxValue);
         }
         selectorIndices[0] = nextScrollSelectorIndex;
         ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
@@ -2045,19 +2049,19 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                 } else {
                     text = formatDateForAccessibility(value);
                 }
-                mDelegator.sendAccessibilityEvent(4);
             }
+            mDelegator.sendAccessibilityEvent(4);
+        }
 
-            if (mOnValueChangeListener != null) {
-                if (mIsLunar) {
-                    SeslSpinningDatePicker.LunarDate lunarDate = new SeslSpinningDatePicker.LunarDate();
-                    mOnValueChangeListener.onValueChange(mDelegator,
-                            convertSolarToLunar(previous, null),
-                            convertSolarToLunar(mValue, lunarDate), lunarDate.isLeapMonth, lunarDate);
-                } else {
-                    mOnValueChangeListener.onValueChange(mDelegator,
-                            previous, mValue, false, null);
-                }
+        if (mOnValueChangeListener != null) {
+            if (mIsLunar) {
+                SeslSpinningDatePicker.LunarDate lunarDate = new SeslSpinningDatePicker.LunarDate();
+                mOnValueChangeListener.onValueChange(mDelegator,
+                        convertSolarToLunar(previous, null),
+                        convertSolarToLunar(mValue, lunarDate), lunarDate.isLeapMonth, lunarDate);
+            } else {
+                mOnValueChangeListener.onValueChange(mDelegator,
+                        previous, mValue, false, null);
             }
         }
     }
@@ -2148,14 +2152,14 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
     }
 
     class PressedStateHelper implements Runnable {
-        public static final int BUTTON_DECREMENT = 2;
-        public static final int BUTTON_INCREMENT = 1;
+        static final int BUTTON_DECREMENT = 2;
+        static final int BUTTON_INCREMENT = 1;
         private final int MODE_PRESS = 1;
         private final int MODE_TAPPED = 2;
         private int mManagedButton;
         private int mMode;
 
-        public void cancel() {
+        void cancel() {
             final int mRight = mDelegator.getRight();
             final int mBottom = mDelegator.getBottom();
             mMode = 0;
@@ -2173,14 +2177,14 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
             }
         }
 
-        public void buttonPressDelayed(int button) {
+        void buttonPressDelayed(int button) {
             cancel();
             mMode = MODE_PRESS;
             mManagedButton = button;
             mDelegator.postDelayed(this, ViewConfiguration.getTapTimeout());
         }
 
-        public void buttonTapped(int button) {
+        void buttonTapped(int button) {
             cancel();
             mMode = MODE_TAPPED;
             mManagedButton = button;
@@ -2464,7 +2468,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
             return super.performAction(virtualViewId, action, arguments);
         }
 
-        public void sendAccessibilityEventForVirtualView(int virtualViewId, int eventType) {
+        void sendAccessibilityEventForVirtualView(int virtualViewId, int eventType) {
             switch (virtualViewId) {
                 case VIRTUAL_VIEW_ID_DECREMENT: {
                     if (hasVirtualDecrementButton()) {
@@ -2517,8 +2521,8 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
                     }
                 } return;
                 case VIRTUAL_VIEW_ID_CENTER: {
-                    CharSequence text = getVirtualCurrentButtonText();
-                    if (!TextUtils.isEmpty(text) && text.toString().toLowerCase().contains(searchedLowerCase)) {
+                    String text = getVirtualCurrentButtonText();
+                    if (!TextUtils.isEmpty(text) && text.toLowerCase().contains(searchedLowerCase)) {
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_CENTER));
                     }
                 } return;
@@ -2663,6 +2667,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
 
         private String getVirtualDecrementButtonText() {
             Calendar value = (Calendar) mValue.clone();
+            value.add(Calendar.DAY_OF_MONTH, -1);
             if (mWrapSelectorWheel) {
                 value = getWrappedSelectorIndex(value);
             }
@@ -2677,6 +2682,7 @@ class SeslSpinningDatePickerSpinnerDelegate extends SeslSpinningDatePickerSpinne
 
         private String getVirtualIncrementButtonText() {
             Calendar value = (Calendar) mValue.clone();
+            value.add(Calendar.DAY_OF_MONTH, 1);
             if (mWrapSelectorWheel) {
                 value = getWrappedSelectorIndex(value);
             }

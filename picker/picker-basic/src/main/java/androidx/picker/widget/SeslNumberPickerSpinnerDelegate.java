@@ -326,7 +326,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                 .getDimensionPixelSize(R.dimen.sesl_number_picker_spinner_height);
         final int defaultWidth = resources
                 .getDimensionPixelSize(R.dimen.sesl_number_picker_spinner_width);
-        final float defaultEditTextHeight = mContext.getResources()
+        final float defaultEditTextHeight = resources
                 .getDimension(R.dimen.sesl_number_picker_spinner_edit_text_height);
 
         mHeightRatio = defaultEditTextHeight / defaultHeight;
@@ -424,10 +424,9 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
         final ColorStateList colors = mInputText.getTextColors();
         final int[] enabledStateSet = mDelegator.getEnableStateSet();
-        final int colorForState = colors.getColorForState(enabledStateSet, Color.WHITE);
 
         if (Build.VERSION.SDK_INT > 29) {
-            mTextColorIdle = colorForState;
+            mTextColorIdle = colors.getColorForState(enabledStateSet, Color.WHITE);
             selectedPickerColor = ResourcesCompat
                     .getColor(resources, R.color.sesl_number_picker_text_highlight_color, context.getTheme());
         } else {
@@ -639,10 +638,12 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                 updateInputTextView();
                 mInputText.setVisibility(View.VISIBLE);
 
-                final AccessibilityNodeProviderImpl provider
-                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-                if (mAccessibilityManager.isEnabled() && provider != null) {
-                    provider.performAction(INPUT, 128, null);
+                if (mAccessibilityManager.isEnabled()) {
+                    final AccessibilityNodeProviderImpl provider
+                            = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
+                    if (provider != null) {
+                        provider.performAction(INPUT, 128, null);
+                    }
                 }
             } else {
                 if (mWheelInterval != DEFAULT_WHEEL_INTERVAL && mCustomWheelIntervalMode
@@ -1081,22 +1082,27 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
                 }
             }
 
-            AccessibilityNodeProviderImpl provider
-                    = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            if (mAccessibilityManager.isEnabled() && provider != null) {
-                if (mIsEditTextMode) {
-                    mLastFocusedChildVirtualViewId = 2;
+
+            if (mAccessibilityManager.isEnabled()) {
+                AccessibilityNodeProviderImpl provider
+                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
+                if (provider != null) {
+                    if (mIsEditTextMode) {
+                        mLastFocusedChildVirtualViewId = 2;
+                    }
+                    provider.performAction(mLastFocusedChildVirtualViewId, 64, null);
                 }
-                provider.performAction(mLastFocusedChildVirtualViewId, 64, null);
             }
         } else {
-            AccessibilityNodeProviderImpl provider
-                    = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
-            if (mAccessibilityManager.isEnabled() && provider != null) {
-                if (mIsEditTextMode) {
-                    mLastFocusedChildVirtualViewId = 2;
+            if (mAccessibilityManager.isEnabled()) {
+                AccessibilityNodeProviderImpl provider
+                        = (AccessibilityNodeProviderImpl) getAccessibilityNodeProvider();
+                if (provider != null) {
+                    if (mIsEditTextMode) {
+                        mLastFocusedChildVirtualViewId = 2;
+                    }
+                    provider.performAction(mLastFocusedChildVirtualViewId, 128, null);
                 }
-                provider.performAction(mLastFocusedChildVirtualViewId, 128, null);
             }
             mLastFocusedChildVirtualViewId = View.NO_ID;
             mLastHoveredChildVirtualViewId = Integer.MIN_VALUE;
@@ -1111,8 +1117,8 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        final int keyCode = event.getKeyCode();
         final int action = event.getAction();
+        final int keyCode = event.getKeyCode();
         if (keyCode != KeyEvent.KEYCODE_ENTER && keyCode != KeyEvent.KEYCODE_NUMPAD_ENTER) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_UP:
@@ -2971,7 +2977,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
             if (mAccessibilityFocusedView != virtualViewId) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            } else if (mAccessibilityFocusedView == virtualViewId) {
+            } else {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {
@@ -3019,7 +3025,7 @@ class SeslNumberPickerSpinnerDelegate extends SeslNumberPicker.AbsNumberPickerDe
 
             if (mAccessibilityFocusedView != View.NO_ID) {
                 info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-            } else if (mAccessibilityFocusedView == View.NO_ID) {
+            } else {
                 info.addAction(AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS);
             }
             if (mDelegator.isEnabled()) {

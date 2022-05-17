@@ -875,12 +875,12 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
             if (isMeaLanguage()) {
                 result[0] = amPm[0];
                 result[1] = amPm[1];
+                return result;
             } else {
                 result[0] = amPm[0].length() > 4 ? narrowAmPm[0] : amPm[0];
                 result[1] = amPm[1].length() > 4 ? narrowAmPm[1] : amPm[1];
+                return result;
             }
-
-            return result;
         } else {
             Locale locale = context.getResources().getConfiguration().locale;
             Object localeData = SeslLocaleDataReflector.get(locale);
@@ -1082,6 +1082,9 @@ class SeslTimePickerSpinnerDelegate extends SeslTimePicker.AbsTimePickerDelegate
     }
 
     private class SeslKeyListener implements View.OnKeyListener {
+        public SeslKeyListener() {
+        }
+
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (DEBUG) {

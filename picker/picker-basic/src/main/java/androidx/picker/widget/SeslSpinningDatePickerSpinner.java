@@ -365,15 +365,15 @@ class SeslSpinningDatePickerSpinner extends LinearLayout {
         return true;
     }
 
-    public boolean getWrapSelectorWheel() {
+    boolean getWrapSelectorWheel() {
         return mDelegate.getWrapSelectorWheel();
     }
 
-    public void setWrapSelectorWheel(boolean wrapSelectorWheel) {
+    void setWrapSelectorWheel(boolean wrapSelectorWheel) {
         mDelegate.setWrapSelectorWheel(wrapSelectorWheel);
     }
 
-    public void setOnLongPressUpdateInterval(long interval) {
+    void setOnLongPressUpdateInterval(long interval) {
         mDelegate.setOnLongPressUpdateInterval(interval);
     }
 

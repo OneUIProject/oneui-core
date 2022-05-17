@@ -75,6 +75,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
@@ -452,7 +453,9 @@ public class TabLayout extends HorizontalScrollView {
   @TabGravity int tabGravity;
   int tabIndicatorAnimationDuration;
   @TabIndicatorGravity int tabIndicatorGravity;
-  @Mode int mode;
+  @ViewDebug.ExportedProperty(category = "tablayout")
+  @Mode
+  int mode;
   boolean inlineLabel;
   boolean tabIndicatorFullWidth;
   @TabIndicatorAnimationMode int tabIndicatorAnimationMode;
@@ -581,14 +584,14 @@ public class TabLayout extends HorizontalScrollView {
         context.obtainStyledAttributes(
             tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
     try {
-      mSubTabTextSize =
-              ta.getDimensionPixelSize(
-                      androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
       mSubTabSubTextColors =
               MaterialResources.getColorStateList(
                       context,
                       ta,
                       androidx.appcompat.R.styleable.TextAppearance_android_textColor);
+      mSubTabTextSize =
+              ta.getDimensionPixelSize(
+                      androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
     } finally {
       seslArray.recycle();
       ta.recycle();
@@ -1960,7 +1963,7 @@ public class TabLayout extends HorizontalScrollView {
    *
    * @see #selectTab(Tab, boolean)
    */
-  public void selectTab(@Nullable final Tab tab, boolean updateIndicator,
+  private void selectTab(@Nullable final Tab tab, boolean updateIndicator,
                         boolean isPressed) {
     if (tab != null && !tab.view.isEnabled()) {
       if (viewPager != null) {
@@ -3541,9 +3544,12 @@ public class TabLayout extends HorizontalScrollView {
 
                           @Override
                           public void onAnimationEnd(Animation animation) {
+                            AnimationSet set = new AnimationSet(true);
+                            set.setFillAfter(true);
                             AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
                             fadeOut.setDuration(ANIM_HIDE_DURATION);
                             fadeOut.setFillAfter(true);
+                            set.addAnimation(fadeOut);
                             mMainTabTouchBackground.startAnimation(fadeOut);
                           }
                         });

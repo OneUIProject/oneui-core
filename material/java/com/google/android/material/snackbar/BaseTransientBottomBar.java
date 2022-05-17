@@ -1131,12 +1131,11 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
           @SuppressLint("ClickableViewAccessibility")
           @Override
           public boolean onTouch(View v, MotionEvent event) {
-            if (v instanceof ViewGroup) {
-              return findChildUnder((ViewGroup) v, event.getX(), event.getY()) != null;
-            } else {
+            if (!(v instanceof ViewGroup)) {
               // Prevent touches from passing through this view.
               return true;
             }
+            return findChildUnder((ViewGroup) v, event.getX(), event.getY()) != null;
           }
         };
 

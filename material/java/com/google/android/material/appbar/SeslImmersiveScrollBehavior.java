@@ -364,12 +364,11 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
   }
 
   private boolean isDexEnabled() {
-    if (mContext != null) {
-      return SeslConfigurationReflector
-              .isDexEnabled(mContext.getResources().getConfiguration());
-    } else {
+    if (mContext == null) {
       return false;
     }
+    return SeslConfigurationReflector
+            .isDexEnabled(mContext.getResources().getConfiguration());
   }
 
   private boolean getCurrentNavbarCanMoveState() {
@@ -386,14 +385,13 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
   }
 
   private boolean isAccessibilityEnable() {
-    if (mContext != null) {
-      AccessibilityManager manager
-              = (AccessibilityManager) mContext
-              .getSystemService(Context.ACCESSIBILITY_SERVICE);
-      return manager.isTouchExplorationEnabled();
-    } else {
+    if (mContext == null) {
       return false;
     }
+    AccessibilityManager manager
+            = (AccessibilityManager) mContext
+            .getSystemService(Context.ACCESSIBILITY_SERVICE);
+    return manager.isTouchExplorationEnabled();
   }
 
   private boolean canImmersiveScroll() {
@@ -732,8 +730,8 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
     findSystemBarsBackground();
     dispatchImmersiveScrollEnable();
 
-    for (int i = 0; i < mAppBarLayout.getChildCount(); i++) {
-      View child = mAppBarLayout.getChildAt(i);
+    for (int i = 0; i < abl.getChildCount(); i++) {
+      View child = abl.getChildAt(i);
       if (mCollapsingToolbarLayout != null) {
         break;
       } else if (child instanceof CollapsingToolbarLayout) {
@@ -742,8 +740,7 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
       }
     }
 
-    View bottomArea = mCollapsingToolbarLayout
-            .findViewById(R.id.bottom_bar_overlay);
+    View bottomArea = parent.findViewById(R.id.bottom_bar_overlay);
     if (mBottomArea == null || bottomArea != null) {
       mBottomArea = bottomArea;
     }
@@ -817,11 +814,15 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
       }
 
       if (mNavigationBarHeight == 0) {
-        final int navBarResId
-                = res.getIdentifier(
-                        "navigation_bar_height", "dimen", "android");
-        if (navBarResId > 0) {
-          mNavigationBarHeight = res.getDimensionPixelSize(navBarResId);
+        final int showNavBarResId = res.getIdentifier(
+                "config_showNavigationBar", "bool", "android");
+        if (showNavBarResId <= 0 || res.getBoolean(showNavBarResId)) {
+          final int navBarHeightResId
+                  = res.getIdentifier(
+                  "navigation_bar_height", "dimen", "android");
+          if (navBarHeightResId > 0) {
+            mNavigationBarHeight = res.getDimensionPixelSize(navBarHeightResId);
+          }
         }
       }
     }
@@ -974,11 +975,10 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
 
   void showWindowInset(boolean force) {
     if (mWindowInsetsController != null && mDecorViewInset != null) {
-      if (!mDecorViewInset.isVisible(WindowInsets.Type.statusBars())
-              || !mDecorViewInset.isVisible(WindowInsets.Type.navigationBars())) {
-        if (isAppBarHide() || force) {
-          mWindowInsetsController.show(WindowInsets.Type.systemBars());
-        }
+      if (!(mDecorViewInset.isVisible(WindowInsets.Type.statusBars())
+              && mDecorViewInset.isVisible(WindowInsets.Type.navigationBars()))
+          || isAppBarHide() || force) {
+        mWindowInsetsController.show(WindowInsets.Type.systemBars());
       }
     }
   }
@@ -1116,7 +1116,7 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
               < mAppBarLayout.seslGetCollapsedHeight();
   }
 
-  boolean startRestoreAnimation() {
+  private boolean startRestoreAnimation() {
     if (!isAppBarHide()) {
       return false;
     } else {

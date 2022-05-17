@@ -329,17 +329,6 @@ public class NavigationBarPresenter extends BaseMenuPresenter {
 
   private class PopupPresenterCallback implements MenuPresenter.Callback {
     @Override
-    public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
-      if (menu instanceof SubMenuBuilder) {
-        menu.getRootMenu().close(false);
-      }
-      MenuPresenter.Callback callback = getCallback();
-      if (callback != null) {
-        callback.onCloseMenu(menu, allMenusAreClosing);
-      }
-    }
-
-    @Override
     public boolean onOpenSubMenu(MenuBuilder subMenu) {
       if (subMenu == null) {
         return false;
@@ -348,6 +337,17 @@ public class NavigationBarPresenter extends BaseMenuPresenter {
       final int itemId = ((SubMenuBuilder) subMenu).getItem().getItemId();
       MenuPresenter.Callback callback = getCallback();
       return callback != null && callback.onOpenSubMenu(subMenu);
+    }
+
+    @Override
+    public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
+      if (menu instanceof SubMenuBuilder) {
+        menu.getRootMenu().close(false);
+      }
+      MenuPresenter.Callback callback = getCallback();
+      if (callback != null) {
+        callback.onCloseMenu(menu, allMenusAreClosing);
+      }
     }
   }
 

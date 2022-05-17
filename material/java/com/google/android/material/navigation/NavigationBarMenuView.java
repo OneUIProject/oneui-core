@@ -199,18 +199,6 @@ public abstract class NavigationBarMenuView extends ViewGroup implements MenuVie
     return 0;
   }
 
-  @Override
-  public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
-    super.onInitializeAccessibilityNodeInfo(info);
-    AccessibilityNodeInfoCompat infoCompat = AccessibilityNodeInfoCompat.wrap(info);
-    infoCompat.setCollectionInfo(
-        CollectionInfoCompat.obtain(
-            /* rowCount= */ 1,
-            /* columnCount= */ menu.getVisibleItems().size(),
-            /* hierarchical= */ false,
-            /* selectionMode = */ CollectionInfoCompat.SELECTION_MODE_SINGLE));
-  }
-
   /**
    * Sets the tint which is applied to the menu items' icons.
    *

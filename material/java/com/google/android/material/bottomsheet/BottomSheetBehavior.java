@@ -1617,7 +1617,9 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
       };
 
   void dispatchOnSlide(int top) {
-    View bottomSheet = viewRef.get();
+    View bottomSheet = viewRef != null
+            ? viewRef.get()
+            : null;
     if (bottomSheet != null && !callbacks.isEmpty()) {
       float slideOffset =
           (top > collapsedOffset || collapsedOffset == getExpandedOffset())
@@ -1787,7 +1789,9 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
       return;
     }
 
-    ViewParent viewParent = viewRef.get().getParent();
+    ViewParent viewParent = (viewRef != null && viewRef.get() != null)
+            ? viewRef.get().getParent()
+            : null;
     if (!(viewParent instanceof CoordinatorLayout)) {
       return;
     }
@@ -1805,7 +1809,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
 
     for (int i = 0; i < childCount; i++) {
       final View child = parent.getChildAt(i);
-      if (child == viewRef.get()) {
+      if (viewRef != null && child == viewRef.get()) {
         continue;
       }
 

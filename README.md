@@ -6,7 +6,12 @@
 </p>
 
 ## Samsung Experience Support Library
-This repo contains Samsung's modified version of Google's [Android Jetpack](https://github.com/androidx/androidx) and [Material Components](https://github.com/material-components/material-components-android) libraries used in their One UI apps.
+This is the repository for the Samsung Experience Support Library (internally referenced as sesl).
+
+Samsung's One UI apps are created by using a heavily modified version of Google's [Android Jetpack](https://github.com/androidx/androidx) and [Material Components](https://github.com/material-components/material-components-android) libraries, that include (but are not limited to) a new theme for the UI, new APIs and much more.
+The intent of this library is to make those Samsung UX elements available to everyone for study, modding or whatever feels right for you.
+
+Any form of contribution, suggestions, bug report or feature request will be welcome.
 
 # Libraries
 ### Android Jetpack:
@@ -26,11 +31,12 @@ This repo contains Samsung's modified version of Google's [Android Jetpack](http
 - picker-basic [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-basic) (based on 1.0.34-sesl4)
 - picker-color [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-color) (based on 1.0.20-sesl4)
 
-## Uncomplete libs:
-- slidingpanelayout (based on 1.0.8-sesl4): broken, needs fixes
+## Uncomplete/to-be-added libs:
+- slidingpanelayout (based on 1.0.10-sesl4): broken, needs fixes
+- typoanimation (based on 1.0.1-sesl4)
 
 # Usage
-To use the libraries in your project, simply add the dependencies in your build.gradle file:
+To use these libraries in your project, simply add the dependencies in your build.gradle file:
 ```groovy
 dependencies {
     implementation 'io.github.oneuiproject.sesl:appcompat:<version>'
@@ -38,7 +44,7 @@ dependencies {
     // ...
 }
 ```
-You'll also need to remove Google's original libraries:
+In order for your project to build correctly, you'll need to remove Google's original libraries:
 ```groovy
 configurations.all {
     exclude group: 'androidx.appcompat', module: 'appcompat'
@@ -46,7 +52,7 @@ configurations.all {
 }
 ```
 ## Using with libraries that depend on AndroidX
-If you need to use a library that requires one or more stock androidx module, you will have to exclude those specific dependencies to avoid build errors, like this:
+If you need to use a library that requires one or more stock androidx module, you have to exclude those specific dependencies to avoid build errors, like this:
 ```groovy
 implementation("com.org.group:library:1.0.0") {
 	exclude group: 'androidx.swiperefreshlayout', module: 'swiperefreshlayout'
@@ -54,9 +60,9 @@ implementation("com.org.group:library:1.0.0") {
 ```
 
 # More info
-- [Samsung's EULA](https://www.samsung.com/sg/Legal/SamsungLegal-EULA/)
-- [Official OneUI Design Guide](https://design.samsung.com/global/contents/one-ui/download/oneui_design_guide_eng.pdf)
-- [Optimizing for DeX](https://developer.samsung.com/samsung-dex/modify-optimizing.html)
+- [Android Jetpack](https://developer.android.com/jetpack)
+- [Material Components](https://material.io/components?platform=android)
+- [One UI](https://www.samsung.com/one-ui/)
 
 # Special thanks
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.

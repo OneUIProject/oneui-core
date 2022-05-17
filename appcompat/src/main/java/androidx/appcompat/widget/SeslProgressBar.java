@@ -1754,11 +1754,11 @@ public class SeslProgressBar extends View {
      * <p>Start the indeterminate progress animation.</p>
      */
     private void startAnimation() {
-        if (getVisibility() != VISIBLE || getWindowVisibility() != VISIBLE) {
+        if (getVisibility() != VISIBLE) {
             return;
         }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M || getWindowVisibility() == VISIBLE) {
             if (mIndeterminateDrawable instanceof Animatable) {
                 mShouldStartAnimationDrawable = true;
                 mHasAnimation = false;

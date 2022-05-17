@@ -337,8 +337,9 @@ public class ActionBarContextView extends AbsActionBarView {
         }
 
         if (mTitleLayout != null && mCustomView == null) {
+            final Context context = getContext();
             if (mTitleView != null) {
-                TypedArray a = getContext().obtainStyledAttributes(mTitleStyleRes,
+                TypedArray a = context.obtainStyledAttributes(mTitleStyleRes,
                         R.styleable.TextAppearance);
                 TypedValue value = a.peekValue(R.styleable.TextAppearance_android_textSize);
                 a.recycle();
@@ -347,7 +348,7 @@ public class ActionBarContextView extends AbsActionBarView {
                 if (TextUtils.isEmpty(mSubtitle)) {
                     mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
                             textSize
-                                    * Math.min(getContext().getResources().getConfiguration().fontScale,
+                                    * Math.min(context.getResources().getConfiguration().fontScale,
                                     MAX_FONT_SCALE));
                 } else {
                     mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
@@ -355,7 +356,7 @@ public class ActionBarContextView extends AbsActionBarView {
             }
             if (mClose == null || mClose.getVisibility() == View.GONE) {
                 final int contentInsetStart =
-                        (int) getContext().getResources().getDimension(R.dimen.sesl_toolbar_content_inset);
+                        (int) context.getResources().getDimension(R.dimen.sesl_toolbar_content_inset);
                 boolean isRtl =
                         ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR;
                 if (mTitleView != null && mTitleView.getVisibility() == View.VISIBLE) {

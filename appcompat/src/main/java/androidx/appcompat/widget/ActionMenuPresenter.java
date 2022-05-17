@@ -326,8 +326,9 @@ class ActionMenuPresenter extends BaseMenuPresenter
         }
 
         if (mOverflowButton != null && mMenuView != null) {
-            mOverflowButton.setBadgeText(((ActionMenuView) mMenuView).getOverflowBadgeText(),
-                    ((ActionMenuView) mMenuView).getSumOfDigitsInBadges());
+            ActionMenuView menuView = (ActionMenuView) mMenuView;
+            mOverflowButton.setBadgeText(menuView.getOverflowBadgeText(),
+                    menuView.getSumOfDigitsInBadges());
         }
         if ((mOverflowButton == null || mOverflowButton.getVisibility() != View.VISIBLE)
                 && isOverflowMenuShowing()) {
@@ -713,14 +714,16 @@ class ActionMenuPresenter extends BaseMenuPresenter
             addView(mInnerView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
 
+            final Resources res = getResources();
+
             if (mInnerView instanceof OverflowImageView) {
                 mContentDescription = mInnerView.getContentDescription();
                 mBadgeContentDescription = ((Object) mContentDescription) + " , "
-                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
+                        + res.getString(R.string.sesl_action_menu_overflow_badge_description);
             }
 
             if (TextUtils.isEmpty(mContentDescription)) {
-                mContentDescription = getResources().getString(R.string.sesl_action_menu_overflow_description);
+                mContentDescription = res.getString(R.string.sesl_action_menu_overflow_description);
                 if (mInnerView != null) {
                     mInnerView.setContentDescription(mContentDescription);
                 }
@@ -736,27 +739,29 @@ class ActionMenuPresenter extends BaseMenuPresenter
         public void onConfigurationChanged(Configuration newConfig) {
             super.onConfigurationChanged(newConfig);
 
-            mBadgeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) getResources().getDimension(R.dimen.sesl_menu_item_badge_text_size));
+            final Resources res = getResources();
+
+            mBadgeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) res.getDimension(R.dimen.sesl_menu_item_badge_text_size));
 
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mBadgeBackground.getLayoutParams();
-            lp.width = (int) (getResources().getDimension(R.dimen.sesl_badge_default_width)
-                    + (mBadgeText.getText().length() * getResources().getDimension(R.dimen.sesl_badge_additional_width)));
-            lp.height = (int) getResources().getDimension(R.dimen.sesl_menu_item_badge_size);
+            lp.width = (int) (res.getDimension(R.dimen.sesl_badge_default_width)
+                    + (mBadgeText.getText().length() * res.getDimension(R.dimen.sesl_badge_additional_width)));
+            lp.height = (int) res.getDimension(R.dimen.sesl_menu_item_badge_size);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                lp.setMarginEnd((int) getResources().getDimension(R.dimen.sesl_menu_item_badge_end_margin));
+                lp.setMarginEnd((int) res.getDimension(R.dimen.sesl_menu_item_badge_end_margin));
             }
             mBadgeBackground.setLayoutParams(lp);
 
             if (mInnerView instanceof OverflowImageView) {
                 mContentDescription = getContentDescription();
                 mBadgeContentDescription = ((Object) mContentDescription) + " , "
-                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
+                        + res.getString(R.string.sesl_action_menu_overflow_badge_description);
             }
 
             if (TextUtils.isEmpty(mContentDescription)) {
-                mContentDescription = getResources().getString(R.string.sesl_action_menu_overflow_description);
+                mContentDescription = res.getString(R.string.sesl_action_menu_overflow_description);
                 mBadgeContentDescription = ((Object) mContentDescription) + " , "
-                        + getResources().getString(R.string.sesl_action_menu_overflow_badge_description);
+                        + res.getString(R.string.sesl_action_menu_overflow_badge_description);
             }
 
             if (mBadgeBackground.getVisibility() == VISIBLE) {
@@ -823,13 +828,15 @@ class ActionMenuPresenter extends BaseMenuPresenter
             setFocusable(true);
             setLongClickable(true);
 
-            mTooltipText = getResources().getString(R.string.sesl_action_menu_overflow_description);
+            final Resources res = getResources();
+
+            mTooltipText = res.getString(R.string.sesl_action_menu_overflow_description);
 
             TooltipCompat.setTooltipText(this, mTooltipText);
 
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
                 mSBSHelper = new SeslShowButtonShapesHelper(this,
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.sesl_more_button_show_button_shapes_background, null),
+                        ResourcesCompat.getDrawable(res, R.drawable.sesl_more_button_show_button_shapes_background, null),
                         getBackground());
             }
         }
@@ -838,20 +845,22 @@ class ActionMenuPresenter extends BaseMenuPresenter
         protected void onConfigurationChanged(Configuration newConfig) {
             super.onConfigurationChanged(newConfig);
 
-            TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.View, R.attr.actionOverflowButtonStyle, 0);
+            final Context context = getContext();
+
+            TypedArray a = context.obtainStyledAttributes(null, R.styleable.View, R.attr.actionOverflowButtonStyle, 0);
             setMinimumHeight(a.getDimensionPixelSize(R.styleable.View_android_minHeight, 0));
-            mTooltipText = getContext().getResources().getString(R.string.sesl_action_menu_overflow_description);
+            mTooltipText = context.getResources().getString(R.string.sesl_action_menu_overflow_description);
             a.recycle();
 
-            TypedArray a2 = getContext().obtainStyledAttributes(null, R.styleable.AppCompatImageView, R.attr.actionOverflowButtonStyle, 0);
-            Drawable d = ContextCompat.getDrawable(getContext(), a2.getResourceId(R.styleable.AppCompatImageView_android_src, -1));
+            TypedArray a2 = context.obtainStyledAttributes(null, R.styleable.AppCompatImageView, R.attr.actionOverflowButtonStyle, 0);
+            Drawable d = ContextCompat.getDrawable(context, a2.getResourceId(R.styleable.AppCompatImageView_android_src, -1));
             if (d != null) {
                 setImageDrawable(d);
             }
             a2.recycle();
 
             if (mSBSHelper != null) {
-                mSBSHelper.updateOverflowButtonBackground(ContextCompat.getDrawable(getContext(),
+                mSBSHelper.updateOverflowButtonBackground(ContextCompat.getDrawable(context,
                         R.drawable.sesl_more_button_show_button_shapes_background));
             }
         }
@@ -917,7 +926,9 @@ class ActionMenuPresenter extends BaseMenuPresenter
             TextViewCompat.setTextAppearance(this, a.getResourceId(R.styleable.AppCompatTheme_actionMenuTextAppearance, 0));
             a.recycle();
 
-            setText(getResources().getString(R.string.sesl_more_item_label));
+            final Resources res = getResources();
+
+            setText(res.getString(R.string.sesl_more_item_label));
 
             mIsLightTheme = SeslMisc.isLightTheme(context);
             if (mIsLightTheme) {
@@ -930,7 +941,7 @@ class ActionMenuPresenter extends BaseMenuPresenter
                 seslSetButtonShapeEnabled(true);
             } else {
                 mSBBHelper = new SeslShowButtonShapesHelper(this,
-                        ResourcesCompat.getDrawable(getResources(), R.drawable.sesl_action_text_button_show_button_shapes_background, null),
+                        ResourcesCompat.getDrawable(res, R.drawable.sesl_action_text_button_show_button_shapes_background, null),
                         getBackground());
             }
         }

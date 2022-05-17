@@ -1049,8 +1049,8 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
             } else {
                 setContentWidth(mDropDownWidth);
             }
-            final int horizontalOffset = mDropDownHorizontalOffset != 0 ?
-                    mDropDownHorizontalOffset : getHorizontalOriginalOffset();
+            final int horizontalOffset = mDropDownHorizontalOffset == 0 ?
+                    getHorizontalOriginalOffset() : mDropDownHorizontalOffset;
             if (ViewUtils.isLayoutRtl(AppCompatSpinner.this)) {
                 hOffset += spinnerWidth - spinnerPaddingRight - getWidth()
                         - horizontalOffset;

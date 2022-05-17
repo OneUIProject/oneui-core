@@ -444,9 +444,10 @@ class DropDownListView extends ListView {
         if (action == MotionEvent.ACTION_HOVER_ENTER
                 || action == MotionEvent.ACTION_HOVER_MOVE) {
             final int position = pointToPosition((int) ev.getX(), (int) ev.getY());
+            final int mSelectedPosition = SeslAdapterViewReflector
+                    .getField_mSelectedPosition(this);
 
-            if (position != INVALID_POSITION
-                    && position != SeslAdapterViewReflector.getField_mSelectedPosition(this)) {
+            if (position != INVALID_POSITION && position != mSelectedPosition) {
                 final View hoveredItem = getChildAt(position - getFirstVisiblePosition());
                 if (hoveredItem.isEnabled()) {
                     requestFocus();

@@ -24,6 +24,7 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -230,8 +231,9 @@ public class ContentFrameLayout extends FrameLayout {
     }
 
     private void updateAvailableWidth() {
+        Resources res = getResources();
         mAvailableWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                getResources().getConfiguration().screenWidthDp, getResources().getDisplayMetrics());
+                res.getConfiguration().screenWidthDp, getResources().getDisplayMetrics());
     }
 
     @Override

@@ -1139,9 +1139,9 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             // If there is text in the query box, handle enter, and action keys
             // The search key is handled by the dialog's onKeyDown().
             if (!mSearchSrcTextView.isEmpty() && event.hasNoModifiers()) {
-                if (event.getAction() == KeyEvent.ACTION_UP
-                        || event.getAction() == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_UP) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER
+                            || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
                         v.cancelLongPress();
 
                         // Launch as a regular search.
@@ -1195,7 +1195,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
             }
 
             // Next, check for an "up and out" move
-            if (keyCode == KeyEvent.KEYCODE_DPAD_UP && mSearchSrcTextView.getListSelection() == 0) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP && 0 == mSearchSrcTextView.getListSelection()) {
                 // TODO: restoreUserQuery();
                 // let ACTV complete the move
                 return false;
@@ -1976,7 +1976,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         private SearchView mSearchView;
 
         @Nullable
-        private OnPrivateImeCommandListener mOnAppPrivateCommandListener;
+        private OnPrivateImeCommandListener mOnAppPrivateCommandListener = null;
 
         private boolean mForceNotCallShowSoftInput;
         private boolean mHasPendingShowSoftInputRequest;

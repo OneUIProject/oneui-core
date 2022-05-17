@@ -1568,6 +1568,13 @@ class SeslRecyclerViewFastScroller {
     }
 
     public boolean onTouchEvent(MotionEvent me) {
+        final Rect container = mContainerRect;
+        final int containerTop = container.top;
+        final int containerBottom = container.bottom;
+        final View trackImage = mTrackImage;
+        final int trackTop = trackImage.getTop();
+        final int trackBottom = trackImage.getBottom();
+
         mScrollY = me.getY();
 
         if (!isEnabled()) {
@@ -1615,13 +1622,6 @@ class SeslRecyclerViewFastScroller {
             } break;
 
             case MotionEvent.ACTION_MOVE: {
-                final Rect container = mContainerRect;
-                final int containerTop = container.top;
-                final int containerBottom = container.bottom;
-                final View trackImage = mTrackImage;
-                final int trackTop = trackImage.getTop();
-                final int trackBottom = trackImage.getBottom();
-
                 if (mPendingDrag >= 0 && Math.abs(me.getY() - mInitialTouchY) > mScaledTouchSlop) {
                     beginDrag();
 

@@ -84,30 +84,30 @@ public class SeslSwipeListAnimator {
         mSwipeConfiguration = configuration;
 
         if (configuration.textLeftToRight == null) {
-            configuration.textLeftToRight = " ";
+            mSwipeConfiguration.textLeftToRight = " ";
         }
-        if (configuration.textRightToLeft == null) {
-            configuration.textRightToLeft = " ";
-        }
-
-        if (configuration.colorLeftToRight == configuration.UNSET_VALUE) {
-            configuration.colorLeftToRight = DEFAULT_LEFT_COLOR;
-        }
-        if (configuration.colorRightToLeft == configuration.UNSET_VALUE) {
-            configuration.colorRightToLeft = DEFAULT_RIGHT_COLOR;
-        }
-        if (configuration.textColor == configuration.UNSET_VALUE) {
-            configuration.textColor = DEFAULT_TEXT_COLOR;
+        if (mSwipeConfiguration.textRightToLeft == null) {
+            mSwipeConfiguration.textRightToLeft = " ";
         }
 
-        if (configuration.textSize == configuration.UNSET_VALUE) {
-            configuration.textSize = DEFAULT_TEXT_SIZE;
+        if (mSwipeConfiguration.colorLeftToRight == mSwipeConfiguration.UNSET_VALUE) {
+            mSwipeConfiguration.colorLeftToRight = DEFAULT_LEFT_COLOR;
         }
-        if (configuration.drawablePadding == configuration.UNSET_VALUE) {
-            configuration.drawablePadding = DEFAULT_DRAWABLE_PADDING;
+        if (mSwipeConfiguration.colorRightToLeft == mSwipeConfiguration.UNSET_VALUE) {
+            mSwipeConfiguration.colorRightToLeft = DEFAULT_RIGHT_COLOR;
+        }
+        if (mSwipeConfiguration.textColor == mSwipeConfiguration.UNSET_VALUE) {
+            mSwipeConfiguration.textColor = DEFAULT_TEXT_COLOR;
         }
 
-        mBgLeftToRight = initPaintWithAlphaAntiAliasing(configuration.colorLeftToRight);
+        if (mSwipeConfiguration.textSize == mSwipeConfiguration.UNSET_VALUE) {
+            mSwipeConfiguration.textSize = DEFAULT_TEXT_SIZE;
+        }
+        if (mSwipeConfiguration.drawablePadding == mSwipeConfiguration.UNSET_VALUE) {
+            mSwipeConfiguration.drawablePadding = DEFAULT_DRAWABLE_PADDING;
+        }
+
+        mBgLeftToRight = initPaintWithAlphaAntiAliasing(mSwipeConfiguration.colorLeftToRight);
         mBgRightToLeft = initPaintWithAlphaAntiAliasing(mSwipeConfiguration.colorRightToLeft);
 
         mTextPaint = new TextPaint();

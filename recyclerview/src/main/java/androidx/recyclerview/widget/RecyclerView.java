@@ -1779,8 +1779,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             return;
         }
 
-        mDrawRect = mDrawRect && layout instanceof LinearLayoutManager;
-        mDrawLastRoundedCorner = mDrawLastRoundedCorner && mDrawRect;
+        final boolean isLinearLayoutManager = layout instanceof LinearLayoutManager;
+        mDrawRect = mDrawRect && isLinearLayoutManager;
+        mDrawLastRoundedCorner = mDrawLastRoundedCorner && isLinearLayoutManager;
 
         stopScroll();
         // TODO We should do this switch a dispatchLayout pass and animate children. There is a good
@@ -3505,7 +3506,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             return focused;
         }
         if (!isPreferredNextFocus(focused, result, direction)) {
-            result = super.focusSearch(result, direction);
+            result = super.focusSearch(focused, direction);
         }
         if (mIsArrowKeyPressed && result == null
                 && (mLayout instanceof StaggeredGridLayoutManager)) {
@@ -4106,14 +4107,14 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mFastScrollerEventListener != null) {
                 if (e.getActionMasked() == MotionEvent.ACTION_DOWN
                         || e.getActionMasked() == MotionEvent.ACTION_MOVE) {
-                    if (mFastScroller.getEffectState()
-                            == SeslRecyclerViewFastScroller.EFFECT_STATE_OPEN) {
+                    final int effectState = mFastScroller.getEffectState();
+                    if (effectState == SeslRecyclerViewFastScroller.EFFECT_STATE_OPEN) {
                         mFastScrollerEventListener.onPressed(mFastScroller.getScrollY());
                     }
                 }
                 if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                    if (mFastScroller.getEffectState()
-                            == SeslRecyclerViewFastScroller.EFFECT_STATE_CLOSE) {
+                    final int effectState = mFastScroller.getEffectState();
+                    if (effectState == SeslRecyclerViewFastScroller.EFFECT_STATE_CLOSE) {
                         mFastScrollerEventListener.onReleased(mFastScroller.getScrollY());
                     }
                 }
@@ -5328,8 +5329,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mLayout != null && !mLayout.canScrollHorizontally()) {
                 mHasNestedScrollRange = false;
 
-                for (ViewParent parent = getParent(); parent != null
-                        && parent instanceof ViewGroup; parent = parent.getParent()) {
+
+                ViewParent parent = getParent();
+                while (parent != null && parent instanceof ViewGroup) {
                     if (parent instanceof NestedScrollingParent2
                             && findSuperClass(parent, "CoordinatorLayout")) {
                         ViewGroup viewGroup = (ViewGroup) parent;
@@ -5343,6 +5345,8 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                         }
                         mNestedScrollRange = mRemainNestedScrollRange;
                         mHasNestedScrollRange = true;
+                    } else {
+                        parent = parent.getParent();
                     }
                 }
 
@@ -5481,10 +5485,11 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mStatisticalCount != 0) {
                 float currentTimeMillis = (float) (System.currentTimeMillis()
                         - mPrevLatencyTime);
+                final float prevLatency = mApproxLatency;
                 if (currentTimeMillis > FRAME_LATENCY_LIMIT) {
                     currentTimeMillis = FRAME_LATENCY_LIMIT;
                 }
-                mApproxLatency += currentTimeMillis;
+                mApproxLatency = prevLatency + currentTimeMillis;
             }
             mPrevLatencyTime = System.currentTimeMillis();
             if (mStatisticalCount == STATISTICS_MAX_COUNT) {
@@ -14866,8 +14871,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
     private void runLastItemAddDeleteAnim(View view) {
         if (mLastItemAddRemoveAnim == null) {
-            if ((getItemAnimator() instanceof DefaultItemAnimator) && mLastItemAnimTop == -1) {
-                mLastItemAnimTop = ((DefaultItemAnimator) getItemAnimator()).getLastItemBottom();
+            ItemAnimator itemAnimator = getItemAnimator();
+            if (itemAnimator instanceof DefaultItemAnimator && mLastItemAnimTop == -1) {
+                mLastItemAnimTop = ((DefaultItemAnimator) itemAnimator).getLastItemBottom();
             }
             if (mIsSetOnlyAddAnim) {
                 mLastItemAddRemoveAnim = ValueAnimator.ofInt(mLastItemAnimTop,
@@ -14889,8 +14895,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     private int getPendingAnimFlag() {
-        if (getItemAnimator() instanceof DefaultItemAnimator) {
-            return ((DefaultItemAnimator) getItemAnimator()).getPendingAnimFlag();
+        ItemAnimator itemAnimator = getItemAnimator();
+        if (itemAnimator instanceof DefaultItemAnimator) {
+            return ((DefaultItemAnimator) itemAnimator).getPendingAnimFlag();
         } else {
             return 0;
         }
@@ -14916,15 +14923,14 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     private void adjustNestedScrollRangeBy(int y) {
-        if (!mHasNestedScrollRange) {
-            return;
-        }
-        if (!canScrollUp() || mRemainNestedScrollRange != 0) {
-            mRemainNestedScrollRange = mRemainNestedScrollRange - y;
-            if (mRemainNestedScrollRange < 0) {
-                mRemainNestedScrollRange = 0;
-            } else if (mRemainNestedScrollRange > mNestedScrollRange) {
-                mRemainNestedScrollRange = mNestedScrollRange;
+        if (mHasNestedScrollRange) {
+            if (!canScrollUp() || mRemainNestedScrollRange != 0) {
+                mRemainNestedScrollRange = mRemainNestedScrollRange - y;
+                if (mRemainNestedScrollRange < 0) {
+                    mRemainNestedScrollRange = 0;
+                } else if (mRemainNestedScrollRange > mNestedScrollRange) {
+                    mRemainNestedScrollRange = mNestedScrollRange;
+                }
             }
         }
     }
@@ -15462,7 +15468,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
             mGoToTopState = state;
 
-            int padding = getPaddingLeft() + (((getWidth() - getPaddingLeft()) - getPaddingRight()) / 2);
+            int padding = getPaddingLeft() + ((getWidth() - getPaddingLeft() - getPaddingRight()) / 2);
             if (state != GTP_STATE_NONE) {
                 if (state == GTP_STATE_SHOWN || state == GTP_STATE_PRESSED) {
                     removeCallbacks(mGoToToFadeOutRunnable);
@@ -15600,15 +15606,14 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     public void seslUpdateIndexTipPosition() {
-        if (mIndexTip == null) {
-            return;
-        }
-        if (mIndexTip.mCurrentOrientation
-                == Configuration.ORIENTATION_PORTRAIT) {
-            mIndexTip.mIsNeedUpdate = true;
-            mIndexTip.invalidate();
-        } else {
-            mIndexTip.mIsNeedUpdate = false;
+        if (mIndexTip != null) {
+            if (mIndexTip.mCurrentOrientation
+                    == Configuration.ORIENTATION_PORTRAIT) {
+                mIndexTip.mIsNeedUpdate = true;
+                mIndexTip.invalidate();
+            } else {
+                mIndexTip.mIsNeedUpdate = false;
+            }
         }
     }
 

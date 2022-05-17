@@ -5345,6 +5345,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                         }
                         mNestedScrollRange = mRemainNestedScrollRange;
                         mHasNestedScrollRange = true;
+                        break;
                     } else {
                         parent = parent.getParent();
                     }

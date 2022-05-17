@@ -40,7 +40,7 @@ import java.util.List;
  */
 
 @RestrictTo(LIBRARY_GROUP_PREFIX)
-public class DataManager {
+class DataManager {
     private static final String TAG = "DataManager";
 
     private static final int MAX_APP_LIST_COUNT = 10000;
@@ -52,6 +52,9 @@ public class DataManager {
 
     private static final boolean sIsSupportQUERY = Build.VERSION.SDK_INT >= 26;
     private static final boolean sIsSupportSCS = Build.VERSION.SDK_INT > 29;
+
+    DataManager() {
+    }
 
     public static List<AppPickerView.AppLabelInfo> resetPackages(Context context,
                                                                  List<String> list) {

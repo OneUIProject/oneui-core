@@ -24,7 +24,7 @@ ext {
 
     // Libraries versions.
     sesl_appcompat_version = "1.0.0-beta02"
-    sesl_apppickerview_version = "1.0.0-beta01"
+    sesl_apppickerview_version = "1.0.0"
     sesl_coordinatorlayout_version = "1.0.0"
     sesl_core_version = "1.0.0"
     sesl_customview_version = "1.0.0"

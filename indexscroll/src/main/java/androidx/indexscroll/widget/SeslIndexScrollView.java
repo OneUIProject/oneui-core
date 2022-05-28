@@ -123,11 +123,11 @@ public class SeslIndexScrollView extends FrameLayout {
     };
 
     public interface OnIndexBarEventListener {
-        void onIndexChanged(int pos);
+        void onIndexChanged(int sectionIndex);
 
-        void onPressed(float y);
+        void onPressed(float v);
 
-        void onReleased(float y);
+        void onReleased(float v);
     }
 
     public SeslIndexScrollView(Context context) {

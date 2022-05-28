@@ -238,14 +238,15 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
                 if (mBundle.containsKey(INDEXSCROLL_INDEX_TITLES)
                         && mBundle.containsKey(INDEXSCROLL_INDEX_COUNTS)) {
                     getBundleInfo();
+                    return;
                 }
-            } else {
-                onBeginTransaction();
-                for (int i = 0; i < mAlphabetLength; i++) {
-                    mCachingValue[i] = getPositionForString("" + mAlphabet.charAt(i));
-                }
-                onEndTransaction();
             }
+
+            onBeginTransaction();
+            for (int i = 0; i < mAlphabetLength; i++) {
+                mCachingValue[i] = getPositionForString("" + mAlphabet.charAt(i));
+            }
+            onEndTransaction();
         }
     }
 

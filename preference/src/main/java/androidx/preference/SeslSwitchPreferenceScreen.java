@@ -39,6 +39,10 @@ public class SeslSwitchPreferenceScreen extends SwitchPreferenceCompat {
         public boolean onKey(View view, int i, KeyEvent keyEvent) {
             int keyCode = keyEvent.getKeyCode();
 
+            if (keyEvent.getAction() != KeyEvent.ACTION_DOWN) {
+                return false;
+            }
+
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_LEFT:
                     if (!isChecked()) {

@@ -47,7 +47,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.preference_preference.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.5-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.6-sesl4" + "\n"
 }
 
 ext {

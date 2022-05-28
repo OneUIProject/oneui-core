@@ -203,7 +203,7 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
         mAlphabetArray = new String[mAlphabetLength];
 
         for (int i = 0; i < mAlphabetLength; i++) {
-            if (mUseGroupIndex && mAlphabet.charAt(i) == 55357) {
+            if (mUseGroupIndex && mAlphabet.charAt(i) == GROUP_CHECKER) {
                 mAlphabetArray[i] = GROUP_CHAR;
             } else {
                 mAlphabetArray[i] = Character.toString(mAlphabet.charAt(i));
@@ -419,9 +419,9 @@ public abstract class SeslAbsIndexer extends DataSetObserver {
                         + targetChar + " = " + basePosition);
             }
 
-            if (targetChar == 9733) {
+            if (targetChar == FAVORITE_CHAR) {
                 basePosition += mFavoriteItemCount;
-            } else if (targetChar == 55357) {
+            } else if (targetChar == GROUP_CHECKER) {
                 basePosition += mGroupItemCount;
             }
 

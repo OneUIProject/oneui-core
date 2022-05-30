@@ -26,22 +26,9 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
     @Nullable
     AccessibilityNodeInfo.TouchDelegateInfo mTouchDelegateInfo = null;
 
-    private static class CapturedTouchDelegate extends TouchDelegate {
-        @NonNull
-        protected final Rect mBounds;
-        @NonNull
-        protected final View mView;
-
-        public CapturedTouchDelegate(@NonNull Rect bounds, @NonNull View delegateView) {
-            super(bounds, delegateView);
-            mBounds = bounds;
-            mView = delegateView;
-        }
-    }
-
-    public SeslTouchTargetDelegate(@NonNull View delegateView) {
-        super(new Rect(), delegateView);
-        mAnchorView = delegateView;
+    public SeslTouchTargetDelegate(@NonNull View anchorView) {
+        super(new Rect(), anchorView);
+        mAnchorView = anchorView;
     }
 
     @Nullable
@@ -51,21 +38,53 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
         return delegate;
     }
 
-    @Override
-    @NonNull
-    @RequiresApi(29)
-    public AccessibilityNodeInfo.TouchDelegateInfo getTouchDelegateInfo() {
-        if (mTouchDelegateInfo == null) {
-            ArrayMap<Region, View> map = new ArrayMap<>(mTouchDelegateList.size());
-            Iterator<CapturedTouchDelegate> it = mTouchDelegateList.iterator();
-            while (it.hasNext()) {
-                CapturedTouchDelegate delegate = it.next();
-                map.put(new Region(delegate.mBounds), delegate.mView);
+    @Nullable
+    public TouchDelegate addTouchDelegate(@NonNull View view) {
+        return addTouchDelegate(view, null);
+    }
+
+    @Nullable
+    public TouchDelegate addTouchDelegate(@NonNull View delegateView, @Nullable ExtraInsets expandInsets) {
+        Rect viewBounds = new Rect(0, 0, delegateView.getWidth(), delegateView.getHeight());
+
+        View view = delegateView;
+        while (view != mAnchorView) {
+            Rect bounds = new Rect();
+            view.getHitRect(bounds);
+            viewBounds.left += bounds.left;
+            viewBounds.right += bounds.left;
+            viewBounds.top += bounds.top;
+            viewBounds.bottom += bounds.top;
+
+            ViewParent parent = view.getParent();
+            if (!(parent instanceof View)) {
+                break;
             }
-            mTouchDelegateInfo = new AccessibilityNodeInfo.TouchDelegateInfo(map);
+
+            view = (View) parent;
         }
 
-        return mTouchDelegateInfo;
+        if (view != mAnchorView) {
+            Log.w(TAG, "Must be delegateView is child of anchorView");
+            return null;
+        }
+
+        if (expandInsets != null) {
+            viewBounds.left -= expandInsets.left;
+            viewBounds.top -= expandInsets.top;
+            viewBounds.right += expandInsets.right;
+            viewBounds.bottom += expandInsets.bottom;
+        }
+
+        return addTouchDelegate(viewBounds, delegateView);
+    }
+
+    public boolean removeTouchDelegate(@NonNull TouchDelegate delegate) {
+        if (delegate instanceof CapturedTouchDelegate) {
+            return mTouchDelegateList.remove(delegate);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -89,12 +108,21 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
         return consumed;
     }
 
-    public boolean removeTouchDelegate(@NonNull TouchDelegate delegate) {
-        if (delegate instanceof CapturedTouchDelegate) {
-            return mTouchDelegateList.remove(delegate);
-        } else {
-            return false;
+    @Override
+    @NonNull
+    @RequiresApi(29)
+    public AccessibilityNodeInfo.TouchDelegateInfo getTouchDelegateInfo() {
+        if (mTouchDelegateInfo == null) {
+            ArrayMap<Region, View> map = new ArrayMap<>(mTouchDelegateList.size());
+            Iterator<CapturedTouchDelegate> it = mTouchDelegateList.iterator();
+            while (it.hasNext()) {
+                CapturedTouchDelegate delegate = it.next();
+                map.put(new Region(delegate.mBounds), delegate.mView);
+            }
+            mTouchDelegateInfo = new AccessibilityNodeInfo.TouchDelegateInfo(map);
         }
+
+        return mTouchDelegateInfo;
     }
 
     public static class ExtraInsets {
@@ -167,44 +195,17 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
         }
     }
 
-    @Nullable
-    public TouchDelegate addTouchDelegate(@NonNull View view) {
-        return addTouchDelegate(view, null);
+    private static class CapturedTouchDelegate extends TouchDelegate {
+        @NonNull
+        protected final Rect mBounds;
+        @NonNull
+        protected final View mView;
+
+        public CapturedTouchDelegate(@NonNull Rect bounds, @NonNull View delegateView) {
+            super(bounds, delegateView);
+            mBounds = bounds;
+            mView = delegateView;
+        }
     }
 
-    @Nullable
-    public TouchDelegate addTouchDelegate(@NonNull View delegateView, @Nullable ExtraInsets extraInsets) {
-        Rect viewBounds = new Rect(0, 0, delegateView.getWidth(), delegateView.getHeight());
-
-        View view = delegateView;
-        while (view != mAnchorView) {
-            Rect bounds = new Rect();
-            view.getHitRect(bounds);
-            viewBounds.left += bounds.left;
-            viewBounds.right += bounds.left;
-            viewBounds.top += bounds.top;
-            viewBounds.bottom += bounds.top;
-
-            ViewParent parent = view.getParent();
-            if (!(parent instanceof View)) {
-                break;
-            }
-
-            view = (View) parent;
-        }
-
-        if (view != mAnchorView) {
-            Log.w(TAG, "Must be delegateView is child of anchorView");
-            return null;
-        }
-
-        if (extraInsets != null) {
-            viewBounds.left -= extraInsets.left;
-            viewBounds.top -= extraInsets.top;
-            viewBounds.right += extraInsets.right;
-            viewBounds.bottom += extraInsets.bottom;
-        }
-
-        return addTouchDelegate(viewBounds, delegateView);
-    }
 }

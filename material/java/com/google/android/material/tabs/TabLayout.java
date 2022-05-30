@@ -75,6 +75,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -102,6 +103,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
+import androidx.reflect.widget.SeslHorizontalScrollViewReflector;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.badge.BadgeDrawable;
@@ -155,9 +157,12 @@ public class TabLayout extends HorizontalScrollView {
 
   private int mBadgeColor = Color.WHITE;
   private int mBadgeTextColor = Color.WHITE;
+  private int mCurrentTouchSlop;
+  private final int mDefaultTouchSlop;
   private int mDepthStyle = DEPTH_TYPE_MAIN;
   private int mFirstTabGravity;
   private int mIconTextGap = -1;
+  private int mMaxTouchSlop;
   private int mOverScreenMaxWidth = -1;
   private int mRequestedTabWidth = -1;
   private int mSubTabIndicator2ndHeight = 1;
@@ -560,6 +565,11 @@ public class TabLayout extends HorizontalScrollView {
             context, seslArray, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
 
     final Resources res = getResources();
+
+    mMaxTouchSlop = res.getDisplayMetrics().widthPixels;
+    mCurrentTouchSlop
+        = mDefaultTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+
     if (Build.VERSION.SDK_INT >= 31) {
       mBoldTypeface = Typeface.create(
               res.getString(androidx.appcompat.R.string.sesl_font_family_medium), Typeface.BOLD);
@@ -4355,6 +4365,23 @@ public class TabLayout extends HorizontalScrollView {
                           int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
     updateBadgePosition();
+
+    if (changed) {
+      mMaxTouchSlop = Math.max(mMaxTouchSlop, right - left);
+    }
+
+    final int touchSlop;
+    if (mode == MODE_FIXED
+            || (!canScrollHorizontally(1) && !canScrollHorizontally(-1))) {
+      touchSlop = mMaxTouchSlop;
+    } else {
+      touchSlop = mDefaultTouchSlop;
+    }
+
+    if (mCurrentTouchSlop != touchSlop) {
+      SeslHorizontalScrollViewReflector.setTouchSlop(this, touchSlop);
+      mCurrentTouchSlop = touchSlop;
+    }
   }
 
   @Override

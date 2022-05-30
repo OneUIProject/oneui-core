@@ -180,6 +180,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     private CharSequence mUserQuery;
     private boolean mExpandedInActionView;
     private int mCollapsedImeOptions;
+    private boolean mHandleIme = true;
     private boolean mUseSVI = false;
 
     SearchableInfo mSearchable;
@@ -605,12 +606,22 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         }
     }
 
+    private void seslClearFocus() {
+        mClearingFocus = true;
+        super.clearFocus();
+        mSearchSrcTextView.clearFocus();
+        mSearchSrcTextView.setImeVisibility(false);
+        mClearingFocus = false;
+    }
+
     @Override
     public void clearFocus() {
         mClearingFocus = true;
         super.clearFocus();
         mSearchSrcTextView.clearFocus();
-        mSearchSrcTextView.setImeVisibility(false);
+        if (mHandleIme || mIconified) {
+            mSearchSrcTextView.setImeVisibility(false);
+        }
         mClearingFocus = false;
     }
 
@@ -1325,7 +1336,11 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
                 // If the app doesn't override the close behavior
                 if (mOnCloseListener == null || !mOnCloseListener.onClose()) {
                     // hide the keyboard and remove focus
-                    clearFocus();
+                    if (mHandleIme) {
+                        clearFocus();
+                    } else {
+                        seslClearFocus();
+                    }
                     // collapse the search field
                     updateViewsVisibility(true);
                 }
@@ -1414,7 +1429,11 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     @Override
     public void onActionViewCollapsed() {
         setQuery("", false);
-        clearFocus();
+        if (mHandleIme) {
+            clearFocus();
+        } else {
+            seslClearFocus();
+        }
         updateViewsVisibility(true);
         mSearchSrcTextView.setImeOptions(mCollapsedImeOptions);
         mExpandedInActionView = false;
@@ -2422,6 +2441,10 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
 
     public void seslSetOnPrivateImeCommandListener(@Nullable OnPrivateImeCommandListener listener) {
         mSearchSrcTextView.seslSetOnPrivateImeCommandListener(listener);
+    }
+
+    public void seslHandleImeForced(boolean enabled) {
+        mHandleIme = enabled;
     }
 
     @Override

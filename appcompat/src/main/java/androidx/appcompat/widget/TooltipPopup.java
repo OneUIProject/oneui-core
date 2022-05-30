@@ -169,10 +169,6 @@ class TooltipPopup {
         return mContentView.getParent() != null;
     }
 
-    void updateContent(CharSequence tooltipText) {
-        mMessageView.setText(tooltipText);
-    }
-
     private boolean checkNaviBarForLandscape() {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();

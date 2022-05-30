@@ -43,6 +43,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,6 +69,7 @@ import androidx.appcompat.view.menu.SubMenuBuilder;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
+import androidx.core.view.SeslTouchTargetDelegate;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.reflect.view.SeslViewReflector;
@@ -85,6 +87,7 @@ import java.util.List;
  */
 public class Toolbar extends ViewGroup {
     private static final float MAX_FONT_SCALE = 1.2f;
+    private static final int SESL_TOP_INSET_TO_EXPAND = 100;
 
     private static final String TAG = "Toolbar";
 
@@ -295,6 +298,8 @@ public class Toolbar extends ViewGroup {
         }
 
         a.recycle();
+
+        seslSetTouchDelegateForToolbar();
     }
 
     @Override
@@ -2682,4 +2687,91 @@ public class Toolbar extends ViewGroup {
         }
     }
 
+    private void seslSetTouchDelegateForToolbar() {
+        final ViewTreeObserver vto = getViewTreeObserver();
+        if (vto != null) {
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    final Toolbar toolbarView = Toolbar.this;
+                    if (toolbarView != null) {
+                        toolbarView.post(new Runnable() {
+                            // TODO rework this method
+                            // kang
+                            @Override
+                            public void run() {
+                                SeslTouchTargetDelegate var1;
+                                boolean var3;
+                                label46: {
+                                    var1 = new SeslTouchTargetDelegate(toolbarView);
+                                    if (mNavButtonView != null) {
+                                        if (shouldLayout(mNavButtonView)) {
+                                            var1.addTouchDelegate(mNavButtonView,
+                                                    SeslTouchTargetDelegate.ExtraInsets
+                                                            .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
+                                            var3 = true;
+                                            break label46;
+                                        }
+                                    }
+
+                                    var3 = false;
+                                }
+
+                                View var4 = null;
+                                int var5 = toolbarView.getChildCount();
+                                int var6 = 0;
+
+                                View var8;
+                                while(true) {
+                                    var8 = var4;
+                                    if (var6 >= var5) {
+                                        break;
+                                    }
+
+                                    var8 = toolbarView.getChildAt(var6);
+                                    if (var8 instanceof ActionMenuView) {
+                                        break;
+                                    }
+
+                                    ++var6;
+                                }
+
+                                boolean var10 = var3;
+                                if (var8 != null) {
+                                    var10 = var3;
+                                    if (var8.getVisibility() == VISIBLE) {
+                                        ViewGroup var9 = (ViewGroup)var8;
+                                        int var7 = var9.getChildCount();
+                                        var6 = 0;
+
+                                        while(true) {
+                                            var10 = var3;
+                                            if (var6 >= var7) {
+                                                break;
+                                            }
+
+                                            var4 = var9.getChildAt(var6);
+                                            if (var4.getVisibility() == VISIBLE) {
+                                                var1.addTouchDelegate(var4,
+                                                        SeslTouchTargetDelegate.ExtraInsets
+                                                                .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
+                                                var3 = true;
+                                            }
+
+                                            ++var6;
+                                        }
+                                    }
+                                }
+
+                                if (var10) {
+                                    toolbarView.setTouchDelegate(var1);
+                                }
+                            }
+                            // kang
+                        });
+                    }
+                }
+            });
+        }
+    }
 }

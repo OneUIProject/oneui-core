@@ -140,11 +140,26 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
             this.bottom = bottom;
         }
 
+        public static @NonNull ExtraInsets of(int horizontal, int vertical) {
+            if (horizontal == 0 && vertical == 0) {
+                return NONE;
+            }
+            return new ExtraInsets(horizontal, vertical, horizontal, vertical);
+        }
+
         public static @NonNull ExtraInsets of(int left, int top, int right, int bottom) {
             if (left == 0 && top == 0 && right == 0 && bottom == 0) {
                 return NONE;
             }
             return new ExtraInsets(left, top, right, bottom);
+        }
+
+        public static @NonNull ExtraInsets of(@Nullable Rect r) {
+            return (r == null) ? NONE : of(r.left, r.top, r.right, r.bottom);
+        }
+
+        public @NonNull Rect toRect() {
+            return new Rect(left, top, right, bottom);
         }
 
         public boolean equals(Object o) {
@@ -170,10 +185,6 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
             return result;
         }
 
-        public @NonNull Rect toRect() {
-            return new Rect(left, top, right, bottom);
-        }
-
         public String toString() {
             return "ExtraInsets{" +
                     "left=" + left +
@@ -181,17 +192,6 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
                     ", right=" + right +
                     ", bottom=" + bottom +
                     '}';
-        }
-
-        public static @NonNull ExtraInsets of(int horizontal, int vertical) {
-            if (horizontal == 0 && vertical == 0) {
-                return NONE;
-            }
-            return new ExtraInsets(horizontal, vertical, horizontal, vertical);
-        }
-
-        public static @NonNull ExtraInsets of(@Nullable Rect r) {
-            return (r == null) ? NONE : of(r.left, r.top, r.right, r.bottom);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,15 @@ package androidx.recyclerview.widget;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.OverScroller;
 import android.widget.Scroller;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Class intended to support snapping for a {@link RecyclerView}.
@@ -37,6 +42,7 @@ public abstract class SnapHelper extends RecyclerView.OnFlingListener {
 
     RecyclerView mRecyclerView;
     private Scroller mGravityScroller;
+    private OverScroller mOverScroller;
 
     // Handles the snap on scroll case.
     private final RecyclerView.OnScrollListener mScrollListener =
@@ -101,6 +107,7 @@ public abstract class SnapHelper extends RecyclerView.OnFlingListener {
             setupCallbacks();
             mGravityScroller = new Scroller(mRecyclerView.getContext(),
                     new DecelerateInterpolator());
+            mOverScroller = new OverScroller(mRecyclerView.getContext());
             snapToTargetExistingView();
         }
     }
@@ -139,6 +146,16 @@ public abstract class SnapHelper extends RecyclerView.OnFlingListener {
                 Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
         outDist[0] = mGravityScroller.getFinalX();
         outDist[1] = mGravityScroller.getFinalY();
+        return outDist;
+    }
+
+    public int[] seslCalculateScrollDistanceForLinear(int velocityX, int velocityY) {
+        int[] outDist = new int[2];
+        mOverScroller.computeScrollOffset();
+        mOverScroller.fling(0, 0, velocityX, velocityY,
+                Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        outDist[0] = mOverScroller.getFinalX();
+        outDist[1] = mOverScroller.getFinalY();
         return outDist;
     }
 

@@ -56,6 +56,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -15502,6 +15503,33 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         mGoToTopView.setTranslationY((float) getScrollY());
         if (mGoToTopState != GTP_STATE_NONE && !canScrollUp()) {
             setupGoToTop(GTP_STATE_NONE);
+        }
+    }
+
+    public void seslSnapScrollToPosition(int position) {
+        final float snapRange = computeHorizontalScrollRange() * 0.2f;
+
+        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(mContext) {
+            @Override
+            protected int getHorizontalSnapPreference() {
+                return SNAP_TO_END;
+            }
+
+            @Override
+            protected int getVerticalSnapPreference() {
+                return SNAP_TO_END;
+            }
+
+            @Override
+            protected float calculateSpeedPerPixel(DisplayMetrics metrics) {
+                return snapRange / computeHorizontalScrollRange();
+            }
+        };
+
+        smoothScroller.setTargetPosition(position);
+
+        if (getLayoutManager() != null) {
+            getLayoutManager().startSmoothScroll(smoothScroller);
         }
     }
 

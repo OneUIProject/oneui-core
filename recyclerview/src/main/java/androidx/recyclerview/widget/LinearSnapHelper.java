@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,14 @@ package androidx.recyclerview.widget;
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.PathInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Implementation of the {@link SnapHelper} supporting snapping in either vertical or horizontal
@@ -34,9 +38,8 @@ import androidx.annotation.Nullable;
  */
 public class LinearSnapHelper extends SnapHelper {
     // Sesl
-    private final PathInterpolator mPathInterpolator
-            = new PathInterpolator(0.2f, 0.7f, 0.3f, 1.0f);
-    private float mVelocityRatio = 1.0f;
+    private final DecelerateInterpolator mDecelerateInterpolator = new DecelerateInterpolator();
+    private float mVelocityRatio = 0.5f;
     private int mDeccelateTimeRatio = 1;
     private float mMillisecondsPerInch = 100.0f;
     // Sesl
@@ -50,7 +53,7 @@ public class LinearSnapHelper extends SnapHelper {
     private OrientationHelper mHorizontalHelper;
 
     public LinearSnapHelper() {
-        setSnapValue(1.0f, 100.0f, 1);
+        setSnapValue(0.5f, 100.0f, 1);
     }
 
     public LinearSnapHelper(float velocityRatio) {
@@ -92,7 +95,7 @@ public class LinearSnapHelper extends SnapHelper {
                 final int time = calculateTimeForDeceleration(
                         Math.max(Math.abs(mDeccelateTimeRatio * dx), Math.abs(mDeccelateTimeRatio * dy)));
                 if (time > 0) {
-                    action.update(dx, dy, time, mPathInterpolator);
+                    action.update(dx, dy, time, mDecelerateInterpolator);
                 }
             }
 
@@ -160,9 +163,10 @@ public class LinearSnapHelper extends SnapHelper {
         }
 
         int vDeltaJump, hDeltaJump;
+        int[] snapDistances = calculateDistanceToFinalSnap(layoutManager, currentView);
         if (layoutManager.canScrollHorizontally()) {
             hDeltaJump = estimateNextPositionDiffForFling(layoutManager,
-                    getHorizontalHelper(layoutManager), velocityX, 0);
+                    getHorizontalHelper(layoutManager), velocityX, 0, snapDistances);
             if (vectorForEnd.x < 0) {
                 hDeltaJump = -hDeltaJump;
             }
@@ -171,7 +175,7 @@ public class LinearSnapHelper extends SnapHelper {
         }
         if (layoutManager.canScrollVertically()) {
             vDeltaJump = estimateNextPositionDiffForFling(layoutManager,
-                    getVerticalHelper(layoutManager), 0, velocityY);
+                    getVerticalHelper(layoutManager), 0, velocityY, snapDistances);
             if (vectorForEnd.y < 0) {
                 vDeltaJump = -vDeltaJump;
             }
@@ -223,15 +227,21 @@ public class LinearSnapHelper extends SnapHelper {
      * @return The diff between the target scroll position and the current position.
      */
     private int estimateNextPositionDiffForFling(RecyclerView.LayoutManager layoutManager,
-            OrientationHelper helper, int velocityX, int velocityY) {
-        int[] distances = calculateScrollDistance(velocityX, velocityY);
+            OrientationHelper helper, int velocityX, int velocityY, int[] snapDistances) {
+        int[] distances = seslCalculateScrollDistanceForLinear(velocityX, velocityY);
+        distances[0] -= snapDistances[0];
+        distances[1] -= snapDistances[1];
         float distancePerChild = computeDistancePerChild(layoutManager, helper);
         if (distancePerChild <= 0) {
             return 0;
         }
         int distance =
                 Math.abs(distances[0]) > Math.abs(distances[1]) ? distances[0] : distances[1];
-        return (int) Math.round(distance / distancePerChild);
+        final int diff = (int) Math.round(distance / distancePerChild);
+        if (diff != 0) {
+            return diff;
+        }
+        return diff < 0 ? -1 : 1;
     }
 
     /**

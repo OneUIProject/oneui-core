@@ -140,18 +140,18 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
             this.bottom = bottom;
         }
 
-        public static @NonNull ExtraInsets of(int horizontal, int vertical) {
-            if (horizontal == 0 && vertical == 0) {
-                return NONE;
-            }
-            return new ExtraInsets(horizontal, vertical, horizontal, vertical);
-        }
-
         public static @NonNull ExtraInsets of(int left, int top, int right, int bottom) {
             if (left == 0 && top == 0 && right == 0 && bottom == 0) {
                 return NONE;
             }
             return new ExtraInsets(left, top, right, bottom);
+        }
+
+        public static @NonNull ExtraInsets of(int horizontal, int vertical) {
+            if (horizontal == 0 && vertical == 0) {
+                return NONE;
+            }
+            return new ExtraInsets(horizontal, vertical, horizontal, vertical);
         }
 
         public static @NonNull ExtraInsets of(@Nullable Rect r) {

@@ -13,6 +13,11 @@ android {
         versionName sesl_viewpager2_version
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+
     sourceSets.main.resources.srcDir "$buildDir/javaResources"
 
     libraryVariants.all {
@@ -33,7 +38,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.viewpager2_viewpager2.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.1-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.2-sesl4" + "\n"
 }
 
 ext {

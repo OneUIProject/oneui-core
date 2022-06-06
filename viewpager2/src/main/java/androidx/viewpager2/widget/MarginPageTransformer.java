@@ -19,7 +19,6 @@ package androidx.viewpager2.widget;
 import android.view.View;
 import android.view.ViewParent;
 
-import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.core.util.Preconditions;
@@ -51,14 +50,13 @@ public final class MarginPageTransformer implements ViewPager2.PageTransformer {
     }
 
     @Override
-    public void transformPage(@NonNull View page,
-            @FloatRange(from = -1.0, to = 1.0) float position) {
+    public void transformPage(@NonNull View page, float position) {
         ViewPager2 viewPager = requireViewPager(page);
 
         float offset = mMarginPx * position;
 
         if (viewPager.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL) {
-            page.setTranslationX(viewPager.isLayoutRtl() ? -offset : offset);
+            page.setTranslationX(viewPager.isRtl() ? -offset : offset);
         } else {
             page.setTranslationY(offset);
         }

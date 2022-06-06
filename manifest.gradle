@@ -30,7 +30,7 @@ ext {
     sesl_customview_version = "1.0.0"
     sesl_drawerlayout_version = "1.0.0"
     sesl_fragment_version = "1.0.0"
-    sesl_indexscroll_version = "1.0.1"
+    sesl_indexscroll_version = "1.0.2"
     sesl_material_version = "1.2.0"
     sesl_picker_basic_version = "1.0.0"
     sesl_picker_color_version = "1.0.1"

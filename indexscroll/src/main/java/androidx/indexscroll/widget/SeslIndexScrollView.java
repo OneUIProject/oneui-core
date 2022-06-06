@@ -750,11 +750,11 @@ public class SeslIndexScrollView extends FrameLayout {
 
                             if (dy != 0) {
                                 playThumbPosAnimator(mTouchY,
-                                        mBgRect.top + mScrollThumbBgRectVerticalPadding
-                                                + ((index / (mIndexer.getAlphabetArray().length - 1)) * mBgRect.height()));
+                                        (float) (mBgRect.top + mScrollThumbBgRectVerticalPadding)
+                                                + (((float) index / (float) (mIndexer.getAlphabetArray().length - 1)) * (float) mBgRect.height()));
                             } else {
-                                mTouchY = mBgRect.top + mScrollThumbBgRectVerticalPadding
-                                        + ((index / (mIndexer.getAlphabetArray().length - 1)) * mBgRect.height());
+                                mTouchY = (float) (mBgRect.top + mScrollThumbBgRectVerticalPadding)
+                                        + (((float) index / (float) (mIndexer.getAlphabetArray().length - 1)) * (float) mBgRect.height());
                             }
                         }
                     }

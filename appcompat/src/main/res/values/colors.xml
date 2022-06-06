@@ -102,8 +102,8 @@
 
     <color name="sesl_input_method_navigation_guard">@android:color/black</color>
 
-    <color name="sesl_list_divider_color_dark">#26ffffff</color>
-    <color name="sesl_list_divider_color_light">#14000000</color>
+    <color name="sesl_list_divider_color_dark">#ff3a3a3a</color>
+    <color name="sesl_list_divider_color_light">#ffc4c4c4</color>
 
     <color name="sesl_list_go_to_top_arrow_bottom_dark">#fffafafa</color>
     <color name="sesl_list_go_to_top_arrow_bottom_light">#ff797979</color>

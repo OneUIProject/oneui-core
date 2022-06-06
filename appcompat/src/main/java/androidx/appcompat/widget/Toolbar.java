@@ -70,6 +70,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.SeslTouchTargetDelegate;
+import androidx.core.view.SeslTouchTargetDelegate.ExtraInsets;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.reflect.view.SeslViewReflector;
@@ -145,6 +146,8 @@ public class Toolbar extends ViewGroup {
     private final ArrayList<View> mHiddenViews = new ArrayList<>();
 
     private final int[] mTempMargins = new int[2];
+
+    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListenerForTD;
 
     OnMenuItemClickListener mOnMenuItemClickListener;
 
@@ -298,8 +301,6 @@ public class Toolbar extends ViewGroup {
         }
 
         a.recycle();
-
-        seslSetTouchDelegateForToolbar();
     }
 
     @Override
@@ -1567,9 +1568,20 @@ public class Toolbar extends ViewGroup {
     }
 
     @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        if (visibility == VISIBLE) {
+            seslSetTouchDelegateForToolbar();
+        } else {
+            seslRemoveListenerForTouchDelegate();
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(mShowOverflowMenuRunnable);
+        seslRemoveListenerForTouchDelegate();
     }
 
     @Override
@@ -2689,8 +2701,8 @@ public class Toolbar extends ViewGroup {
 
     private void seslSetTouchDelegateForToolbar() {
         final ViewTreeObserver vto = getViewTreeObserver();
-        if (vto != null) {
-            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        if (vto != null && mOnGlobalLayoutListenerForTD == null) {
+            mOnGlobalLayoutListenerForTD = new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     final Toolbar toolbarView = Toolbar.this;
@@ -2700,78 +2712,80 @@ public class Toolbar extends ViewGroup {
                             // kang
                             @Override
                             public void run() {
-                                SeslTouchTargetDelegate var1;
-                                boolean var3;
-                                label46: {
-                                    var1 = new SeslTouchTargetDelegate(toolbarView);
-                                    if (mNavButtonView != null) {
-                                        if (shouldLayout(mNavButtonView)) {
-                                            var1.addTouchDelegate(mNavButtonView,
-                                                    SeslTouchTargetDelegate.ExtraInsets
-                                                            .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
-                                            var3 = true;
-                                            break label46;
-                                        }
-                                    }
-
-                                    var3 = false;
+                                SeslTouchTargetDelegate var1 = new SeslTouchTargetDelegate(toolbarView);
+                                boolean var2;
+                                if (mNavButtonView != null && shouldLayout(mNavButtonView)) {
+                                    var1.addTouchDelegate(mNavButtonView, ExtraInsets
+                                            .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
+                                    var2 = true;
+                                } else {
+                                    var2 = false;
                                 }
 
-                                View var4 = null;
-                                int var5 = toolbarView.getChildCount();
-                                int var6 = 0;
+                                View var3 = null;
+                                int var4 = toolbarView.getChildCount();
+                                int var5 = 0;
 
-                                View var8;
+                                View var6;
                                 while(true) {
-                                    var8 = var4;
-                                    if (var6 >= var5) {
+                                    var6 = var3;
+                                    if (var5 >= var4) {
                                         break;
                                     }
 
-                                    var8 = toolbarView.getChildAt(var6);
-                                    if (var8 instanceof ActionMenuView) {
+                                    var6 = toolbarView.getChildAt(var5);
+                                    if (var6 instanceof ActionMenuView) {
                                         break;
                                     }
 
-                                    ++var6;
+                                    ++var5;
                                 }
 
-                                boolean var10 = var3;
-                                if (var8 != null) {
-                                    var10 = var3;
-                                    if (var8.getVisibility() == VISIBLE) {
-                                        ViewGroup var9 = (ViewGroup)var8;
+                                boolean var8 = var2;
+                                if (var6 != null) {
+                                    var8 = var2;
+                                    if (var6.getVisibility() == VISIBLE) {
+                                        ViewGroup var9 = (ViewGroup)var6;
                                         int var7 = var9.getChildCount();
-                                        var6 = 0;
+                                        var5 = 0;
 
                                         while(true) {
-                                            var10 = var3;
-                                            if (var6 >= var7) {
+                                            var8 = var2;
+                                            if (var5 >= var7) {
                                                 break;
                                             }
 
-                                            var4 = var9.getChildAt(var6);
-                                            if (var4.getVisibility() == VISIBLE) {
-                                                var1.addTouchDelegate(var4,
-                                                        SeslTouchTargetDelegate.ExtraInsets
-                                                                .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
-                                                var3 = true;
+                                            var3 = var9.getChildAt(var5);
+                                            if (var3.getVisibility() == VISIBLE) {
+                                                var1.addTouchDelegate(var3, ExtraInsets
+                                                        .of(0, SESL_TOP_INSET_TO_EXPAND, 0, 0));
+                                                var2 = true;
                                             }
 
-                                            ++var6;
+                                            ++var5;
                                         }
                                     }
                                 }
 
-                                if (var10) {
+                                if (var8) {
                                     toolbarView.setTouchDelegate(var1);
                                 }
+
                             }
                             // kang
                         });
                     }
                 }
-            });
+            };
+            vto.addOnGlobalLayoutListener(mOnGlobalLayoutListenerForTD);
+        }
+    }
+
+    private void seslRemoveListenerForTouchDelegate() {
+        if (mOnGlobalLayoutListenerForTD != null) {
+            getViewTreeObserver()
+                    .removeOnGlobalLayoutListener(mOnGlobalLayoutListenerForTD);
+            mOnGlobalLayoutListenerForTD = null;
         }
     }
 }

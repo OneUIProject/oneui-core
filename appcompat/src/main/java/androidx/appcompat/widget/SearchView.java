@@ -606,6 +606,10 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         }
     }
 
+    public void seslHandleImeForced(boolean enabled) {
+        mHandleIme = enabled;
+    }
+
     private void seslClearFocus() {
         mClearingFocus = true;
         super.clearFocus();
@@ -2441,10 +2445,6 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
 
     public void seslSetOnPrivateImeCommandListener(@Nullable OnPrivateImeCommandListener listener) {
         mSearchSrcTextView.seslSetOnPrivateImeCommandListener(listener);
-    }
-
-    public void seslHandleImeForced(boolean enabled) {
-        mHandleIme = enabled;
     }
 
     @Override

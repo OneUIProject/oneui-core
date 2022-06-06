@@ -290,6 +290,7 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
       vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+          getViewTreeObserver().removeOnGlobalLayoutListener(this);
           if (mSnackBarLayout != null) {
             if (actionView != null
                     && actionView.getVisibility() == VISIBLE) {

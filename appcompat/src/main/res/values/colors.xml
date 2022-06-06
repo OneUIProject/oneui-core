@@ -102,8 +102,8 @@
 
     <color name="sesl_input_method_navigation_guard">@android:color/black</color>
 
-    <color name="sesl_list_divider_color_dark">#ff3a3a3a</color>
-    <color name="sesl_list_divider_color_light">#ffc4c4c4</color>
+    <color name="sesl_list_divider_color_dark">#26ffffff</color>
+    <color name="sesl_list_divider_color_light">#14000000</color>
 
     <color name="sesl_list_go_to_top_arrow_bottom_dark">#fffafafa</color>
     <color name="sesl_list_go_to_top_arrow_bottom_light">#ff797979</color>
@@ -229,8 +229,8 @@
     <color name="sesl_status_bar_color_dark">@color/sesl_black</color>
     <color name="sesl_status_bar_color_light">@color/sesl_white</color>
 
-    <color name="sesl_switch_divider_color_dark">#26ffffff</color>
-    <color name="sesl_switch_divider_color_light">#14000000</color>
+    <color name="sesl_switch_divider_color_dark">#ff3a3a3a</color>
+    <color name="sesl_switch_divider_color_light">#ffc4c4c4</color>
     <color name="sesl_switch_thumb_off_color">#fffafafa</color>
     <color name="sesl_switch_thumb_off_disabled_color">#fffafafa</color>
     <color name="sesl_switch_thumb_off_disabled_color_dark">#ff858585</color>

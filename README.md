@@ -1,6 +1,6 @@
 <p align="center">
   For Wear OS, please look at
-  <a href="https://github.com/OneUIProject/seslw">seslw</a>.
+  <a href="https://github.com/OneUIProject/oneuiw-core">oneuiw-core</a>.
   <br><br>
   <img loading="lazy" src="readme-res/sesl-readme-header.png"/>
 </p>
@@ -51,6 +51,7 @@ configurations.all {
     exclude group: 'androidx.core', module: 'core'
 }
 ```
+For more informations about the usage of the libraries, please take a look at [oneui-design](https://github.com/OneUIProject/oneui-design).
 ## Using with libraries that depend on AndroidX
 If you need to use a library that requires one or more stock androidx module, you have to exclude those specific dependencies to avoid build errors, like this:
 ```groovy
@@ -67,4 +68,4 @@ implementation("com.org.group:library:1.0.0") {
 # Special thanks
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.
 - [Samsung](https://www.samsung.com/) for their awesome OneUI Design. :)
-- All the current and future [contributors](https://github.com/Yanndroid/OneUI-Design-Library/graphs/contributors) and issue reporters. :D
+- All the current and future [contributors](https://github.com/OneUIProject/oneui-core/graphs/contributors) and issue reporters. :D

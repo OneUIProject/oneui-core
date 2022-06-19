@@ -916,9 +916,9 @@ public final class MenuItemImpl implements SupportMenuItem, SeslMenuItem {
     }
 
     @Override
-    public void setBadgeText(String badgeText) {
-        if (mBadgeText == null || !mBadgeText.equals(badgeText)) {
-            mBadgeText = badgeText;
+    public void setBadgeText(String text) {
+        if (mBadgeText == null || !mBadgeText.equals(text)) {
+            mBadgeText = text;
             mMenu.onItemsChanged(false);
         }
     }

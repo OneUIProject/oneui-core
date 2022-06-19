@@ -82,10 +82,10 @@ public class SeslRoundedCorner {
         initRoundedCorner();
     }
 
-    public SeslRoundedCorner(Context context, boolean mutate) {
+    public SeslRoundedCorner(Context context, boolean isMutate) {
         mContext = context;
         mRes = context.getResources();
-        mIsMutate = mutate;
+        mIsMutate = isMutate;
         initRoundedCorner();
     }
 
@@ -112,22 +112,22 @@ public class SeslRoundedCorner {
                 initRoundedCorner();
             }
 
-            PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
+            PorterDuffColorFilter pdcf = new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
             if ((corners & ROUNDED_CORNER_TOP_LEFT) != 0) {
                 mTopLeftRoundColor = color;
-                mTopLeftRound.setColorFilter(colorFilter);
+                mTopLeftRound.setColorFilter(pdcf);
             }
             if ((corners & ROUNDED_CORNER_TOP_RIGHT) != 0) {
                 mTopRightRoundColor = color;
-                mTopRightRound.setColorFilter(colorFilter);
+                mTopRightRound.setColorFilter(pdcf);
             }
             if ((corners & ROUNDED_CORNER_BOTTOM_LEFT) != 0) {
                 mBottomLeftRoundColor = color;
-                mBottomLeftRound.setColorFilter(colorFilter);
+                mBottomLeftRound.setColorFilter(pdcf);
             }
             if ((corners & ROUNDED_CORNER_BOTTOM_RIGHT) != 0) {
                 mBottomRightRoundColor = color;
-                mBottomRightRound.setColorFilter(colorFilter);
+                mBottomRightRound.setColorFilter(pdcf);
             }
         } else {
             throw new IllegalArgumentException("Use wrong rounded corners to the param, corners = " + corners);
@@ -160,7 +160,7 @@ public class SeslRoundedCorner {
     private void initRoundedCorner() {
         mRoundRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, RADIUS, mRes.getDisplayMetrics());
 
-        final boolean isDarkTheme = !SeslMisc.isLightTheme(mContext);
+        final boolean darkTheme = !SeslMisc.isLightTheme(mContext);
         final Resources.Theme theme = mContext.getTheme();
 
         if (mIsMutate) {
@@ -175,7 +175,7 @@ public class SeslRoundedCorner {
             mBottomRightRound = mRes.getDrawable(R.drawable.sesl_bottom_right_round, theme);
         }
 
-        if (isDarkTheme) {
+        if (darkTheme) {
             final int roundColor = mRes.getColor(R.color.sesl_round_and_bgcolor_dark);
             mBottomRightRoundColor = roundColor;
             mBottomLeftRoundColor = roundColor;
@@ -189,11 +189,11 @@ public class SeslRoundedCorner {
             mTopLeftRoundColor = roundColor;
         }
 
-        PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(mTopLeftRoundColor, PorterDuff.Mode.SRC_IN);
-        mTopLeftRound.setColorFilter(colorFilter);
-        mTopRightRound.setColorFilter(colorFilter);
-        mBottomLeftRound.setColorFilter(colorFilter);
-        mBottomRightRound.setColorFilter(colorFilter);
+        PorterDuffColorFilter pdcf = new PorterDuffColorFilter(mTopLeftRoundColor, PorterDuff.Mode.SRC_IN);
+        mTopLeftRound.setColorFilter(pdcf);
+        mTopRightRound.setColorFilter(pdcf);
+        mBottomLeftRound.setColorFilter(pdcf);
+        mBottomRightRound.setColorFilter(pdcf);
     }
 
     @RestrictTo(LIBRARY_GROUP_PREFIX)

@@ -310,7 +310,7 @@ class TooltipPopup {
         }
     }
 
-    private int adjustTooltipPosition(int x, int tooltipWidth, int tooltipRightMargin) {
+    private int adjustTooltipPosition(int posX, int tooltipWidth, int tooltipHorizontalPadding) {
         int fixedX;
 
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -319,44 +319,44 @@ class TooltipPopup {
 
         if (checkNaviBarForLandscape()) {
             if (rotation == Surface.ROTATION_90) {
-                fixedX = (((mTmpDisplayFrame.width() - tooltipWidth) - getNavigationBarHeight()) / 2) - tooltipRightMargin;
-                if (x <= fixedX) {
-                    return x;
+                fixedX = (((mTmpDisplayFrame.width() - tooltipWidth) - getNavigationBarHeight()) / 2) - tooltipHorizontalPadding;
+                if (posX <= fixedX) {
+                    return posX;
                 }
             } else if (rotation == Surface.ROTATION_270) {
-                if (x <= 0) {
-                    fixedX = ((tooltipWidth - mTmpDisplayFrame.width()) / 2) + tooltipRightMargin;
-                    if (x > fixedX) {
-                        return x;
+                if (posX <= 0) {
+                    fixedX = ((tooltipWidth - mTmpDisplayFrame.width()) / 2) + tooltipHorizontalPadding;
+                    if (posX > fixedX) {
+                        return posX;
                     }
-                    return fixedX + tooltipRightMargin;
+                    return fixedX + tooltipHorizontalPadding;
                 } else {
-                    fixedX = ((mTmpDisplayFrame.width() - tooltipWidth) / 2) + tooltipRightMargin;
-                    if (x <= fixedX) {
-                        return x;
+                    fixedX = ((mTmpDisplayFrame.width() - tooltipWidth) / 2) + tooltipHorizontalPadding;
+                    if (posX <= fixedX) {
+                        return posX;
                     }
                 }
             } else {
-                return x;
+                return posX;
             }
         } else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
-            if (x <= 0) {
-                fixedX = ((tooltipWidth - mTmpDisplayFrame.width()) / 2) + tooltipRightMargin;
-                if (x >= fixedX) {
-                    return x;
+            if (posX <= 0) {
+                fixedX = ((tooltipWidth - mTmpDisplayFrame.width()) / 2) + tooltipHorizontalPadding;
+                if (posX >= fixedX) {
+                    return posX;
                 }
-                return fixedX + tooltipRightMargin;
+                return fixedX + tooltipHorizontalPadding;
             } else {
-                fixedX = ((mTmpDisplayFrame.width() - tooltipWidth) / 2) + tooltipRightMargin;
-                if (x <= fixedX) {
-                    return x;
+                fixedX = ((mTmpDisplayFrame.width() - tooltipWidth) / 2) + tooltipHorizontalPadding;
+                if (posX <= fixedX) {
+                    return posX;
                 }
             }
         } else {
-            return x;
+            return posX;
         }
 
-        return fixedX - tooltipRightMargin;
+        return fixedX - tooltipHorizontalPadding;
     }
 
     private static View getAppRootView(View anchorView) {

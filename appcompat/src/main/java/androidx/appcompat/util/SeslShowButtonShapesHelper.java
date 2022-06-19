@@ -51,25 +51,25 @@ public class SeslShowButtonShapesHelper {
         mBackgroundOff = backgroundOff;
     }
 
-    public void setBackgroundOff(@Nullable Drawable drawable) {
-        if (mBackgroundOn == null || mBackgroundOn != drawable) {
-            mBackgroundOff = drawable;
+    public void setBackgroundOff(@Nullable Drawable backgroundOff) {
+        if (mBackgroundOn == null || mBackgroundOn != backgroundOff) {
+            mBackgroundOff = backgroundOff;
         } else {
-            Log.w("SeslSBBHelper", drawable + "is same drawable with mBackgroundOn");
+            Log.w("SeslSBBHelper", backgroundOff + "is same drawable with mBackgroundOn");
         }
     }
 
-    public void setBackgroundOn(@Nullable Drawable drawable) {
-        mBackgroundOn = drawable;
+    public void setBackgroundOn(@Nullable Drawable backgroundOn) {
+        mBackgroundOn = backgroundOn;
     }
 
     public void updateButtonBackground() {
-        final boolean showButtonBackground = Settings.System.getInt(mContentResolver, "show_button_background", 0) == 1;
-        ViewCompat.setBackground(mView, showButtonBackground ? mBackgroundOn : mBackgroundOff);
+        final boolean show = Settings.System.getInt(mContentResolver, "show_button_background", 0) == 1;
+        ViewCompat.setBackground(mView, show ? mBackgroundOn : mBackgroundOff);
     }
 
-    public void updateOverflowButtonBackground(Drawable drawable) {
-        mBackgroundOn = drawable;
+    public void updateOverflowButtonBackground(Drawable backgroundOn) {
+        mBackgroundOn = backgroundOn;
         updateButtonBackground();
     }
 }

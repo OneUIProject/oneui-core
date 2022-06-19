@@ -45,15 +45,15 @@ public class TooltipCompat  {
     /**
      * Force the next Tooltip to be shown under its anchor view.
      */
-    public static void seslSetNextTooltipForceBelow(boolean force) {
-        TooltipCompatHandler.seslSetTooltipForceBelow(force);
+    public static void seslSetNextTooltipForceBelow(boolean isBelow) {
+        TooltipCompatHandler.seslSetTooltipForceBelow(isBelow);
     }
 
     /**
      * Force the next Tooltip to use ActionBar positioning.
      */
-    public static void seslSetNextTooltipForceActionBarPosX(boolean force) {
-        TooltipCompatHandler.seslSetTooltipForceActionBarPosX(force);
+    public static void seslSetNextTooltipForceActionBarPosX(boolean isForceX) {
+        TooltipCompatHandler.seslSetTooltipForceActionBarPosX(isForceX);
     }
 
     /**

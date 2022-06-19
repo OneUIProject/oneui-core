@@ -388,12 +388,12 @@ class TooltipCompatHandler implements View.OnLongClickListener, View.OnHoverList
         sIsTooltipNull = tooltipNull;
     }
 
-    public static void seslSetTooltipForceBelow(boolean force) {
-        sIsForceBelow = force;
+    public static void seslSetTooltipForceBelow(boolean isbelow) {
+        sIsForceBelow = isbelow;
     }
 
-    public static void seslSetTooltipForceActionBarPosX(boolean force) {
-        sIsForceActionBarX = force;
+    public static void seslSetTooltipForceActionBarPosX(boolean isForceX) {
+        sIsForceActionBarX = isForceX;
     }
 
     private void showPenPointEffect(MotionEvent event, boolean show) {

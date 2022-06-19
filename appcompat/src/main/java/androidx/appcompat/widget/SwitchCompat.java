@@ -1559,10 +1559,10 @@ public class SwitchCompat extends CompoundButton {
         final float mEndPosition;
         final float mDiff;
 
-        ThumbAnimation(float startPos, float endPos) {
-            mStartPosition = startPos;
-            mEndPosition = endPos;
-            mDiff = endPos - startPos;
+        ThumbAnimation(float startPosition, float endPosition) {
+            mStartPosition = startPosition;
+            mEndPosition = endPosition;
+            mDiff = endPosition - startPosition;
         }
 
         @Override

@@ -164,8 +164,8 @@ public class SeslSeekBar extends SeslAbsSeekBar {
         }
     }
 
-    public void setOnSeekBarHoverListener(OnSeekBarHoverListener l) {
-        mOnSeekBarHoverListener = l;
+    public void setOnSeekBarHoverListener(OnSeekBarHoverListener listener) {
+        mOnSeekBarHoverListener = listener;
     }
 
     @Override

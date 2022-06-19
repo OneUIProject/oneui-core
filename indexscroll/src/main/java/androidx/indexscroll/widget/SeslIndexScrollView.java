@@ -428,17 +428,17 @@ public class SeslIndexScrollView extends FrameLayout {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent ev) {
+        super.onTouchEvent(ev);
         if (mNeedToHandleA11yEvent) {
-            return handleA11yEvent(event);
+            return handleA11yEvent(ev);
         } else {
-            return handleMotionEvent(event);
+            return handleMotionEvent(ev);
         }
     }
 
-    private boolean handleA11yEvent(MotionEvent event) {
-        final int action = event.getAction();
+    private boolean handleA11yEvent(MotionEvent ev) {
+        final int action = ev.getAction();
 
         if (mIndexer == null) {
             return false;
@@ -446,11 +446,11 @@ public class SeslIndexScrollView extends FrameLayout {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mA11yDownPosY = event.getY();
+                mA11yDownPosY = ev.getY();
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                final float posY = event.getY();
+                final float posY = ev.getY();
                 if (posY != mA11yDownPosY) {
                     if (mA11yTargetIndex == -1) {
                         mA11yTargetIndex
@@ -477,10 +477,10 @@ public class SeslIndexScrollView extends FrameLayout {
         return true;
     }
 
-    private boolean handleMotionEvent(MotionEvent event) {
-        final int action = event.getAction();
-        final float y = event.getY();
-        final float x = event.getX();
+    private boolean handleMotionEvent(MotionEvent ev) {
+        final int action = ev.getAction();
+        final float y = ev.getY();
+        final float x = ev.getX();
 
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
@@ -613,8 +613,8 @@ public class SeslIndexScrollView extends FrameLayout {
         }
     }
 
-    public void setOnIndexBarEventListener(OnIndexBarEventListener listener) {
-        mOnIndexBarEventListener = listener;
+    public void setOnIndexBarEventListener(OnIndexBarEventListener iOnIndexBarEventListener) {
+        mOnIndexBarEventListener = iOnIndexBarEventListener;
     }
 
     class IndexerObserver extends DataSetObserver {

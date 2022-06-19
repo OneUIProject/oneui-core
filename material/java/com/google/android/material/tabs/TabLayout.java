@@ -546,15 +546,15 @@ public class TabLayout extends HorizontalScrollView {
     tabTextAppearance =
         a.getResourceId(R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab);
 
-    TypedArray seslArray =
+    TypedArray ta =
             context.obtainStyledAttributes(
                     tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
-    tabTextSize = seslArray.getDimensionPixelSize(
+    tabTextSize = ta.getDimensionPixelSize(
             androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
-    mIsScaledTextSizeType = seslArray.getText(
+    mIsScaledTextSizeType = ta.getText(
             androidx.appcompat.R.styleable.TextAppearance_android_textSize).toString().contains("sp");
     tabTextColors = MaterialResources.getColorStateList(
-            context, seslArray, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
+            context, ta, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
 
     final Resources res = getResources();
 
@@ -578,7 +578,7 @@ public class TabLayout extends HorizontalScrollView {
     mSubTabIndicator2ndHeight = res.getDimensionPixelSize(
             R.dimen.sesl_tablayout_subtab_indicator_2nd_height);
     mTabMinSideSpace = res.getDimensionPixelSize(R.dimen.sesl_tab_min_side_space);
-    mSubTabSubTextAppearance = seslArray.getResourceId(
+    mSubTabSubTextAppearance = ta.getResourceId(
             R.styleable.TabLayout_seslTabSubTextAppearance, R.style.TextAppearance_Design_Tab_SubText);
 
     // Text colors/sizes come from the text appearance first
@@ -595,7 +595,7 @@ public class TabLayout extends HorizontalScrollView {
               ta.getDimensionPixelSize(
                       androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
     } finally {
-      seslArray.recycle();
+      ta.recycle();
       ta.recycle();
     }
 
@@ -1884,7 +1884,7 @@ public class TabLayout extends HorizontalScrollView {
   /**
    * Called when a selected tab is added. Unselects all other tabs in the TabLayout.
    */
-  private void setSelectedTabView(int position, boolean isPressed) {
+  private void setSelectedTabView(int position, boolean skipIndicatorVI) {
     final int tabCount = slidingTabIndicator.getChildCount();
     if (position < tabCount) {
       for (int i = 0; i < tabCount; i++) {
@@ -1911,7 +1911,7 @@ public class TabLayout extends HorizontalScrollView {
             tabView.mSubTextView.setSelected(true);
           }
           if (tabView.mIndicatorView != null) {
-            if (!isPressed) {
+            if (!skipIndicatorVI) {
               tabs.get(i).view.mIndicatorView.setReleased();
             } else if (tabView.mIndicatorView.getAlpha() != 1.0f) {
               tabView.mIndicatorView.setShow();
@@ -1966,7 +1966,7 @@ public class TabLayout extends HorizontalScrollView {
    * @see #selectTab(Tab, boolean)
    */
   private void selectTab(@Nullable final Tab tab, boolean updateIndicator,
-                        boolean isPressed) {
+                        boolean skipIndicatorVI) {
     if (tab != null && !tab.view.isEnabled()) {
       if (viewPager != null) {
         viewPager.setCurrentItem(getSelectedTabPosition());
@@ -1992,7 +1992,7 @@ public class TabLayout extends HorizontalScrollView {
           animateToTab(newPosition);
         }
         if (newPosition != Tab.INVALID_POSITION) {
-          setSelectedTabView(newPosition, isPressed);
+          setSelectedTabView(newPosition, skipIndicatorVI);
         }
       }
       // Setting selectedTab before dispatching 'tab unselected' events, so that currentTab's state
@@ -4175,10 +4175,10 @@ public class TabLayout extends HorizontalScrollView {
   }
 
   @Deprecated
-  public void seslSetTabTextColor(ColorStateList color, boolean refresh) {
-    if (tabTextColors != color) {
-      tabTextColors = color;
-      if (refresh) {
+  public void seslSetTabTextColor(ColorStateList textColor, boolean updateTabView) {
+    if (tabTextColors != textColor) {
+      tabTextColors = textColor;
+      if (updateTabView) {
         updateAllTabs();
       } else if (tabs != null) {
         for (int i = 0; i < tabs.size(); i++) {
@@ -4221,14 +4221,14 @@ public class TabLayout extends HorizontalScrollView {
     }
   }
 
-  private void checkMaxFontScale(TextView textView, int size) {
+  private void checkMaxFontScale(TextView textview, int baseSize) {
     final float currentFontScale
             = getResources().getConfiguration().fontScale;
-    if (textView != null
+    if (textview != null
             && mIsScaledTextSizeType && currentFontScale > 1.3f) {
-      textView.setTextSize(
+      textview.setTextSize(
               TypedValue.COMPLEX_UNIT_PX,
-              (size / currentFontScale) * 1.3f);
+              (baseSize / currentFontScale) * 1.3f);
     }
   }
 
@@ -4309,11 +4309,11 @@ public class TabLayout extends HorizontalScrollView {
     }
   }
 
-  public void seslShowBadge(int index, boolean show, String text) {
-    seslShowBadge(index, show, text, null);
+  public void seslShowBadge(int index, boolean show, String content) {
+    seslShowBadge(index, show, content, null);
   }
 
-  public void seslShowBadge(int index, boolean show, String text,
+  public void seslShowBadge(int index, boolean show, String content,
                             String contentDescription) {
     if (mDepthStyle != DEPTH_TYPE_SUB
             && tabs.get(index) != null && tabs.get(index).view != null) {
@@ -4324,7 +4324,7 @@ public class TabLayout extends HorizontalScrollView {
       }
 
       if (tabView.mNBadgeView != null) {
-        tabView.mNBadgeView.setText(text);
+        tabView.mNBadgeView.setText(content);
         if (show) {
           tabView.mNBadgeView.setVisibility(VISIBLE);
 
@@ -4401,8 +4401,8 @@ public class TabLayout extends HorizontalScrollView {
     updateBadgePosition();
   }
 
-  public void seslSetSubTabIndicatorHeight(int height) {
-    mSubTabIndicatorHeight = height;
+  public void seslSetSubTabIndicatorHeight(int heightPixel) {
+    mSubTabIndicatorHeight = heightPixel;
   }
 
   public void seslSetIconTextGap(int gap) {

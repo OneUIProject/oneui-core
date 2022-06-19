@@ -88,20 +88,20 @@ public class SeslTabRoundRectIndicator extends SeslAbsIndicatorView {
 
   @Override
   void onHide() {
-    AlphaAnimation anim = new AlphaAnimation(0f, 0f);
-    anim.setDuration(0);
-    anim.setFillAfter(true);
-    startAnimation(anim);
+    AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 0f);
+    alphaAnimation.setDuration(0);
+    alphaAnimation.setFillAfter(true);
+    startAnimation(alphaAnimation);
     setAlpha(0f);
   }
 
   @Override
   void onShow() {
     setAlpha(1f);
-    AlphaAnimation anim = new AlphaAnimation(1f, 1f);
-    anim.setDuration(0);
-    anim.setFillAfter(true);
-    startAnimation(anim);
+    AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 1f);
+    alphaAnimation.setDuration(0);
+    alphaAnimation.setFillAfter(true);
+    startAnimation(alphaAnimation);
   }
 
   @Override
@@ -126,22 +126,22 @@ public class SeslTabRoundRectIndicator extends SeslAbsIndicatorView {
       }
     });
 
-    ScaleAnimation scaleAnim
+    ScaleAnimation scaleAnimation
             = new ScaleAnimation(1.0f, SCALE_MINOR,
             1.0f, SCALE_MINOR,
             Animation.RELATIVE_TO_SELF, 0.5f,
             Animation.RELATIVE_TO_SELF, 0.5f);
-    scaleAnim.setDuration(DURATION_PRESS);
-    scaleAnim.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
-    scaleAnim.setFillAfter(true);
-    mPressAnimationSet.addAnimation(scaleAnim);
+    scaleAnimation.setDuration(DURATION_PRESS);
+    scaleAnimation.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
+    scaleAnimation.setFillAfter(true);
+    mPressAnimationSet.addAnimation(scaleAnimation);
 
     if (!isSelected()) {
-      AlphaAnimation alphaAnim = new AlphaAnimation(0f, 1f);
-      alphaAnim.setDuration(DURATION_PRESS);
-      alphaAnim.setFillAfter(true);
-      alphaAnim.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
-      mPressAnimationSet.addAnimation(alphaAnim);
+      AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+      alphaAnimation.setDuration(DURATION_PRESS);
+      alphaAnimation.setFillAfter(true);
+      alphaAnimation.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
+      mPressAnimationSet.addAnimation(alphaAnimation);
     }
 
     startAnimation(mPressAnimationSet);
@@ -151,20 +151,20 @@ public class SeslTabRoundRectIndicator extends SeslAbsIndicatorView {
   void startReleaseEffect() {
     setAlpha(1f);
 
-    AnimationSet animSet = new AnimationSet(false);
-    animSet.setFillAfter(true);
+    AnimationSet animationSet = new AnimationSet(false);
+    animationSet.setFillAfter(true);
 
-    ScaleAnimation scaleAnim
+    ScaleAnimation scaleAnimation
             = new ScaleAnimation(SCALE_MINOR, 1.0f,
             SCALE_MINOR, 1.0f,
             Animation.RELATIVE_TO_SELF, 0.5f,
             Animation.RELATIVE_TO_SELF, 0.5f);
-    scaleAnim.setDuration(DURATION_RELEASE);
-    scaleAnim.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
-    scaleAnim.setFillAfter(true);
+    scaleAnimation.setDuration(DURATION_RELEASE);
+    scaleAnimation.setInterpolator(SeslAnimationUtils.SINE_IN_OUT_80);
+    scaleAnimation.setFillAfter(true);
 
-    animSet.addAnimation(scaleAnim);
-    startAnimation(animSet);
+    animationSet.addAnimation(scaleAnimation);
+    startAnimation(animationSet);
   }
 
   @Override

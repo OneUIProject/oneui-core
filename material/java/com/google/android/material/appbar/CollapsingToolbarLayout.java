@@ -1664,8 +1664,8 @@ public class CollapsingToolbarLayout extends FrameLayout {
       return parallaxMult;
     }
 
-    public void seslSetIsTitleCustom(Boolean isTitleCustom) {
-      this.isTitleCustom = isTitleCustom;
+    public void seslSetIsTitleCustom(Boolean isCustom) {
+      this.isTitleCustom = isCustom;
     }
 
     public boolean seslIsTitleCustom() {
@@ -1715,8 +1715,8 @@ public class CollapsingToolbarLayout extends FrameLayout {
     }
   }
 
-  public void seslSetCustomTitleView(View v, LayoutParams lp) {
-    mIsCollapsingToolbarTitleCustom = lp.seslIsTitleCustom();
+  public void seslSetCustomTitleView(View view, LayoutParams params) {
+    mIsCollapsingToolbarTitleCustom = params.seslIsTitleCustom();
 
     if (mIsCollapsingToolbarTitleCustom) {
       if (mExtendedTitle != null && mExtendedTitle.getParent() == mTitleLayout) {
@@ -1725,9 +1725,9 @@ public class CollapsingToolbarLayout extends FrameLayout {
       if (mExtendedSubTitle != null && mExtendedSubTitle.getParent() == mTitleLayout) {
         mTitleLayout.removeView(mExtendedSubTitle);
       }
-      mTitleLayout.addView(v, lp);
+      mTitleLayout.addView(view, params);
     } else {
-      super.addView(v, lp);
+      super.addView(view, params);
     }
   }
 
@@ -1871,12 +1871,12 @@ public class CollapsingToolbarLayout extends FrameLayout {
     requestLayout();
   }
 
-  public void seslSetCustomSubtitle(View v) {
-    if (v != null) {
+  public void seslSetCustomSubtitle(View view) {
+    if (view != null) {
       mSubTitleEnabled = true;
-      mCustomSubTitleView = v;
+      mCustomSubTitleView = view;
       if (mTitleEnabled) {
-        mTitleLayout.addView(v);
+        mTitleLayout.addView(view);
       }
     } else {
       mSubTitleEnabled = false;

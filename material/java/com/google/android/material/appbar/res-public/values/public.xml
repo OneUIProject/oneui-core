@@ -32,6 +32,7 @@
   <public name="toolbarId" type="attr"/>
   <public name="Widget.Design.AppBarLayout" type="style"/>
   <public name="Widget.Design.CollapsingToolbar" type="style"/>
+  <public name="Widget.Design.Light.CollapsingToolbar" type="style"/>
   <public name="Widget.MaterialComponents.AppBarLayout.Primary" type="style"/>
   <public name="Widget.MaterialComponents.AppBarLayout.Surface" type="style"/>
   <public name="Widget.MaterialComponents.AppBarLayout.PrimarySurface" type="style"/>

@@ -546,15 +546,15 @@ public class TabLayout extends HorizontalScrollView {
     tabTextAppearance =
         a.getResourceId(R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab);
 
-    TypedArray ta =
+    TypedArray seslArray =
             context.obtainStyledAttributes(
                     tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
-    tabTextSize = ta.getDimensionPixelSize(
+    tabTextSize = seslArray.getDimensionPixelSize(
             androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
-    mIsScaledTextSizeType = ta.getText(
+    mIsScaledTextSizeType = seslArray.getText(
             androidx.appcompat.R.styleable.TextAppearance_android_textSize).toString().contains("sp");
     tabTextColors = MaterialResources.getColorStateList(
-            context, ta, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
+            context, seslArray, androidx.appcompat.R.styleable.TextAppearance_android_textColor);
 
     final Resources res = getResources();
 
@@ -578,7 +578,7 @@ public class TabLayout extends HorizontalScrollView {
     mSubTabIndicator2ndHeight = res.getDimensionPixelSize(
             R.dimen.sesl_tablayout_subtab_indicator_2nd_height);
     mTabMinSideSpace = res.getDimensionPixelSize(R.dimen.sesl_tab_min_side_space);
-    mSubTabSubTextAppearance = ta.getResourceId(
+    mSubTabSubTextAppearance = seslArray.getResourceId(
             R.styleable.TabLayout_seslTabSubTextAppearance, R.style.TextAppearance_Design_Tab_SubText);
 
     // Text colors/sizes come from the text appearance first
@@ -595,7 +595,7 @@ public class TabLayout extends HorizontalScrollView {
               ta.getDimensionPixelSize(
                       androidx.appcompat.R.styleable.TextAppearance_android_textSize, 0);
     } finally {
-      ta.recycle();
+      seslArray.recycle();
       ta.recycle();
     }
 

@@ -15,6 +15,10 @@
 -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
 <resources>
+
+    <dimen name="sesl_picker_spinner_height">164.0dip</dimen>
+
+    <dimen name="sesl_number_picker_spinner_edit_text_height">54.0dip</dimen>
     
     <dimen name="sesl_date_picker_calendar_day_height">32.0dip</dimen>
     <dimen name="sesl_date_picker_calendar_header_button_height">36.0dip</dimen>

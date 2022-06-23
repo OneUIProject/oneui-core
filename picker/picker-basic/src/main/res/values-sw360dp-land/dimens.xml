@@ -27,5 +27,6 @@
     <dimen name="sesl_date_picker_selected_day_circle_radius">12.0dip</dimen>
 
     <dimen name="sesl_spinning_date_picker_height">244.0dip</dimen>
+    <dimen name="sesl_spinning_date_picker_height_dialog">244.0dip</dimen>
 
 </resources>

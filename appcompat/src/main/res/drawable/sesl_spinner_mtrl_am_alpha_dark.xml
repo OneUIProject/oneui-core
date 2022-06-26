@@ -15,6 +15,15 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/sesl_spinner_mtrl_am_alpha_light" />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22.0dip"
+    android:height="24.0dip"
+    android:viewportWidth="22.0"
+    android:viewportHeight="24.0">
+    <path
+        android:fillColor="@color/sesl_spinner_background_tint_dark"
+        android:fillType="evenOdd"
+        android:pathData="M10.5453,14.5903L6.8107,9.5717C6.5323,9.198 6.7993,8.6667 7.265,8.6667L14.7343,8.6667C15.2007,8.6667 15.4677,9.198 15.1893,9.5717L11.4547,14.5903C11.228,14.895 10.772,14.895 10.5453,14.5903"
+        android:strokeWidth="1.0"
+        android:strokeColor="#00000000" />
+</vector>

@@ -15,6 +15,10 @@
   ~ limitations under the License.
   -->
 <!-- Original code by Samsung, all rights reserved to the original author. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/sesl_spinner_mtrl_am_alpha_light" />
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_enabled="false"
+        android:color="@color/sesl_spinner_icon_color_disabled_light" />
+    <item
+        android:color="@color/sesl_spinner_icon_color_default_light" />
+</selector>

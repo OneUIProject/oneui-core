@@ -28,6 +28,7 @@
 
     <item
         android:width="22.0dip"
+        android:height="24.0dip"
         android:end="7.0dip"
         android:drawable="@drawable/sesl_spinner_background_am_alpha_dark"
         android:gravity="end|center" />

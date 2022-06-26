@@ -51,7 +51,7 @@ configurations.all {
     exclude group: 'androidx.core', module: 'core'
 }
 ```
-For more informations about the usage of the libraries, please take a look at [oneui-design](https://github.com/OneUIProject/oneui-design).
+For more informations about the usage of the libraries, please take a look at our [wiki](https://oneuiproject.github.io/).
 ## Using with libraries that depend on AndroidX
 If you need to use a library that requires one or more stock androidx module, you have to exclude those specific dependencies to avoid build errors, like this:
 ```groovy

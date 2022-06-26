@@ -180,7 +180,6 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     private CharSequence mUserQuery;
     private boolean mExpandedInActionView;
     private int mCollapsedImeOptions;
-    private boolean mHandleIme = true;
     private boolean mUseSVI = false;
 
     SearchableInfo mSearchable;
@@ -606,26 +605,12 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
         }
     }
 
-    public void seslHandleImeForced(boolean enabled) {
-        mHandleIme = enabled;
-    }
-
-    private void seslClearFocus() {
-        mClearingFocus = true;
-        super.clearFocus();
-        mSearchSrcTextView.clearFocus();
-        mSearchSrcTextView.setImeVisibility(false);
-        mClearingFocus = false;
-    }
-
     @Override
     public void clearFocus() {
         mClearingFocus = true;
         super.clearFocus();
         mSearchSrcTextView.clearFocus();
-        if (mHandleIme || mIconified) {
-            mSearchSrcTextView.setImeVisibility(false);
-        }
+        mSearchSrcTextView.setImeVisibility(false);
         mClearingFocus = false;
     }
 
@@ -1340,11 +1325,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
                 // If the app doesn't override the close behavior
                 if (mOnCloseListener == null || !mOnCloseListener.onClose()) {
                     // hide the keyboard and remove focus
-                    if (mHandleIme) {
-                        clearFocus();
-                    } else {
-                        seslClearFocus();
-                    }
+                    clearFocus();
                     // collapse the search field
                     updateViewsVisibility(true);
                 }
@@ -1433,11 +1414,7 @@ public class SearchView extends LinearLayoutCompat implements CollapsibleActionV
     @Override
     public void onActionViewCollapsed() {
         setQuery("", false);
-        if (mHandleIme) {
-            clearFocus();
-        } else {
-            seslClearFocus();
-        }
+        clearFocus();
         updateViewsVisibility(true);
         mSearchSrcTextView.setImeOptions(mCollapsedImeOptions);
         mExpandedInActionView = false;

@@ -11576,6 +11576,14 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 info.addAction(AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD);
                 info.setScrollable(true);
             }
+            if (!info.isScrollable()) {
+                Rect rect = new Rect();
+                mRecyclerView.getGlobalVisibleRect(rect);
+                if (rect.bottom - rect.top < mRecyclerView.getHeight()) {
+                    info.addAction(AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD);
+                    info.setScrollable(true);
+                }
+            }
             final AccessibilityNodeInfoCompat.CollectionInfoCompat collectionInfo =
                     AccessibilityNodeInfoCompat.CollectionInfoCompat
                             .obtain(getRowCountForAccessibility(recycler, state),

@@ -1336,130 +1336,144 @@ class SeslRecyclerViewFastScroller {
      * @param totalItemCount Total number of items, >= 0.
      * @return
      */
+    // TODO rework this method
+    // kang
     private float getPosFromItemCount(
-            int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        final SectionIndexer sectionIndexer = mSectionIndexer;
-        if (sectionIndexer == null || mListAdapter == null) {
-            getSectionsFromIndexer();
+            int var1, int var2, int var3) {
+        /* var1 = firstVisibleItem; var2 = visibleItemCount; var2 = totalItemCount; */
+        if (this.mSectionIndexer == null || this.mListAdapter == null) {
+            this.getSectionsFromIndexer();
         }
 
-        if (visibleItemCount == 0 || totalItemCount == 0) {
-            // No items are visible.
-            return 0;
-        }
+        float var4 = 0.0F;
+        if (var2 != 0 && var3 != 0) {
+            SectionIndexer var5 = this.mSectionIndexer;
+            int var6 = this.mRecyclerView.getPaddingTop();
+            int var7 = var1;
+            if (var6 > 0) {
+                var7 = var1;
+                if (this.mRecyclerView.mLayout instanceof LinearLayoutManager) {
+                    LinearLayoutManager var8 = (LinearLayoutManager)this.mRecyclerView.mLayout;
 
-        if (mRecyclerView.getPaddingTop() > 0) {
-            RecyclerView.LayoutManager layoutManager = mRecyclerView.mLayout;
-            if (layoutManager instanceof LinearLayoutManager) {
-                LinearLayoutManager llm = (LinearLayoutManager) layoutManager;
-                while (firstVisibleItem > 0) {
-                    final int previousVisibleItem = firstVisibleItem - 1;
-                    if (llm.findViewByPosition(previousVisibleItem) == null) {
-                        break;
-                    }
-                    firstVisibleItem = previousVisibleItem;
-                }
-            }
-        }
+                    while(true) {
+                        var7 = var1;
+                        if (var1 <= 0) {
+                            break;
+                        }
 
-        // Hidden portion of the first visible row.
-        final View child = mRecyclerView.getChildAt(0);
-        final float incrementalPos;
-        if (child == null || child.getHeight() == 0) {
-            incrementalPos = 0;
-        } else if (firstVisibleItem == 0) {
-            incrementalPos = (float) (mRecyclerView.getPaddingTop() - child.getTop()) / (child.getHeight() + mRecyclerView.getPaddingTop());
-        } else {
-            incrementalPos = (float) (-child.getTop()) / child.getHeight();
-        }
+                        var7 = var1 - 1;
+                        if (var8.findViewByPosition(var7) == null) {
+                            var7 = var1;
+                            break;
+                        }
 
-        final int section;
-        final float posWithinSection;
-        final int sectionCount;
-
-        final boolean hasSections = sectionIndexer != null && mSections != null
-                && mSections.length > 0;
-        if (!hasSections || !mMatchDragPosition) {
-            if (visibleItemCount == totalItemCount) {
-                // All items are visible.
-                if (mRecyclerView.mLayout instanceof StaggeredGridLayoutManager) {
-                    StaggeredGridLayoutManager.LayoutParams lp
-                            = (StaggeredGridLayoutManager.LayoutParams) child.getLayoutParams();
-                    if (firstVisibleItem != 0 && child != null && lp.isFullSpan()) {
-                        return 1;
+                        var1 = var7;
                     }
                 }
-                return 0;
-            } else {
-                int span = 1;
-
-                if (mRecyclerView.mLayout instanceof GridLayoutManager) {
-                    GridLayoutManager glm = (GridLayoutManager) mRecyclerView.mLayout;
-                    span = glm.getSpanCount() / glm.getSpanSizeLookup().getSpanSize(firstVisibleItem);
-                } else if (mRecyclerView.mLayout instanceof StaggeredGridLayoutManager) {
-                    StaggeredGridLayoutManager sglm = (StaggeredGridLayoutManager) mRecyclerView.mLayout;
-                    span = sglm.getSpanCount();
-                }
-
-                section = firstVisibleItem;
-                posWithinSection = incrementalPos * span;
-                sectionCount = totalItemCount;
-            }
-        } else {
-            if (firstVisibleItem < 0) {
-                return 0;
             }
 
-            // Number of rows in this section.
-            section = sectionIndexer.getSectionForPosition(firstVisibleItem);
-            final int sectionPos = sectionIndexer.getPositionForSection(section);
-            sectionCount = mSections.length;
-            final int positionsInSection;
-            if (section < sectionCount - 1) {
-                final int nextSectionPos;
-                if (section + 1 < sectionCount) {
-                    nextSectionPos = sectionIndexer.getPositionForSection(section + 1);
+            View var9 = this.mRecyclerView.getChildAt(0);
+            float var10;
+            if (var9 != null && var9.getHeight() != 0) {
+                if (var7 == 0) {
+                    var10 = (float)(var6 - var9.getTop()) / (float)(var9.getHeight() + var6);
                 } else {
-                    nextSectionPos = totalItemCount - 1;
+                    var10 = (float)(-var9.getTop()) / (float)var9.getHeight();
                 }
-                positionsInSection = nextSectionPos - sectionPos;
             } else {
-                positionsInSection = totalItemCount - sectionPos;
+                var10 = 0.0F;
             }
 
-            // Position within this section.
-            if (positionsInSection == 0) {
-                posWithinSection = 0;
-            } else {
-                posWithinSection = (firstVisibleItem + incrementalPos - sectionPos)
-                        / positionsInSection;
+            boolean var13;
+            label103: {
+                if (var5 != null) {
+                    Object[] var15 = this.mSections;
+                    if (var15 != null && var15.length > 0) {
+                        var13 = true;
+                        break label103;
+                    }
+                }
+
+                var13 = false;
             }
+
+            if (var13 && this.mMatchDragPosition) {
+                if (var7 < 0) {
+                    return 0.0F;
+                }
+
+                int var11 = var5.getSectionForPosition(var7);
+                int var12 = var5.getPositionForSection(var11);
+                var6 = this.mSections.length;
+                if (var11 < var6 - 1) {
+                    var1 = var11 + 1;
+                    if (var1 < var6) {
+                        var1 = var5.getPositionForSection(var1);
+                    } else {
+                        var1 = var3 - 1;
+                    }
+
+                    var1 -= var12;
+                } else {
+                    var1 = var3 - var12;
+                }
+
+                if (var1 == 0) {
+                    var10 = var4;
+                } else {
+                    var10 = ((float)var7 + var10 - (float)var12) / (float)var1;
+                }
+
+                var4 = (float)var11 + var10;
+                var10 = (float)var6;
+            } else {
+                if (var2 == var3) {
+                    if (this.mRecyclerView.mLayout instanceof StaggeredGridLayoutManager && var7 != 0 && var9 != null && ((StaggeredGridLayoutManager.LayoutParams)var9.getLayoutParams()).isFullSpan()) {
+                        return 1.0F;
+                    }
+
+                    return 0.0F;
+                }
+
+                if (this.mRecyclerView.mLayout instanceof GridLayoutManager) {
+                    var1 = ((GridLayoutManager)this.mRecyclerView.mLayout).getSpanCount() / ((GridLayoutManager)this.mRecyclerView.mLayout).getSpanSizeLookup().getSpanSize(var7);
+                } else if (this.mRecyclerView.mLayout instanceof StaggeredGridLayoutManager) {
+                    var1 = ((StaggeredGridLayoutManager)this.mRecyclerView.mLayout).getSpanCount();
+                } else {
+                    var1 = 1;
+                }
+
+                var4 = (float)var7 + var10 * (float)var1;
+                var10 = (float)var3;
+            }
+
+            var4 /= var10;
+            var10 = var4;
+            if (var7 + var2 == var3) {
+                View var16 = this.mRecyclerView.getChildAt(var2 - 1);
+                View var14 = this.mRecyclerView.getChildAt(0);
+                var2 = var16.getBottom() - this.mRecyclerView.getHeight() + this.mRecyclerView.getPaddingBottom();
+                var1 = var2 - (var14.getTop() - this.mRecyclerView.getPaddingTop());
+                if (var1 > var16.getHeight() || var7 > 0) {
+                    var1 = var16.getHeight();
+                }
+
+                var2 = var1 - var2;
+                var10 = var4;
+                if (var2 > 0) {
+                    var10 = var4;
+                    if (var1 > 0) {
+                        var10 = var4 + (1.0F - var4) * ((float)var2 / (float)var1);
+                    }
+                }
+            }
+
+            return var10;
+        } else {
+            return 0.0F;
         }
-
-        float result = (section + posWithinSection) / sectionCount;
-
-        // Fake out the scroll bar for the last item. Since the section indexer
-        // won't ever actually move the list in this end space, make scrolling
-        // across the last item account for whatever space is remaining.
-        if (firstVisibleItem > 0 && firstVisibleItem + visibleItemCount == totalItemCount) {
-            final View lastChild = mRecyclerView.getChildAt(visibleItemCount - 1);
-            final int bottomPadding = mRecyclerView.getPaddingBottom();
-            final int maxSize;
-            final int currentVisibleSize;
-            if (mRecyclerView.getClipToPadding()) {
-                maxSize = lastChild.getHeight();
-                currentVisibleSize = mRecyclerView.getHeight() - bottomPadding - lastChild.getTop();
-            } else {
-                maxSize = lastChild.getHeight() + bottomPadding;
-                currentVisibleSize = mRecyclerView.getHeight() - lastChild.getTop();
-            }
-            if (currentVisibleSize > 0 && maxSize > 0) {
-                result += (1 - result) * ((float) currentVisibleSize / maxSize );
-            }
-        }
-
-        return result;
     }
+    // kang
 
     /**
      * Cancels an ongoing fling event by injecting a

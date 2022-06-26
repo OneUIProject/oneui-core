@@ -2563,6 +2563,10 @@ public class SeslDatePicker extends LinearLayout
                             .getStringProperties("ro.carrier"))) {
                 String countryIsoCode = SeslSystemPropertiesReflector
                         .getStringProperties("persist.sys.selected_country_iso");
+                if (TextUtils.isEmpty(countryIsoCode)
+                        && UAE_SALES_CODE.equals(SeslSystemPropertiesReflector.getSalesCode())) {
+                    return null;
+                }
                 if (TextUtils.isEmpty(countryIsoCode)) {
                     countryIsoCode = SeslSystemPropertiesReflector
                             .getStringProperties("ro.csc.countryiso_code");

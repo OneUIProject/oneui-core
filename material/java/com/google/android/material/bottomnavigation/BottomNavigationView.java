@@ -29,12 +29,15 @@ import androidx.appcompat.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.SeslTouchTargetDelegate;
+
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.navigation.NavigationBarMenuView;
@@ -50,6 +53,7 @@ import com.google.android.material.shape.MaterialShapeDrawable;
  */
 public class BottomNavigationView extends NavigationBarView {
   static final int MAX_ITEM_COUNT = 5;
+  private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListenerForTD;
 
   public BottomNavigationView(@NonNull Context context) {
     this(context, null);
@@ -162,11 +166,6 @@ public class BottomNavigationView extends NavigationBarView {
     addView(divider);
   }
 
-  @Override
-  public void seslSetGroupDividerEnabled(boolean enabled) {
-    super.seslSetGroupDividerEnabled(enabled);
-  }
-
   /**
    * Set a listener that will be notified when a bottom navigation item is selected. This listener
    * will also be notified when the currently selected item is reselected, unless an {@link
@@ -192,6 +191,107 @@ public class BottomNavigationView extends NavigationBarView {
   public void setOnNavigationItemReselectedListener(
       @Nullable OnNavigationItemReselectedListener listener) {
     setOnItemReselectedListener(listener);
+  }
+
+  @Override
+  protected void onWindowVisibilityChanged(int visibility) {
+    super.onWindowVisibilityChanged(visibility);
+    if (visibility == VISIBLE) {
+      seslSetTouchDelegateForBottomBar();
+    } else {
+      seslRemoveListenerForTouchDelegate();
+    }
+  }
+
+  @Override
+  public void seslSetGroupDividerEnabled(boolean enabled) {
+    super.seslSetGroupDividerEnabled(enabled);
+  }
+
+  private void seslSetTouchDelegateForBottomBar() {
+    final ViewTreeObserver vto = getViewTreeObserver();
+    if (vto != null && mOnGlobalLayoutListenerForTD != null) {
+      mOnGlobalLayoutListenerForTD = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+          final BottomNavigationView bottomNaviView = BottomNavigationView.this;
+          if (bottomNaviView != null) {
+            bottomNaviView.post(new Runnable() {
+              // TODO rework this method
+              // kang
+              @Override
+              public void run() {
+                SeslTouchTargetDelegate var1 = new SeslTouchTargetDelegate(bottomNaviView);
+                int var2 = bottomNaviView.getChildCount();
+                int var3 = 0;
+                int var4 = 0;
+
+                View var5;
+                while(true) {
+                  if (var4 >= var2) {
+                    var5 = null;
+                    break;
+                  }
+
+                  var5 = bottomNaviView.getChildAt(var4);
+                  if (var5 instanceof BottomNavigationMenuView) {
+                    break;
+                  }
+
+                  ++var4;
+                }
+
+                var4 = var3;
+                if (var5 != null) {
+                  var4 = var3;
+                  if (var5.getVisibility() == VISIBLE) {
+                    ViewGroup var6 = (ViewGroup)var5;
+                    int var7 = var6.getChildCount();
+                    var3 = 0;
+
+                    for(var4 = var3; var3 < var7; ++var3) {
+                      var5 = var6.getChildAt(var3);
+                      if (var5.getVisibility() == VISIBLE) {
+                        var4 = var5.getMeasuredHeight() / 2;
+                        if (var3 == 0) {
+                          var2 = var4;
+                        } else {
+                          var2 = 0;
+                        }
+
+                        int var8;
+                        if (var3 == var7 - 1) {
+                          var8 = var4;
+                        } else {
+                          var8 = 0;
+                        }
+
+                        var1.addTouchDelegate(var5, SeslTouchTargetDelegate.ExtraInsets.of(var2, var4, var8, var4));
+                        var4 = 1;
+                      }
+                    }
+                  }
+                }
+
+                if (var4 != 0) {
+                  bottomNaviView.setTouchDelegate(var1);
+                }
+
+              }
+              // kang
+            });
+          }
+        }
+      };;
+      vto.addOnGlobalLayoutListener(mOnGlobalLayoutListenerForTD);
+    }
+  }
+
+  private void seslRemoveListenerForTouchDelegate() {
+    if (mOnGlobalLayoutListenerForTD != null) {
+      getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListenerForTD);
+      mOnGlobalLayoutListenerForTD = null;
+    }
   }
 
   /** Listener for handling selection events on bottom navigation items. */

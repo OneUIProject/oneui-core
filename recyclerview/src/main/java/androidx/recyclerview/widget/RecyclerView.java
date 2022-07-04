@@ -14864,13 +14864,13 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         return mScrollingChildHelper;
     }
 
-    public void seslSetLastRoundedCorner(boolean enabled) {
-        mDrawLastRoundedCorner = enabled;
+    public void seslSetLastRoundedCorner(boolean draw) {
+        mDrawLastRoundedCorner = draw;
     }
 
-    public void seslSetFillBottomEnabled(boolean enabled) {
+    public void seslSetFillBottomEnabled(boolean draw) {
         if (mLayout instanceof LinearLayoutManager) {
-            mDrawRect = enabled;
+            mDrawRect = draw;
             requestLayout();
         }
     }
@@ -14932,10 +14932,10 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         }
     }
 
-    private void adjustNestedScrollRangeBy(int y) {
+    private void adjustNestedScrollRangeBy(int offset) {
         if (mHasNestedScrollRange) {
             if (!canScrollUp() || mRemainNestedScrollRange != 0) {
-                mRemainNestedScrollRange = mRemainNestedScrollRange - y;
+                mRemainNestedScrollRange = mRemainNestedScrollRange - offset;
                 if (mRemainNestedScrollRange < 0) {
                     mRemainNestedScrollRange = 0;
                 } else if (mRemainNestedScrollRange > mNestedScrollRange) {
@@ -15304,28 +15304,28 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         return false;
     }
 
-    public void seslSetFastScrollerEventListener(SeslFastScrollerEventListener listener) {
-        mFastScrollerEventListener = listener;
+    public void seslSetFastScrollerEventListener(SeslFastScrollerEventListener l) {
+        mFastScrollerEventListener = l;
     }
 
-    public void seslSetGoToTopEnabled(boolean enabled) {
-        seslSetGoToTopEnabled(enabled, true);
+    public void seslSetGoToTopEnabled(boolean enable) {
+        seslSetGoToTopEnabled(enable, true);
     }
 
-    public void seslSetGoToTopEnabled(boolean enabled, boolean lightStyle) {
-        mGoToTopImage = lightStyle
+    public void seslSetGoToTopEnabled(boolean enable, boolean isWhite) {
+        mGoToTopImage = isWhite
                 ? mGoToTopImageLight : mContext.getResources().getDrawable(
                         R.drawable.sesl_list_go_to_top_dark);
 
         if (mGoToTopImage != null) {
-            if (enabled) {
+            if (enable) {
                 if (mGoToTopView == null) {
                     mGoToTopView = new ImageView(mContext);
 
                     final boolean isLightTheme = SeslMisc.isLightTheme(mContext);
                     if (Build.VERSION.SDK_INT >= 26) {
                         Drawable background;
-                        if (isLightTheme && lightStyle) {
+                        if (isLightTheme && isWhite) {
                             background = mContext.getResources().getDrawable(
                                     R.drawable.sesl_go_to_top_background_light, null);
                         } else {
@@ -15347,7 +15347,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 getOverlay().remove(mGoToTopView);
             }
 
-            mEnableGoToTop = enabled;
+            mEnableGoToTop = enable;
 
             mGoToTopFadeInAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
             mGoToTopFadeInAnimator.setDuration(333);
@@ -15430,57 +15430,57 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         }
     }
 
-    private void autoHide(int state) {
+    private void autoHide(int when) {
         if (mEnableGoToTop) {
-            if (state == GTP_STATE_NONE) {
+            if (when == GTP_STATE_NONE) {
                 if (!seslIsFastScrollerEnabled()) {
                     removeCallbacks(mAutoHide);
                     postDelayed(mAutoHide, GO_TO_TOP_HIDE);
                 }
-            } else if (state == GTP_STATE_SHOWN) {
+            } else if (when == GTP_STATE_SHOWN) {
                 removeCallbacks(mAutoHide);
                 postDelayed(mAutoHide, GO_TO_TOP_HIDE);
             }
         }
     }
 
-    private void setupGoToTop(int state) {
+    private void setupGoToTop(int where) {
         if (mEnableGoToTop) {
             removeCallbacks(mAutoHide);
-            if (state == GTP_STATE_SHOWN && !canScrollUp()) {
-                state = GTP_STATE_NONE;
+            if (where == GTP_STATE_SHOWN && !canScrollUp()) {
+                where = GTP_STATE_NONE;
             }
 
-            if (state != -1 || !mSizeChnage) {
-                if (state == -1 && (canScrollUp() || canScrollDown())) {
-                    state = GTP_STATE_SHOWN;
+            if (where != -1 || !mSizeChnage) {
+                if (where == -1 && (canScrollUp() || canScrollDown())) {
+                    where = GTP_STATE_SHOWN;
                 }
             } else if (canScrollUp() || canScrollDown()) {
-                state = mGoToTopLastState;
+                where = mGoToTopLastState;
             } else {
-                state = GTP_STATE_NONE;
+                where = GTP_STATE_NONE;
             }
 
-            if (state != GTP_STATE_NONE) {
+            if (where != GTP_STATE_NONE) {
                 removeCallbacks(mGoToToFadeOutRunnable);
-            } else if (state != GTP_STATE_SHOWN) {
+            } else if (where != GTP_STATE_SHOWN) {
                 removeCallbacks(mGoToToFadeInRunnable);
             }
 
             if (mShowFadeOutGTP == GTP_STATE_NONE
-                    && state == GTP_STATE_NONE && mGoToTopLastState != GTP_STATE_NONE) {
+                    && where == GTP_STATE_NONE && mGoToTopLastState != GTP_STATE_NONE) {
                 post(mGoToToFadeOutRunnable);
             }
 
-            if (state != GTP_STATE_PRESSED) {
+            if (where != GTP_STATE_PRESSED) {
                 mGoToTopView.setPressed(false);
             }
 
-            mGoToTopState = state;
+            mGoToTopState = where;
 
             int padding = getPaddingLeft() + ((getWidth() - getPaddingLeft() - getPaddingRight()) / 2);
-            if (state != GTP_STATE_NONE) {
-                if (state == GTP_STATE_SHOWN || state == GTP_STATE_PRESSED) {
+            if (where != GTP_STATE_NONE) {
+                if (where == GTP_STATE_SHOWN || where == GTP_STATE_PRESSED) {
                     removeCallbacks(mGoToToFadeOutRunnable);
                     mGoToTopRect.set(padding - (mGoToTopSize / 2),
                             ((getHeight() - mGoToTopSize) - mGoToTopBottomPadding) - mGoToTopImmersiveBottomPadding,
@@ -15497,7 +15497,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
 
             mGoToTopView.layout(mGoToTopRect.left, mGoToTopRect.top, mGoToTopRect.right, mGoToTopRect.bottom);
 
-            if (state == GTP_STATE_SHOWN
+            if (where == GTP_STATE_SHOWN
                     && (mGoToTopLastState == GTP_STATE_NONE || mGoToTopView.getAlpha() == 0.0f || mSizeChnage)) {
                 post(mGoToToFadeInRunnable);
             }
@@ -15545,53 +15545,53 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         return mHoverBottomAreaHeight;
     }
 
-    public void seslSetHoverBottomPadding(int bottom) {
-        mHoverBottomAreaHeight = bottom;
+    public void seslSetHoverBottomPadding(int padding) {
+        mHoverBottomAreaHeight = padding;
     }
 
     public int seslGetHoverTopPadding() {
         return mHoverTopAreaHeight;
     }
 
-    public void seslSetHoverTopPadding(int top) {
-        mHoverTopAreaHeight = top;
+    public void seslSetHoverTopPadding(int padding) {
+        mHoverTopAreaHeight = padding;
     }
 
     public int seslGetGoToTopBottomPadding() {
         return mGoToTopBottomPadding;
     }
 
-    public void seslSetGoToTopBottomPadding(int bottom) {
-        mGoToTopBottomPadding = bottom;
+    public void seslSetGoToTopBottomPadding(int padding) {
+        mGoToTopBottomPadding = padding;
     }
 
     public void seslSetOnGoToTopClickListener(SeslOnGoToTopClickListener listener) {
         mOnGoToTopClickListener = listener;
     }
 
-    public void seslShowGoToTopEdge(float delta, float displacement, int delayMillis) {
+    public void seslShowGoToTopEdge(float deltaDistance, float displacement, int delayTime) {
         removeCallbacks(mGoToTopEdgeEffectRunnable);
-        postDelayed(mGoToTopEdgeEffectRunnable, (long) delayMillis);
+        postDelayed(mGoToTopEdgeEffectRunnable, (long) delayTime);
     }
 
-    public void seslSetImmersiveScrollBottomPadding(int bottom) {
-        if (bottom >= 0) {
+    public void seslSetImmersiveScrollBottomPadding(int padding) {
+        if (padding >= 0) {
             if (mEnableGoToTop) {
-                int immersiveBottom = getHeight() - mGoToTopSize - mGoToTopBottomPadding - bottom;
+                int immersiveBottom = getHeight() - mGoToTopSize - mGoToTopBottomPadding - padding;
                 if (immersiveBottom < 0) {
                     mGoToTopImmersiveBottomPadding = 0;
-                    Log.e(TAG, "The Immersive padding value (" + bottom +
+                    Log.e(TAG, "The Immersive padding value (" + padding +
                             ") was too large to draw GoToTop.");
                     return;
                 }
-                mGoToTopImmersiveBottomPadding = bottom;
+                mGoToTopImmersiveBottomPadding = padding;
 
                 if (mGoToTopState != GTP_STATE_NONE) {
-                    final int padding = getPaddingLeft() +
+                    final int value = getPaddingLeft() +
                             (((getWidth() - getPaddingLeft()) - getPaddingRight()) / 2);
-                    mGoToTopRect.set(padding - (mGoToTopSize / 2),
+                    mGoToTopRect.set(value - (mGoToTopSize / 2),
                             immersiveBottom,
-                            padding + (mGoToTopSize / 2),
+                            value + (mGoToTopSize / 2),
                             mGoToTopSize + immersiveBottom);
                     mGoToTopView.layout(mGoToTopRect.left,
                             mGoToTopRect.top,
@@ -15601,7 +15601,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             }
 
             if (mFastScroller != null && mAdapter != null) {
-                mFastScroller.setImmersiveBottomPadding(bottom);
+                mFastScroller.setImmersiveBottomPadding(padding);
             }
         }
     }
@@ -16136,18 +16136,18 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 mPenDragSelectedViewPosition = getChildLayoutPosition(child);
 
                 if (child.getVisibility() == View.VISIBLE) {
-                    final boolean notNeedToCheck;
+                    final boolean needSelected;
                     if (startPosition > mPenDragSelectedViewPosition
                             || mPenDragSelectedViewPosition > endPosition
                             || mPenDragSelectedViewPosition == mPenTrackedChildPosition) {
-                        notNeedToCheck = false;
+                        needSelected = false;
                     } else {
-                        notNeedToCheck = true;
+                        needSelected = true;
                     }
 
                     // wrap mPenDragSelectedViewPosition in order to call
                     // remove(Object o) instead of remove(int index)
-                    if (notNeedToCheck) {
+                    if (needSelected) {
                         if (mPenDragSelectedViewPosition != NO_POSITION
                                 && !mPenDragSelectedItemArray.contains(
                                         Integer.valueOf(mPenDragSelectedViewPosition))) {
@@ -16569,9 +16569,11 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     @Override
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_CTRL_LEFT
-                || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT) {
-            mIsCtrlKeyPressed = false;
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_CTRL_LEFT:
+            case KeyEvent.KEYCODE_CTRL_RIGHT:
+                mIsCtrlKeyPressed = false;
+                break;
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -16609,48 +16611,48 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 && getChildAt(childCount - 1).getBottom() <= getHeight() - mListPadding.bottom;
     }
 
-    private boolean showPointerIcon(MotionEvent event, int type) {
-        SeslInputDeviceReflector.semSetPointerType(event.getDevice(), type);
+    private boolean showPointerIcon(MotionEvent ev, int iconId) {
+        SeslInputDeviceReflector.semSetPointerType(ev.getDevice(), iconId);
         return true;
     }
 
     private boolean canScrollUp() {
-        boolean z = findFirstChildPosition() > 0;
-        if (z || getChildCount() <= 0) {
-            return z;
+        boolean canScrollUp = findFirstChildPosition() > 0;
+        if (!canScrollUp && getChildCount() > 0) {
+            View child = getChildAt(0);
+            return child.getTop() < getPaddingTop();
         }
-        return getChildAt(0).getTop() < getPaddingTop();
+        return canScrollUp;
     }
 
     private boolean canScrollDown() {
-        final int childCount = getChildCount();
+        final int count = getChildCount();
         if (mAdapter == null) {
             Log.e(TAG, "No adapter attached; skipping canScrollDown");
             return false;
         }
-        boolean z = findFirstChildPosition() + childCount < mAdapter.getItemCount();
-        if (z || childCount <= 0) {
-            return z;
+        boolean canScrollDown = findFirstChildPosition() + count < mAdapter.getItemCount();
+        if (!canScrollDown && count > 0) {
+            View child = getChildAt(count - 1);
+            canScrollDown = child.getBottom() > getBottom() - mListPadding.bottom;
         }
-        return getChildAt(childCount - 1).getBottom() > getBottom() - mListPadding.bottom;
+        return canScrollDown;
     }
 
     private int findFirstChildPosition() {
-        final int firstChildPos;
+        int firstPosition = 0;
         if (mLayout instanceof LinearLayoutManager) {
-            LinearLayoutManager llm = (LinearLayoutManager) mLayout;
-            firstChildPos = llm.findFirstVisibleItemPosition();
+            firstPosition = ((LinearLayoutManager) mLayout).findFirstVisibleItemPosition();
         } else if (mLayout instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager glm = (StaggeredGridLayoutManager) mLayout;
-            firstChildPos = glm.findFirstVisibleItemPositions(null)
-                    [mLayout.getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL ? glm.getSpanCount() - 1 : 0];
-        } else {
-            firstChildPos = 0;
+            firstPosition = ((StaggeredGridLayoutManager) mLayout).findFirstVisibleItemPositions(null)
+                    [mLayout.getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL
+                        ? ((StaggeredGridLayoutManager) mLayout).getSpanCount() - 1
+                        : 0];
         }
-        if (firstChildPos == NO_POSITION) {
+        if (firstPosition == NO_POSITION) {
             return 0;
         }
-        return firstChildPos;
+        return firstPosition;
     }
 
     private boolean isLockScreenMode() {
@@ -16667,12 +16669,10 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     int findFirstVisibleItemPosition() {
         if (mLayout instanceof LinearLayoutManager) {
-            LinearLayoutManager llm = (LinearLayoutManager) mLayout;
-            return llm.findFirstVisibleItemPosition();
+            return ((LinearLayoutManager) mLayout).findFirstVisibleItemPosition();
         }
         if (mLayout instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager glm = (StaggeredGridLayoutManager) mLayout;
-            return glm.findFirstVisibleItemPositions(null)[0];
+            return ((StaggeredGridLayoutManager) mLayout).findFirstVisibleItemPositions(null)[0];
         }
         return NO_POSITION;
     }
@@ -16680,17 +16680,15 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     int findLastVisibleItemPosition() {
         if (mLayout instanceof LinearLayoutManager) {
-            LinearLayoutManager llm = (LinearLayoutManager) mLayout;
-            return llm.findLastVisibleItemPosition();
+            return ((LinearLayoutManager) mLayout).findLastVisibleItemPosition();
         }
         if (mLayout instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager glm = (StaggeredGridLayoutManager) mLayout;
-            return glm.findLastVisibleItemPositions(null)[0];
+            return ((StaggeredGridLayoutManager) mLayout).findLastVisibleItemPositions(null)[0];
         }
         return NO_POSITION;
     }
 
-    private boolean pageScroll(int focus) {
+    private boolean pageScroll(int direction) {
         if (mAdapter == null) {
             Log.e(TAG, "No adapter attached; skipping pageScroll");
             return false;
@@ -16701,31 +16699,31 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             return false;
         }
 
-        final int itemPos;
-        switch (focus) {
+        int pos;
+        switch (direction) {
             case FOCUS_MOVE_UP:
-                itemPos = findFirstVisibleItemPosition() - getChildCount();
+                pos = findFirstVisibleItemPosition() - getChildCount();
                 break;
             case FOCUS_MOVE_DOWN:
-                itemPos = findLastVisibleItemPosition() + getChildCount();
+                pos = findLastVisibleItemPosition() + getChildCount();
                 break;
             case FOCUS_MOVE_FULL_UP:
-                itemPos = 0;
+                pos = 0;
                 break;
             case FOCUS_MOVE_FULL_DOWN:
-                itemPos = itemCount - 1;
+                pos = itemCount - 1;
                 break;
             default:
                 return false;
         }
 
-        int index = 0;
-        if (itemPos > itemCount - 1) {
-            index = itemCount - 1;
-        } else if (itemPos >= 0) {
-            index = itemPos;
+        if (pos > itemCount - 1) {
+            pos = itemCount - 1;
+        } else if (pos < 0) {
+            pos = 0;
         }
-        mLayout.mRecyclerView.scrollToPosition(index);
+
+        mLayout.mRecyclerView.scrollToPosition(pos);
         mLayout.mRecyclerView.post(new Runnable() {
             @Override
             public void run() {

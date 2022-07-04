@@ -80,10 +80,10 @@ public class SeslSwipeListAnimator {
         mRecyclerView = recyclerView;
     }
 
-    public void setSwipeConfiguration(SwipeConfiguration configuration) {
-        mSwipeConfiguration = configuration;
+    public void setSwipeConfiguration(SwipeConfiguration swipeConfiguration) {
+        mSwipeConfiguration = swipeConfiguration;
 
-        if (configuration.textLeftToRight == null) {
+        if (swipeConfiguration.textLeftToRight == null) {
             mSwipeConfiguration.textLeftToRight = " ";
         }
         if (mSwipeConfiguration.textRightToLeft == null) {
@@ -124,10 +124,11 @@ public class SeslSwipeListAnimator {
     }
 
     private int convertDipToPixels(Context context, int dip) {
-        return Math.round(context.getResources().getDisplayMetrics().density * dip);
+        final float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dip * density);
     }
 
-    public void doMoveAction(Canvas canvas, View viewForeground, float deltaX,
+    public void doMoveAction(Canvas c, View viewForeground, float deltaX,
                              boolean isCurrentlyActive) {
         Log.i(TAG, "doMoveAction: viewForeground = " + viewForeground +
                 " deltaX = " + deltaX + ", isCurrentlyActive = " + isCurrentlyActive);
@@ -143,7 +144,7 @@ public class SeslSwipeListAnimator {
             if (mDrawSwipeBitmapDrawable != null) {
                 mRecyclerView.invalidate(mDrawSwipeBitmapDrawable.getBounds());
                 Log.i(TAG, "doMoveAction: draw");
-                mDrawSwipeBitmapDrawable.draw(canvas);
+                mDrawSwipeBitmapDrawable.draw(c);
             }
         } else {
             Log.i(TAG, "doMoveAction: #2 reutrn");
@@ -161,6 +162,7 @@ public class SeslSwipeListAnimator {
     // TODO rework this method
     // kang
     private Canvas drawRectToBitmapCanvas(View var1, float var2, float var3) {
+        /* var1 = view; var2 = deltaX; var3 = swipeProgress; */
         int[] var4 = new int[2];
         this.mRecyclerView.getLocationInWindow(var4);
         int[] var5 = new int[2];

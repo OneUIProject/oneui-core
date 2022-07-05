@@ -194,7 +194,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void seslSetAllowDividerAfterLastItem(boolean allow) {
-        mAllowDividerAfterLastItem = allow;
+    public void seslSetAllowDividerAfterLastItem(boolean disableDividerAfterLastItem) {
+        mAllowDividerAfterLastItem = disableDividerAfterLastItem;
     }
 }

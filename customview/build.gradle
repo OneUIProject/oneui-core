@@ -31,7 +31,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.customview_customview.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.1-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.3-sesl4" + "\n"
 }
 
 ext {

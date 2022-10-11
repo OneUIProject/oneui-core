@@ -1221,6 +1221,10 @@ public class ViewDragHelper {
 
                     saveLastMotion(ev);
                 } else {
+                    if (mInitialMotionX == null || mInitialMotionY == null) {
+                        break;
+                    }
+
                     // Check to see if any pointer is now over a draggable view.
                     final int pointerCount = ev.getPointerCount();
                     for (int i = 0; i < pointerCount; i++) {
@@ -1380,6 +1384,10 @@ public class ViewDragHelper {
      * @return true if the slop threshold has been crossed, false otherwise
      */
     public boolean checkTouchSlop(int directions) {
+        if (mInitialMotionX == null) {
+            return false;
+        }
+
         final int count = mInitialMotionX.length;
         for (int i = 0; i < count; i++) {
             if (checkTouchSlop(directions, i)) {
@@ -1405,7 +1413,7 @@ public class ViewDragHelper {
      * @return true if the slop threshold has been crossed, false otherwise
      */
     public boolean checkTouchSlop(int directions, int pointerId) {
-        if (!isPointerDown(pointerId)) {
+        if (!isPointerDown(pointerId) || mInitialMotionX == null) {
             return false;
         }
 

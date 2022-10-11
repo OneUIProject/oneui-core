@@ -807,6 +807,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                                 + " swipeDir=" + swipeDir);
                         mCallback.onSwiped(anim.mViewHolder, swipeDir);
                         endRecoverAnimation(anim.mViewHolder, false);
+                    } else {
+                        mRecyclerView.post(this);
                     }
                 } else {
                     Log.i(TAG, "Failed to call mCallback.onSwiped()!, " +
@@ -815,7 +817,6 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     mCallback.seslOnSwipeFailed(anim.mViewHolder, swipeDir);
                     endRecoverAnimation(anim.mViewHolder, false);
                 }
-                mRecyclerView.post(this);
             }
         });
     }

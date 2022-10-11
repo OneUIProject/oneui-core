@@ -114,6 +114,7 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
   private SeslAppbarState mAppbarState;
   private Drawable mBackground;
   private List<SeslBaseOnImmOffsetChangedListener> mImmOffsetListener;
+  private WindowInsetsCompat mLastInsets = null;
   private Resources mResources;
 
   private boolean isMouse = false;
@@ -350,6 +351,12 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
         new androidx.core.view.OnApplyWindowInsetsListener() {
           @Override
           public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+            if (!insets.equals(mLastInsets)) {
+              if (getImmBehavior() != null) {
+                getImmBehavior().notifyOnApplyWindowInsets();
+              }
+              mLastInsets = insets;
+            }
             return onWindowInsetChanged(insets);
           }
         });

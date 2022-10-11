@@ -966,6 +966,14 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
     resetWindowInsetsAnimationController();
   }
 
+  void notifyOnApplyWindowInsets() {
+    if (mAppBarLayout != null) {
+      cancelWindowInsetsAnimationController();
+      dispatchImmersiveScrollEnable();
+      mAppBarLayout.onOffsetChanged(getTopAndBottomOffset());
+    }
+  }
+
   void forceRestoreWindowInset(boolean force) {
     if (mWindowInsetsController != null) {
       mDecorViewInset = mDecorView.getRootWindowInsets();

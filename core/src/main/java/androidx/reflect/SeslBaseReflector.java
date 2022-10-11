@@ -49,7 +49,7 @@ public class SeslBaseReflector {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            Log.e(TAG, "Fail to get class", e);
+            Log.w(TAG, "Fail to get class = " + className);
             return null;
         }
     }
@@ -72,7 +72,7 @@ public class SeslBaseReflector {
         try {
             return cls.getMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e) {
-            Log.e(TAG, methodName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find method = " + methodName);
             return null;
         }
     }
@@ -90,7 +90,7 @@ public class SeslBaseReflector {
         try {
             return classT.getMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e) {
-            Log.e(TAG, methodName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find method = " + methodName);
             return null;
         }
     }
@@ -114,7 +114,7 @@ public class SeslBaseReflector {
                     method.setAccessible(true);
                 }
             } catch (NoSuchMethodException e) {
-                Log.e(TAG, methodName + " NoSuchMethodException", e);
+                Log.w(TAG, "Reflector did not find method = " + methodName);
             }
         }
 
@@ -138,7 +138,7 @@ public class SeslBaseReflector {
                 method.setAccessible(true);
             }
         } catch (NoSuchMethodException e) {
-            Log.e(TAG, methodName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find method = " + methodName);
         }
 
         return method;
@@ -185,7 +185,7 @@ public class SeslBaseReflector {
         try {
             return cls.getField(fieldName);
         } catch (NoSuchFieldException e) {
-            Log.e(TAG, fieldName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find field = " + fieldName);
             return null;
         }
     }
@@ -204,7 +204,7 @@ public class SeslBaseReflector {
         try {
             return classT.getField(fieldName);
         } catch (NoSuchFieldException e) {
-            Log.e(TAG, fieldName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find field = " + fieldName);
             return null;
         }
     }
@@ -228,7 +228,7 @@ public class SeslBaseReflector {
                     field.setAccessible(true);
                 }
             } catch (NoSuchFieldException e) {
-                Log.e(TAG, fieldName + " NoSuchMethodException", e);
+                Log.w(TAG, "Reflector did not find field = " + fieldName);
             }
         }
 
@@ -252,7 +252,7 @@ public class SeslBaseReflector {
                 field.setAccessible(true);
             }
         } catch (NoSuchFieldException e) {
-            Log.e(TAG, fieldName + " NoSuchMethodException", e);
+            Log.w(TAG, "Reflector did not find field = " + fieldName);;
         }
 
         return field;

@@ -1,1 +1,1 @@
-include ':core:core-ktx'
+include ':core:core', ':core:core-ktx'

@@ -1,0 +1,38 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+}
+
+android {
+    namespace "androidx.core"
+
+    aaptOptions {
+        noCompress "ttf"
+    }
+
+    buildFeatures {
+        aidl = true
+    }
+
+    buildTypes.all {
+        consumerProguardFiles("proguard-rules.pro")
+    }
+}
+
+dependencies {
+    // Atomic group
+    constraints {
+        implementation(project(":core:core-ktx"))
+    }
+
+    api("androidx.annotation:annotation:$androidx_annotation_version")
+    api("androidx.annotation:annotation-experimental:$androidx_annotation_experimental_version")
+    api("androidx.lifecycle:lifecycle-runtime:$androidx_lifecycle_version")
+    api("androidx.versionedparcelable:versionedparcelable:$androidx_versionedparcelable_version")
+    implementation("androidx.collection:collection:$androidx_collection_version")
+    implementation("androidx.concurrent:concurrent-futures:$androidx_concurrent_version")
+    implementation("androidx.interpolator:interpolator:$androidx_interpolator_version")
+
+    // Required for -Werror due to annotation-experimental use of Kotlin
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+}

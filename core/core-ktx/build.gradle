@@ -10,10 +10,10 @@ android {
 dependencies {
     // Atomic group
     constraints {
-        implementation("androidx.core:core:$androidx_core_version")
+        implementation(project(":core:core"))
     }
 
     api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     api("androidx.annotation:annotation:$androidx_annotation_version")
-    api("androidx.core:core:$androidx_core_version")
+    api(project(":core:core"))
 }

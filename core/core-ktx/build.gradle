@@ -1,0 +1,19 @@
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+}
+
+android {
+    namespace "androidx.core.ktx"
+}
+
+dependencies {
+    // Atomic group
+    constraints {
+        implementation("androidx.core:core:$androidx_core_version")
+    }
+
+    api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+    api("androidx.annotation:annotation:$androidx_annotation_version")
+    api("androidx.core:core:$androidx_core_version")
+}

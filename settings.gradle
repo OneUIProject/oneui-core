@@ -1,1 +1,1 @@
-include ':mylibrary'
+include ':core:core-ktx'

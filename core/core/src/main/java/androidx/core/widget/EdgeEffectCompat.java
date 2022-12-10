@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package androidx.core.widget;
 
 import static android.os.Build.VERSION.SDK_INT;
@@ -29,6 +30,11 @@ import androidx.annotation.DoNotInline;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.reflect.view.SeslViewRuneReflector;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Helper for accessing {@link EdgeEffect}.
@@ -66,7 +72,7 @@ public final class EdgeEffectCompat {
      */
     @NonNull
     public static EdgeEffect create(@NonNull Context context, @Nullable AttributeSet attrs) {
-        if (SDK_INT >= 31) {
+        if (SDK_INT >= 31 && SeslViewRuneReflector.isEdgeEffectStretchType()) {
             return Api31Impl.create(context, attrs);
         }
 
@@ -87,7 +93,7 @@ public final class EdgeEffectCompat {
      * API level 30 and earlier.
      */
     public static float getDistance(@NonNull EdgeEffect edgeEffect) {
-        if (SDK_INT >= 31) {
+        if (SDK_INT >= 31 && SeslViewRuneReflector.isEdgeEffectStretchType()) {
             return Api31Impl.getDistance(edgeEffect);
         }
         return 0;
@@ -242,7 +248,7 @@ public final class EdgeEffectCompat {
             float deltaDistance,
             float displacement
     ) {
-        if (SDK_INT >= 31) {
+        if (SDK_INT >= 31 && SeslViewRuneReflector.isEdgeEffectStretchType()) {
             return Api31Impl.onPullDistance(edgeEffect, deltaDistance, displacement);
         }
         onPull(edgeEffect, deltaDistance, displacement);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import static android.view.View.TEXT_DIRECTION_LOCALE;
 import static android.view.View.TEXT_DIRECTION_LTR;
 import static android.view.View.TEXT_DIRECTION_RTL;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.app.Activity;
@@ -74,6 +75,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Helper for accessing features in {@link TextView}.
@@ -108,6 +112,9 @@ public final class TextViewCompat {
     private static Field sMinModeField;
     private static boolean sMinModeFieldFetched;
 
+    private static Field mTweakTypeField;
+    private static boolean mTweakTypeFieldFetched;
+
     private static final int LINES = 1;
 
     // Hide constructor
@@ -129,6 +136,18 @@ public final class TextViewCompat {
             return field.getInt(textView);
         } catch (IllegalAccessException e) {
             Log.d(LOG_TAG, "Could not retrieve value of " + field.getName() + " field.");
+        }
+        return -1;
+    }
+
+    @RestrictTo(LIBRARY_GROUP)
+    public static int getUniformTweakType(TextView textView) {
+        if (!mTweakTypeFieldFetched) {
+            mTweakTypeField = retrieveField("AUTO_SIZE_TEXT_TYPE_UNIFORM_TWEAK");
+            mTweakTypeFieldFetched = true;
+        }
+        if (mTweakTypeField != null) {
+            return retrieveIntFromField(mTweakTypeField, textView);
         }
         return -1;
     }

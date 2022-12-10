@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-
 package androidx.core.view;
 
+import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 import static androidx.core.view.ViewCompat.TYPE_NON_TOUCH;
 import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
@@ -25,8 +25,13 @@ import android.view.ViewParent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.core.view.ViewCompat.NestedScrollType;
 import androidx.core.view.ViewCompat.ScrollAxis;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Helper class for implementing nested scrolling child views compatible with Android platform
@@ -229,6 +234,22 @@ public class NestedScrollingChildHelper {
             int dyUnconsumed, @Nullable int[] offsetInWindow, @NestedScrollType int type,
             @Nullable int[] consumed) {
         dispatchNestedScrollInternal(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+                offsetInWindow, type, consumed);
+    }
+
+    /**
+     * Dispatch one step of a nested scrolling operation to the current nested scrolling parent.
+     *
+     * <p>This is a delegate method. Call it from your {@link NestedScrollingChild3} interface
+     * method with the same signature to implement the standard policy.
+     *
+     * @return <code>true</code> if the parent consumed any of the nested scroll distance
+     */
+    @RestrictTo(LIBRARY)
+    public boolean seslDispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
+            int dyUnconsumed, @Nullable int[] offsetInWindow, @NestedScrollType int type,
+            @Nullable int[] consumed) {
+        return dispatchNestedScrollInternal(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
                 offsetInWindow, type, consumed);
     }
 

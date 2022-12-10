@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,10 @@ import androidx.core.view.accessibility.AccessibilityNodeProviderCompat;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * Helper for accessing {@link AccessibilityDelegate}.
@@ -411,6 +415,10 @@ public class AccessibilityDelegateCompat {
         List<AccessibilityActionCompat> actions = (List<AccessibilityActionCompat>)
                 view.getTag(R.id.tag_accessibility_actions);
         return actions == null ? Collections.emptyList() : actions;
+    }
+
+    public void seslNotifyPerformAction(int virtualViewId,
+                                        int action, Bundle arguments) {
     }
 
     @RequiresApi(16)

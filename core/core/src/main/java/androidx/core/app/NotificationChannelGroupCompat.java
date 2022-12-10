@@ -21,7 +21,6 @@ import android.app.NotificationChannelGroup;
 import android.content.Intent;
 import android.os.Build;
 
-import androidx.annotation.DoNotInline;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -39,7 +38,7 @@ import java.util.List;
  * This class doesn't do anything on older SDKs which don't support Notification Channels.
  */
 public class NotificationChannelGroupCompat {
-    // These fields are settable through the builder
+    // These fields are settable theough the builder
     final String mId;
     CharSequence mName;
     String mDescription;
@@ -113,16 +112,16 @@ public class NotificationChannelGroupCompat {
     @RequiresApi(26)
     NotificationChannelGroupCompat(@NonNull NotificationChannelGroup group,
             @NonNull List<NotificationChannel> allChannels) {
-        this(Api26Impl.getId(group));
+        this(group.getId());
         // Populate all builder-editable fields
-        mName = Api26Impl.getName(group);
+        mName = group.getName();
         if (Build.VERSION.SDK_INT >= 28) {
-            mDescription = Api28Impl.getDescription(group);
+            mDescription = group.getDescription();
         }
         // Populate all read-only fields
         if (Build.VERSION.SDK_INT >= 28) {
-            mBlocked = Api28Impl.isBlocked(group);
-            mChannels = getChannelsCompat(Api26Impl.getChannels(group));
+            mBlocked = group.isBlocked();
+            mChannels = getChannelsCompat(group.getChannels());
         } else {
             // On API 26 and 27, the NotificationChannelGroup.getChannels() method was broken,
             // so we collect this information from the full list of channels at construction.
@@ -134,7 +133,7 @@ public class NotificationChannelGroupCompat {
     private List<NotificationChannelCompat> getChannelsCompat(List<NotificationChannel> channels) {
         List<NotificationChannelCompat> channelsCompat = new ArrayList<>();
         for (NotificationChannel channel : channels) {
-            if (mId.equals(Api26Impl.getGroup(channel))) {
+            if (mId.equals(channel.getGroup())) {
                 channelsCompat.add(new NotificationChannelCompat(channel));
             }
         }
@@ -150,9 +149,9 @@ public class NotificationChannelGroupCompat {
         if (Build.VERSION.SDK_INT < 26) {
             return null;
         }
-        NotificationChannelGroup group = Api26Impl.createNotificationChannelGroup(mId, mName);
+        NotificationChannelGroup group = new NotificationChannelGroup(mId, mName);
         if (Build.VERSION.SDK_INT >= 28) {
-            Api28Impl.setDescription(group, mDescription);
+            group.setDescription(mDescription);
         }
         return group;
     }
@@ -197,7 +196,7 @@ public class NotificationChannelGroupCompat {
      * {@link NotificationManagerCompat#areNotificationsEnabled()} and
      * {@link NotificationChannelCompat#getImportance()}.
      *
-     * <p>This value is always {@code false} before {@link Build.VERSION_CODES#P}
+     * <p>This value is always {@code false} before {@link android.os.Build.VERSION_CODES#P}
      *
      * <p>This is a read-only property which is only valid on instances fetched from the
      * {@link NotificationManagerCompat}.
@@ -215,68 +214,5 @@ public class NotificationChannelGroupCompat {
     @NonNull
     public List<NotificationChannelCompat> getChannels() {
         return mChannels;
-    }
-
-    /**
-     * A class for wrapping calls to {@link NotificationChannelGroupCompat} methods which
-     * were added in API 26; these calls must be wrapped to avoid performance issues.
-     * See the UnsafeNewApiCall lint rule for more details.
-     */
-    @RequiresApi(26)
-    static class Api26Impl {
-        private Api26Impl() { }
-
-        @DoNotInline
-        static NotificationChannelGroup createNotificationChannelGroup(String id,
-                CharSequence name) {
-            return new NotificationChannelGroup(id, name);
-        }
-
-        @DoNotInline
-        static String getId(NotificationChannelGroup notificationChannelGroup) {
-            return notificationChannelGroup.getId();
-        }
-
-        @DoNotInline
-        static CharSequence getName(NotificationChannelGroup notificationChannelGroup) {
-            return notificationChannelGroup.getName();
-        }
-
-        @DoNotInline
-        static List<NotificationChannel> getChannels(
-                NotificationChannelGroup notificationChannelGroup) {
-            return notificationChannelGroup.getChannels();
-        }
-
-        @DoNotInline
-        static String getGroup(NotificationChannel notificationChannel) {
-            return notificationChannel.getGroup();
-        }
-    }
-
-    /**
-     * A class for wrapping calls to {@link NotificationChannelGroupCompat} methods which
-     * were added in API 28; these calls must be wrapped to avoid performance issues.
-     * See the UnsafeNewApiCall lint rule for more details.
-     */
-    @RequiresApi(28)
-    static class Api28Impl {
-        private Api28Impl() { }
-
-        @DoNotInline
-        static boolean isBlocked(NotificationChannelGroup notificationChannelGroup) {
-            return notificationChannelGroup.isBlocked();
-        }
-
-        @DoNotInline
-        static String getDescription(NotificationChannelGroup notificationChannelGroup) {
-            return notificationChannelGroup.getDescription();
-        }
-
-        @DoNotInline
-        static void setDescription(NotificationChannelGroup notificationChannelGroup,
-                String description) {
-            notificationChannelGroup.setDescription(description);
-        }
     }
 }

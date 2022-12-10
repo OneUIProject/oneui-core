@@ -179,11 +179,4 @@ public class TypefaceCompatApi29Impl extends TypefaceCompatBaseImpl {
             return null;
         }
     }
-
-    @NonNull
-    @Override
-    Typeface createWeightStyle(@NonNull Context context,
-            @NonNull Typeface base, int weight, boolean italic) {
-        return Typeface.create(base, weight, italic);
-    }
 }

@@ -39,9 +39,7 @@ import androidx.annotation.RestrictTo;
 public interface AutoSizeableTextView {
     /**
      * @hide
-     * @deprecated do not use, overlarge scope and missing annotations
      */
-    @Deprecated
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     boolean PLATFORM_SUPPORTS_AUTOSIZE = Build.VERSION.SDK_INT >= 27;
 

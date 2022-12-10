@@ -165,7 +165,6 @@ class NotificationCompatJellybean {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static NotificationCompat.Action getAction(Notification notif, int actionIndex) {
         synchronized (sActionsLock) {
             try {
@@ -233,7 +232,6 @@ class NotificationCompatJellybean {
         return !sActionsAccessFailed;
     }
 
-    @SuppressWarnings("deprecation")
     static NotificationCompat.Action getActionFromBundle(Bundle bundle) {
         Bundle extras = bundle.getBundle(KEY_EXTRAS);
         boolean allowGeneratedReplies = false;
@@ -339,7 +337,6 @@ class NotificationCompatJellybean {
      * Update the bundle to have a typed array so fetches in the future don't need
      * to do an array copy.
      */
-    @SuppressWarnings("deprecation")
     private static Bundle[] getBundleArrayFromBundle(Bundle bundle, String key) {
         Parcelable[] array = bundle.getParcelableArray(key);
         if (array instanceof Bundle[] || array == null) {

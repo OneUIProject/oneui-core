@@ -267,6 +267,10 @@ public final class WindowInsetsAnimationControllerCompat {
         void finish(boolean shown) {
         }
 
+        public boolean isReady() {
+            return false;
+        }
+
         boolean isFinished() {
             return false;
         }
@@ -330,6 +334,11 @@ public final class WindowInsetsAnimationControllerCompat {
         @Override
         void finish(boolean shown) {
             mController.finish(shown);
+        }
+
+        @Override
+        public boolean isReady() {
+            return mController.isReady();
         }
 
         @Override

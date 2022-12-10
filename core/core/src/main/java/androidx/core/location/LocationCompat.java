@@ -25,11 +25,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 
 import androidx.annotation.DoNotInline;
-import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.util.Preconditions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -66,17 +64,6 @@ public final class LocationCompat {
      */
     @SuppressWarnings("ActionValue") // legacy value
     public static final String EXTRA_BEARING_ACCURACY = "bearingAccuracy";
-
-    /**
-     * Constant used as a key to store Mean Sea Level altitude in {@link Location#getExtras()}.
-     */
-    public static final String EXTRA_MSL_ALTITUDE = "androidx.core.location.extra.MSL_ALTITUDE";
-
-    /**
-     * Constant used as a key to store Mean Sea Level altitude in {@link Location#getExtras()}.
-     */
-    public static final String EXTRA_MSL_ALTITUDE_ACCURACY =
-            "androidx.core.location.extra.MSL_ALTITUDE_ACCURACY";
 
     @Nullable
     private static Method sSetIsFromMockProviderMethod;
@@ -139,7 +126,12 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             return Api26Impl.hasVerticalAccuracy(location);
         } else {
-            return containsExtra(location, EXTRA_VERTICAL_ACCURACY);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                return false;
+            }
+
+            return extras.containsKey(EXTRA_VERTICAL_ACCURACY);
         }
     }
 
@@ -180,7 +172,13 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             Api26Impl.setVerticalAccuracyMeters(location, verticalAccuracyM);
         } else {
-            getOrCreateExtras(location).putFloat(EXTRA_VERTICAL_ACCURACY, verticalAccuracyM);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                location.setExtras(new Bundle());
+                extras = location.getExtras();
+            }
+
+            extras.putFloat(EXTRA_VERTICAL_ACCURACY, verticalAccuracyM);
         }
     }
 
@@ -193,7 +191,12 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             return Api26Impl.hasSpeedAccuracy(location);
         } else {
-            return containsExtra(location, EXTRA_SPEED_ACCURACY);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                return false;
+            }
+
+            return extras.containsKey(EXTRA_SPEED_ACCURACY);
         }
     }
 
@@ -234,7 +237,13 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             Api26Impl.setSpeedAccuracyMetersPerSecond(location, speedAccuracyMps);
         } else {
-            getOrCreateExtras(location).putFloat(EXTRA_SPEED_ACCURACY, speedAccuracyMps);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                location.setExtras(new Bundle());
+                extras = location.getExtras();
+            }
+
+            extras.putFloat(EXTRA_SPEED_ACCURACY, speedAccuracyMps);
         }
     }
 
@@ -247,7 +256,12 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             return Api26Impl.hasBearingAccuracy(location);
         } else {
-            return containsExtra(location, EXTRA_BEARING_ACCURACY);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                return false;
+            }
+
+            return extras.containsKey(EXTRA_BEARING_ACCURACY);
         }
     }
 
@@ -288,80 +302,14 @@ public final class LocationCompat {
         if (VERSION.SDK_INT >= 26) {
             Api26Impl.setBearingAccuracyDegrees(location, bearingAccuracyD);
         } else {
-            getOrCreateExtras(location).putFloat(EXTRA_BEARING_ACCURACY, bearingAccuracyD);
+            Bundle extras = location.getExtras();
+            if (extras == null) {
+                location.setExtras(new Bundle());
+                extras = location.getExtras();
+            }
+
+            extras.putFloat(EXTRA_BEARING_ACCURACY, bearingAccuracyD);
         }
-    }
-
-    /**
-     * Returns the Mean Sea Level altitude of the location in meters.
-     *
-     * @throws IllegalStateException if the Mean Sea Level altitude of the location is not set
-     */
-    public static double getMslAltitudeMeters(@NonNull Location location) {
-        Preconditions.checkState(hasMslAltitude(location),
-                "The Mean Sea Level altitude of the location is not set.");
-        return getOrCreateExtras(location).getDouble(EXTRA_MSL_ALTITUDE);
-    }
-
-    /**
-     * Sets the Mean Sea Level altitude of the location in meters.
-     */
-    public static void setMslAltitudeMeters(@NonNull Location location,
-            double mslAltitudeMeters) {
-        getOrCreateExtras(location).putDouble(EXTRA_MSL_ALTITUDE, mslAltitudeMeters);
-    }
-
-    /**
-     * Returns true if the location has a Mean Sea Level altitude, false otherwise.
-     */
-    public static boolean hasMslAltitude(@NonNull Location location) {
-        return containsExtra(location, EXTRA_MSL_ALTITUDE);
-    }
-
-    /**
-     * Removes the Mean Sea Level altitude from the location.
-     */
-    public static void removeMslAltitude(@NonNull Location location) {
-        removeExtra(location, EXTRA_MSL_ALTITUDE);
-    }
-
-    /**
-     * Returns the estimated Mean Sea Level altitude accuracy in meters of the location at the 68th
-     * percentile confidence level. This means that there is 68% chance that the true Mean Sea Level
-     * altitude of the location falls within {@link #getMslAltitudeMeters(Location)} +/- this
-     * uncertainty.
-     *
-     * @throws IllegalStateException if the Mean Sea Level altitude accuracy of the location is not
-     *                               set
-     */
-    public static @FloatRange(from = 0.0) float getMslAltitudeAccuracyMeters(
-            @NonNull Location location) {
-        Preconditions.checkState(hasMslAltitudeAccuracy(location),
-                "The Mean Sea Level altitude accuracy of the location is not set.");
-        return getOrCreateExtras(location).getFloat(EXTRA_MSL_ALTITUDE_ACCURACY);
-    }
-
-    /**
-     * Sets the Mean Sea Level altitude accuracy of the location in meters.
-     */
-    public static void setMslAltitudeAccuracyMeters(@NonNull Location location,
-            @FloatRange(from = 0.0) float mslAltitudeAccuracyMeters) {
-        getOrCreateExtras(location).putFloat(EXTRA_MSL_ALTITUDE_ACCURACY,
-                mslAltitudeAccuracyMeters);
-    }
-
-    /**
-     * Returns true if the location has a Mean Sea Level altitude accuracy, false otherwise.
-     */
-    public static boolean hasMslAltitudeAccuracy(@NonNull Location location) {
-        return containsExtra(location, EXTRA_MSL_ALTITUDE_ACCURACY);
-    }
-
-    /**
-     * Removes the Mean Sea Level altitude accuracy from the location.
-     */
-    public static void removeMslAltitudeAccuracy(@NonNull Location location) {
-        removeExtra(location, EXTRA_MSL_ALTITUDE_ACCURACY);
     }
 
     /**
@@ -514,30 +462,5 @@ public final class LocationCompat {
         }
 
         return sSetIsFromMockProviderMethod;
-    }
-
-    private static Bundle getOrCreateExtras(@NonNull Location location) {
-        Bundle extras = location.getExtras();
-        if (extras == null) {
-            location.setExtras(new Bundle());
-            extras = location.getExtras();
-        }
-
-        return extras;
-    }
-
-    private static boolean containsExtra(@NonNull Location location, String key) {
-        Bundle extras = location.getExtras();
-        return extras != null && extras.containsKey(key);
-    }
-
-    private static void removeExtra(@NonNull Location location, String key) {
-        Bundle extras = location.getExtras();
-        if (extras != null) {
-            extras.remove(key);
-            if (extras.isEmpty()) {
-                location.setExtras(null);
-            }
-        }
     }
 }

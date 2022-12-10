@@ -27,6 +27,7 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
+import androidx.core.os.IResultReceiver;
 
 /**
  * Generic interface for receiving a callback result from someone.  Use this

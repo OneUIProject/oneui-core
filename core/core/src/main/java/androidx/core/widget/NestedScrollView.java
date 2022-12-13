@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,52 @@
  * limitations under the License.
  */
 
-
 package androidx.core.widget;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Outline;
+import android.graphics.RecordingCanvas;
 import android.graphics.Rect;
+import android.graphics.RenderNode;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.StateSet;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.FocusFinder;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
+import android.view.Surface;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.AnimationUtils;
+import android.view.animation.PathInterpolator;
 import android.widget.EdgeEffect;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
@@ -64,16 +82,143 @@ import androidx.core.view.ScrollingView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityRecordCompat;
+import androidx.reflect.provider.SeslSettingsReflector;
+import androidx.reflect.view.SeslInputDeviceReflector;
+import androidx.reflect.view.SeslPointerIconReflector;
+import androidx.reflect.widget.SeslOverScrollerReflector;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
+
 /**
- * NestedScrollView is just like {@link ScrollView}, but it supports acting
- * as both a nested scrolling parent and child on both new and old versions of Android.
- * Nested scrolling is enabled by default.
+ * Samsung NestedScrollView class.
  */
 public class NestedScrollView extends FrameLayout implements NestedScrollingParent3,
         NestedScrollingChild3, ScrollingView {
+    // Sesl
+    private static final int GO_TO_TOP_HIDE = 2500;
+
+    private static final int GTT_STATE_NONE = 0;
+    private static final int GTT_STATE_PRESSED = 2;
+    private static final int GTT_STATE_SHOWN = 1;
+    private static final int GTT_STATE_MAINTAINED = 3;
+
+    public static final int SESL_GO_TO_TOP_BUTTON_STYLE_BLACK = 1;
+    public static final int SESL_GO_TO_TOP_BUTTON_STYLE_WHITE = 0;
+
+    private static final int HOVERSCROLL_HEIGHT_TOP_DP = 25;
+    private static final int HOVERSCROLL_HEIGHT_BOTTOM_DP = 25;
+
+    private static final int HOVERSCROLL_UP = 1;
+    private static final int HOVERSCROLL_DOWN = 2;
+
+    private static final int HOVERSCROLL_DELAY = 15;
+    private static final float HOVERSCROLL_SPEED = 800.0f;
+
+    private static final int MSG_HOVERSCROLL_MOVE = 1;
+
+    private static final int MOTION_EVENT_ACTION_PEN_DOWN = 211;
+    private static final int MOTION_EVENT_ACTION_PEN_UP = 212;
+    private static final int MOTION_EVENT_ACTION_PEN_MOVE = 213;
+
+    private final int SWITCH_CONTROL_FLING = 4000;
+    private final float SWITCH_CONTROL_SCROLL_MIN_DURATION = 0.6f;
+    private final float SWITCH_CONTROL_SCROLL_MAX_DURATION = 17.1f;
+
+    private final int ON_ABSORB_VELOCITY = 10000;
+
+    private final float mAutoscrollDurationGap = 1.178f;
+
+    private long mHoverRecognitionCurrentTime = 0;
+    private long mHoverRecognitionDurationTime = 0;
+    private long mHoverRecognitionStartTime = 0;
+    private long mHoverScrollStartTime = 0;
+    private long mHoverScrollTimeInterval = 300;
+
+    private int mGoToTopButtonStyle = SESL_GO_TO_TOP_BUTTON_STYLE_BLACK;
+    private int mGoToTopElevation;
+    private int mGoToTopGap;
+    private int mGoToTopLastState = GTT_STATE_NONE;
+    private int mGoToTopSize;
+    private int mGoToTopState = GTT_STATE_NONE;
+    private int mHoverBottomAreaHeight = 0;
+    private int mHoverScrollDirection = -1;
+    private int mHoverScrollSpeed = 0;
+    private int mHoverTopAreaHeight = 0;
+
+    private boolean mGoToTopEnabled = false;
+    private boolean mGoToTopPressed = false;
+    private boolean mHoverAreaEnter = false;
+    private boolean mHoverScrollEnabled = true;
+    private boolean mHoverScrollStateChanged = false;
+    private boolean mIgnoreDelaychildPrerssed = false;
+    private boolean mIsGoToTopShown = false;
+    private boolean mIsHoverOverscrolled = false;
+    private boolean mIsSupportGoToTop = false;
+    private boolean mIsSupportHoverScroll = false;
+    private boolean mNeedsHoverScroll = false;
+    private boolean mPreviousTextViewScroll = false;
+    private boolean mSizeChange = false;
+
+    private Context mContext;
+    private Bitmap mGoToTopBitmap;
+    private ValueAnimator mGoToTopFadeInAnimator;
+    private ValueAnimator mGoToTopFadeOutAnimator;
+    private Drawable mGoToTopImage;
+    private RenderNode mGoToTopRenderNode;
+    private HoverScrollHandler mHoverHandler;
+    private final Rect mGoToTopRect = new Rect();
+    private Outline mOutline = new Outline();
+
+    View.OnLayoutChangeListener mOnLayoutChangeListener = new OnLayoutChangeListener() {
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            post(mCheckGoToTopAndAutoScrollCondition);
+        }
+    };
+
+    private final Runnable mGoToTopFadeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            playGoToTopFadeOut();
+        }
+    };
+    private final Runnable mGoToTopFadeInRunnable = new Runnable() {
+        @Override
+        public void run() {
+            playGoToTopFadeIn();
+        }
+    };
+
+    private final Runnable mAutoHide = new Runnable() {
+        @Override
+        public void run() {
+            setupGoToTop(GTT_STATE_NONE);
+        }
+    };
+
+    private final Runnable mGoToTopEdgeEffectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mEdgeGlowTop.onAbsorb(ON_ABSORB_VELOCITY);
+            invalidate();
+        }
+    };
+
+    private final Runnable mCheckGoToTopAndAutoScrollCondition = new Runnable() {
+        @Override
+        public void run() {
+            if (mGoToTopEnabled || mHoverScrollEnabled) {
+                mIsSupportGoToTop = mIsSupportHoverScroll = checkChildScrollableForGoToTopAndAutoScroll();
+            }
+        }
+    };
+    // Sesl
+
     static final int ANIMATED_SCROLL_GAP = 250;
 
     static final float MAX_SCROLL_FACTOR = 0.5f;
@@ -212,6 +357,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public NestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         mEdgeGlowTop = EdgeEffectCompat.create(context, attrs);
         mEdgeGlowBottom = EdgeEffectCompat.create(context, attrs);
 
@@ -239,6 +385,12 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public void dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
             int dyUnconsumed, @Nullable int[] offsetInWindow, int type, @NonNull int[] consumed) {
         mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+                offsetInWindow, type, consumed);
+    }
+
+    private boolean seslDispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
+            int dyUnconsumed, @Nullable int[] offsetInWindow, int type, @NonNull int[] consumed) {
+        return mChildHelper.seslDispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
                 offsetInWindow, type, consumed);
     }
 
@@ -484,6 +636,8 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        post(mCheckGoToTopAndAutoScrollCondition);
+        addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     @Override
@@ -593,6 +747,10 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
+
+        if (canOverScroll() && t != oldt) {
+            showGoToTop();
+        }
 
         if (mOnScrollChangeListener != null) {
             mOnScrollChangeListener.onScrollChange(this, l, t, oldl, oldt);
@@ -952,6 +1110,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                             EdgeEffectCompat.onPullDistance(mEdgeGlowBottom,
                                     (float) deltaY / getHeight(),
                                     1.f - ev.getX(activePointerIndex) / getWidth());
+                            showGoToTop();
                             if (!mEdgeGlowTop.isFinished()) {
                                 mEdgeGlowTop.onRelease();
                             }
@@ -1112,6 +1271,11 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                 }
                 if (newScrollY != oldScrollY) {
                     super.scrollTo(getScrollX(), newScrollY);
+                    startNestedScroll(newScrollY, ViewCompat.TYPE_NON_TOUCH);
+                    showGoToTop();
+                    if (!dispatchNestedPreScroll(0, newScrollY, null, null, ViewCompat.TYPE_NON_TOUCH)) {
+                        super.scrollTo(getScrollX(), newScrollY);
+                    }
                     return true;
                 }
                 return absorbed;
@@ -1147,6 +1311,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     @Override
     protected void onOverScrolled(int scrollX, int scrollY,
             boolean clampedX, boolean clampedY) {
+        showGoToTop();
         super.scrollTo(scrollX, scrollY);
     }
 
@@ -1428,6 +1593,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
             nextFocused.getDrawingRect(mTempRect);
             offsetDescendantRectToMyCoords(nextFocused, mTempRect);
             int scrollDelta = computeScrollDeltaToGetChildRectOnScreen(mTempRect);
+            mLastScrollerY = getScrollY();
             doScrollY(scrollDelta);
             nextFocused.requestFocus(direction);
         } else {
@@ -1724,8 +1890,18 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
             // Nested Scrolling Post Pass
             mScrollConsumed[1] = 0;
-            dispatchNestedScroll(0, scrolledByMe, 0, unconsumed, mScrollOffset,
-                    ViewCompat.TYPE_NON_TOUCH, mScrollConsumed);
+
+            if (seslDispatchNestedScroll(0, scrolledByMe, 0, unconsumed, mScrollOffset,
+                    ViewCompat.TYPE_NON_TOUCH, mScrollConsumed)) {
+                mScrollOffset[0] = 0;
+                mScrollOffset[1] = 0;
+            }
+
+            if (mScrollOffset[0] < 0 || mScrollOffset[1] < 0) {
+                mScrollOffset[0] = 0;
+                mScrollOffset[1] = 0;
+            }
+
             unconsumed -= mScrollConsumed[1];
         }
 
@@ -2158,6 +2334,9 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
             }
             canvas.restoreToCount(restoreCount);
         }
+        if (canGoToTop()) {
+            drawGoToTop(canvas);
+        }
     }
 
     private static int clamp(int n, int my, int child) {
@@ -2277,7 +2456,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                     final int targetScrollY = Math.min(nsvHost.getScrollY() + viewportHeight,
                             nsvHost.getScrollRange());
                     if (targetScrollY != nsvHost.getScrollY()) {
-                        nsvHost.smoothScrollTo(0, targetScrollY, true);
+                        nsvHost.scrollTo(0, targetScrollY);
                         return true;
                     }
                 }
@@ -2288,7 +2467,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                             - nsvHost.getPaddingTop();
                     final int targetScrollY = Math.max(nsvHost.getScrollY() - viewportHeight, 0);
                     if (targetScrollY != nsvHost.getScrollY()) {
-                        nsvHost.smoothScrollTo(0, targetScrollY, true);
+                        nsvHost.scrollTo(0, targetScrollY);
                         return true;
                     }
                 }
@@ -2345,6 +2524,761 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         @DoNotInline
         static boolean getClipToPadding(ViewGroup viewGroup) {
             return viewGroup.getClipToPadding();
+        }
+    }
+
+    private boolean initGoToTop() {
+        mGoToTopState = GTT_STATE_NONE;
+        mGoToTopLastState = GTT_STATE_NONE;
+        removeCallbacks(mAutoHide);
+        removeCallbacks(mGoToTopFadeInRunnable);
+        removeCallbacks(mGoToTopFadeOutRunnable);
+        mGoToTopRect.setEmpty();
+
+        mGoToTopImage = findAndGetDrawable(mGoToTopButtonStyle == SESL_GO_TO_TOP_BUTTON_STYLE_WHITE
+                ? "sesl_list_go_to_top_light" : "sesl_list_go_to_top_dark");
+        mGoToTopSize = findAndGetDimension("sesl_go_to_top_scrollable_view_size", -1);
+        mGoToTopGap = findAndGetDimension("sesl_go_to_top_scrollable_view_gap", -1);
+        mGoToTopElevation = findAndGetDimension("sesl_go_to_top_elevation", -1);
+
+        if (mGoToTopImage == null || mGoToTopSize == -1 || mGoToTopGap == -1 || mGoToTopElevation == -1) {
+            Log.i(TAG, "GTT not support : maybe not contains AppCompat ");
+            mIsSupportGoToTop = false;
+            return false;
+        }
+
+        Log.d(TAG, "initGoToTop");
+
+        if (mGoToTopState != GTT_STATE_NONE) {
+            mGoToTopImage.setBounds(0, 0, 0, 0);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        final int x = (int) event.getX();
+        final int y = (int) event.getY();
+        final int childCount = getChildCount();
+        int contentBottom = 0;
+        final int range = getScrollRange();
+        //final boolean needToScroll = MultiSelection.isNeedToScroll();
+
+        if (mHoverHandler == null) {
+            mHoverHandler = new HoverScrollHandler(this);
+        }
+
+        if (mHoverTopAreaHeight <= 0 || mHoverBottomAreaHeight <= 0) {
+            mHoverTopAreaHeight = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    HOVERSCROLL_HEIGHT_TOP_DP, mContext.getResources().getDisplayMetrics()) + 0.5f);
+            mHoverBottomAreaHeight = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    HOVERSCROLL_HEIGHT_BOTTOM_DP, mContext.getResources().getDisplayMetrics()) + 0.5f);
+        }
+
+        if (childCount != 0) {
+            contentBottom = getHeight();
+        }
+
+        final boolean isPossibleTooltype = event.getToolType(0) == MotionEvent.BUTTON_STYLUS_PRIMARY;
+
+        final int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mGoToTopPressed = false;
+                if (isSupportGotoTop() && mGoToTopState != GTT_STATE_PRESSED && mGoToTopRect.contains(x, y)) {
+                    setupGoToTop(GTT_STATE_PRESSED);
+                    mGoToTopPressed = true;
+                    mGoToTopImage.setHotspot(x, y);
+                    mGoToTopImage.setState(new int[] {
+                            android.R.attr.state_pressed,
+                            android.R.attr.state_enabled,
+                            android.R.attr.state_selected
+                    });
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (isSupportGotoTop() && mGoToTopState == GTT_STATE_PRESSED) {
+                    if (canScrollUp()) {
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                smoothScrollTo(0, 0);
+                            }
+                        });
+                        postDelayed(mGoToTopEdgeEffectRunnable, 150);
+                    }
+                    mGoToTopState = GTT_STATE_SHOWN;
+                    autoHideGoToTop();
+                    mGoToTopImage.setState(StateSet.NOTHING);
+                    playSoundEffect(SoundEffectConstants.CLICK);
+                    return true;
+                } else {
+                    mGoToTopPressed = false;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (isSupportGotoTop() && mGoToTopState == GTT_STATE_PRESSED) {
+                    if (!mGoToTopRect.contains(x, y)) {
+                        mGoToTopState = GTT_STATE_SHOWN;
+                        mGoToTopImage.setState(StateSet.NOTHING);
+                        autoHideGoToTop();
+                    }
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if (isSupportGotoTop() && mGoToTopState != GTT_STATE_NONE) {
+                    mGoToTopImage.setState(StateSet.NOTHING);
+                }
+                mGoToTopPressed = false;
+                break;
+        }
+
+        if ((y > mHoverTopAreaHeight && y < contentBottom - mHoverBottomAreaHeight)
+                || range == 0 || !isPossibleTooltype || event.getButtonState() != MotionEvent.BUTTON_STYLUS_PRIMARY) {
+            if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+            }
+            mHoverRecognitionStartTime = 0;
+            mHoverScrollStartTime = 0;
+            mHoverAreaEnter = false;
+            mIsHoverOverscrolled = false;
+            return super.dispatchTouchEvent(event);
+        }
+
+        if (!mHoverAreaEnter) {
+            mHoverScrollStartTime = System.currentTimeMillis();
+        }
+
+        switch (action) {
+            case MOTION_EVENT_ACTION_PEN_DOWN:
+                if (isSupportGotoTop() && mGoToTopState != GTT_STATE_PRESSED && mGoToTopRect.contains(x, y)) {
+                    setupGoToTop(GTT_STATE_PRESSED);
+                    mGoToTopImage.setHotspot(x, y);
+                    mGoToTopImage.setState(new int[] {
+                            android.R.attr.state_pressed,
+                            android.R.attr.state_enabled,
+                            android.R.attr.state_selected
+                    });
+                    return true;
+                }
+                break;
+            case MOTION_EVENT_ACTION_PEN_UP:
+                if (isSupportGotoTop() && mGoToTopState == GTT_STATE_PRESSED) {
+                    Log.d(TAG, "pen up false GOTOTOP");
+                    if (canScrollUp()) {
+                        smoothScrollTo(0, 0);
+                        mEdgeGlowTop.onAbsorb(ON_ABSORB_VELOCITY);
+                        invalidate();
+                    }
+                    setupGoToTop(GTT_STATE_NONE);
+                    mGoToTopImage.setState(StateSet.NOTHING);
+                    return true;
+                }
+
+                if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                    mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                }
+
+                mHoverRecognitionStartTime = 0;
+                mHoverScrollStartTime = 0;
+                mIsHoverOverscrolled = false;
+                mHoverAreaEnter = false;
+                break;
+            case MOTION_EVENT_ACTION_PEN_MOVE:
+                if (isSupportGotoTop() && mGoToTopState == GTT_STATE_PRESSED && !mGoToTopRect.contains(x, y)) {
+                    mGoToTopState = GTT_STATE_SHOWN;
+                    mGoToTopImage.setState(StateSet.NOTHING);
+                    return true;
+                }
+
+                if (mPreviousTextViewScroll && mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                    mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                }
+
+                mPreviousTextViewScroll = false;
+                break;
+        }
+
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected boolean dispatchHoverEvent(MotionEvent ev) {
+        final int action = ev.getAction();
+
+        if (action == MotionEvent.ACTION_HOVER_ENTER || mHoverScrollStateChanged) {
+            final int toolType = ev.getToolType(0);
+
+            mNeedsHoverScroll = true;
+            mHoverScrollStateChanged = false;
+
+            if (!canHoverScroll()) {
+                mNeedsHoverScroll = false;
+            }
+
+            if (mNeedsHoverScroll && toolType == MotionEvent.TOOL_TYPE_STYLUS) {
+                final boolean isHoveringOn = Settings.System.getInt(mContext.getContentResolver(),
+                        SeslSettingsReflector.SeslSystemReflector.getField_SEM_PEN_HOVERING(), 0) == 1;
+                if (!isHoveringOn) {
+                    mNeedsHoverScroll = false;
+                }
+            }
+
+            if (mNeedsHoverScroll && toolType == MotionEvent.TOOL_TYPE_MOUSE) {
+                mNeedsHoverScroll = false;
+            }
+        }
+
+        if (!mNeedsHoverScroll) {
+            return super.dispatchHoverEvent(ev);
+        }
+
+        final int x = (int) ev.getX();
+        final int y = (int) ev.getY();
+        final int childCount = getChildCount();
+        int contentBottom = 0;
+        final int range = getScrollRange();
+
+        if (mHoverHandler == null) {
+            mHoverHandler = new HoverScrollHandler(this);
+        }
+
+        if (mHoverTopAreaHeight <= 0 || mHoverBottomAreaHeight <= 0) {
+            mHoverTopAreaHeight = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    HOVERSCROLL_HEIGHT_TOP_DP, mContext.getResources().getDisplayMetrics()) + 0.5f);
+            mHoverBottomAreaHeight = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    HOVERSCROLL_HEIGHT_BOTTOM_DP, mContext.getResources().getDisplayMetrics()) + 0.5f);
+        }
+
+        if (childCount != 0) {
+            contentBottom = getHeight();
+        }
+
+        final boolean isPossibleTooltype = ev.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS;
+        if ((y > mHoverTopAreaHeight && y < contentBottom - mHoverBottomAreaHeight) || x <= 0 || x > getRight()
+                || range == 0 || ((y >= 0 && y <= mHoverTopAreaHeight && getScrollY() <= 0 && mIsHoverOverscrolled)
+                || ((y >= contentBottom - mHoverBottomAreaHeight && y <= contentBottom && getScrollY() >= range && mIsHoverOverscrolled)
+                || ((isPossibleTooltype && ev.getButtonState() == MotionEvent.BUTTON_STYLUS_PRIMARY) || !isPossibleTooltype || isLockScreenMode()
+                || (canGoToTop() && mGoToTopState != GTT_STATE_NONE && mGoToTopRect.contains(x, y)))))) {
+            if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_DEFAULT());
+            }
+
+            if ((y > mHoverTopAreaHeight && y < contentBottom - mHoverBottomAreaHeight) || x <= 0 || x > getRight()) {
+                mIsHoverOverscrolled = false;
+            }
+
+            if (mHoverAreaEnter || mHoverScrollStartTime != 0) {
+                showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_DEFAULT());
+            }
+
+            mHoverRecognitionStartTime = 0;
+            mHoverScrollStartTime = 0;
+            mHoverAreaEnter = false;
+
+            return super.dispatchHoverEvent(ev);
+        }
+
+        if (!mHoverAreaEnter) {
+            mHoverScrollStartTime = System.currentTimeMillis();
+        }
+
+        switch (action) {
+            case MotionEvent.ACTION_HOVER_MOVE:
+                if (!mHoverAreaEnter) {
+                    mHoverAreaEnter = true;
+                    ev.setAction(MotionEvent.ACTION_HOVER_EXIT);
+                    return super.dispatchHoverEvent(ev);
+                } else if (y >= 0 && y <= mHoverTopAreaHeight) {
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        if (!mIsHoverOverscrolled || mHoverScrollDirection == HOVERSCROLL_UP) {
+                            showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_SCROLL_UP());
+                        }
+                        mHoverScrollDirection = HOVERSCROLL_DOWN;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
+                } else if (y >= contentBottom - mHoverBottomAreaHeight && y <= contentBottom) {
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        if (!mIsHoverOverscrolled || mHoverScrollDirection == HOVERSCROLL_DOWN) {
+                            showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_SCROLL_DOWN());
+                        }
+                        mHoverScrollDirection = HOVERSCROLL_UP;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_HOVER_ENTER:
+                mHoverAreaEnter = true;
+                if (y >= 0 && y <= mHoverTopAreaHeight) {
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_SCROLL_UP());
+                        mHoverScrollDirection = HOVERSCROLL_DOWN;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
+                } else if (y >= contentBottom - mHoverBottomAreaHeight && y <= contentBottom) {
+                    if (!mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                        mHoverRecognitionStartTime = System.currentTimeMillis();
+                        showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_SCROLL_DOWN());
+                        mHoverScrollDirection = HOVERSCROLL_UP;
+                        mHoverHandler.sendEmptyMessage(MSG_HOVERSCROLL_MOVE);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_HOVER_EXIT:
+                if (mHoverHandler.hasMessages(MSG_HOVERSCROLL_MOVE)) {
+                    mHoverHandler.removeMessages(MSG_HOVERSCROLL_MOVE);
+                }
+                showPointerIcon(ev, SeslPointerIconReflector.getField_SEM_TYPE_STYLUS_DEFAULT());
+                mHoverRecognitionStartTime = 0;
+                mHoverScrollStartTime = 0;
+                mIsHoverOverscrolled = false;
+                mHoverAreaEnter = false;
+                mScroller.forceFinished(true);
+                return super.dispatchHoverEvent(ev);
+        }
+
+        return true;
+    }
+
+    private static class HoverScrollHandler extends Handler {
+        private final WeakReference<NestedScrollView> mScrollView;
+
+        HoverScrollHandler(NestedScrollView sv) {
+            mScrollView = new WeakReference<>(sv);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            NestedScrollView sv = mScrollView.get();
+            if (sv != null) {
+                sv.handleMessage(msg);
+            }
+        }
+    }
+
+    private void handleMessage(Message msg) {
+        switch (msg.what) {
+            case MSG_HOVERSCROLL_MOVE:
+                final int range = getScrollRange();
+
+                mHoverRecognitionCurrentTime = System.currentTimeMillis();
+                mHoverRecognitionDurationTime = (mHoverRecognitionCurrentTime - mHoverRecognitionStartTime) / 1000;
+
+                if (mHoverRecognitionCurrentTime - mHoverScrollStartTime < mHoverScrollTimeInterval) {
+                    return;
+                }
+
+                mHoverScrollSpeed = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        HOVERSCROLL_SPEED, mContext.getResources().getDisplayMetrics()) + 0.5f);
+
+                if (mHoverRecognitionDurationTime > 2 && mHoverRecognitionDurationTime < 4) {
+                    mHoverScrollSpeed += mHoverScrollSpeed * 0.1d;
+                } else if (mHoverRecognitionDurationTime >= 4 && mHoverRecognitionDurationTime < 5) {
+                    mHoverScrollSpeed += mHoverScrollSpeed * 0.2d;
+                } else if (mHoverRecognitionDurationTime >= 5) {
+                    mHoverScrollSpeed += mHoverScrollSpeed * 0.3d;
+                }
+
+                final int offset;
+                if (mHoverScrollDirection == HOVERSCROLL_DOWN) {
+                    offset = mHoverScrollSpeed * -1;
+                } else {
+                    offset = mHoverScrollSpeed * 1;
+                }
+
+                if (offset < 0 && getScrollY() > 0) {
+                    flingWithoutAcc(offset);
+                    mHoverHandler.sendEmptyMessageDelayed(MSG_HOVERSCROLL_MOVE, HOVERSCROLL_DELAY);
+                } else if (offset > 0 && getScrollY() < range) {
+                    flingWithoutAcc(offset);
+                    mHoverHandler.sendEmptyMessageDelayed(MSG_HOVERSCROLL_MOVE, HOVERSCROLL_DELAY);
+                } else {
+                    final int overScrollMode = getOverScrollMode();
+                    final boolean canOverscroll = overScrollMode == View.OVER_SCROLL_ALWAYS
+                            || (overScrollMode == View.OVER_SCROLL_IF_CONTENT_SCROLLS && range > 0);
+
+                    if (canOverscroll && !mIsHoverOverscrolled) {
+                        if (mHoverScrollDirection == HOVERSCROLL_DOWN) {
+                            final int width = getWidth() - getPaddingLeft() - getPaddingRight();
+                            mEdgeGlowTop.setSize(width, getHeight());
+                            mEdgeGlowTop.onAbsorb(ON_ABSORB_VELOCITY);
+                            if (!mEdgeGlowBottom.isFinished()) {
+                                mEdgeGlowBottom.onRelease();
+                            }
+                        } else if (mHoverScrollDirection == HOVERSCROLL_UP) {
+                            final int width = getWidth() - getPaddingLeft() - getPaddingRight();
+                            mEdgeGlowBottom.setSize(width, getHeight());
+                            mEdgeGlowBottom.onAbsorb(ON_ABSORB_VELOCITY);
+                            showGoToTop();
+                            if (!mEdgeGlowTop.isFinished()) {
+                                mEdgeGlowTop.onRelease();
+                            }
+                        }
+
+                        if (!mEdgeGlowTop.isFinished() || !mEdgeGlowBottom.isFinished()) {
+                            invalidate();
+                        }
+
+                        mIsHoverOverscrolled = true;
+                    }
+
+                    if (!canOverscroll && !mIsHoverOverscrolled) {
+                        mIsHoverOverscrolled = true;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showPointerIcon(MotionEvent ev, int iconId) {
+        InputDevice inputDevice = ev.getDevice();
+        if (inputDevice != null) {
+            SeslInputDeviceReflector.semSetPointerType(inputDevice, iconId);
+        } else {
+            Log.e(TAG, "Failed to change PointerIcon to " + iconId);
+        }
+    }
+
+    private void setupGoToTop(int where) {
+        final int paddingLeft = getPaddingLeft();
+        final int paddingRight = getPaddingRight();
+
+        if (canGoToTop()) {
+            removeCallbacks(mAutoHide);
+
+            if (where == GTT_STATE_MAINTAINED) {
+                where = canScrollUp() ? mGoToTopLastState : GTT_STATE_NONE;
+            }
+
+            if (where != GTT_STATE_PRESSED) {
+                mGoToTopImage.setState(StateSet.NOTHING);
+            }
+
+            if (!mIsGoToTopShown && where == GTT_STATE_NONE && mGoToTopLastState != GTT_STATE_NONE) {
+                post(mGoToTopFadeOutRunnable);
+            }
+
+            mGoToTopState = where;
+
+            final int w = getWidth();
+            final int h = getHeight();
+            final int contentW = w - paddingLeft - paddingRight;
+
+            int centerX = paddingLeft + (contentW / 2);
+
+            final int[] locOnScr = {0, 0};
+            getLocationInWindow(locOnScr);
+
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            final int rotate = display.getRotation();
+            final boolean isLandScape = rotate == Surface.ROTATION_90 || rotate == Surface.ROTATION_270;
+
+            Rect displayFrame = new Rect();
+            getWindowVisibleDisplayFrame(displayFrame);
+            final int left = isLandScape ? displayFrame.left : 0;
+            final int right = isLandScape ? displayFrame.right : dm.widthPixels;
+
+            int overlappedW = -locOnScr[0];
+            if (locOnScr[0] < left && overlappedW > paddingLeft) {
+                centerX += (overlappedW - paddingLeft) / 2;
+            }
+            overlappedW = locOnScr[0] + w - dm.widthPixels;
+            if (locOnScr[0] + w > right && overlappedW > paddingRight) {
+                centerX -= (overlappedW - paddingRight) / 2;
+            }
+
+            switch (mGoToTopState) {
+                case GTT_STATE_NONE:
+                    if (mIsGoToTopShown) {
+                        mGoToTopRect.setEmpty();
+                    }
+                    break;
+                case GTT_STATE_SHOWN:
+                case GTT_STATE_PRESSED:
+                    mGoToTopRect.set(centerX - (mGoToTopSize / 2),
+                            (h - mGoToTopSize) - mGoToTopGap,
+                            (mGoToTopSize / 2) + centerX,
+                            h - mGoToTopGap);
+                    break;
+            }
+
+            mGoToTopImage.setBounds(mGoToTopRect);
+
+            if (mIsGoToTopShown) {
+                mIsGoToTopShown = false;
+            }
+
+            if (where == GTT_STATE_SHOWN) {
+                if (mGoToTopLastState == GTT_STATE_NONE || mSizeChange) {
+                    post(mGoToTopFadeInRunnable);
+                }
+            }
+
+            mSizeChange = false;
+            mGoToTopLastState = mGoToTopState;
+
+            mOutline.setOval(0, 0, mGoToTopRect.width(), mGoToTopRect.height());
+            mGoToTopRenderNode.setPosition(mGoToTopRect);
+            mGoToTopRenderNode.setClipToBounds(false);
+        }
+    }
+
+    private void playGoToTopFadeOut() {
+        if (mGoToTopFadeOutAnimator.isRunning()) {
+            return;
+        }
+        mGoToTopFadeOutAnimator.setIntValues(mGoToTopImage.getAlpha(), 0);
+        mGoToTopFadeOutAnimator.start();
+    }
+
+    private void playGoToTopFadeIn() {
+        if (mGoToTopFadeInAnimator.isRunning()) {
+            return;
+        }
+        mGoToTopFadeInAnimator.setIntValues(mGoToTopImage.getAlpha(), 255);
+        mGoToTopFadeInAnimator.start();
+    }
+
+    public void seslSetHoverScrollEnabled(boolean enabled) {
+        mHoverScrollEnabled = enabled;
+    }
+
+    public void seslSetGoToTopEnabled(boolean enabled) {
+        seslSetGoToTopEnabled(enabled, isLightTheme(mContext)
+                ? SESL_GO_TO_TOP_BUTTON_STYLE_WHITE : SESL_GO_TO_TOP_BUTTON_STYLE_BLACK);
+    }
+
+    public void seslSetGoToTopEnabled(boolean enabled, int buttonStyle) {
+        mGoToTopButtonStyle = buttonStyle;
+        mGoToTopEnabled = enabled;
+
+        post(mCheckGoToTopAndAutoScrollCondition);
+
+        if (!initGoToTop()) {
+            mGoToTopEnabled = false;
+            return;
+        }
+
+        if (mGoToTopImage != null) {
+            mGoToTopEnabled = enabled;
+
+            if (mGoToTopImage.getAlpha() != 255) {
+                mGoToTopImage.setAlpha(255);
+            }
+
+            mGoToTopBitmap = drawableToBitmap(mGoToTopImage);
+            mGoToTopImage.setAlpha(0);
+            if (enabled) {
+                mGoToTopImage.setCallback(this);
+            } else {
+                mGoToTopImage.setCallback(null);
+            }
+
+            mGoToTopFadeInAnimator = ValueAnimator.ofInt(0, 255);
+            mGoToTopFadeInAnimator.setDuration(333);
+            mGoToTopFadeInAnimator.setInterpolator(new PathInterpolator(0.33f, 0.0f, 0.3f, 1.0f));
+            mGoToTopFadeInAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    final int value = (Integer) animation.getAnimatedValue();
+                    mGoToTopImage.setAlpha(value);
+                    invalidate();
+                }
+            });
+
+            mGoToTopFadeOutAnimator = ValueAnimator.ofInt(255, 0);
+            mGoToTopFadeOutAnimator.setDuration(333);
+            mGoToTopFadeOutAnimator.setInterpolator(new PathInterpolator(0.33f, 0.0f, 0.3f, 1.0f));
+            mGoToTopFadeOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    final int value = (Integer) animation.getAnimatedValue();
+                    mGoToTopImage.setAlpha(value);
+                    invalidate();
+                }
+            });
+            mGoToTopFadeOutAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) { }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mIsGoToTopShown = true;
+                    setupGoToTop(GTT_STATE_NONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) { }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) { }
+            });
+
+            mGoToTopRenderNode = new RenderNode("goToTop");
+            mGoToTopRenderNode.setElevation(mGoToTopElevation);
+        }
+    }
+
+    void autoHideGoToTop() {
+        if (canGoToTop()) {
+            removeCallbacks(mAutoHide);
+            postDelayed(mAutoHide, GO_TO_TOP_HIDE);
+        }
+    }
+
+    private void showGoToTop() {
+        if (canGoToTop() && mGoToTopState != GTT_STATE_PRESSED && canScrollUp()) {
+            setupGoToTop(GTT_STATE_SHOWN);
+            autoHideGoToTop();
+        }
+    }
+
+    private boolean canScrollUp() {
+        return canScrollVertically(-1);
+    }
+
+    private boolean isLockScreenMode() {
+        KeyguardManager keyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+        return keyguardManager.inKeyguardRestrictedInputMode();
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public void flingWithoutAcc(int velocityY) {
+        if (getChildCount() > 0) {
+            final int height = getHeight() - getPaddingBottom() - getPaddingTop();
+            final int bottom = getChildAt(0).getHeight();
+
+            SeslOverScrollerReflector.fling2(mScroller, getScrollX(), mScroller.getCurrY(),
+                    0, velocityY,
+                    0, 0,
+                    0, Math.max(0, bottom - height), true);
+
+            if (Build.VERSION.SDK_INT >= 29) {
+                postInvalidateOnAnimation();
+            }
+        }
+    }
+
+    private boolean canGoToTop() {
+        return mIsSupportGoToTop && mGoToTopEnabled;
+    }
+
+    private boolean canHoverScroll() {
+        return mIsSupportHoverScroll && mHoverScrollEnabled;
+    }
+
+    private boolean isSupportGotoTop() {
+        return mIsSupportGoToTop;
+    }
+
+    private void drawGoToTop(Canvas canvas) {
+        final int scrollY = getScrollY();
+        final int restoreCount = canvas.save();
+
+        canvas.translate(0.0f, scrollY);
+
+        if (scrollY == 0 && mGoToTopState != GTT_STATE_NONE) {
+            post(mGoToTopFadeOutRunnable);
+        }
+
+        if (!mGoToTopRect.isEmpty()) {
+            if (canvas.isHardwareAccelerated()) {
+                canvas.enableZ();
+
+                final float alpha = mGoToTopImage.getAlpha() / 255.0f;
+                RecordingCanvas recordingCanvas = mGoToTopRenderNode.beginRecording();
+
+                mOutline.setAlpha(alpha);
+                mGoToTopRenderNode.setOutline(mOutline);
+                mGoToTopRenderNode.setAlpha(alpha);
+
+                recordingCanvas.drawBitmap(mGoToTopBitmap, 0.0f, 0.0f, null);
+                canvas.drawRenderNode(mGoToTopRenderNode);
+
+                mGoToTopRenderNode.endRecording();
+                canvas.disableZ();
+            } else {
+                mGoToTopImage.draw(canvas);
+            }
+        }
+
+        canvas.restoreToCount(restoreCount);
+    }
+
+    private int findAndGetDimension(String name, int failedValue) {
+        try {
+            final Resources res = mContext.getResources();
+            return res.getDimensionPixelSize(mContext.getResources()
+                    .getIdentifier(name, "dimen", mContext.getPackageName()));
+        } catch (Resources.NotFoundException e) {
+            return failedValue;
+        }
+    }
+
+    private Drawable findAndGetDrawable(String name) {
+        try {
+            final Resources res = mContext.getResources();
+            return res.getDrawable(mContext.getResources()
+                    .getIdentifier(name, "drawable", mContext.getPackageName()));
+        } catch (Resources.NotFoundException e) {
+            return null;
+        }
+    }
+
+    private boolean checkChildScrollableForGoToTopAndAutoScroll() {
+        if (Build.VERSION.SDK_INT < 33) {
+            Log.i(TAG, "GTT HSC not support : under Platform Version : " + Build.VERSION.SDK_INT);
+            return false;
+        }
+
+        if (getChildCount() > 0 && (getChildAt(0) instanceof ViewGroup)) {
+            ViewGroup child = (ViewGroup) getChildAt(0);
+
+            if (child.getHeight() < getHeight()) {
+                Log.i(TAG, "GTT HSC not support : Small Height child");
+                return false;
+            }
+
+            for (int i = 0; i < child.getChildCount(); i++) {
+                View view = child.getChildAt(i);
+                if (view.getVisibility() != GONE) {
+                    if (view.canScrollVertically(1) || view.canScrollVertically(-1)) {
+                        Log.i(TAG, "GTT HSC not support : Some child view can scroll index: " +
+                                i + " " + view);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isLightTheme(Context context) {
+        TypedValue outValue = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.isLightTheme, outValue, true)
+                && outValue.data == 0) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

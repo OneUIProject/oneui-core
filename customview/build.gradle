@@ -4,10 +4,28 @@ plugins {
 
 android {
     namespace "androidx.customview"
+
+    defaultConfig {
+        versionName sesl_customview_version[0]
+    }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))
     implementation("androidx.collection:collection:$androidx_collection_version")
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.customview_customview.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = sesl_customview_version[1] + "\n"
 }

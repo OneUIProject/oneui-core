@@ -13,4 +13,5 @@ ext {
     // Libraries versions.
     sesl_core_version = [ '2.0.0-beta01', '1.0.11-sesl5' ]
     sesl_core_ktx_version = [ '2.0.0-beta01', '1.0.1-sesl5' ]
+    sesl_customview_version = [ '2.0.0', '1.0.1-sesl5' ]
 }

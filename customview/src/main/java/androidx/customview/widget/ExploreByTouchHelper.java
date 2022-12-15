@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ import androidx.core.view.accessibility.AccessibilityRecordCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * ExploreByTouchHelper is a utility class for implementing accessibility
@@ -895,6 +899,8 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
     }
 
     boolean performAction(int virtualViewId, int action, Bundle arguments) {
+        seslNotifyPerformAction(virtualViewId, action, arguments);
+
         switch (virtualViewId) {
             case HOST_ID:
                 return performActionForHost(action, arguments);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-
 package androidx.customview.widget;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
 import android.util.Log;
@@ -31,9 +32,14 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
+import androidx.annotation.RestrictTo;
 import androidx.core.view.ViewCompat;
 
 import java.util.Arrays;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * ViewDragHelper is a utility class for writing custom ViewGroups. It offers a number
@@ -143,6 +149,8 @@ public class ViewDragHelper {
     private boolean mReleaseInProgress;
 
     private final ViewGroup mParentView;
+
+    private boolean mIsUpdateOffsetLR = true;
 
     /**
      * A Callback is used as a communication channel with the ViewDragHelper back to the
@@ -371,6 +379,18 @@ public class ViewDragHelper {
         final ViewDragHelper helper = create(forParent, cb);
         helper.mTouchSlop = (int) (helper.mTouchSlop * (1 / sensitivity));
         return helper;
+    }
+
+    public static ViewDragHelper seslCreate(@NonNull ViewGroup forParent, float sensitivity,
+            @NonNull Callback cb) {
+        final ViewDragHelper helper = create(forParent, cb);
+        helper.mTouchSlop = (int) (helper.mTouchSlop * (1 / sensitivity));
+        helper.mIsUpdateOffsetLR = false;
+        return helper;
+    }
+
+    public void seslSetUpdateOffsetLR(boolean update) {
+        mIsUpdateOffsetLR = update;
     }
 
     /**
@@ -768,7 +788,7 @@ public class ViewDragHelper {
             final int dx = x - mCapturedView.getLeft();
             final int dy = y - mCapturedView.getTop();
 
-            if (dx != 0) {
+            if (dx != 0 && mIsUpdateOffsetLR) {
                 ViewCompat.offsetLeftAndRight(mCapturedView, dx);
             }
             if (dy != 0) {
@@ -1456,7 +1476,9 @@ public class ViewDragHelper {
         final int oldTop = mCapturedView.getTop();
         if (dx != 0) {
             clampedX = mCallback.clampViewPositionHorizontal(mCapturedView, left, dx);
-            ViewCompat.offsetLeftAndRight(mCapturedView, clampedX - oldLeft);
+            if (mIsUpdateOffsetLR || getViewDragState() != STATE_SETTLING) {
+                ViewCompat.offsetLeftAndRight(mCapturedView, clampedX - oldLeft);
+            }
         }
         if (dy != 0) {
             clampedY = mCallback.clampViewPositionVertical(mCapturedView, top, dy);
@@ -1536,12 +1558,17 @@ public class ViewDragHelper {
     }
 
     private boolean isValidPointerForActionMove(int pointerId) {
-        if (!isPointerDown(pointerId)) {
+        if (!isPointerDown(pointerId) || pointerId == INVALID_POINTER) {
             Log.e(TAG, "Ignoring pointerId=" + pointerId + " because ACTION_DOWN was not received "
                     + "for this pointer before ACTION_MOVE. It likely happened because "
                     + " ViewDragHelper did not receive all the events in the event stream.");
             return false;
         }
         return true;
+    }
+
+    @RestrictTo(LIBRARY_GROUP_PREFIX)
+    public void setTouchSlop(int touchSlop) {
+        mTouchSlop = touchSlop;
     }
 }

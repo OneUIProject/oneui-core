@@ -5,10 +5,28 @@ plugins {
 
 android {
     namespace "androidx.core.ktx"
+
+    defaultConfig {
+        versionName sesl_core_ktx_version[0]
+    }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.core_core-ktx.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = sesl_core_ktx_version[1] + "\n"
 }

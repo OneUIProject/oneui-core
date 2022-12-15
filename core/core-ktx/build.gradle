@@ -8,11 +8,6 @@ android {
 }
 
 dependencies {
-    // Atomic group
-    constraints {
-        implementation(project(":core:core"))
-    }
-
     api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))

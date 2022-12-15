@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
 }
 
 android {
@@ -30,11 +29,6 @@ android {
 }
 
 dependencies {
-    // Atomic group
-    constraints {
-        implementation(project(":core:core-ktx"))
-    }
-
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api("androidx.annotation:annotation-experimental:$androidx_annotation_experimental_version")
     api("androidx.lifecycle:lifecycle-runtime:$androidx_lifecycle_version")
@@ -42,9 +36,6 @@ dependencies {
     implementation("androidx.collection:collection:$androidx_collection_version")
     implementation("androidx.concurrent:concurrent-futures:$androidx_concurrent_version")
     implementation("androidx.interpolator:interpolator:$androidx_interpolator_version")
-
-    // Required for -Werror due to annotation-experimental use of Kotlin
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
 }
 
 task writeVersionFile() {

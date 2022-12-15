@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-@file:Suppress("NOTHING_TO_INLINE", "unused") // Aliases to other public API.
+@file:Suppress("NOTHING_TO_INLINE") // Aliases to other public API.
 
 package androidx.core.view
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewParent
-import androidx.annotation.DoNotInline
 import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.applyCanvas
@@ -135,14 +133,8 @@ public inline fun View.doOnDetach(crossinline action: (view: View) -> Unit) {
  * Updates this view's relative padding. This version of the method allows using named parameters
  * to just set one or more axes.
  *
- * Note that this inline method references platform APIs added in API 17 and may raise runtime
- * verification warnings on earlier platforms. See Chromium's guide to
- * [Class Verification Failures](https://chromium.googlesource.com/chromium/src/+/HEAD/build/android/docs/class_verification_failures.md)
- * for more information.
- *
  * @see View.setPaddingRelative
  */
-@SuppressLint("ClassVerificationFailure") // Can't work around this for default arguments.
 @RequiresApi(17)
 public inline fun View.updatePaddingRelative(
     @Px start: Int = paddingStart,
@@ -208,12 +200,12 @@ public inline fun View.postDelayed(delayInMillis: Long, crossinline action: () -
  * @return the created Runnable
  */
 @RequiresApi(16)
-public fun View.postOnAnimationDelayed(
+public inline fun View.postOnAnimationDelayed(
     delayInMillis: Long,
-    action: () -> Unit
+    crossinline action: () -> Unit
 ): Runnable {
     val runnable = Runnable { action() }
-    Api16Impl.postOnAnimationDelayed(this, runnable, delayInMillis)
+    postOnAnimationDelayed(runnable, delayInMillis)
     return runnable
 }
 
@@ -332,8 +324,8 @@ public inline fun <reified T : ViewGroup.LayoutParams> View.updateLayoutParams(
 }
 
 /**
- * Returns the left margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the left margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  */
@@ -341,8 +333,8 @@ public inline val View.marginLeft: Int
     get() = (layoutParams as? MarginLayoutParams)?.leftMargin ?: 0
 
 /**
- * Returns the top margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the top margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  */
@@ -350,8 +342,8 @@ public inline val View.marginTop: Int
     get() = (layoutParams as? MarginLayoutParams)?.topMargin ?: 0
 
 /**
- * Returns the right margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the right margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  */
@@ -359,8 +351,8 @@ public inline val View.marginRight: Int
     get() = (layoutParams as? MarginLayoutParams)?.rightMargin ?: 0
 
 /**
- * Returns the bottom margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the bottom margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  */
@@ -368,8 +360,8 @@ public inline val View.marginBottom: Int
     get() = (layoutParams as? MarginLayoutParams)?.bottomMargin ?: 0
 
 /**
- * Returns the start margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the start margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  * @see MarginLayoutParamsCompat.getMarginStart
@@ -381,8 +373,8 @@ public inline val View.marginStart: Int
     }
 
 /**
- * Returns the end margin if this view's [ViewGroup.LayoutParams] is a
- * [ViewGroup.MarginLayoutParams], otherwise 0.
+ * Returns the end margin if this view's [LayoutParams] is a [ViewGroup.MarginLayoutParams],
+ * otherwise 0.
  *
  * @see ViewGroup.MarginLayoutParams
  * @see MarginLayoutParamsCompat.getMarginEnd
@@ -416,16 +408,3 @@ public val View.allViews: Sequence<View>
             yieldAll(this@allViews.descendants)
         }
     }
-
-@RequiresApi(16)
-private object Api16Impl {
-    @JvmStatic
-    @DoNotInline
-    fun postOnAnimationDelayed(
-        view: View,
-        action: Runnable,
-        delayInMillis: Long
-    ) {
-        view.postOnAnimationDelayed(action, delayInMillis)
-    }
-}

@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-@file:SuppressLint("ClassVerificationFailure") // Entire file is RequiresApi(17)
-
 package androidx.core.text
 
-import android.annotation.SuppressLint
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import java.util.Locale

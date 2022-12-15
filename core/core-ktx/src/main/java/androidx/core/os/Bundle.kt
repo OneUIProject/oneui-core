@@ -22,8 +22,6 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
-import androidx.annotation.DoNotInline
-import androidx.annotation.RequiresApi
 import java.io.Serializable
 
 /**
@@ -92,11 +90,11 @@ public fun bundleOf(vararg pairs: Pair<String, Any?>): Bundle = Bundle(pairs.siz
 
             else -> {
                 if (Build.VERSION.SDK_INT >= 18 && value is IBinder) {
-                    BundleApi18ImplKt.putBinder(this, key, value)
+                    putBinder(key, value)
                 } else if (Build.VERSION.SDK_INT >= 21 && value is Size) {
-                    BundleApi21ImplKt.putSize(this, key, value)
+                    putSize(key, value)
                 } else if (Build.VERSION.SDK_INT >= 21 && value is SizeF) {
-                    BundleApi21ImplKt.putSizeF(this, key, value)
+                    putSizeF(key, value)
                 } else {
                     val valueType = value.javaClass.canonicalName
                     throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
@@ -104,27 +102,4 @@ public fun bundleOf(vararg pairs: Pair<String, Any?>): Bundle = Bundle(pairs.siz
             }
         }
     }
-}
-
-/**
- * Returns a new empty [Bundle].
- */
-public fun bundleOf(): Bundle = Bundle(0)
-
-@RequiresApi(18)
-private object BundleApi18ImplKt {
-    @DoNotInline
-    @JvmStatic
-    fun putBinder(bundle: Bundle, key: String, value: IBinder?) = bundle.putBinder(key, value)
-}
-
-@RequiresApi(21)
-private object BundleApi21ImplKt {
-    @DoNotInline
-    @JvmStatic
-    fun putSize(bundle: Bundle, key: String, value: Size?) = bundle.putSize(key, value)
-
-    @DoNotInline
-    @JvmStatic
-    fun putSizeF(bundle: Bundle, key: String, value: SizeF?) = bundle.putSizeF(key, value)
 }

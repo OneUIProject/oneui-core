@@ -5,7 +5,7 @@
   <img loading="lazy" src="readme-res/sesl-readme-header.png"/>
 </p>
 
-## Samsung Experience Support Library
+## Samsung Experience Support Library (One UI 4.x)
 This is the repository for the Samsung Experience Support Library (internally referenced as sesl).
 
 Samsung's One UI apps are created by using a heavily modified version of Google's [Android Jetpack](https://github.com/androidx/androidx) and [Material Components](https://github.com/material-components/material-components-android) libraries, that include (but are not limited to) a new theme for the UI, new APIs and much more.
@@ -15,24 +15,24 @@ Any form of contribution, suggestions, bug report or feature request will be wel
 
 # Libraries
 ### Android Jetpack:
-- [appcompat](https://developer.android.com/jetpack/androidx/releases/appcompat) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/appcompat?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/appcompat) (based on 1.0.45-sesl4)
-- [coordinatorlayout](https://developer.android.com/jetpack/androidx/releases/coordinatorlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/coordinatorlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/coordinatorlayout) (based on 1.0.2-sesl4)
-- [drawerlayout](https://developer.android.com/jetpack/androidx/releases/drawerlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/drawerlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/drawerlayout) (based on 1.0.2-sesl4)
-- [preference](https://developer.android.com/jetpack/androidx/releases/preference) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/preference?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/preference) (based on 1.0.6-sesl4)
-- [recyclerview](https://developer.android.com/jetpack/androidx/releases/recyclerview) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/recyclerview?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/recyclerview) (based on 1.0.29-sesl4)
-- [swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/swiperefreshlayout?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/swiperefreshlayout) (based on 1.0.10-sesl4)
-- [viewpager](https://developer.android.com/jetpack/androidx/releases/viewpager) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/viewpager) (based on 1.0.4-sesl4)
-- [viewpager2](https://developer.android.com/jetpack/androidx/releases/viewpager2) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager2?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/viewpager2) (based on 1.0.2-sesl4)
+- [appcompat](https://developer.android.com/jetpack/androidx/releases/appcompat) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/appcompat?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/appcompat) (based on 1.0.45-sesl4)
+- [coordinatorlayout](https://developer.android.com/jetpack/androidx/releases/coordinatorlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/coordinatorlayout?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/coordinatorlayout) (based on 1.0.2-sesl4)
+- [drawerlayout](https://developer.android.com/jetpack/androidx/releases/drawerlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/drawerlayout?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/drawerlayout) (based on 1.0.2-sesl4)
+- [preference](https://developer.android.com/jetpack/androidx/releases/preference) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/preference?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/preference) (based on 1.0.6-sesl4)
+- [recyclerview](https://developer.android.com/jetpack/androidx/releases/recyclerview) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/recyclerview?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/recyclerview) (based on 1.0.29-sesl4)
+- [swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/swiperefreshlayout?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/swiperefreshlayout) (based on 1.0.10-sesl4)
+- [viewpager](https://developer.android.com/jetpack/androidx/releases/viewpager) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/viewpager) (based on 1.0.4-sesl4)
+- [viewpager2](https://developer.android.com/jetpack/androidx/releases/viewpager2) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/viewpager2?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/viewpager2) (based on 1.0.2-sesl4)
 ### Material Components:
-- [material](https://material.io/develop/android) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/material?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/material) (based on 1.0.43-sesl4)
+- [material](https://material.io/develop/android) [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/material?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/material) (based on 1.0.43-sesl4)
 ### Samsung:
-- apppickerview [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/apppickerview?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/apppickerview) (based on 1.0.18-sesl4)
-- indexscroll [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/indexscroll?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/indexscroll) (based on 1.0.14-sesl4)
-- picker-basic [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-basic) (based on 1.0.35-sesl4)
-- picker-color [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=%23C71A36&logoColor=%23C11920&style=flat-square)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-color) (based on 1.0.21-sesl4)
+- apppickerview [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/apppickerview?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/apppickerview) (based on 1.0.18-sesl4)
+- indexscroll [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/indexscroll?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/indexscroll) (based on 1.0.14-sesl4)
+- picker-basic [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-basic?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-basic) (based on 1.0.35-sesl4)
+- picker-color [![](https://img.shields.io/maven-central/v/io.github.oneuiproject.sesl/picker-color?color=C71A36&style=flat-square&versionPrefix=1)](https://mvnrepository.com/artifact/io.github.oneuiproject.sesl/picker-color) (based on 1.0.21-sesl4)
 
-## Uncomplete/to-be-added libs:
-- slidingpanelayout (based on 1.0.10-sesl4): broken, needs fixes
+## Missing libs:
+- slidingpanelayout (based on 1.0.10-sesl4)
 - typoanimation (based on 1.0.1-sesl4)
 
 # Usage

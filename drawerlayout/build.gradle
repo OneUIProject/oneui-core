@@ -1,0 +1,13 @@
+plugins {
+    id("com.android.library")
+}
+
+android {
+    namespace "androidx.drawerlayout"
+}
+
+dependencies {
+    api("androidx.annotation:annotation:$androidx_annotation_version")
+    api(project(":core:core"))
+    api(project(":customview"))
+}

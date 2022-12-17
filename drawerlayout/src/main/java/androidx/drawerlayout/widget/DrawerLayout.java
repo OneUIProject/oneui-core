@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 package androidx.drawerlayout.widget;
 
@@ -34,12 +33,15 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowInsets;
@@ -70,6 +72,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Original code by Samsung, all rights reserved to the original author.
+ */
 
 /**
  * DrawerLayout acts as a top-level container for window content that allows for
@@ -162,7 +168,7 @@ public class DrawerLayout extends ViewGroup implements Openable {
     @Retention(RetentionPolicy.SOURCE)
     private @interface EdgeGravity {}
 
-    private static final int MIN_DRAWER_MARGIN = 64; // dp
+    private static final int MIN_DRAWER_MARGIN = 56; // dp
 
     private static final int DEFAULT_SCRIM_COLOR = 0x99000000;
 
@@ -209,6 +215,8 @@ public class DrawerLayout extends ViewGroup implements Openable {
     private int mScrimColor = DEFAULT_SCRIM_COLOR;
     private float mScrimOpacity;
     private Paint mScrimPaint = new Paint();
+
+    private View mContentView;
 
     private final ViewDragHelper mLeftDragger;
     private final ViewDragHelper mRightDragger;
@@ -1013,6 +1021,17 @@ public class DrawerLayout extends ViewGroup implements Openable {
         drawerView.offsetLeftAndRight(
                 checkDrawerViewAbsoluteGravity(drawerView, Gravity.LEFT) ? dx : -dx);
         setDrawerViewOffset(drawerView, slideOffset);
+
+        if (mContentView != null) {
+            final int left = drawerView.getLeft();
+            if (ViewCompat.getLayoutDirection(this)
+                    == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                mContentView.setLeft(left - mContentView.getWidth());
+                mContentView.setRight(left);
+            } else {
+                mContentView.setLeft(left + drawerView.getWidth());
+            }
+        }
     }
 
     /**
@@ -1270,10 +1289,12 @@ public class DrawerLayout extends ViewGroup implements Openable {
                 final float newOffset;
                 if (checkDrawerViewAbsoluteGravity(child, Gravity.LEFT)) {
                     childLeft = -childWidth + (int) (childWidth * lp.onScreen);
-                    newOffset = (float) (childWidth + childLeft) / childWidth;
+                    newOffset = childWidth == 0 ?
+                            0 : (float) (childWidth + childLeft) / childWidth;
                 } else { // Right; onMeasure checked for us.
                     childLeft = width - (int) (childWidth * lp.onScreen);
-                    newOffset = (float) (width - childLeft) / childWidth;
+                    newOffset = childWidth == 0 ?
+                            0 : (float) (width - childLeft) / childWidth;
                 }
 
                 final boolean changeOffset = newOffset != lp.onScreen;
@@ -1512,7 +1533,8 @@ public class DrawerLayout extends ViewGroup implements Openable {
     }
 
     boolean isContentView(View child) {
-        return ((LayoutParams) child.getLayoutParams()).gravity == Gravity.NO_GRAVITY;
+        return ((LayoutParams) child.getLayoutParams()).gravity == Gravity.NO_GRAVITY
+                || child == mContentView;
     }
 
     boolean isDrawerView(View child) {
@@ -1695,14 +1717,28 @@ public class DrawerLayout extends ViewGroup implements Openable {
             final int childWidth = child.getWidth();
 
             if (checkDrawerViewAbsoluteGravity(child, Gravity.LEFT)) {
-                needsInvalidate |= mLeftDragger.smoothSlideViewTo(child,
-                        -childWidth, child.getTop());
+                if (!shouldSkipScroll()) {
+                    needsInvalidate |= mLeftDragger.smoothSlideViewTo(child,
+                            -childWidth, child.getTop());
+                    lp.isPeeking = false;
+                } else {
+                    moveDrawerToOffset(child, 0);
+                    updateDrawerState(STATE_IDLE, child);
+                    child.setVisibility(INVISIBLE);
+                    lp.isPeeking = false;
+                }
             } else {
-                needsInvalidate |= mRightDragger.smoothSlideViewTo(child,
-                        getWidth(), child.getTop());
+                if (!shouldSkipScroll()) {
+                    needsInvalidate |= mRightDragger.smoothSlideViewTo(child,
+                            getWidth(), child.getTop());
+                    lp.isPeeking = false;
+                } else {
+                    moveDrawerToOffset(child, 0);
+                    updateDrawerState(STATE_IDLE, child);
+                    child.setVisibility(INVISIBLE);
+                    lp.isPeeking = false;
+                }
             }
-
-            lp.isPeeking = false;
         }
 
         mLeftCallback.removeCallbacks();
@@ -1748,7 +1784,7 @@ public class DrawerLayout extends ViewGroup implements Openable {
 
             updateChildrenImportantForAccessibility(drawerView, true);
             updateChildAccessibilityAction(drawerView);
-        } else if (animate) {
+        } else if (animate && !shouldSkipScroll()) {
             lp.openState |= LayoutParams.FLAG_IS_OPENING;
 
             if (checkDrawerViewAbsoluteGravity(drawerView, Gravity.LEFT)) {
@@ -1823,7 +1859,7 @@ public class DrawerLayout extends ViewGroup implements Openable {
         if (mFirstLayout) {
             lp.onScreen = 0.f;
             lp.openState = 0;
-        } else if (animate) {
+        } else if (animate && !shouldSkipScroll()) {
             lp.openState |= LayoutParams.FLAG_IS_CLOSING;
 
             if (checkDrawerViewAbsoluteGravity(drawerView, Gravity.LEFT)) {
@@ -2253,14 +2289,27 @@ public class DrawerLayout extends ViewGroup implements Openable {
             float offset;
             final int childWidth = changedView.getWidth();
 
-            // This reverses the positioning shown in onLayout.
-            if (checkDrawerViewAbsoluteGravity(changedView, Gravity.LEFT)) {
-                offset = (float) (childWidth + left) / childWidth;
+            if (childWidth == 0) {
+                offset = 0;
             } else {
-                final int width = getWidth();
-                offset = (float) (width - left) / childWidth;
+                // This reverses the positioning shown in onLayout.
+                if (checkDrawerViewAbsoluteGravity(changedView, Gravity.LEFT)) {
+                    offset = (float) (childWidth + left) / childWidth;
+                } else {
+                    final int width = getWidth();
+                    offset = (float) (width - left) / childWidth;
+                }
             }
             setDrawerViewOffset(changedView, offset);
+            if (mContentView != null) {
+                final int l = changedView.getLeft();
+                if (getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                    mContentView.setLeft(l - mContentView.getWidth());
+                    mContentView.setRight(l);
+                } else {
+                    mContentView.setLeft(l + changedView.getWidth());
+                }
+            }
             changedView.setVisibility(offset == 0 ? INVISIBLE : VISIBLE);
             invalidate();
         }
@@ -2546,5 +2595,33 @@ public class DrawerLayout extends ViewGroup implements Openable {
                 info.setParent(null);
             }
         }
+    }
+
+    public void seslSetContentView(View view) {
+        mContentView = view;
+    }
+
+    public void seslSetTouchSensitivity(float sensitivity) {
+        final int scaledTouchSlop = ViewConfiguration.get(getContext())
+                .getScaledTouchSlop();
+
+        if (mLeftDragger != null) {
+            mLeftDragger.setTouchSlop((int) (scaledTouchSlop
+                    * (TOUCH_SLOP_SENSITIVITY / sensitivity)));
+        } else {
+            Log.e(TAG, "Ignore set sensitivity because of mLeftDragger is null");
+        }
+
+        if (mRightDragger != null) {
+            mRightDragger.setTouchSlop((int) (scaledTouchSlop
+                    * (TOUCH_SLOP_SENSITIVITY / sensitivity)));
+        } else {
+            Log.e(TAG, "Ignore set sensitivity because of mRightDragger is null");
+        }
+    }
+
+    private boolean shouldSkipScroll() {
+        return Settings.System.getInt(getContext().getContentResolver(),
+                "remove_animations", 0) == 1;
     }
 }

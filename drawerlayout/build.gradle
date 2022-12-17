@@ -4,10 +4,28 @@ plugins {
 
 android {
     namespace "androidx.drawerlayout"
+
+    defaultConfig {
+        versionName sesl_drawerlayout_version[0]
+    }
+
+    sourceSets.main.resources.srcDir "$buildDir/javaResources"
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))
     api(project(":customview"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.drawerlayout_drawerlayout.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = sesl_drawerlayout_version[1] + "\n"
 }

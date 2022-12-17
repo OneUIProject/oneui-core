@@ -1,0 +1,25 @@
+plugins {
+    id("com.android.library")
+}
+
+android {
+    namespace "androidx.coordinatorlayout"
+
+    sourceSets {
+        main.res.srcDirs = [
+                "src/main/res",
+                "src/main/res-public"
+        ]
+    }
+
+    buildTypes.all {
+        consumerProguardFiles "proguard-rules.pro"
+    }
+}
+
+dependencies {
+    api("androidx.annotation:annotation:$androidx_annotation_version")
+    api(project(":core:core"))
+    implementation("androidx.collection:collection:$androidx_collection_version")
+    api(project(":customview"))
+}

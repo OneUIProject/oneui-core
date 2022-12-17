@@ -5,7 +5,12 @@ plugins {
 android {
     namespace "androidx.coordinatorlayout"
 
+    defaultConfig {
+        versionName sesl_coordinatorlayout_version[0]
+    }
+
     sourceSets {
+        main.resources.srcDir "$buildDir/javaResources"
         main.res.srcDirs = [
                 "src/main/res",
                 "src/main/res-public"
@@ -15,6 +20,10 @@ android {
     buildTypes.all {
         consumerProguardFiles "proguard-rules.pro"
     }
+
+    libraryVariants.all {
+        it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
+    }
 }
 
 dependencies {
@@ -22,4 +31,12 @@ dependencies {
     api(project(":core:core"))
     implementation("androidx.collection:collection:$androidx_collection_version")
     api(project(":customview"))
+}
+
+task writeVersionFile() {
+    def versionFileDir = "$buildDir/javaResources/META-INF"
+    def versionFileName = "androidx.coordinatorlayout_coordinatorlayout.version"
+
+    new File(versionFileDir).mkdirs()
+    new File(versionFileDir + '/' + versionFileName).text = sesl_coordinatorlayout_version[1] + "\n"
 }

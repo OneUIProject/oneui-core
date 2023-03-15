@@ -6584,13 +6584,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
                 requestLayout();
             }
 
-            if (mFastScroller != null) {
-                mFastScroller.onSectionsChanged();
-            }
-
-            if (mIndexTip != null) {
-                mIndexTip.updateSections();
-            }
+            updateSections();
         }
 
         @Override
@@ -6599,6 +6593,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mAdapterHelper.onItemRangeChanged(positionStart, itemCount, payload)) {
                 triggerUpdateProcessor();
             }
+            updateSections();
         }
 
         @Override
@@ -6607,6 +6602,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mAdapterHelper.onItemRangeInserted(positionStart, itemCount)) {
                 triggerUpdateProcessor();
             }
+            updateSections();
         }
 
         @Override
@@ -6615,6 +6611,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mAdapterHelper.onItemRangeRemoved(positionStart, itemCount)) {
                 triggerUpdateProcessor();
             }
+            updateSections();
         }
 
         @Override
@@ -6623,6 +6620,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             if (mAdapterHelper.onItemRangeMoved(fromPosition, toPosition, itemCount)) {
                 triggerUpdateProcessor();
             }
+            updateSections();
         }
 
         void triggerUpdateProcessor() {
@@ -6645,6 +6643,16 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             Adapter<?> adapter = mAdapter;
             if (adapter != null && adapter.canRestoreState()) {
                 requestLayout();
+            }
+        }
+
+        private void updateSections() {
+            if (mFastScroller != null) {
+                mFastScroller.onSectionsChanged();
+            }
+
+            if (mIndexTip != null) {
+                mIndexTip.updateSections();
             }
         }
     }

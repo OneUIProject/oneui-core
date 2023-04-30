@@ -18,7 +18,6 @@ package androidx.core.os;
 
 import android.os.Bundle;
 
-/** @hide */
-oneway interface IResultReceiver {
-    void send(int resultCode, in Bundle resultData);
+oneway interface IResultReceiver 
+{    void send(int resultCode, in Bundle resultData);
 }

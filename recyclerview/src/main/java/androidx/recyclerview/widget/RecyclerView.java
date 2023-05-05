@@ -5447,6 +5447,12 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             drawGoToTop();
         }
 
+        if (isTalkBackIsRunning()) {
+            if (mGoToTopView != null && mGoToTopView.getAlpha() != 0.0f) {
+                mGoToTopView.setAlpha(0.0f);
+            }
+        }
+
         if (mIsPenDragBlockEnabled && !mIsLongPressMultiSelection && mLayout != null) {
             if (mPenDragBlockLeft != 0 || mPenDragBlockTop != 0) {
                 final int firstVisibleItemPosition = findFirstVisibleItemPosition();
@@ -15437,7 +15443,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
     }
 
     private void setupGoToTop(int where) {
-        if (mEnableGoToTop) {
+        if (!isTalkBackIsRunning() && mEnableGoToTop) {
             removeCallbacks(mAutoHide);
             if (where == GTP_STATE_SHOWN && !canScrollUp()) {
                 where = GTP_STATE_NONE;

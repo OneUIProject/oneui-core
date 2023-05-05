@@ -19,6 +19,7 @@ package androidx.viewpager.widget;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -55,6 +56,7 @@ import androidx.annotation.Px;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.math.MathUtils;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
@@ -168,6 +170,8 @@ public class ViewPager extends ViewGroup {
     private int mOffscreenPageLimit = DEFAULT_OFFSCREEN_PAGES;
 
     private int mLeftIncr = -1;
+
+    private int mOrientation;
 
     private boolean mIsBeingDragged;
     private boolean mIsUnableToDrag;
@@ -405,6 +409,7 @@ public class ViewPager extends ViewGroup {
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         final float density = context.getResources().getDisplayMetrics().density;
 
+        mOrientation = context.getResources().getConfiguration().orientation;
         mTouchSlop = configuration.getScaledPagingTouchSlop();
         mScaledTouchSlop = configuration.getScaledTouchSlop();
         mPagingTouchSlop = configuration.getScaledPagingTouchSlop();
@@ -469,8 +474,8 @@ public class ViewPager extends ViewGroup {
                         }
 
                         // Now return a new WindowInsets, using the consumed window insets
-                        return applied.replaceSystemWindowInsets(
-                                res.left, res.top, res.right, res.bottom);
+                        return new WindowInsetsCompat.Builder(applied)
+                                .setSystemWindowInsets(Insets.of(res)).build();
                     }
                 });
     }
@@ -1634,12 +1639,28 @@ public class ViewPager extends ViewGroup {
     }
 
     @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        final int orientation = newConfig.orientation;
+        if (mOrientation != orientation) {
+            mOrientation = orientation;
+            if (mPageMargin > 0) {
+                setCurrentItemInternal(mCurItem, false, true, 0);
+            }
+        }
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // Make sure scroll position is set correctly.
         if (w != oldw) {
             recomputeScrollPosition(w, oldw, mPageMargin, mPageMargin);
+            if (mPageMargin > 0) {
+                setCurrentItemInternal(mCurItem, false, true, 0);
+            }
         }
     }
 

@@ -32,7 +32,7 @@ task writeVersionFile() {
     def versionFileName = "androidx.viewpager_viewpager.version"
 
     new File(versionFileDir).mkdirs()
-    new File(versionFileDir + '/' + versionFileName).text = "1.0.4-sesl4" + "\n"
+    new File(versionFileDir + '/' + versionFileName).text = "1.0.5-sesl4" + "\n"
 }
 
 ext {

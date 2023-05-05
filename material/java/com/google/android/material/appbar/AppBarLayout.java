@@ -44,6 +44,7 @@ import androidx.appcompat.animation.SeslAnimationUtils;
 import androidx.appcompat.util.SeslMisc;
 import androidx.coordinatorlayout.widget.AppBarLayoutBehavior;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.NestedScrollingChild;
@@ -100,6 +101,9 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
   // Sesl
   private static final String TAG = "AppBarLayout";
 
+  private static final int TAPPABLE_ELEMENT = WindowInsetsCompat.Type.tappableElement();
+  private static final int SYSTEM_BARS = WindowInsetsCompat.Type.systemBars();
+
   private static final float DEFAULT_HEIGHT_RATIO_TO_SCREEN = 0.39f;
 
   public static final int IMMERSIVE_DETACH_OPTION_SET_FIT_SYSTEM_WINDOW = 1;
@@ -115,6 +119,8 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
   private Drawable mBackground;
   private List<SeslBaseOnImmOffsetChangedListener> mImmOffsetListener;
   private WindowInsetsCompat mLastInsets = null;
+  private Insets mLastSysInsets;
+  private Insets mLastTappableInsets;
   private Resources mResources;
 
   private boolean isMouse = false;

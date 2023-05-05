@@ -618,7 +618,11 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
             mDecorViewInset = mDecorView.getRootWindowInsets();
             if (mWindowInsetsController != null && mDecorViewInset != null) {
               if (mDecorViewInset.getInsets(WindowInsets.Type.statusBars()).top != 0) {
-                mWindowInsetsController.hide(WindowInsets.Type.statusBars());
+                try {
+                  mWindowInsetsController.hide(WindowInsets.Type.statusBars());
+                } catch (IllegalStateException e) {
+                  Log.w(TAG, "setupDecorsFitSystemWindowState: mWindowInsetsController.hide failed!");
+                }
               }
             }
           }
@@ -986,7 +990,11 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
       if (!(mDecorViewInset.isVisible(WindowInsets.Type.statusBars())
               && mDecorViewInset.isVisible(WindowInsets.Type.navigationBars()))
           || isAppBarHide() || force) {
-        mWindowInsetsController.show(WindowInsets.Type.systemBars());
+        try {
+          mWindowInsetsController.show(WindowInsets.Type.systemBars());
+        } catch (IllegalStateException e) {
+          Log.w(TAG, "showWindowInset: mWindowInsetsController.show failed!");
+        }
       }
     }
   }
@@ -1035,7 +1043,11 @@ public final class SeslImmersiveScrollBehavior extends AppBarLayout.Behavior {
 
     final int systemBars = WindowInsets.Type.systemBars();
     if (!isHideCameraCutout(mDecorViewInset)) {
-      mWindowInsetsController.hide(systemBars);
+      try {
+        mWindowInsetsController.hide(systemBars);
+      } catch (IllegalStateException e) {
+        Log.w(TAG, "startAnimationControlRequest: mWindowInsetsController.hide failed!");
+      }
     }
     mWindowInsetsController.setSystemBarsBehavior(
             WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);

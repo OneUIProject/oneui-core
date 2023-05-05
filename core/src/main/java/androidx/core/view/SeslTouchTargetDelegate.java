@@ -90,22 +90,24 @@ public class SeslTouchTargetDelegate extends TouchDelegate {
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         Iterator<CapturedTouchDelegate> it = mTouchDelegateList.iterator();
-        boolean consumed = false;
         while (it.hasNext()) {
-            consumed |= it.next().onTouchEvent(event);
+            if (it.next().onTouchEvent(event)) {
+                return true;
+            }
         }
-        return consumed;
+        return false;
     }
 
     @Override
     @RequiresApi(29)
     public boolean onTouchExplorationHoverEvent(@NonNull MotionEvent event) {
         Iterator<CapturedTouchDelegate> it = mTouchDelegateList.iterator();
-        boolean consumed = false;
         while (it.hasNext()) {
-            consumed |= it.next().onTouchExplorationHoverEvent(event);
+            if (it.next().onTouchExplorationHoverEvent(event)) {
+                return true;
+            }
         }
-        return consumed;
+        return false;
     }
 
     @Override

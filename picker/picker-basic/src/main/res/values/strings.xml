@@ -25,6 +25,7 @@
     <string name="sesl_date_picker_decrement_month">Decrease month</string>
     <string name="sesl_date_picker_increment_month">Increase month</string>
     <string name="sesl_date_picker_month">Month</string>
+    <string name="sesl_date_picker_switch_to_month_day_year_view_description">Double tap to switch to Month-Day-Year view.</string>
     <string name="sesl_date_picker_switch_to_calendar_description">Double tap to switch to calendar view.</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Double tap to switch to wheel view.</string>
     <string name="sesl_date_picker_year">Year</string>

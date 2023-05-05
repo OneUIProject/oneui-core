@@ -8,7 +8,7 @@
     <string name="sesl_date_picker_decrement_month">Tháng trước</string>
     <string name="sesl_date_picker_day">Ngày</string>
     <string name="sesl_date_picker_switch_to_wheel_description">Chạm hai lần để chuyển sang dạng xem vòng xoay.</string>
-    <string name="sesl_picker_done">H.tất</string>
+    <string name="sesl_picker_done">Hoàn tất</string>
     <string name="sesl_time_picker_hour">Giờ</string>
     <string name="sesl_time_picker_set_title">Đặt thời gian</string>
     <string name="sesl_date_picker_year">Năm</string>

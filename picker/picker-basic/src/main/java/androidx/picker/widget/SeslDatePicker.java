@@ -263,7 +263,7 @@ public class SeslDatePicker extends LinearLayout
                         mCalendarHeaderText.setContentDescription(monthAndYearString
                                 + ", "
                                 + mContext.getString(mCurrentViewType == VIEW_TYPE_CALENDAR ?
-                                    R.string.sesl_date_picker_switch_to_wheel_description
+                                    R.string.sesl_date_picker_switch_to_month_day_year_view_description
                                     : R.string.sesl_date_picker_switch_to_calendar_description));
                     }
                     break;

@@ -55,7 +55,7 @@
     <string name="sesl_color_picker_dark_azure">深藍色</string>
     <string name="sesl_color_picker_orange">橙色</string>
     <string name="sesl_color_picker_color_three">顏色三</string>
-    <string name="sesl_color_hex_text">十六進製</string>
+    <string name="sesl_color_hex_text">十六進制</string>
     <string name="sesl_color_picker_color_four">顏色四</string>
     <string name="sesl_color_picker_spectrum_text">光譜</string>
     <string name="sesl_color_picker_light_blue">淺藍色</string>

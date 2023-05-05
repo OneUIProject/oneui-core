@@ -55,7 +55,7 @@
     <string name="sesl_color_picker_dark_azure">진한 푸른색</string>
     <string name="sesl_color_picker_orange">주황색</string>
     <string name="sesl_color_picker_color_three">색상 삼</string>
-    <string name="sesl_color_hex_text">헥스</string>
+    <string name="sesl_color_hex_text">색상 코드</string>
     <string name="sesl_color_picker_color_four">색상 사</string>
     <string name="sesl_color_picker_spectrum_text">사용자 지정</string>
     <string name="sesl_color_picker_light_blue">하늘색</string>

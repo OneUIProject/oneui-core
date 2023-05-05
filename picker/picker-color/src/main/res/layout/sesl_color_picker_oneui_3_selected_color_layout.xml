@@ -76,6 +76,7 @@
             android:maxLength="6"
             android:minWidth="50dp"
             android:privateImeOptions="disableSticker=true;disableGifKeyboard=true;disableEmoticonInput=true;disableDirectWriting=true;"
+            android:importantForAutofill="no"
             android:singleLine="true" />
     </LinearLayout>
 

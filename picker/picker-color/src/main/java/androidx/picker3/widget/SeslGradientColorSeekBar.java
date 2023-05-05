@@ -27,6 +27,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.picker.R;
 
 /*
@@ -81,6 +82,8 @@ class SeslGradientColorSeekBar extends SeekBar {
 
     void changeColorBase(int color) {
         if (mProgressDrawable != null) {
+            color = ColorUtils.setAlphaComponent(color, 255);
+
             mColors[1] = color;
             mProgressDrawable.setColors(mColors);
             setProgressDrawable(mProgressDrawable);

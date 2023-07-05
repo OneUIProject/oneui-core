@@ -1122,6 +1122,9 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
         mRoundedCorner = new SeslSubheaderRoundedCorner(getContext());
         mRoundedCorner.setRoundedCorners(SeslRoundedCorner.ROUNDED_CORNER_BOTTOM_LEFT
                 | SeslRoundedCorner.ROUNDED_CORNER_BOTTOM_RIGHT);
+        mRoundedCorner.setRoundedCornerColor(SeslRoundedCorner.ROUNDED_CORNER_BOTTOM_LEFT
+                | SeslRoundedCorner.ROUNDED_CORNER_BOTTOM_RIGHT, mRectColor);
+
 
         // Re-set whether nested scrolling is enabled so that it is set on all API levels
         setNestedScrollingEnabled(nestedScrollingEnabled);

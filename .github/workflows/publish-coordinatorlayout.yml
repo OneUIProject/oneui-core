@@ -1,0 +1,30 @@
+name: publish coordinatorlayout
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    name: build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: java setup and gradle caching
+        uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "11"
+          cache: "gradle"
+
+      - name: grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: upload to sonatype
+        run: ./gradlew :coordinatorlayout:publish --no-daemon --no-parallel
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
+          MAVEN_PASSWORD: ${{ secrets.SONATYPE_PWD }}
+          SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          SIGNING_KEYID: ${{ secrets.SIGNING_KEYID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}

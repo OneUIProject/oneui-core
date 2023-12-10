@@ -4047,7 +4047,7 @@ public class TabLayout extends HorizontalScrollView {
 
       if (tabs.size() > 0) {
         int selectedTab = getSelectedTabPosition();
-        ArrayList<Tab> tabs = new ArrayList<>(this.tabs.size());
+        ArrayList<Tab> savedTabs = new ArrayList<>(this.tabs.size());
 
         for (int i = 0; i < this.tabs.size(); i++) {
           Tab tab = newTab();
@@ -4059,19 +4059,19 @@ public class TabLayout extends HorizontalScrollView {
             tab.select();
           }
           tab.view.update();
-          tabs.add(tab);
+          savedTabs.add(tab);
         }
 
         removeAllTabs();
 
-        for (int i = 0; i < this.tabs.size(); i++) {
-          addTab((Tab) tabs.get(i), i == selectedTab);
+        for (int i = 0; i < savedTabs.size(); i++) {
+          addTab((Tab) savedTabs.get(i), i == selectedTab);
           if (this.tabs.get(i) != null) {
             this.tabs.get(i).view.update();
           }
         }
 
-        tabs.clear();
+        savedTabs.clear();
       }
     }
   }

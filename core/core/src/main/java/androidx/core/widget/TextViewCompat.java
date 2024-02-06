@@ -562,7 +562,7 @@ public final class TextViewCompat {
     @Nullable
     public static ActionMode.Callback unwrapCustomSelectionActionModeCallback(
             @Nullable ActionMode.Callback callback) {
-        if (callback instanceof OreoCallback && Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26 && callback instanceof OreoCallback) {
             return ((OreoCallback) callback).getWrappedCallback();
         }
         return callback;

@@ -197,6 +197,74 @@ public class MathUtils {
      * number is smaller than the minimum required by the range, then the minimum of the range will
      * be returned. If the number is higher than the maximum allowed by the range then the maximum
      * of the range will be returned.
+     * (Duplicate of {@link #clamp(float, float, float)} for sesl4 compatibility.)
+     *
+     * @param value the value to be clamped.
+     * @param min minimum resulting value.
+     * @param max maximum resulting value.
+     *
+     * @return the clamped value.
+     */
+    public static float constrain(float value, float min, float max) {
+        return clamp(value, min, max);
+    }
+
+    /**
+     * This method takes a numerical value and ensures it fits in a given numerical range. If the
+     * number is smaller than the minimum required by the range, then the minimum of the range will
+     * be returned. If the number is higher than the maximum allowed by the range then the maximum
+     * of the range will be returned.
+     * (Duplicate of {@link #clamp(double, double, double)} for sesl4 compatibility.)
+     *
+     * @param value the value to be clamped.
+     * @param min minimum resulting value.
+     * @param max maximum resulting value.
+     *
+     * @return the clamped value.
+     */
+    public static double constrain(double value, double min, double max) {
+        return clamp(value, min, max);
+    }
+
+    /**
+     * This method takes a numerical value and ensures it fits in a given numerical range. If the
+     * number is smaller than the minimum required by the range, then the minimum of the range will
+     * be returned. If the number is higher than the maximum allowed by the range then the maximum
+     * of the range will be returned.
+     * (Duplicate of {@link #clamp(int, int, int)} for sesl4 compatibility.)
+     *
+     * @param value the value to be clamped.
+     * @param min minimum resulting value.
+     * @param max maximum resulting value.
+     *
+     * @return the clamped value.
+     */
+    public static int constrain(int value, int min, int max) {
+        return clamp(value, min, max);
+    }
+
+    /**
+     * This method takes a numerical value and ensures it fits in a given numerical range. If the
+     * number is smaller than the minimum required by the range, then the minimum of the range will
+     * be returned. If the number is higher than the maximum allowed by the range then the maximum
+     * of the range will be returned.
+     * (Duplicate of {@link #clamp(long, long, long)} for sesl4 compatibility.)
+     *
+     * @param value the value to be clamped.
+     * @param min minimum resulting value.
+     * @param max maximum resulting value.
+     *
+     * @return the clamped value.
+     */
+    public static long constrain(long value, long min, long max) {
+        return clamp(value, min, max);
+    }
+
+    /**
+     * This method takes a numerical value and ensures it fits in a given numerical range. If the
+     * number is smaller than the minimum required by the range, then the minimum of the range will
+     * be returned. If the number is higher than the maximum allowed by the range then the maximum
+     * of the range will be returned.
      *
      * @param value the value to be clamped.
      * @param min minimum resulting value.

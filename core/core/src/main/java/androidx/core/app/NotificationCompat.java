@@ -436,7 +436,7 @@ public class NotificationCompat {
     public static final String EXTRA_PICTURE = "android.picture";
 
     /**
-     * {@link #extras} key: this is a content description of the big picture supplied from
+     * {@link #getExtras extras} key: this is a content description of the big picture supplied from
      * {@link BigPictureStyle#bigPicture(Bitmap)}, supplied to
      * {@link BigPictureStyle#setContentDescription(CharSequence)}.
      */
